@@ -33,12 +33,12 @@ public class Function {
   */
   public void setName(String formula) {
     this.formula = formula;
-    this.calc.setFormula(formula, false);
+    this.calc.setFormula(formula);
   }
 
   @Override
   public Function clone() {
-    return new Function(this.formula.clone());
+    return new Function(this.formula);
   }
 
   @Override

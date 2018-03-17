@@ -28,17 +28,30 @@ public class GMath {
   }
 
   /**
+  * Give the formula a new value
+  * @param formula the new value for the formula
+  */
+  public void setFormula(String formula) {
+    this.formula = formula;
+    this.toRPN();
+  }
+
+  /**
   * Fill precedence and associativity maps
   */
   private void fillMaps() {
     // Fill precedence
+    precedence = new HashMap<String, Integer>();
     precedence.put("-", 2);
     precedence.put("+", 2);
     precedence.put("/", 3);
     precedence.put("*", 3);
     precedence.put("^", 4);
+    precedence.put("(", 5);
+    precedence.put(")", 5);
 
     // Fill associativity
+    associativity = new HashMap<String, Integer>();
     associativity.put("-", 0); // Left
     associativity.put("+", 0); // Left
     associativity.put("/", 0); // Left
@@ -55,36 +68,56 @@ public class GMath {
     StringTokenizer tokenizer = new StringTokenizer(this.formula);
     while (tokenizer.hasMoreTokens()) {
       String next = tokenizer.nextToken();
-      if (next.isNumeric()) { // If number
+      if (isNumeric(next)) { // If number
         output += next + " ";
       }
       // If constant pi or e
-      else if (next.equalsIgnoreCaps("pi") || next.equalsIgnoreCaps("e")) {
+      else if (next.equalsIgnoreCase("pi") || next.equalsIgnoreCase("e")) {
         output += next + " ";
       }
       // If variable x or y
-      else if (next.equalsIgnoreCaps("x") || next.equalsIgnoreCaps("y")) {
+      else if (next.equalsIgnoreCase("x") || next.equalsIgnoreCase("y")) {
         output += next + " ";
       }
       else if (next.equals("(")) { // if Left Bracket
         operators.push(next);
       }
       else if (next.equals(")")) { // if right Bracket
-
+        while (!operators.peek().equals("(")) {
+          output += operators.pop() + " ";
+        }
+        String leftBracket = operators.pop();
       }
       else { // If operator
-        int topPrecerence = -1;
-        if (!operators.isEmpty()) {
-          topPrecedence = precedence.get(operators.peek());
-        }
-        int nextPrecedence = precedence.get(next);
-        while () {
-
+        while ((topWithPrecedence(next, operators) || topEqualLeft(next, operators)) && !operators.peek().equals("(")) {
+          output += operators.pop() + " ";
         }
         operators.push(next);
       }
     }
-    this.formula = output;
+    while (!operators.isEmpty()) output += operators.pop() + " ";
+    // Starting index is inclusive, ending index is exclusive
+    this.formula = output.substring(0, output.length() - 1);
+    System.out.println(this.formula);
+  }
+
+  private static boolean topEqualLeft(String op1, Stack<String> operators) {
+    if (operators.isEmpty()) return false;
+    else {
+      int nextPrecedence = precedence.get(op1);
+      int topPrecedence = precedence.get(operators.peek());
+      int topAssociative = associativity.get(operators.peek());
+      return topPrecedence == nextPrecedence && topAssociative == 0;
+    }
+  }
+
+  private static boolean topWithPrecedence(String op1, Stack<String> operators) {
+    if (operators.isEmpty()) return false;
+    else {
+      int nextPrecedence = precedence.get(op1);
+      int topPrecedence = precedence.get(operators.peek());
+      return topPrecedence > nextPrecedence;
+    }
   }
 
   private static boolean isNumeric(String token) {
@@ -105,7 +138,7 @@ public class GMath {
   * @return the output of the function
   */
   public double compute(double x, double y) {
-
+    return 0;
   }
 
   @Override
@@ -118,7 +151,7 @@ public class GMath {
 
   @Override
   public GMath clone() {
-    return new GMath(this.formula.clone(), true);
+    return new GMath(this.formula, true);
   }
 
   @Override
