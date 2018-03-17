@@ -7,14 +7,16 @@
 
 public class Function {
 
-  String formula;
+  private String formula;
+  private GMath calc;
 
   /**
   * Create a new Function instance
   * @param formula the formula of the function
   */
   public Function(String formula) {
-    this.formula = ShuntingYard.toRPN(formula);
+    this.formula = formula;
+    this.calc = new GMath(formula, false);
   }
 
   /**
@@ -31,6 +33,7 @@ public class Function {
   */
   public void setName(String formula) {
     this.formula = formula;
+    this.calc.setFormula(formula, false);
   }
 
   @Override
