@@ -7,14 +7,26 @@
 
 public class Function {
 
-  String formula;
+  private String formula;
+  private GMath calc;
 
   /**
   * Create a new Function instance
   * @param formula the formula of the function
   */
   public Function(String formula) {
-    this.formula = ShuntingYard.toRPN(formula);
+    this.formula = formula;
+    this.calc = new GMath(formula, false);
+  }
+
+  /**
+  * Compute the outcome of the function given values for x and y
+  * @param x the value for x
+  * @param y the value for y
+  * @return the value of z = f(x, y)
+  */
+  public double getZ(double x, double y) {
+    return this.calc.compute(x, y);
   }
 
   /**
@@ -31,11 +43,12 @@ public class Function {
   */
   public void setName(String formula) {
     this.formula = formula;
+    this.calc.setFormula(formula);
   }
 
   @Override
   public Function clone() {
-    return new Function(this.formula.clone());
+    return new Function(this.formula);
   }
 
   @Override
