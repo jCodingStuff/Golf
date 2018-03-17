@@ -5,6 +5,8 @@
 * @version 0.1, 17/03/2018
 */
 
-public Function() {
+public class Function {
+
   
+
 }
