@@ -75,9 +75,9 @@ public class GMath {
       else { // If operator
         int topPrecerence = -1;
         if (!operators.isEmpty()) {
-          topPrecerence = precedence.get(operators.peek());
+          topPrecedence = precedence.get(operators.peek());
         }
-        int nextPrecerence = precedence.get(next);
+        int nextPrecedence = precedence.get(next);
         while () {
 
         }
