@@ -20,6 +20,16 @@ public class Function {
   }
 
   /**
+  * Compute the outcome of the function given values for x and y
+  * @param x the value for x
+  * @param y the value for y
+  * @return the value of z = f(x, y)
+  */
+  public double getZ(double x, double y) {
+    return this.calc.compute(x, y);
+  }
+
+  /**
   * Get access to the formula of the Function
   * @return the formula of the function
   */

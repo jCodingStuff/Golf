@@ -2,6 +2,8 @@ import java.util.StringTokenizer;
 import java.util.Stack;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
 * A class with methods to implement Shunting-Yard Algorithm and
@@ -138,7 +140,30 @@ public class GMath {
   * @return the output of the function
   */
   public double compute(double x, double y) {
-    return 0;
+    Stack<Double> stack = new Stack<Double>();
+    StringTokenizer tokenizer = new StringTokenizer(this.formula);
+    while (tokenizer.hasMoreTokens()) {
+      String next = tokenizer.nextToken();
+      if (isNumeric(next)) stack.push(Double.parseDouble(next));
+      else if (next.equalsIgnoreCase("pi")) stack.push(Math.PI);
+      else if (next.equalsIgnoreCase("e")) stack.push(Math.E);
+      else if (next.equalsIgnoreCase("x")) stack.push(x);
+      else if (next.equalsIgnoreCase("y")) stack.push(y);
+      else { // Token is an operator
+        double op2 = stack.pop();
+        double op1 = stack.pop();
+        double result = 0;
+        switch (next) {
+          case "-": result = op1 - op2; break;
+          case "+": result = op1 + op2; break;
+          case "*": result = op1 * op2; break;
+          case "/": result = op1 / op2; break;
+          case "^": result = Math.pow(op1, op2); break;
+        }
+        stack.push(result);
+      }
+    }
+    return stack.pop();
   }
 
   @Override
