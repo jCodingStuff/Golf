@@ -100,7 +100,6 @@ public class GMath {
     while (!operators.isEmpty()) output += operators.pop() + " ";
     // Starting index is inclusive, ending index is exclusive
     this.formula = output.substring(0, output.length() - 1);
-    System.out.println(this.formula);
   }
 
   private static boolean topEqualLeft(String op1, Stack<String> operators) {
