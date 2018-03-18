@@ -2,12 +2,16 @@ import java.util.StringTokenizer;
 import java.util.Stack;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
 * A class with methods to implement Shunting-Yard Algorithm and
 * RPN computations
+*
+* @author Julian Marrades
+* @version 0.1, 17/03/2018
+*
+* @author Julian Marrades
+* @version 0.2, 18/03/2018
 */
 public class GMath {
 
@@ -44,11 +48,13 @@ public class GMath {
   private void fillMaps() {
     // Fill precedence
     precedence = new HashMap<String, Integer>();
-    precedence.put("-", 2);
-    precedence.put("+", 2);
-    precedence.put("/", 3);
-    precedence.put("*", 3);
-    precedence.put("^", 4);
+    precedence.put("-", 1);
+    precedence.put("+", 1);
+    precedence.put("/", 2);
+    precedence.put("*", 2);
+    precedence.put("^", 3);
+    precedence.put("cos", 4);
+    precedence.put("sin", 4);
     precedence.put("(", 5);
     precedence.put(")", 5);
 
@@ -59,6 +65,8 @@ public class GMath {
     associativity.put("/", 0); // Left
     associativity.put("*", 0); // Left
     associativity.put("^", 1); // Right
+    associativity.put("cos", 1); // Right
+    associativity.put("sin", 1); // Right
   }
 
   /**
@@ -150,14 +158,15 @@ public class GMath {
       else if (next.equalsIgnoreCase("y")) stack.push(y);
       else { // Token is an operator
         double op2 = stack.pop();
-        double op1 = stack.pop();
         double result = 0;
         switch (next) {
-          case "-": result = op1 - op2; break;
-          case "+": result = op1 + op2; break;
-          case "*": result = op1 * op2; break;
-          case "/": result = op1 / op2; break;
-          case "^": result = Math.pow(op1, op2); break;
+          case "-": result = stack.pop() - op2; break;
+          case "+": result = stack.pop() + op2; break;
+          case "*": result = stack.pop() * op2; break;
+          case "/": result = stack.pop() / op2; break;
+          case "^": result = Math.pow(stack.pop(), op2); break;
+          case "cos": result = Math.cos(op2); break; // In radians
+          case "sin": result = Math.sin(op2); break; // In radians
         }
         stack.push(result);
       }
