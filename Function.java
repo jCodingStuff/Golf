@@ -69,7 +69,7 @@ public class Function {
 
   @Override
   public String toString() {
-    return "z = f(x, y) = " + this.formula;
+    return this.getClass().getName() + "[ z = f(x, y) = " + this.formula + " ]";
   }
 
 }

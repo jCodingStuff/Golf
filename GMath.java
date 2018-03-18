@@ -189,7 +189,7 @@ public class GMath {
 
   @Override
   public String toString() {
-    return "RPN -> z = f(x, y) = " + this.formula;
+    return this.getClass().getName() + "[ z = f(x, y) = " + this.formula + " ]";
   }
 
 }
