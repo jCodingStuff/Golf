@@ -20,6 +20,14 @@ public class Function {
   }
 
   /**
+  * Get access to the computation engine of the function
+  * @return the GMath instance that function objects hold
+  */
+  public GMath getGMath() {
+    return this.calc;
+  }
+
+  /**
   * Compute the outcome of the function given values for x and y
   * @param x the value for x
   * @param y the value for y
