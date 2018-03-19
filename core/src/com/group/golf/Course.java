@@ -5,6 +5,6 @@ package com.group.golf;
  */
 public class Course {
 
-    
+
 
 }
