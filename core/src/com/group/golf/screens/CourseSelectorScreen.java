@@ -7,14 +7,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.group.golf.Golf;
 
-public class MainMenuScreen implements Screen {
+public class CourseSelectorScreen implements Screen {
 
     final Golf game;
 
     Music menuMusic;
     OrthographicCamera cam;
 
-    public MainMenuScreen(final Golf game) {
+    public CourseSelectorScreen(final Golf game) {
         this.game = game;
 
         // Setup cam

@@ -11,8 +11,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.group.golf.Golf;
 
-import javax.swing.*;
-
 public class IntroScreen implements Screen {
 
     final Golf game;
@@ -82,7 +80,7 @@ public class IntroScreen implements Screen {
         this.game.batch.end();
 
         if (Gdx.input.isTouched()) {
-            this.game.setScreen(new MainMenuScreen(this.game));
+            this.game.setScreen(new CourseSelectorScreen(this.game));
             this.dispose();
         }
     }
