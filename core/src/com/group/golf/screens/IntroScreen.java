@@ -46,8 +46,8 @@ public class IntroScreen implements Screen {
 
         this.game.batch.begin();
         this.game.batch.draw(this.introImg, 0, 0, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
-        this.game.fontMainMenu.draw(this.game.batch, "Crazy Golf", 10, 50);
-        this.game.fontMainMenu.draw(this.game.batch, "Click anywhere to continue", 10, 25);
+        this.game.font.draw(this.game.batch, "Crazy Golf", 10, 50);
+        this.game.font.draw(this.game.batch, "Click anywhere to continue", 10, 25);
         this.game.batch.end();
 
         if (Gdx.input.isTouched()) {

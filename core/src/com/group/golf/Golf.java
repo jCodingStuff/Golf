@@ -16,12 +16,12 @@ public class Golf extends Game {
 	public static final int VIRTUAL_HEIGHT = 800;
 
 	public SpriteBatch batch;
-	public BitmapFont fontMainMenu;
+	public BitmapFont font;
 	
 	@Override
 	public void create () {
 		this.batch = new SpriteBatch();
-		this.fontMainMenu = new BitmapFont();
+		this.font = new BitmapFont();
 		this.setScreen(new IntroScreen(this));
 	}
 
@@ -33,6 +33,6 @@ public class Golf extends Game {
 	@Override
 	public void dispose () {
 		this.batch.dispose();
-		this.fontMainMenu.dispose();
+		this.font.dispose();
 	}
 }
