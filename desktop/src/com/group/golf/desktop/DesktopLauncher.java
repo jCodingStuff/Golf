@@ -13,6 +13,9 @@ public class DesktopLauncher {
 		config.title = Golf.GAME_NAME;
 		config.width = Golf.VIRTUAL_WIDTH;
 		config.height = Golf.VIRTUAL_HEIGHT;
+		config.resizable = false;
+		config.x = -1; // Set in the center
+		config.y = -1; // Set in the center
 		config.addIcon("icon128.png", Files.FileType.Internal);
 		config.addIcon("icon32.png", Files.FileType.Internal);
 		config.addIcon("icon16.png", Files.FileType.Internal);
