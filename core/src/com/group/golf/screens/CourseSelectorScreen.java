@@ -5,6 +5,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
@@ -13,12 +18,32 @@ import com.group.golf.math.Function;
 public class CourseSelectorScreen implements Screen {
 
     final Golf game;
+    Stage stage;
 
+    TextButton play;
+    TextButton importbtn;
+    TextButton design;
     Music menuMusic;
     OrthographicCamera cam;
 
     public CourseSelectorScreen(final Golf game) {
         this.game = game;
+        stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
+        Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+        play = new TextButton("play", skin);
+        importbtn = new TextButton("import", skin);
+        design = new TextButton("design", skin);
+        play.setPosition(300, 400);
+        importbtn.setPosition(300, 300);
+        design.setPosition(300, 200);
+        play.setSize(200, 60);
+        importbtn.setSize(200, 60);
+        design.setSize(200, 60);
+
+        stage.addActor(play);
+        stage.addActor(importbtn);
+        stage.addActor(design);
 
         // Setup cam
         this.cam = new OrthographicCamera();
@@ -28,6 +53,28 @@ public class CourseSelectorScreen implements Screen {
         this.menuMusic = Gdx.audio.newMusic(Gdx.files.internal("mariokart8_mainmenu.mp3"));
         this.menuMusic.setVolume(0.2f);
         this.menuMusic.setLooping(true);
+
+        class PlayListener extends ChangeListener{
+            final Golf game;
+            private Screen screen;
+            public PlayListener(final Golf game, Screen screen){
+                this.game = game;
+                this.screen = screen;
+            }
+            @Override
+            public void changed (ChangeEvent event, Actor actor) {
+                String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
+                double[] start = new double[]{0, 0};
+                double[] goal = new double[]{4, 3};
+                Function function = new Function(formula);
+                Course course = new Course(function, 9.81, 0.5, 3, start, goal, 0.5);
+                this.game.setScreen(new CourseScreen(this.game, course, new Ball(1)));
+                this.screen.dispose();
+            }
+
+        }
+
+        play.addListener(new PlayListener(game, this));
     }
 
     @Override
@@ -43,20 +90,10 @@ public class CourseSelectorScreen implements Screen {
         this.cam.update();
         this.game.batch.setProjectionMatrix(this.cam.combined);
 
-        this.game.batch.begin();
-        this.game.font.draw(this.game.batch, "MAIN MENU", 400, 300);
-        this.game.batch.end();
-
-        if (Gdx.input.isTouched()) { // Launch default course
-            String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-            double[] start = new double[]{2, 4};
-            double[] goal = new double[]{4, 3};
-            Function function = new Function(formula);
-            Course course = new Course(function, 9.81, 0.5, 3, start, goal, 0.75);
-            this.game.setScreen(new CourseScreen(this.game, course, new Ball(1)));
-            this.dispose();
-        }
+        stage.act(delta);
+        stage.draw();
     }
+
 
     @Override
     public void resize(int width, int height) {
