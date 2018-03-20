@@ -5,7 +5,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.group.golf.Course;
 import com.group.golf.Golf;
+import com.group.golf.math.Function;
 
 public class CourseSelectorScreen implements Screen {
 

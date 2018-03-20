@@ -25,14 +25,14 @@ public class Course {
      * @param goal the goal coordinates
      * @param tolerance the radius of the goal
      */
-    public Course(String function, double g, double mu, double vmax, double[] start, double[] goal, double tolerance) {
+    public Course(Function function, double g, double mu, double vmax, double[] start, double[] goal, double tolerance) {
         this.g = g;
         this.mu = mu;
         this.vmax = vmax;
         this.start = start;
         this.goal = goal;
         this.tolerance = tolerance;
-        this.function = new Function(function);
+        this.function = function;
     }
 
     /**
@@ -143,8 +143,8 @@ public class Course {
      * Set a new function
      * @param function the formula of the function
      */
-    public void setFunction(String function) {
-        this.function = new Function(function);
+    public void setFunction(Function function) {
+        this.function = function;
     }
 
     @Override
