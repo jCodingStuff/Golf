@@ -50,10 +50,18 @@ public class Ball {
         this.x = x;
     }
 
+    /**
+     * Get access to the y-position
+     * @return the y-coordinate for position
+     */
     public double getY() {
         return y;
     }
 
+    /**
+     * Set a new value for the y-position
+     * @param y the new y-position
+     */
     public void setY(double y) {
         this.y = y;
     }
