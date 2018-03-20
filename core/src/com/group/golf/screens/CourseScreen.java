@@ -26,6 +26,8 @@ public class CourseScreen implements Screen {
     Music music;
 
     // Graphing things
+    private int goalSize;
+    private int ballSize;
     private double scale;
     private double xoffset;
     private double yoffset;
@@ -60,7 +62,11 @@ public class CourseScreen implements Screen {
         this.ball = ball;
         this.ball.setX(this.course.getStart()[0]);
         this.ball.setY(this.course.getStart()[1]);
+        this.ballSize = 12;
         this.ballImage = new Texture(Gdx.files.internal("ball_soccer2.png"));
+
+        // Setup Goal
+        this.goalSize = 12;
     }
 
     private void setUpCourse() {
@@ -137,15 +143,29 @@ public class CourseScreen implements Screen {
         this.renderTerrain();
 
         // Render the ball
-        float realX = (float) (this.ball.getX() - 8 - xoffset);
-        float realY = (float) (this.ball.getY() - 8 - yoffset);
-        this.game.batch.draw(this.ballImage, realX, realY, 8, 8);
-        this.game.shapeRenderer.setColor(1, 1, 1, 1);
-        this.game.shapeRenderer.rect(realX, realY, 20, 20);
-        System.out.println("Ball drawn");
+        this.renderBall();
 
-        this.game.batch.end();
+        // Render the goal
+        this.renderGoal();
+
         this.game.shapeRenderer.end();
+        this.game.batch.end();
+    }
+
+    private void renderGoal() {
+        float realX = (float) ((this.course.getGoal()[0] - xoffset) * 100.0);
+        float realY = (float) ((this.course.getGoal()[1] - yoffset) * 100.0);
+        this.game.shapeRenderer.setColor(0, 0, 0, 1);
+        this.game.shapeRenderer.ellipse(realX - this.goalSize/2, realY - this.goalSize/2,
+                this.goalSize, this.goalSize);
+    }
+
+    private void renderBall() {
+        float realX = (float) ((this.ball.getX() - xoffset) * 100.0) - this.ballSize/2;
+        float realY = (float) ((this.ball.getY() - yoffset) * 100.0) - this.ballSize/2;
+        //this.game.batch.draw(this.ballImage, realX, realY, this.ballSize, this.ballSize);
+        this.game.shapeRenderer.setColor(1, 1, 1, 1);
+        this.game.shapeRenderer.ellipse(realX, realY, this.ballSize, this.ballSize);
     }
 
     private void renderTerrain() {
