@@ -67,7 +67,7 @@ public class CourseScreen implements Screen {
         this.ballImage = new Texture(Gdx.files.internal("ball_soccer2.png"));
 
         // Setup Goal
-        this.goalSize = 17;
+        this.goalSize = 20;
         this.flag = new Texture(Gdx.files.internal("golf_flag.png"));
     }
 
@@ -105,7 +105,7 @@ public class CourseScreen implements Screen {
         this.colors = new Color[Golf.VIRTUAL_WIDTH][Golf.VIRTUAL_HEIGHT];
         for (int x = 0; x < this.colors.length; x++) {
             for (int y = 0; y < this.colors[x].length; y++) {
-                if (this.heights[x][y] <= 0) {
+                if (this.heights[x][y] <= 0) { // Water
                     this.colors[x][y] = new Color(0, 0, 1, 1);
                 }
                 else {
@@ -121,11 +121,11 @@ public class CourseScreen implements Screen {
     private void calcOffsets() {
         double x1 = this.course.getStart()[0];
         double x2 = this.course.getGoal()[0];
-        double xUnits = Golf.VIRTUAL_WIDTH / 100.0;
+        double xUnits = Golf.VIRTUAL_WIDTH / (1/this.scale);
         this.xoffset = (x1 + x2 - xUnits) / 2.0;
         double y1 = this.course.getStart()[1];
         double y2 = this.course.getGoal()[1];
-        double yUnits = Golf.VIRTUAL_HEIGHT / 100.0;
+        double yUnits = Golf.VIRTUAL_HEIGHT / (1/this.scale);
         this.yoffset = (y1 + y2 - yUnits) / 2.0;
     }
 
@@ -157,8 +157,8 @@ public class CourseScreen implements Screen {
 
     private void renderGoal() {
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        float realX = (float) ((this.course.getGoal()[0] - xoffset) * 100.0);
-        float realY = (float) ((this.course.getGoal()[1] - yoffset) * 100.0);
+        float realX = (float) ((this.course.getGoal()[0] - xoffset) * (1/this.scale));
+        float realY = (float) ((this.course.getGoal()[1] - yoffset) * (1/this.scale));
         this.game.shapeRenderer.setColor(0, 0, 0, 1);
         this.game.shapeRenderer.ellipse(realX - this.goalSize/2, realY - this.goalSize/2,
                 this.goalSize, this.goalSize);
@@ -174,8 +174,8 @@ public class CourseScreen implements Screen {
     }
 
     private void renderBall() {
-        float realX = (float) ((this.ball.getX() - xoffset) * 100.0);
-        float realY = (float) ((this.ball.getY() - yoffset) * 100.0);
+        float realX = (float) ((this.ball.getX() - xoffset) * (1/this.scale));
+        float realY = (float) ((this.ball.getY() - yoffset) * (1/this.scale));
         this.game.batch.begin();
         this.game.batch.draw(this.ballImage, realX - this.ballSize/2, realY - this.ballSize/2,
                 this.ballSize, this.ballSize);
@@ -216,5 +216,7 @@ public class CourseScreen implements Screen {
     @Override
     public void dispose() {
         this.music.dispose();
+        this.ballImage.dispose();
+        this.flag.dispose();
     }
 }
