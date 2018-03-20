@@ -1,7 +1,6 @@
 package com.group.golf;
 
 import com.group.golf.math.Function;
-import sun.nio.cs.ext.MacHebrew;
 
 /**
  * This class represents a course for the Golf Game
