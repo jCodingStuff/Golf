@@ -67,8 +67,8 @@ public class CourseSelectorScreen implements Screen {
                 double[] start = new double[]{0, 0};
                 double[] goal = new double[]{4, 3};
                 Function function = new Function(formula);
-                Course course = new Course(function, 9.81, 0.5, 3, start, goal, 0.02);
-                this.game.setScreen(new CourseScreen(this.game, course));
+                Course course = new Course(function, 9.81, 0.5, 3, start, goal, 0.5);
+                this.game.setScreen(new CourseScreen(this.game, course, new Ball(1)));
                 this.screen.dispose();
             }
 
@@ -89,10 +89,6 @@ public class CourseSelectorScreen implements Screen {
 
         this.cam.update();
         this.game.batch.setProjectionMatrix(this.cam.combined);
-
-        this.game.batch.begin();
-        //this.game.font.draw(this.game.batch, "MAIN MENU", 400, 300);
-        this.game.batch.end();
 
         stage.act(delta);
         stage.draw();

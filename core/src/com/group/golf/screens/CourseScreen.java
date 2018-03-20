@@ -6,7 +6,9 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.math.MathLib;
@@ -18,11 +20,15 @@ public class CourseScreen implements Screen {
 
     final Golf game;
     Course course;
-    //Ball ball;
+    Ball ball;
+    Texture ballImage;
+    Texture flag;
     OrthographicCamera cam;
     Music music;
 
     // Graphing things
+    private int goalSize;
+    private int ballSize;
     private double scale;
     private double xoffset;
     private double yoffset;
@@ -35,8 +41,9 @@ public class CourseScreen implements Screen {
      * Create a new CourseScreen instance
      * @param game the game itself
      * @param course the course instance we want to graph
+     * @param ball the ball to play
      */
-    public CourseScreen(final Golf game, Course course) {
+    public CourseScreen(final Golf game, Course course, Ball ball) {
         this.game = game;
         this.course = course;
 
@@ -51,6 +58,17 @@ public class CourseScreen implements Screen {
 
         // Setup Course
         this.setUpCourse();
+
+        // Setup Ball
+        this.ball = ball;
+        this.ball.setX(this.course.getStart()[0]);
+        this.ball.setY(this.course.getStart()[1]);
+        this.ballSize = 12;
+        this.ballImage = new Texture(Gdx.files.internal("ball_soccer2.png"));
+
+        // Setup Goal
+        this.goalSize = 15;
+        this.flag = new Texture(Gdx.files.internal("golf_flag.png"));
     }
 
     private void setUpCourse() {
@@ -122,6 +140,40 @@ public class CourseScreen implements Screen {
 
         // Render the course
         this.renderTerrain();
+
+        // Render the goal
+        this.renderGoal();
+
+        // Render the ball
+        this.renderBall();
+
+    }
+
+    private void renderGoal() {
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        float realX = (float) ((this.course.getGoal()[0] - xoffset) * 100.0);
+        float realY = (float) ((this.course.getGoal()[1] - yoffset) * 100.0);
+        this.game.shapeRenderer.setColor(0, 0, 0, 1);
+        this.game.shapeRenderer.ellipse(realX - this.goalSize/2, realY - this.goalSize/2,
+                this.goalSize, this.goalSize);
+        this.game.shapeRenderer.end();
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        float tolerance = (float) this.course.getTolerance() * 100;
+        this.game.shapeRenderer.setColor(1, 0, 0, 1);
+        this.game.shapeRenderer.ellipse(realX - tolerance/2, realY - tolerance/2, tolerance, tolerance);
+        this.game.shapeRenderer.end();
+        this.game.batch.begin();
+        this.game.batch.draw(this.flag, realX - 3, realY, 50, 60);
+        this.game.batch.end();
+    }
+
+    private void renderBall() {
+        float realX = (float) ((this.ball.getX() - xoffset) * 100.0);
+        float realY = (float) ((this.ball.getY() - yoffset) * 100.0);
+        this.game.batch.begin();
+        this.game.batch.draw(this.ballImage, realX - this.ballSize/2, realY - this.ballSize/2,
+                this.ballSize, this.ballSize);
+        this.game.batch.end();
     }
 
     private void renderTerrain() {
