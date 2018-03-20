@@ -105,9 +105,15 @@ public class CourseScreen implements Screen {
         this.colors = new Color[Golf.VIRTUAL_WIDTH][Golf.VIRTUAL_HEIGHT];
         for (int x = 0; x < this.colors.length; x++) {
             for (int y = 0; y < this.colors[x].length; y++) {
-                // Higher, darker
-                float green = max - min - (float) MathLib.map(this.heights[x][y], this.minimum, this.maximum, min, max);
-                this.colors[x][y] = new Color(0, green, 0, 1);
+                if (this.heights[x][y] <= 0) {
+                    this.colors[x][y] = new Color(0, 0, 1, 1);
+                }
+                else {
+                    // Higher, darker
+                    float green = max - min - (float) MathLib.map(this.heights[x][y], this.minimum,
+                            this.maximum, min, max);
+                    this.colors[x][y] = new Color(0, green, 0, 1);
+                }
             }
         }
     }

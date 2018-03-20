@@ -64,7 +64,7 @@ public class CourseSelectorScreen implements Screen {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                double[] start = new double[]{0, 0};
+                double[] start = new double[]{0, 1};
                 double[] goal = new double[]{4, 3};
                 Function function = new Function(formula);
                 Course course = new Course(function, 9.81, 0.5, 3, start, goal, 0.5);
