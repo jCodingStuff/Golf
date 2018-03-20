@@ -74,7 +74,9 @@ public class CourseScreen implements Screen {
     private void setUpCourse() {
         // Set up the scale, each pixel of the screen represents this.scale units
         double dist = this.course.getDistance();
-        if (dist <= 6) this.scale = 0.01;
+        if (dist <= 1.5) this.scale = 0.0025;
+        else if (dist <= 3) this.scale = 0.005;
+        else if (dist <= 6) this.scale = 0.01;
         else if (dist <= 12) this.scale = 0.02;
         else this.scale = 0.03;
 
