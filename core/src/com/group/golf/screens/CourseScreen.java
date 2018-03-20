@@ -6,7 +6,9 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.math.MathLib;
@@ -18,7 +20,8 @@ public class CourseScreen implements Screen {
 
     final Golf game;
     Course course;
-    //Ball ball;
+    Ball ball;
+    Texture ballImage;
     OrthographicCamera cam;
     Music music;
 
@@ -35,8 +38,9 @@ public class CourseScreen implements Screen {
      * Create a new CourseScreen instance
      * @param game the game itself
      * @param course the course instance we want to graph
+     * @param ball the ball to play
      */
-    public CourseScreen(final Golf game, Course course) {
+    public CourseScreen(final Golf game, Course course, Ball ball) {
         this.game = game;
         this.course = course;
 
@@ -51,6 +55,12 @@ public class CourseScreen implements Screen {
 
         // Setup Course
         this.setUpCourse();
+
+        // Setup Ball
+        this.ball = ball;
+        this.ball.setX(this.course.getStart()[0]);
+        this.ball.setY(this.course.getStart()[1]);
+        this.ballImage = new Texture(Gdx.files.internal("ball_soccer2.png"));
     }
 
     private void setUpCourse() {
@@ -120,19 +130,31 @@ public class CourseScreen implements Screen {
         this.game.batch.setProjectionMatrix(this.cam.combined);
         this.game.shapeRenderer.setProjectionMatrix(this.cam.combined);
 
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        this.game.batch.begin();
+
         // Render the course
         this.renderTerrain();
+
+        // Render the ball
+        float realX = (float) (this.ball.getX() - 8 - xoffset);
+        float realY = (float) (this.ball.getY() - 8 - yoffset);
+        this.game.batch.draw(this.ballImage, realX, realY, 8, 8);
+        this.game.shapeRenderer.setColor(1, 1, 1, 1);
+        this.game.shapeRenderer.rect(realX, realY, 20, 20);
+        System.out.println("Ball drawn");
+
+        this.game.batch.end();
+        this.game.shapeRenderer.end();
     }
 
     private void renderTerrain() {
-        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (int x = 0; x < this.colors.length; x++) {
             for (int y = 0; y < this.colors[x].length; y++) {
                 this.game.shapeRenderer.setColor(this.colors[x][y]);
                 this.game.shapeRenderer.rect(x, y, 1, 1); // Draw 1 pixel squares
             }
         }
-        this.game.shapeRenderer.end();
     }
 
     @Override

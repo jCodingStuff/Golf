@@ -19,6 +19,16 @@ public class Ball {
     }
 
     /**
+     * Create a default ball with position at [0, 0]
+     * @param mass the mass of the ball
+     */
+    public Ball(double mass) {
+        this.mass = mass;
+        this.x = 0;
+        this.y = 0;
+    }
+
+    /**
      * Get access to the mass
      * @return the mass
      */
