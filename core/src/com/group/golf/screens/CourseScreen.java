@@ -6,10 +6,10 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.math.MathLib;
-import jdk.nashorn.internal.objects.Global;
 
 public class CourseScreen implements Screen {
 
@@ -19,13 +19,13 @@ public class CourseScreen implements Screen {
     Music music;
 
     // Graphing things
-    float scale;
-    float xoffset;
-    float yoffset;
-    double[][] heights;
-    double maximum;
-    double minimum;
-    Color[][] colors;
+    private double scale;
+    private double xoffset;
+    private double yoffset;
+    private double[][] heights;
+    private double maximum;
+    private double minimum;
+    private Color[][] colors;
 
     public CourseScreen(final Golf game, Course course) {
         this.game = game;
@@ -36,7 +36,7 @@ public class CourseScreen implements Screen {
         this.cam.setToOrtho(false, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
 
         // Setup Music
-        this.music = Gdx.audio.newMusic(Gdx.files.internal("mario64_ost"));
+        this.music = Gdx.audio.newMusic(Gdx.files.internal("mario64_ost.mp3"));
         this.music.setVolume(0.5f);
         this.music.setLooping(true);
 
@@ -46,17 +46,17 @@ public class CourseScreen implements Screen {
 
     private void setUpCourse() {
         // Set up the scale, each pixel of the screen represents 0.01 units
-        this.scale = 0.01f;
+        this.scale = 0.01;
 
         // The center of the screen is the middle point between the start and the goal
-        float x1 = this.course.getStart()[0];
-        float x2 = this.course.getGoal()[0];
-        float xUnits = (float) (Golf.VIRTUAL_WIDTH / 100.0);
-        this.xoffset = (float) ((x1 + x2 - xUnits) / 2.0);
-        float y1 = this.course.getStart()[1];
-        float y2 = this.course.getGoal()[1];
-        float yUnits = (float) (Golf.VIRTUAL_HEIGHT / 100.0);
-        this.yoffset = (float) ((y1 + y2 - yUnits) / 2.0);
+        double x1 = this.course.getStart()[0];
+        double x2 = this.course.getGoal()[0];
+        double xUnits = Golf.VIRTUAL_WIDTH / 100.0;
+        this.xoffset = (x1 + x2 - xUnits) / 2.0;
+        double y1 = this.course.getStart()[1];
+        double y2 = this.course.getGoal()[1];
+        double yUnits = Golf.VIRTUAL_HEIGHT / 100.0;
+        this.yoffset = (y1 + y2 - yUnits) / 2.0;
 
         // Setup the heights matrix
         this.heights = new double[Golf.VIRTUAL_WIDTH][Golf.VIRTUAL_HEIGHT];
@@ -91,8 +91,20 @@ public class CourseScreen implements Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Cam and projection matrices
         this.cam.update();
         this.game.batch.setProjectionMatrix(this.cam.combined);
+        this.game.shapeRenderer.setProjectionMatrix(this.cam.combined);
+
+        // Render the course
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        for (int x = 0; x < this.colors.length; x++) {
+            for (int y = 0; y < this.colors.length; y++) {
+                this.game.shapeRenderer.setColor(this.colors[x][y]);
+                this.game.shapeRenderer.rect(x, y, 1, 1); // Draw 1 pixel square
+            }
+        }
+        this.game.shapeRenderer.end();
     }
 
     @Override
