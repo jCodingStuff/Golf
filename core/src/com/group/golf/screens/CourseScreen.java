@@ -67,7 +67,7 @@ public class CourseScreen implements Screen {
         this.ballImage = new Texture(Gdx.files.internal("ball_soccer2.png"));
 
         // Setup Goal
-        this.goalSize = 15;
+        this.goalSize = 17;
         this.flag = new Texture(Gdx.files.internal("golf_flag.png"));
     }
 
@@ -169,7 +169,7 @@ public class CourseScreen implements Screen {
         this.game.shapeRenderer.ellipse(realX - tolerance/2, realY - tolerance/2, tolerance, tolerance);
         this.game.shapeRenderer.end();
         this.game.batch.begin();
-        this.game.batch.draw(this.flag, realX - 3, realY, 50, 60);
+        this.game.batch.draw(this.flag, realX - 3, realY, 52, 62);
         this.game.batch.end();
     }
 
