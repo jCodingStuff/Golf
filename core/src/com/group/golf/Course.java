@@ -1,6 +1,7 @@
 package com.group.golf;
 
 import com.group.golf.math.Function;
+import sun.nio.cs.ext.MacHebrew;
 
 /**
  * This class represents a course for the Golf Game
@@ -145,6 +146,15 @@ public class Course {
      */
     public void setFunction(Function function) {
         this.function = function;
+    }
+
+    /**
+     * Get the distance between the start and goal
+     * @return the euclidean disctance between start and goal
+     */
+    public double getDistance() {
+        double dist = Math.sqrt(Math.pow(this.goal[0] - this.start[0], 2) + Math.pow(this.goal[1] - this.start[0], 2));
+        return Math.abs(dist);
     }
 
     @Override
