@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.group.golf.Course;
 import com.group.golf.Golf;
+import com.group.golf.math.MathLib;
 import jdk.nashorn.internal.objects.Global;
 
 public class CourseScreen implements Screen {
@@ -67,6 +68,15 @@ public class CourseScreen implements Screen {
                 if (value > this.maximum) this.maximum = value;
                 else if (value < this.minimum) this.minimum = value;
                 this.heights[x][y] = value;
+            }
+        }
+
+        // Setup the color matrix
+        this.colors = new Color[Golf.VIRTUAL_WIDTH][Golf.VIRTUAL_HEIGHT];
+        for (int x = 0; x < this.colors.length; x++) {
+            for (int y = 0; y < this.colors[x].length; y++) {
+                float green = (float) MathLib.map(this.heights[x][y], this.minimum, this.maximum, 0.2745, 1);
+                this.colors[x][y] = new Color(0, 0, green, 1);
             }
         }
     }
