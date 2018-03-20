@@ -63,7 +63,7 @@ public class CourseScreen implements Screen {
         this.ball = ball;
         this.ball.setX(this.course.getStart()[0]);
         this.ball.setY(this.course.getStart()[1]);
-        this.ballSize = 12;
+        this.ballSize = 20;
         this.ballImage = new Texture(Gdx.files.internal("ball_soccer2.png"));
 
         // Setup Goal
