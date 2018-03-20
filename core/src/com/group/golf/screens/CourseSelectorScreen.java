@@ -5,6 +5,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.math.Function;
@@ -12,12 +15,32 @@ import com.group.golf.math.Function;
 public class CourseSelectorScreen implements Screen {
 
     final Golf game;
+    Stage stage;
 
+    TextButton play;
+    TextButton importbtn;
+    TextButton design;
     Music menuMusic;
     OrthographicCamera cam;
 
     public CourseSelectorScreen(final Golf game) {
         this.game = game;
+        stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
+        Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+        play = new TextButton("play", skin);
+        importbtn = new TextButton("import", skin);
+        design = new TextButton("design", skin);
+        play.setPosition(300, 400);
+        importbtn.setPosition(300, 300);
+        design.setPosition(300, 200);
+        play.setSize(200, 60);
+        importbtn.setSize(200, 60);
+        design.setSize(200, 60);
+
+        stage.addActor(play);
+        stage.addActor(importbtn);
+        stage.addActor(design);
 
         // Setup cam
         this.cam = new OrthographicCamera();
@@ -43,8 +66,11 @@ public class CourseSelectorScreen implements Screen {
         this.game.batch.setProjectionMatrix(this.cam.combined);
 
         this.game.batch.begin();
-        this.game.font.draw(this.game.batch, "MAIN MENU", 400, 300);
+        //this.game.font.draw(this.game.batch, "MAIN MENU", 400, 300);
         this.game.batch.end();
+
+        stage.act(delta);
+        stage.draw();
 
         if (Gdx.input.isTouched()) { // Launch default course
             String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
