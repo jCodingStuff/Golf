@@ -103,8 +103,8 @@ public class CourseScreen implements Screen {
     }
 
     private void calcColorsMatrix() {
-        float min = 0.3f;
-        float max = 1f;
+        float min = 0.1f;
+        float max = 0.9f;
         this.colors = new Color[Golf.VIRTUAL_WIDTH][Golf.VIRTUAL_HEIGHT];
         for (int x = 0; x < this.colors.length; x++) {
             for (int y = 0; y < this.colors[x].length; y++) {
@@ -113,7 +113,7 @@ public class CourseScreen implements Screen {
                 }
                 else {
                     // Higher, darker
-                    float green = max - min - (float) MathLib.map(this.heights[x][y], this.minimum,
+                    float green = max + min - (float) MathLib.map(this.heights[x][y], this.minimum,
                             this.maximum, min, max);
                     this.colors[x][y] = new Color(0, green, 0, 1);
                 }
