@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -25,6 +26,7 @@ public class CourseSelectorScreen implements Screen {
     TextButton design;
     Music menuMusic;
     OrthographicCamera cam;
+    Texture background;
 
     public CourseSelectorScreen(final Golf game) {
         this.game = game;
@@ -53,6 +55,9 @@ public class CourseSelectorScreen implements Screen {
         this.menuMusic = Gdx.audio.newMusic(Gdx.files.internal("mariokart8_mainmenu.mp3"));
         this.menuMusic.setVolume(0.2f);
         this.menuMusic.setLooping(true);
+
+        // Setup background image
+        this.background = new Texture(Gdx.files.internal("minigolf_background.jpg"));
 
         class PlayListener extends ChangeListener{
             final Golf game;
@@ -90,6 +95,10 @@ public class CourseSelectorScreen implements Screen {
         this.cam.update();
         this.game.batch.setProjectionMatrix(this.cam.combined);
 
+        this.game.batch.begin();
+        this.game.batch.draw(this.background, 0, 0, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
+        this.game.batch.end();
+
         stage.act(delta);
         stage.draw();
     }
@@ -118,5 +127,6 @@ public class CourseSelectorScreen implements Screen {
     @Override
     public void dispose() {
         this.menuMusic.dispose();
+        this.background.dispose();
     }
 }
