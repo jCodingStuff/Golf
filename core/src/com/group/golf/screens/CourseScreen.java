@@ -22,6 +22,7 @@ public class CourseScreen implements Screen {
     Course course;
     Ball ball;
     Texture ballImage;
+    Texture flag;
     OrthographicCamera cam;
     Music music;
 
@@ -66,7 +67,8 @@ public class CourseScreen implements Screen {
         this.ballImage = new Texture(Gdx.files.internal("ball_soccer2.png"));
 
         // Setup Goal
-        this.goalSize = 12;
+        this.goalSize = 15;
+        this.flag = new Texture(Gdx.files.internal("golf_flag.png"));
     }
 
     private void setUpCourse() {
@@ -136,45 +138,53 @@ public class CourseScreen implements Screen {
         this.game.batch.setProjectionMatrix(this.cam.combined);
         this.game.shapeRenderer.setProjectionMatrix(this.cam.combined);
 
-        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        this.game.batch.begin();
-
         // Render the course
         this.renderTerrain();
-
-        // Render the ball
-        this.renderBall();
 
         // Render the goal
         this.renderGoal();
 
-        this.game.shapeRenderer.end();
-        this.game.batch.end();
+        // Render the ball
+        this.renderBall();
+
     }
 
     private void renderGoal() {
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         float realX = (float) ((this.course.getGoal()[0] - xoffset) * 100.0);
         float realY = (float) ((this.course.getGoal()[1] - yoffset) * 100.0);
         this.game.shapeRenderer.setColor(0, 0, 0, 1);
         this.game.shapeRenderer.ellipse(realX - this.goalSize/2, realY - this.goalSize/2,
                 this.goalSize, this.goalSize);
+        this.game.shapeRenderer.end();
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        float tolerance = (float) this.course.getTolerance() * 100;
+        this.game.shapeRenderer.setColor(1, 0, 0, 1);
+        this.game.shapeRenderer.ellipse(realX - tolerance/2, realY - tolerance/2, tolerance, tolerance);
+        this.game.shapeRenderer.end();
+        this.game.batch.begin();
+        this.game.batch.draw(this.flag, realX - 3, realY, 50, 60);
+        this.game.batch.end();
     }
 
     private void renderBall() {
-        float realX = (float) ((this.ball.getX() - xoffset) * 100.0) - this.ballSize/2;
-        float realY = (float) ((this.ball.getY() - yoffset) * 100.0) - this.ballSize/2;
-        //this.game.batch.draw(this.ballImage, realX, realY, this.ballSize, this.ballSize);
-        this.game.shapeRenderer.setColor(1, 1, 1, 1);
-        this.game.shapeRenderer.ellipse(realX, realY, this.ballSize, this.ballSize);
+        float realX = (float) ((this.ball.getX() - xoffset) * 100.0);
+        float realY = (float) ((this.ball.getY() - yoffset) * 100.0);
+        this.game.batch.begin();
+        this.game.batch.draw(this.ballImage, realX - this.ballSize/2, realY - this.ballSize/2,
+                this.ballSize, this.ballSize);
+        this.game.batch.end();
     }
 
     private void renderTerrain() {
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (int x = 0; x < this.colors.length; x++) {
             for (int y = 0; y < this.colors[x].length; y++) {
                 this.game.shapeRenderer.setColor(this.colors[x][y]);
                 this.game.shapeRenderer.rect(x, y, 1, 1); // Draw 1 pixel squares
             }
         }
+        this.game.shapeRenderer.end();
     }
 
     @Override

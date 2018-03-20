@@ -52,7 +52,7 @@ public class CourseSelectorScreen implements Screen {
             double[] start = new double[]{2, 4};
             double[] goal = new double[]{4, 3};
             Function function = new Function(formula);
-            Course course = new Course(function, 9.81, 0.5, 3, start, goal, 0.02);
+            Course course = new Course(function, 9.81, 0.5, 3, start, goal, 0.75);
             this.game.setScreen(new CourseScreen(this.game, course, new Ball(1)));
             this.dispose();
         }
