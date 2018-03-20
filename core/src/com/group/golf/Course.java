@@ -10,8 +10,8 @@ public class Course {
     private double g;
     private double mu;
     private double vmax;
-    private double[] start;
-    private double[] goal;
+    private float[] start;
+    private float[] goal;
     private double tolerance;
     private Function function;
 
@@ -25,14 +25,14 @@ public class Course {
      * @param goal the goal coordinates
      * @param tolerance the radius of the goal
      */
-    public Course(String function, double g, double mu, double vmax, double[] start, double[] goal, double tolerance) {
+    public Course(Function function, double g, double mu, double vmax, float[] start, float[] goal, double tolerance) {
         this.g = g;
         this.mu = mu;
         this.vmax = vmax;
         this.start = start;
         this.goal = goal;
         this.tolerance = tolerance;
-        this.function = new Function(function);
+        this.function = function;
     }
 
     /**
@@ -87,7 +87,7 @@ public class Course {
      * Get access to the start coordinates
      * @return the start coordinates
      */
-    public double[] getStart() {
+    public float[] getStart() {
         return start;
     }
 
@@ -95,7 +95,7 @@ public class Course {
      * Set a new set of start coordinates
      * @param start the new start coordinates
      */
-    public void setStart(double[] start) {
+    public void setStart(float[] start) {
         this.start = start;
     }
 
@@ -103,7 +103,7 @@ public class Course {
      * Get access to the goal coordinates
      * @return the goal coordinates
      */
-    public double[] getGoal() {
+    public float[] getGoal() {
         return goal;
     }
 
@@ -111,7 +111,7 @@ public class Course {
      * Set a new set of goal coordinates
      * @param goal the new goal coordinates
      */
-    public void setGoal(double[] goal) {
+    public void setGoal(float[] goal) {
         this.goal = goal;
     }
 
@@ -143,8 +143,8 @@ public class Course {
      * Set a new function
      * @param function the formula of the function
      */
-    public void setFunction(String function) {
-        this.function = new Function(function);
+    public void setFunction(Function function) {
+        this.function = function;
     }
 
     @Override
@@ -155,7 +155,7 @@ public class Course {
         return message;
     }
 
-    private static String arrToStr(double[] array) {
+    private static String arrToStr(float[] array) {
         String message = "[";
         for (int i = 0; i < array.length; i++) {
             message += array[i];

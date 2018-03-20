@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.group.golf.screens.IntroScreen;
 
 public class Golf extends Game {
@@ -17,11 +18,13 @@ public class Golf extends Game {
 
 	public SpriteBatch batch;
 	public BitmapFont font;
+	public ShapeRenderer shapeRenderer;
 	
 	@Override
 	public void create () {
 		this.batch = new SpriteBatch();
 		this.font = new BitmapFont();
+		this.shapeRenderer = new ShapeRenderer();
 		this.setScreen(new IntroScreen(this));
 	}
 
@@ -34,5 +37,6 @@ public class Golf extends Game {
 	public void dispose () {
 		this.batch.dispose();
 		this.font.dispose();
+		this.shapeRenderer.dispose();
 	}
 }
