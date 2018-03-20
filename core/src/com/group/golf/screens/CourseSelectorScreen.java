@@ -46,7 +46,7 @@ public class CourseSelectorScreen implements Screen {
         this.game.font.draw(this.game.batch, "MAIN MENU", 400, 300);
         this.game.batch.end();
 
-        /*if (Gdx.input.isTouched()) { // Launch default course
+        if (Gdx.input.isTouched()) { // Launch default course
             String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
             double[] start = new double[]{0, 0};
             double[] goal = new double[]{4, 3};
@@ -54,7 +54,7 @@ public class CourseSelectorScreen implements Screen {
             Course course = new Course(function, 9.81, 0.5, 3, start, goal, 0.02);
             this.game.setScreen(new CourseScreen(this.game, course));
             this.dispose();
-        }*/
+        }
     }
 
     @Override

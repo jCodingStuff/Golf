@@ -84,8 +84,8 @@ public class CourseScreen implements Screen {
         this.colors = new Color[Golf.VIRTUAL_WIDTH][Golf.VIRTUAL_HEIGHT];
         for (int x = 0; x < this.colors.length; x++) {
             for (int y = 0; y < this.colors[x].length; y++) {
-                float green = (float) MathLib.map(this.heights[x][y], this.minimum, this.maximum, 0.2745, 1);
-                this.colors[x][y] = new Color(0, 0, green, 1);
+                float green = (float) MathLib.map(this.heights[x][y], this.minimum, this.maximum, 0.3, 1);
+                this.colors[x][y] = new Color(0, green, 0, 1);
             }
         }
     }
@@ -123,7 +123,7 @@ public class CourseScreen implements Screen {
     private void renderTerrain() {
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (int x = 0; x < this.colors.length; x++) {
-            for (int y = 0; y < this.colors.length; y++) {
+            for (int y = 0; y < this.colors[x].length; y++) {
                 this.game.shapeRenderer.setColor(this.colors[x][y]);
                 this.game.shapeRenderer.rect(x, y, 1, 1); // Draw 1 pixel squares
             }
