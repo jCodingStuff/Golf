@@ -11,6 +11,9 @@ import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.math.MathLib;
 
+/**
+ * A class to draw the course
+ */
 public class CourseScreen implements Screen {
 
     final Golf game;
@@ -27,6 +30,11 @@ public class CourseScreen implements Screen {
     private double minimum;
     private Color[][] colors;
 
+    /**
+     * Create a new CourseScreen instance
+     * @param game the game itself
+     * @param course the course instance we want to graph
+     */
     public CourseScreen(final Golf game, Course course) {
         this.game = game;
         this.course = course;
