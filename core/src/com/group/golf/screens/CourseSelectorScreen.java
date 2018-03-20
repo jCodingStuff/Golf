@@ -5,9 +5,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.math.Function;
@@ -50,6 +53,28 @@ public class CourseSelectorScreen implements Screen {
         this.menuMusic = Gdx.audio.newMusic(Gdx.files.internal("mariokart8_mainmenu.mp3"));
         this.menuMusic.setVolume(0.2f);
         this.menuMusic.setLooping(true);
+
+        class PlayListener extends ChangeListener{
+            final Golf game;
+            private Screen screen;
+            public PlayListener(final Golf game, Screen screen){
+                this.game = game;
+                this.screen = screen;
+            }
+            @Override
+            public void changed (ChangeEvent event, Actor actor) {
+                String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
+                double[] start = new double[]{0, 0};
+                double[] goal = new double[]{4, 3};
+                Function function = new Function(formula);
+                Course course = new Course(function, 9.81, 0.5, 3, start, goal, 0.02);
+                this.game.setScreen(new CourseScreen(this.game, course));
+                this.screen.dispose();
+            }
+
+        }
+
+        play.addListener(new PlayListener(game, this));
     }
 
     @Override
@@ -71,17 +96,8 @@ public class CourseSelectorScreen implements Screen {
 
         stage.act(delta);
         stage.draw();
-
-        if (Gdx.input.isTouched()) { // Launch default course
-            String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-            double[] start = new double[]{0, 0};
-            double[] goal = new double[]{4, 3};
-            Function function = new Function(formula);
-            Course course = new Course(function, 9.81, 0.5, 3, start, goal, 0.02);
-            this.game.setScreen(new CourseScreen(this.game, course));
-            this.dispose();
-        }
     }
+
 
     @Override
     public void resize(int width, int height) {
