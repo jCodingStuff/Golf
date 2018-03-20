@@ -1,6 +1,7 @@
 package com.group.golf.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
@@ -79,7 +80,7 @@ public class IntroScreen implements Screen {
         this.subTitleFont.draw(this.game.batch, "Click anywhere to continue", 230, 100);
         this.game.batch.end();
 
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.isTouched() || Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
             this.game.setScreen(new CourseSelectorScreen(this.game));
             this.dispose();
         }

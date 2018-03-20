@@ -37,7 +37,7 @@ public class CourseScreen implements Screen {
 
         // Setup Music
         this.music = Gdx.audio.newMusic(Gdx.files.internal("mario64_ost.mp3"));
-        this.music.setVolume(0.5f);
+        this.music.setVolume(0.2f);
         this.music.setLooping(true);
 
         // Setup Course
@@ -49,16 +49,16 @@ public class CourseScreen implements Screen {
         this.scale = 0.01;
 
         // The center of the screen is the middle point between the start and the goal
-        double x1 = this.course.getStart()[0];
-        double x2 = this.course.getGoal()[0];
-        double xUnits = Golf.VIRTUAL_WIDTH / 100.0;
-        this.xoffset = (x1 + x2 - xUnits) / 2.0;
-        double y1 = this.course.getStart()[1];
-        double y2 = this.course.getGoal()[1];
-        double yUnits = Golf.VIRTUAL_HEIGHT / 100.0;
-        this.yoffset = (y1 + y2 - yUnits) / 2.0;
+        this.calcOffsets();
 
         // Setup the heights matrix
+        this.calcHeightsMatrix();
+
+        // Setup the colors matrix
+        this.calcColorsMatrix();
+    }
+
+    private void calcHeightsMatrix() {
         this.heights = new double[Golf.VIRTUAL_WIDTH][Golf.VIRTUAL_HEIGHT];
         this.maximum = Double.MIN_VALUE;
         this.minimum = Double.MAX_VALUE;
@@ -70,8 +70,9 @@ public class CourseScreen implements Screen {
                 this.heights[x][y] = value;
             }
         }
+    }
 
-        // Setup the color matrix
+    private void calcColorsMatrix() {
         this.colors = new Color[Golf.VIRTUAL_WIDTH][Golf.VIRTUAL_HEIGHT];
         for (int x = 0; x < this.colors.length; x++) {
             for (int y = 0; y < this.colors[x].length; y++) {
@@ -79,6 +80,17 @@ public class CourseScreen implements Screen {
                 this.colors[x][y] = new Color(0, 0, green, 1);
             }
         }
+    }
+
+    private void calcOffsets() {
+        double x1 = this.course.getStart()[0];
+        double x2 = this.course.getGoal()[0];
+        double xUnits = Golf.VIRTUAL_WIDTH / 100.0;
+        this.xoffset = (x1 + x2 - xUnits) / 2.0;
+        double y1 = this.course.getStart()[1];
+        double y2 = this.course.getGoal()[1];
+        double yUnits = Golf.VIRTUAL_HEIGHT / 100.0;
+        this.yoffset = (y1 + y2 - yUnits) / 2.0;
     }
 
     @Override
@@ -97,11 +109,15 @@ public class CourseScreen implements Screen {
         this.game.shapeRenderer.setProjectionMatrix(this.cam.combined);
 
         // Render the course
+        this.renderTerrain();
+    }
+
+    private void renderTerrain() {
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (int x = 0; x < this.colors.length; x++) {
             for (int y = 0; y < this.colors.length; y++) {
                 this.game.shapeRenderer.setColor(this.colors[x][y]);
-                this.game.shapeRenderer.rect(x, y, 1, 1); // Draw 1 pixel square
+                this.game.shapeRenderer.rect(x, y, 1, 1); // Draw 1 pixel squares
             }
         }
         this.game.shapeRenderer.end();
