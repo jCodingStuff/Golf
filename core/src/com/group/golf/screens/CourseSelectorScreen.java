@@ -80,6 +80,24 @@ public class CourseSelectorScreen implements Screen {
         }
 
         play.addListener(new PlayListener(game, this));
+
+
+        class DesignListener extends ChangeListener{
+            final Golf game;
+            private Screen screen;
+            public DesignListener(final Golf game, Screen screen){
+                this.game = game;
+                this.screen = screen;
+            }
+            @Override
+            public void changed (ChangeEvent event, Actor actor) {
+
+                this.game.setScreen(new DesignScreen(this.game));
+                this.screen.dispose();
+            }
+
+        }
+        design.addListener(new DesignListener(game, this));
     }
 
     @Override
