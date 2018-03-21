@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -73,27 +74,54 @@ public class CourseSelectorScreen implements Screen {
                 double[] goal = new double[]{4, 3};
                 Function function = new Function(formula);
                 Course course = new Course(function, 9.81, 0.5, 3, start, goal, 0.5);
+                design.setTouchable(Touchable.disabled);
                 this.game.setScreen(new CourseScreen(this.game, course, new Ball(1)));
+
                 this.screen.dispose();
             }
 
         }
         play.addListener(new PlayListener(game, this));
 
+<<<<<<< HEAD
         class ImportListener extends ChangeListener {
             final Golf game;
             private Screen screen;
             public ImportListener(final Golf game, Screen screen) {
+=======
+
+        class DesignListener extends ChangeListener{
+            final Golf game;
+            private Screen screen;
+            public DesignListener(final Golf game, Screen screen){
+>>>>>>> 98050f2a4bb3dcd9a9b6d40ec11e21959170628f
                 this.game = game;
                 this.screen = screen;
             }
             @Override
+<<<<<<< HEAD
             public void changed(ChangeEvent event, Actor actor) {
                 this.game.setScreen(new ImportScreen(this.game));
                 this.screen.dispose();
             }
         }
         importbtn.addListener(new ImportListener(this.game, this));
+=======
+            public void changed (ChangeEvent event, Actor actor) {
+
+                this.game.setScreen(new DesignScreen(this.game));
+
+                this.screen.dispose();
+
+
+            }
+
+        }
+        design.addListener(new DesignListener(game, this));
+
+
+
+>>>>>>> 98050f2a4bb3dcd9a9b6d40ec11e21959170628f
     }
 
     @Override
