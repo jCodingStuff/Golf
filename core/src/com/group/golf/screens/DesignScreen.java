@@ -21,7 +21,7 @@ import com.group.golf.Golf;
 
 
 class DesignScreen implements Screen {
-    final Golf game;
+    Golf game;
 
     Stage stage;
     OrthographicCamera cam;
@@ -41,7 +41,7 @@ class DesignScreen implements Screen {
     TextButton btnBack;
     ButtonGroup mode;
     Texture background;
-    public DesignScreen(final Golf game){
+    public DesignScreen(Golf game){
         this.game = game;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);

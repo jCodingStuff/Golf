@@ -1,6 +1,7 @@
 package com.group.golf.listeners;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -13,10 +14,11 @@ import com.group.golf.screens.CourseScreen;
 
 public class ImportListener extends ChangeListener {
 
-    final Golf game;
+    Golf game;
     private TextField txtField;
+    Screen screen;
 
-    public ImportListener(final Golf game, TextField txtField) {
+    public ImportListener(Golf game, TextField txtField, Screen screen) {
         this.game = game;
         this.txtField = txtField;
     }
@@ -30,6 +32,9 @@ public class ImportListener extends ChangeListener {
             FileHandle file = Gdx.files.local(path);
             String text = file.readString();
             CourseScreen newCourse = json.fromJson(CourseScreen.class, text);
+            newCourse.setGame(this.game);
+            this.game.setScreen(newCourse);
+            this.screen.dispose();
         }
     }
 }

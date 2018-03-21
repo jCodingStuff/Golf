@@ -19,7 +19,7 @@ import com.group.golf.math.Function;
 
 public class CourseSelectorScreen implements Screen {
 
-    final Golf game;
+    Golf game;
     Stage stage;
 
     TextButton play;
@@ -29,7 +29,7 @@ public class CourseSelectorScreen implements Screen {
     OrthographicCamera cam;
     Texture background;
 
-    public CourseSelectorScreen(final Golf game) {
+    public CourseSelectorScreen(Golf game) {
         this.game = game;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
