@@ -26,6 +26,7 @@ class ImportScreen implements Screen {
     TextButton back;
     Label label;
     OrthographicCamera cam;
+    TextButton importButton;
 
 
     public ImportScreen(final Golf game){
@@ -45,6 +46,10 @@ class ImportScreen implements Screen {
 
         stage.addActor(txtf);
         stage.addActor(back);
+
+        this.importButton = new TextButton("Import", skin);
+        this.importButton.setPosition(270, 200);
+        stage.addActor(this.importButton);
 
         this.label = new Label("Course Name", skin);
         this.label.setPosition(200, 500);
