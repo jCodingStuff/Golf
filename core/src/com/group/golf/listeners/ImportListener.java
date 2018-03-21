@@ -21,6 +21,7 @@ public class ImportListener extends ChangeListener {
     public ImportListener(Golf game, TextField txtField, Screen screen) {
         this.game = game;
         this.txtField = txtField;
+        this.screen = screen;
     }
 
     @Override
