@@ -78,8 +78,22 @@ public class CourseSelectorScreen implements Screen {
             }
 
         }
-
         play.addListener(new PlayListener(game, this));
+
+        class ImportListener extends ChangeListener {
+            final Golf game;
+            private Screen screen;
+            public ImportListener(final Golf game, Screen screen) {
+                this.game = game;
+                this.screen = screen;
+            }
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                this.game.setScreen(new ImportScreen(this.game));
+                this.screen.dispose();
+            }
+        }
+        importbtn.addListener(new ImportListener(this.game, this));
     }
 
     @Override
