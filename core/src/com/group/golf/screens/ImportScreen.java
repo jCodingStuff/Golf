@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.group.golf.Golf;
 import com.group.golf.listeners.ImportBackListener;
+import com.group.golf.listeners.ImportListener;
 
 
 /**
@@ -21,7 +22,7 @@ import com.group.golf.listeners.ImportBackListener;
 class ImportScreen implements Screen {
     private Stage stage;
     TextField txtf;
-    final Golf game;
+    Golf game;
     Music music;
     TextButton back;
     Label label;
@@ -29,7 +30,7 @@ class ImportScreen implements Screen {
     TextButton importButton;
 
 
-    public ImportScreen(final Golf game){
+    public ImportScreen(Golf game){
         this.game = game;
         this.stage = new Stage();
 
@@ -49,6 +50,7 @@ class ImportScreen implements Screen {
 
         this.importButton = new TextButton("Import", skin);
         this.importButton.setPosition(270, 200);
+        this.importButton.addListener(new ImportListener(this.game, this.txtf, this));
         stage.addActor(this.importButton);
 
         this.label = new Label("Course Name", skin);

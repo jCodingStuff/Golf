@@ -14,7 +14,7 @@ import com.group.golf.Golf;
 
 public class IntroScreen implements Screen {
 
-    final Golf game;
+    Golf game;
 
     OrthographicCamera cam;
     Music introMusic;
@@ -27,7 +27,7 @@ public class IntroScreen implements Screen {
     BitmapFont titleFont;
     BitmapFont subTitleFont;
 
-    public IntroScreen(final Golf game) {
+    public IntroScreen(Golf game) {
         this.game = game;
 
         // Setup cam

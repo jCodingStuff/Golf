@@ -9,10 +9,10 @@ import com.group.golf.screens.CourseSelectorScreen;
 
 public class ImportBackListener extends ChangeListener {
 
-    final Golf game;
+    Golf game;
     private Screen screen;
 
-    public ImportBackListener(final Golf game, Screen screen) {
+    public ImportBackListener(Golf game, Screen screen) {
         this.game = game;
         this.screen = screen;
     }
