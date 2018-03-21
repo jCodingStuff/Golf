@@ -96,7 +96,8 @@ public class CourseScreen implements Screen {
         this.minimum = Double.MAX_VALUE;
         for (int x = 0; x < this.heights.length; x++) {
             for (int y = 0; y < this.heights[x].length; y++) {
-                double value = this.course.getFunction().getZ(xoffset + x*this.scale, yoffset + y*this.scale);
+                double value = this.course.getFunction().getZ(this.xoffset + x*this.scale,
+                        this.yoffset + y*this.scale);
                 if (value > this.maximum) this.maximum = value;
                 else if (value < this.minimum) this.minimum = value;
                 this.heights[x][y] = value;
@@ -105,18 +106,23 @@ public class CourseScreen implements Screen {
     }
 
     private void calcColorsMatrix() {
-        float min = 0.1f;
-        float max = 0.9f;
+        float minTerrain = 0.1f;
+        float maxTerrain = 0.9f;
+        float minWater = 0.2f;
+        float maxWater = 1f;
         this.colors = new Color[Golf.VIRTUAL_WIDTH][Golf.VIRTUAL_HEIGHT];
         for (int x = 0; x < this.colors.length; x++) {
             for (int y = 0; y < this.colors[x].length; y++) {
-                if (this.heights[x][y] <= 0) { // Water
-                    this.colors[x][y] = new Color(0, 0, 1, 1);
+                if (this.heights[x][y] < 0) { // Water
+                    // More negative, darker
+                    float blue = maxWater + minWater - (float) MathLib.map(Math.abs(this.heights[x][y]), 0,
+                            Math.abs(this.minimum), minWater, maxWater);
+                    this.colors[x][y] = new Color(0, 0, blue, 1);
                 }
-                else {
+                else { // Grass
                     // Higher, darker
-                    float green = max + min - (float) MathLib.map(this.heights[x][y], this.minimum,
-                            this.maximum, min, max);
+                    float green = maxTerrain + minTerrain - (float) MathLib.map(this.heights[x][y], 0,
+                            this.maximum, minTerrain, maxTerrain);
                     this.colors[x][y] = new Color(0, green, 0, 1);
                 }
             }
@@ -162,8 +168,8 @@ public class CourseScreen implements Screen {
 
     private void renderGoal() {
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        float realX = (float) ((this.course.getGoal()[0] - xoffset) * (1/this.scale));
-        float realY = (float) ((this.course.getGoal()[1] - yoffset) * (1/this.scale));
+        float realX = (float) ((this.course.getGoal()[0] - this.xoffset) * (1/this.scale));
+        float realY = (float) ((this.course.getGoal()[1] - this.yoffset) * (1/this.scale));
         this.game.shapeRenderer.setColor(0, 0, 0, 1);
         this.game.shapeRenderer.ellipse(realX - this.goalSize/2, realY - this.goalSize/2,
                 this.goalSize, this.goalSize);
@@ -179,8 +185,8 @@ public class CourseScreen implements Screen {
     }
 
     private void renderBall() {
-        float realX = (float) ((this.ball.getX() - xoffset) * (1/this.scale));
-        float realY = (float) ((this.ball.getY() - yoffset) * (1/this.scale));
+        float realX = (float) ((this.ball.getX() - this.xoffset) * (1/this.scale));
+        float realY = (float) ((this.ball.getY() - this.yoffset) * (1/this.scale));
         this.game.batch.begin();
         this.game.batch.draw(this.ballImage, realX - this.ballSize/2, realY - this.ballSize/2,
                 this.ballSize, this.ballSize);
