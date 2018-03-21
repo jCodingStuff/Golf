@@ -230,4 +230,128 @@ public class CourseScreen implements Screen {
         this.ballImage.dispose();
         this.flag.dispose();
     }
+
+    public Golf getGame() {
+        return game;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    public Ball getBall() {
+        return ball;
+    }
+
+    public void setBall(Ball ball) {
+        this.ball = ball;
+    }
+
+    public Texture getBallImage() {
+        return ballImage;
+    }
+
+    public void setBallImage(Texture ballImage) {
+        this.ballImage = ballImage;
+    }
+
+    public Texture getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Texture flag) {
+        this.flag = flag;
+    }
+
+    public OrthographicCamera getCam() {
+        return cam;
+    }
+
+    public void setCam(OrthographicCamera cam) {
+        this.cam = cam;
+    }
+
+    public Music getMusic() {
+        return music;
+    }
+
+    public void setMusic(Music music) {
+        this.music = music;
+    }
+
+    public int getGoalSize() {
+        return goalSize;
+    }
+
+    public void setGoalSize(int goalSize) {
+        this.goalSize = goalSize;
+    }
+
+    public int getBallSize() {
+        return ballSize;
+    }
+
+    public void setBallSize(int ballSize) {
+        this.ballSize = ballSize;
+    }
+
+    public double getScale() {
+        return scale;
+    }
+
+    public void setScale(double scale) {
+        this.scale = scale;
+    }
+
+    public double getXoffset() {
+        return xoffset;
+    }
+
+    public void setXoffset(double xoffset) {
+        this.xoffset = xoffset;
+    }
+
+    public double getYoffset() {
+        return yoffset;
+    }
+
+    public void setYoffset(double yoffset) {
+        this.yoffset = yoffset;
+    }
+
+    public double[][] getHeights() {
+        return heights;
+    }
+
+    public void setHeights(double[][] heights) {
+        this.heights = heights;
+    }
+
+    public double getMaximum() {
+        return maximum;
+    }
+
+    public void setMaximum(double maximum) {
+        this.maximum = maximum;
+    }
+
+    public double getMinimum() {
+        return minimum;
+    }
+
+    public void setMinimum(double minimum) {
+        this.minimum = minimum;
+    }
+
+    public Color[][] getColors() {
+        return colors;
+    }
+
+    public void setColors(Color[][] colors) {
+        this.colors = colors;
+    }
 }
