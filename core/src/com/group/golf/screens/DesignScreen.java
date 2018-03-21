@@ -157,6 +157,23 @@ class DesignScreen implements Screen {
 
         }
         btnBack.addListener(new BackListener(game, this));
+
+        /*class FrictionListener extends FocusListener {
+            final Golf game;
+            private Screen screen;
+            public BackListener(final Golf game, Screen screen){
+                this.game = game;
+                this.screen = screen;
+            }
+            @Override
+            public void changed (FocusEvent event, Actor actor) {
+
+                this.game.setScreen(new CourseSelectorScreen(this.game));
+                this.screen.dispose();
+            }
+
+        }
+        btnBack.addListener(new BackListener(game, this));*/
     }
     @Override
     public void show() {
