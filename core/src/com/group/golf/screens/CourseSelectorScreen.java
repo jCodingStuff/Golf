@@ -98,6 +98,8 @@ public class CourseSelectorScreen implements Screen {
 
         }
         design.addListener(new DesignListener(game, this));
+
+
     }
 
     @Override
