@@ -5,6 +5,8 @@ public class Ball {
     private double mass;
     private double x;
     private double y;
+    private double velocityX;
+    private double velocityY;
 
     /**
      * Construct a new Ball object
@@ -16,6 +18,8 @@ public class Ball {
         this.mass = mass;
         this.x = x;
         this.y = y;
+        this.velocityX = 0;
+        this.velocityY = 0;
     }
 
     /**
@@ -26,6 +30,24 @@ public class Ball {
         this.mass = mass;
         this.x = 0;
         this.y = 0;
+        this.velocityX = 0;
+        this.velocityY = 0;
+    }
+
+    public double getVelocityX() {
+        return velocityX;
+    }
+
+    public void setVelocityX(double velocityX) {
+        this.velocityX = velocityX;
+    }
+
+    public double getVelocityY() {
+        return velocityY;
+    }
+
+    public void setVelocityY(double velocityY) {
+        this.velocityY = velocityY;
     }
 
     /**
@@ -51,6 +73,7 @@ public class Ball {
     public double getX() {
         return x;
     }
+
 
     /**
      * Set a new x-position
