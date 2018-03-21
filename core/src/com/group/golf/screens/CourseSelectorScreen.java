@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -73,7 +74,9 @@ public class CourseSelectorScreen implements Screen {
                 double[] goal = new double[]{4, 3};
                 Function function = new Function(formula);
                 Course course = new Course(function, 9.81, 0.5, 3, start, goal, 0.5);
+                design.setTouchable(Touchable.disabled);
                 this.game.setScreen(new CourseScreen(this.game, course, new Ball(1)));
+
                 this.screen.dispose();
             }
 
@@ -93,11 +96,15 @@ public class CourseSelectorScreen implements Screen {
             public void changed (ChangeEvent event, Actor actor) {
 
                 this.game.setScreen(new DesignScreen(this.game));
+
                 this.screen.dispose();
+
+
             }
 
         }
         design.addListener(new DesignListener(game, this));
+
 
 
     }
