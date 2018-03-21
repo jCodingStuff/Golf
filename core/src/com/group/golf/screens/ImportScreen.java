@@ -4,10 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.group.golf.Golf;
+import com.group.golf.listeners.ImportBackListener;
 
 
 /**
@@ -19,14 +22,28 @@ class ImportScreen implements Screen {
     TextField txtf;
     final Golf game;
     Music music;
+    TextButton back;
+    OrthographicCamera cam;
 
 
     public ImportScreen(final Golf game){
         this.game = game;
         this.stage = new Stage();
+
+        // Setup cam
+        this.cam = new OrthographicCamera();
+        this.cam.setToOrtho(false, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
+
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-        txtf = new TextField("Name of the course:", skin);
+        txtf = new TextField("", skin);
+        txtf.setPosition(200, 400);
+        this.back = new TextButton("Back", skin);
+        this.back.setPosition(200, 200);
+        this.back.addListener(new ImportBackListener(this.game, this));
+
         stage.addActor(txtf);
+        stage.addActor(back);
+
         // Set the stage as InputProcessor
         Gdx.input.setInputProcessor(this.stage);
 
@@ -44,6 +61,12 @@ class ImportScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0.5f, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        this.cam.update();
+
+        stage.act(delta);
+        stage.draw();
+
     }
     @Override
     public void resize(int width, int height) {
