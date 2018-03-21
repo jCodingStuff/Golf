@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -25,6 +26,7 @@ public class CourseSelectorScreen implements Screen {
     TextButton design;
     Music menuMusic;
     OrthographicCamera cam;
+    Texture background;
 
     public CourseSelectorScreen(final Golf game) {
         this.game = game;
@@ -54,6 +56,9 @@ public class CourseSelectorScreen implements Screen {
         this.menuMusic.setVolume(0.2f);
         this.menuMusic.setLooping(true);
 
+        // Setup background image
+        this.background = new Texture(Gdx.files.internal("minigolf_background.jpg"));
+
         class PlayListener extends ChangeListener{
             final Golf game;
             private Screen screen;
@@ -64,7 +69,7 @@ public class CourseSelectorScreen implements Screen {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                double[] start = new double[]{0, 0};
+                double[] start = new double[]{0, 1};
                 double[] goal = new double[]{4, 3};
                 Function function = new Function(formula);
                 Course course = new Course(function, 9.81, 0.5, 3, start, goal, 0.5);
@@ -89,6 +94,10 @@ public class CourseSelectorScreen implements Screen {
 
         this.cam.update();
         this.game.batch.setProjectionMatrix(this.cam.combined);
+
+        this.game.batch.begin();
+        this.game.batch.draw(this.background, 0, 0, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
+        this.game.batch.end();
 
         stage.act(delta);
         stage.draw();
@@ -118,5 +127,6 @@ public class CourseSelectorScreen implements Screen {
     @Override
     public void dispose() {
         this.menuMusic.dispose();
+        this.background.dispose();
     }
 }

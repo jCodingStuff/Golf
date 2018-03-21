@@ -63,17 +63,22 @@ public class CourseScreen implements Screen {
         this.ball = ball;
         this.ball.setX(this.course.getStart()[0]);
         this.ball.setY(this.course.getStart()[1]);
-        this.ballSize = 12;
+        this.ballSize = 20;
         this.ballImage = new Texture(Gdx.files.internal("ball_soccer2.png"));
 
         // Setup Goal
-        this.goalSize = 15;
+        this.goalSize = 20;
         this.flag = new Texture(Gdx.files.internal("golf_flag.png"));
     }
 
     private void setUpCourse() {
-        // Set up the scale, each pixel of the screen represents 0.01 units
-        this.scale = 0.01;
+        // Set up the scale, each pixel of the screen represents this.scale units
+        double dist = this.course.getDistance();
+        if (dist <= 1.5) this.scale = 0.0025;
+        else if (dist <= 3) this.scale = 0.005;
+        else if (dist <= 6) this.scale = 0.01;
+        else if (dist <= 12) this.scale = 0.02;
+        else this.scale = 0.03;
 
         // The center of the screen is the middle point between the start and the goal
         this.calcOffsets();
@@ -91,7 +96,8 @@ public class CourseScreen implements Screen {
         this.minimum = Double.MAX_VALUE;
         for (int x = 0; x < this.heights.length; x++) {
             for (int y = 0; y < this.heights[x].length; y++) {
-                double value = this.course.getFunction().getZ(xoffset + x*this.scale, yoffset + y*this.scale);
+                double value = this.course.getFunction().getZ(this.xoffset + x*this.scale,
+                        this.yoffset + y*this.scale);
                 if (value > this.maximum) this.maximum = value;
                 else if (value < this.minimum) this.minimum = value;
                 this.heights[x][y] = value;
@@ -100,14 +106,25 @@ public class CourseScreen implements Screen {
     }
 
     private void calcColorsMatrix() {
-        float min = 0.3f;
-        float max = 1f;
+        float minTerrain = 0.1f;
+        float maxTerrain = 0.9f;
+        float minWater = 0.2f;
+        float maxWater = 1f;
         this.colors = new Color[Golf.VIRTUAL_WIDTH][Golf.VIRTUAL_HEIGHT];
         for (int x = 0; x < this.colors.length; x++) {
             for (int y = 0; y < this.colors[x].length; y++) {
-                // Higher, darker
-                float green = max - min - (float) MathLib.map(this.heights[x][y], this.minimum, this.maximum, min, max);
-                this.colors[x][y] = new Color(0, green, 0, 1);
+                if (this.heights[x][y] < 0) { // Water
+                    // More negative, darker
+                    float blue = maxWater + minWater - (float) MathLib.map(Math.abs(this.heights[x][y]), 0,
+                            Math.abs(this.minimum), minWater, maxWater);
+                    this.colors[x][y] = new Color(0, 0, blue, 1);
+                }
+                else { // Grass
+                    // Higher, darker
+                    float green = maxTerrain + minTerrain - (float) MathLib.map(this.heights[x][y], 0,
+                            this.maximum, minTerrain, maxTerrain);
+                    this.colors[x][y] = new Color(0, green, 0, 1);
+                }
             }
         }
     }
@@ -115,11 +132,11 @@ public class CourseScreen implements Screen {
     private void calcOffsets() {
         double x1 = this.course.getStart()[0];
         double x2 = this.course.getGoal()[0];
-        double xUnits = Golf.VIRTUAL_WIDTH / 100.0;
+        double xUnits = Golf.VIRTUAL_WIDTH / (1/this.scale);
         this.xoffset = (x1 + x2 - xUnits) / 2.0;
         double y1 = this.course.getStart()[1];
         double y2 = this.course.getGoal()[1];
-        double yUnits = Golf.VIRTUAL_HEIGHT / 100.0;
+        double yUnits = Golf.VIRTUAL_HEIGHT / (1/this.scale);
         this.yoffset = (y1 + y2 - yUnits) / 2.0;
     }
 
@@ -151,8 +168,8 @@ public class CourseScreen implements Screen {
 
     private void renderGoal() {
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        float realX = (float) ((this.course.getGoal()[0] - xoffset) * 100.0);
-        float realY = (float) ((this.course.getGoal()[1] - yoffset) * 100.0);
+        float realX = (float) ((this.course.getGoal()[0] - this.xoffset) * (1/this.scale));
+        float realY = (float) ((this.course.getGoal()[1] - this.yoffset) * (1/this.scale));
         this.game.shapeRenderer.setColor(0, 0, 0, 1);
         this.game.shapeRenderer.ellipse(realX - this.goalSize/2, realY - this.goalSize/2,
                 this.goalSize, this.goalSize);
@@ -163,13 +180,13 @@ public class CourseScreen implements Screen {
         this.game.shapeRenderer.ellipse(realX - tolerance/2, realY - tolerance/2, tolerance, tolerance);
         this.game.shapeRenderer.end();
         this.game.batch.begin();
-        this.game.batch.draw(this.flag, realX - 3, realY, 50, 60);
+        this.game.batch.draw(this.flag, realX - 3, realY, 52, 62);
         this.game.batch.end();
     }
 
     private void renderBall() {
-        float realX = (float) ((this.ball.getX() - xoffset) * 100.0);
-        float realY = (float) ((this.ball.getY() - yoffset) * 100.0);
+        float realX = (float) ((this.ball.getX() - this.xoffset) * (1/this.scale));
+        float realY = (float) ((this.ball.getY() - this.yoffset) * (1/this.scale));
         this.game.batch.begin();
         this.game.batch.draw(this.ballImage, realX - this.ballSize/2, realY - this.ballSize/2,
                 this.ballSize, this.ballSize);
@@ -210,5 +227,7 @@ public class CourseScreen implements Screen {
     @Override
     public void dispose() {
         this.music.dispose();
+        this.ballImage.dispose();
+        this.flag.dispose();
     }
 }
