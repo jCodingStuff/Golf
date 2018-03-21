@@ -81,27 +81,36 @@ public class CourseSelectorScreen implements Screen {
             }
 
         }
-
         play.addListener(new PlayListener(game, this));
 
+        class ImportListener extends ChangeListener {
+            final Golf game;
+            private Screen screen;
 
-        class DesignListener extends ChangeListener{
+            public ImportListener(final Golf game, Screen screen) {
+                this.game = game;
+                this.screen = screen;
+            }
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                this.game.setScreen(new ImportScreen(this.game));
+                this.screen.dispose();
+            }
+        }
+        importbtn.addListener(new ImportListener(this.game, this));
+
+        class DesignListener extends ChangeListener {
             final Golf game;
             private Screen screen;
             public DesignListener(final Golf game, Screen screen){
                 this.game = game;
                 this.screen = screen;
             }
-            @Override
             public void changed (ChangeEvent event, Actor actor) {
-
                 this.game.setScreen(new DesignScreen(this.game));
-
                 this.screen.dispose();
-
-
             }
-
         }
         design.addListener(new DesignListener(game, this));
 
@@ -129,7 +138,6 @@ public class CourseSelectorScreen implements Screen {
         stage.act(delta);
         stage.draw();
     }
-
 
     @Override
     public void resize(int width, int height) {
