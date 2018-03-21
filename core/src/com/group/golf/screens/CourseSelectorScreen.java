@@ -83,45 +83,39 @@ public class CourseSelectorScreen implements Screen {
         }
         play.addListener(new PlayListener(game, this));
 
-<<<<<<< HEAD
         class ImportListener extends ChangeListener {
             final Golf game;
             private Screen screen;
-            public ImportListener(final Golf game, Screen screen) {
-=======
 
-        class DesignListener extends ChangeListener{
-            final Golf game;
-            private Screen screen;
-            public DesignListener(final Golf game, Screen screen){
->>>>>>> 98050f2a4bb3dcd9a9b6d40ec11e21959170628f
+            public ImportListener(final Golf game, Screen screen) {
                 this.game = game;
                 this.screen = screen;
             }
+
             @Override
-<<<<<<< HEAD
             public void changed(ChangeEvent event, Actor actor) {
                 this.game.setScreen(new ImportScreen(this.game));
                 this.screen.dispose();
             }
         }
         importbtn.addListener(new ImportListener(this.game, this));
-=======
-            public void changed (ChangeEvent event, Actor actor) {
 
-                this.game.setScreen(new DesignScreen(this.game));
-
-                this.screen.dispose();
-
-
+        class DesignListener extends ChangeListener {
+            final Golf game;
+            private Screen screen;
+            public DesignListener(final Golf game, Screen screen){
+                this.game = game;
+                this.screen = screen;
             }
-
+            public void changed (ChangeEvent event, Actor actor) {
+                this.game.setScreen(new DesignScreen(this.game));
+                this.screen.dispose();
+            }
         }
         design.addListener(new DesignListener(game, this));
 
 
 
->>>>>>> 98050f2a4bb3dcd9a9b6d40ec11e21959170628f
     }
 
     @Override
@@ -144,7 +138,6 @@ public class CourseSelectorScreen implements Screen {
         stage.act(delta);
         stage.draw();
     }
-
 
     @Override
     public void resize(int width, int height) {
