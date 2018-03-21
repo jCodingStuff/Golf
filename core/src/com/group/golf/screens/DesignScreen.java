@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -30,15 +31,21 @@ class DesignScreen implements Screen {
     TextField txtVMax;
     TextField txtFriction;
     TextField txtGravity;
-    TextButton btnStart;
+    TextField txtBallMass;
+
     TextButton btnExport;
     TextButton btnMode1;
     TextButton btnMode2;
+    TextButton btnBack;
     ButtonGroup mode;
+    Texture background;
     public DesignScreen(final Golf game){
         this.game = game;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+
+        // Setup background image
+        this.background = new Texture(Gdx.files.internal("minigolf_background.jpg"));
 
         // Setup cam
         this.cam = new OrthographicCamera();
@@ -53,14 +60,16 @@ class DesignScreen implements Screen {
         txtGravity = new TextField("Gravity", skin);
         txtFriction = new TextField("Friction", skin);
         txtVMax = new TextField("Maximum velocity", skin);
+        txtBallMass = new TextField("Mass of the ball",skin);
 
-        btnStart = new TextButton("Start", skin);
+
         btnExport = new TextButton("Export", skin);
+        btnBack = new TextButton("Back", skin);
 
         btnMode1 = new TextButton("Mode 1", skin);
         btnMode2 = new TextButton("Mode 2", skin);
 
-        txtFriction.setPosition(300, 400);
+        txtFriction.setPosition(250, 400);
         txtFriction.setSize(200,60);
         txtFriction.addListener(new FocusListener(){
             public void focusGained(FocusEvent e) {
@@ -74,28 +83,40 @@ class DesignScreen implements Screen {
             }
         });
 
-        txtFunction.setPosition(300, 300);
+        txtFunction.setPosition(250, 300);
         txtFunction.setSize(200,60);
 
-        txtVMax.setPosition(300, 200);
+        txtVMax.setPosition(250, 200);
         txtVMax.setSize(200,60);
 
-        txtStartPos.setPosition(300, 100);
+        txtStartPos.setPosition(550, 400);
         txtStartPos.setSize(200,60);
 
-        txtGoalPos.setPosition(300, 0);
+
+
+        txtGoalPos.setPosition(550, 300);
         txtGoalPos.setSize(200,60);
 
-        txtGravity.setPosition(300, 400);
+        txtGravity.setPosition(250, 500);
         txtGravity.setSize(200,60);
 
-        txtRadius.setPosition(300, 400);
+        txtRadius.setPosition(550, 500);
         txtRadius.setSize(200,60);
 
-        btnMode1.setPosition(600, 400);
+        txtBallMass.setPosition(550, 200);
+        txtBallMass.setSize(200,60);
+
+        btnExport.setPosition(800,300);
+        btnExport.setSize(100,60);
+
+        btnBack.setPosition(100,300);
+        btnBack.setSize(100,60);
+
+        btnMode1.setPosition(250, 100);
         btnMode1.setSize(200,60);
-        btnMode2.setPosition(600, 300);
+        btnMode2.setPosition(550, 100);
         btnMode2.setSize(200,60);
+
 
         mode = new ButtonGroup(btnMode1, btnMode2);
         mode.setMaxCheckCount(1);
@@ -107,6 +128,13 @@ class DesignScreen implements Screen {
         stage.addActor(txtVMax);
         stage.addActor(btnMode1);
         stage.addActor(btnMode2);
+        stage.addActor(txtGravity);
+        stage.addActor(txtRadius);
+        stage.addActor(txtStartPos);
+        stage.addActor(txtGoalPos);
+        stage.addActor(txtBallMass);
+        stage.addActor(btnExport);
+        stage.addActor(btnBack);
 
 
         Gdx.input.setInputProcessor(this.stage);
@@ -124,6 +152,9 @@ class DesignScreen implements Screen {
         this.cam.update();
         this.game.batch.setProjectionMatrix(this.cam.combined);
 
+        this.game.batch.begin();
+        this.game.batch.draw(this.background, 0, 0, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
+        this.game.batch.end();
         stage.act(delta);
         stage.draw();
     }
