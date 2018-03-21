@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -23,6 +24,7 @@ class ImportScreen implements Screen {
     final Golf game;
     Music music;
     TextButton back;
+    Label label;
     OrthographicCamera cam;
 
 
@@ -43,6 +45,10 @@ class ImportScreen implements Screen {
 
         stage.addActor(txtf);
         stage.addActor(back);
+
+        this.label = new Label("Course Name", skin);
+        this.label.setPosition(200, 500);
+        stage.addActor(this.label);
 
         // Set the stage as InputProcessor
         Gdx.input.setInputProcessor(this.stage);
