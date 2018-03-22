@@ -25,7 +25,7 @@ import com.group.golf.listeners.ToExportListener;
  * Screen to design courses
  */
 class DesignScreen implements Screen {
-    Golf game;
+    final Golf game;
 
     Stage stage;
     OrthographicCamera cam;
@@ -50,7 +50,7 @@ class DesignScreen implements Screen {
      * Create a new Design Screen
      * @param game the Golf instace
      */
-    public DesignScreen(Golf game){
+    public DesignScreen(final Golf game){
         this.game = game;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);

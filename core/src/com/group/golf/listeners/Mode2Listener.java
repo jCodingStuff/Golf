@@ -18,7 +18,7 @@ import java.util.StringTokenizer;
  */
 public class Mode2Listener extends ChangeListener {
 
-    Golf game;
+    final Golf game;
     Screen screen;
     TextField txtFunction;
     TextField txtStartPos;
@@ -42,7 +42,7 @@ public class Mode2Listener extends ChangeListener {
      * @param txtGravity the TextField containing the gravity
      * @param txtBallMass the TextF
      */
-    public Mode2Listener(Golf game, Screen screen, TextField txtFunction, TextField txtStartPos, TextField txtGoalPos,
+    public Mode2Listener(final Golf game, Screen screen, TextField txtFunction, TextField txtStartPos, TextField txtGoalPos,
                          TextField txtRadius, TextField txtVMax, TextField txtFriction, TextField txtGravity,
                          TextField txtBallMass) {
         this.game = game;

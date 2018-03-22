@@ -23,7 +23,7 @@ import java.util.StringTokenizer;
  */
 public class ImportListener extends ChangeListener {
 
-    Golf game;
+    final Golf game;
     private TextField txtField;
     Screen screen;
 
@@ -33,7 +33,7 @@ public class ImportListener extends ChangeListener {
      * @param txtField the TextField containing the name of the file
      * @param screen the screen where this listener was created
      */
-    public ImportListener(Golf game, TextField txtField, Screen screen) {
+    public ImportListener(final Golf game, TextField txtField, Screen screen) {
         this.game = game;
         this.txtField = txtField;
         this.screen = screen;

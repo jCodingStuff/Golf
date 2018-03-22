@@ -22,7 +22,7 @@ import com.group.golf.math.Function;
  */
 public class CourseSelectorScreen implements Screen {
 
-    Golf game;
+    final Golf game;
     Stage stage;
 
     TextButton play;
@@ -36,7 +36,7 @@ public class CourseSelectorScreen implements Screen {
      * Create a new main menu screen
      * @param game the Golf instance
      */
-    public CourseSelectorScreen(Golf game) {
+    public CourseSelectorScreen(final Golf game) {
         this.game = game;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);

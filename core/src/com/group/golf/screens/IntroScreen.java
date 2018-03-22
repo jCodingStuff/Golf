@@ -17,7 +17,7 @@ import com.group.golf.Golf;
  */
 public class IntroScreen implements Screen {
 
-    Golf game;
+    final Golf game;
 
     OrthographicCamera cam;
     Music introMusic;
@@ -34,7 +34,7 @@ public class IntroScreen implements Screen {
      * Create a new intro screen
      * @param game the Golf instance
      */
-    public IntroScreen(Golf game) {
+    public IntroScreen(final Golf game) {
         this.game = game;
 
         // Setup cam

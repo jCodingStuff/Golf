@@ -17,7 +17,7 @@ import com.group.golf.screens.CourseScreen;
  */
 public class MovesPlayListener extends ChangeListener {
 
-    Golf game;
+    final Golf game;
     Course course;
     Ball ball;
     Screen screen;
@@ -31,7 +31,7 @@ public class MovesPlayListener extends ChangeListener {
      * @param screen the screen where this listener was created
      * @param txt the TextField containing the name of the file
      */
-    public MovesPlayListener(Golf game, Course course, Ball ball, Screen screen, TextField txt) {
+    public MovesPlayListener(final Golf game, Course course, Ball ball, Screen screen, TextField txt) {
         this.game = game;
         this.course = course;
         this.ball = ball;

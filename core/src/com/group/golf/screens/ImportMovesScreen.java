@@ -23,7 +23,7 @@ import com.group.golf.listeners.MovesPlayListener;
  */
 public class ImportMovesScreen implements Screen {
 
-    Golf game;
+    final Golf game;
     Stage stage;
     TextField txt;
     Ball ball;
@@ -41,7 +41,7 @@ public class ImportMovesScreen implements Screen {
      * @param course the Course instance
      * @param ball the Ball instance
      */
-    public ImportMovesScreen(Golf game, Course course, Ball ball) {
+    public ImportMovesScreen(final Golf game, Course course, Ball ball) {
         this.game = game;
         this.stage = new Stage();
         this.ball = ball;
@@ -70,11 +70,11 @@ public class ImportMovesScreen implements Screen {
         this.back.setPosition(200, 200);
 
         class MovesBackListener extends ChangeListener {
-            Golf game;
+            final Golf game;
             Screen screen;
             Course course;
             Ball ball;
-            public MovesBackListener(Golf game, Screen screen, Course course, Ball ball) {
+            public MovesBackListener(final Golf game, Screen screen, Course course, Ball ball) {
                 this.game = game;
                 this.screen = screen;
                 this.course = course;

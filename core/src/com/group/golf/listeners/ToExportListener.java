@@ -20,7 +20,7 @@ import com.group.golf.screens.ImportMovesScreen;
 
 public class ToExportListener extends ChangeListener {
 	
-	Golf game;
+	final Golf game;
     Screen screen;
     TextField txtFunction;
     TextField txtStartPos;
@@ -33,7 +33,7 @@ public class ToExportListener extends ChangeListener {
    
     
     
-    public ToExportListener(Golf game, Screen screen, TextField txtFunction, TextField txtStartPos,
+    public ToExportListener(final Golf game, Screen screen, TextField txtFunction, TextField txtStartPos,
 			TextField txtGoalPos, TextField txtRadius, TextField txtVMax, TextField txtFriction, TextField txtGravity,
 			TextField txtBallMass) {
 		super();

@@ -32,7 +32,7 @@ public class ExportScreen implements Screen {
 
 	private Stage stage;
     TextField txtf;
-    Golf game;
+    final Golf game;
     Music music;
     TextButton back;
     //Label label;
@@ -88,11 +88,11 @@ public class ExportScreen implements Screen {
         this.back.setSize(100, 60);
 
         class ExportBackListener extends ChangeListener {
-            Golf game;
+            final Golf game;
             Screen screen;
             Course course;
             Ball ball;
-            public ExportBackListener(Golf game, Screen screen, Course course, Ball ball) {
+            public ExportBackListener(final Golf game, Screen screen, Course course, Ball ball) {
                 this.game = game;
                 this.screen = screen;
                 this.course = course;

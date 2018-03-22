@@ -12,7 +12,7 @@ import com.group.golf.screens.CourseSelectorScreen;
  */
 public class ImportBackListener extends ChangeListener {
 
-    Golf game;
+    final Golf game;
     private Screen screen;
 
     /**
@@ -20,7 +20,7 @@ public class ImportBackListener extends ChangeListener {
      * @param game the Golf instance
      * @param screen the Screen where this listener was created
      */
-    public ImportBackListener(Golf game, Screen screen) {
+    public ImportBackListener(final Golf game, Screen screen) {
         this.game = game;
         this.screen = screen;
     }
