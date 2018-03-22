@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
+import com.group.golf.listeners.ExportListener;
 import com.group.golf.listeners.ImportBackListener;
 import com.group.golf.listeners.ImportListener;
 import com.badlogic.gdx.Screen;
@@ -87,7 +88,7 @@ public class ExportScreen implements Screen {
 
         this.exportButton = new TextButton("Export", skin);
         this.exportButton.setPosition(270, 200);
-        this.exportButton.addListener(new ImportListener(this.game, this.txtf, this));
+        this.exportButton.addListener(new ExportListener(this.game, this, this.course1, this.ball1, this.txtf));
         stage.addActor(this.exportButton);
 
         this.label = new Label("Course Name", skin);
@@ -99,7 +100,7 @@ public class ExportScreen implements Screen {
 
         // Set up music
         this.music = Gdx.audio.newMusic(Gdx.files.internal("exportmusic.mp3"));
-        this.music.setVolume(0.2f);
+        this.music.setVolume(0.8f);
         this.music.setLooping(true);
     }
     @Override
