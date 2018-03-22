@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -28,11 +29,14 @@ class ImportScreen implements Screen {
     Label label;
     OrthographicCamera cam;
     TextButton importButton;
+    Texture background;
 
 
     public ImportScreen(Golf game){
         this.game = game;
         this.stage = new Stage();
+
+        this.background = new Texture(Gdx.files.internal("minigolf_background.jpg"));
 
         // Setup cam
         this.cam = new OrthographicCamera();
@@ -76,6 +80,11 @@ class ImportScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         this.cam.update();
+        this.game.batch.setProjectionMatrix(this.cam.combined);
+
+        this.game.batch.begin();
+        this.game.batch.draw(this.background, 0, 0, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
+        this.game.batch.end();
 
         stage.act(delta);
         stage.draw();
