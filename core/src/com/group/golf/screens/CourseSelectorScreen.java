@@ -41,9 +41,9 @@ public class CourseSelectorScreen implements Screen {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-        play = new TextButton("play", skin);
-        importbtn = new TextButton("import", skin);
-        design = new TextButton("design", skin);
+        play = new TextButton("Play", skin);
+        importbtn = new TextButton("Import", skin);
+        design = new TextButton("Design", skin);
         play.setPosition(300, 400);
         importbtn.setPosition(300, 300);
         design.setPosition(300, 200);
