@@ -250,8 +250,14 @@ public class CourseScreen implements Screen {
         // Render the goal
         this.renderGoal();
 
-        // Make a move
+        // Check if the ball is stopped
         if (!this.ball.isMoving()) {
+            // Store position
+            double ballX = (this.ball.getX() - this.xoffset) * (1/this.scale);
+            double ballY = (this.ball.getY() - this.yoffset) * (1/this.scale);
+            this.lastStop[0] = ballX;
+            this.lastStop[1] = ballY;
+            // Make a move
             if (this.moves != null && this.counter < this.moves.size()) { // Mode 2 is active
                 StringTokenizer tokenizer = new StringTokenizer(this.moves.get(this.counter));
                 double force = Double.parseDouble(tokenizer.nextToken());
@@ -262,12 +268,6 @@ public class CourseScreen implements Screen {
             else { // Mode 1 is active
 
             }
-        }
-        else { // Stopped, store position
-            double ballX = (this.ball.getX() - this.xoffset) * (1/this.scale);
-            double ballY = (this.ball.getY() - this.yoffset) * (1/this.scale);
-            this.lastStop[0] = ballX;
-            this.lastStop[1] = ballY;
         }
         //this.engine.movement();
 
