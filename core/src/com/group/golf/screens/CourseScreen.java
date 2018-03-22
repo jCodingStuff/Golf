@@ -274,7 +274,7 @@ public class CourseScreen implements Screen {
             double ballY = (this.ball.getY() - this.yoffset) * (1/this.scale);
             this.lastStop[0] = ballX;
             this.lastStop[1] = ballY;
-            
+
             // Make a move
             if (this.moves != null && this.counter < this.moves.size()) { // Mode 2 is active
                 StringTokenizer tokenizer = new StringTokenizer(this.moves.get(this.counter));
