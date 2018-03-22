@@ -253,7 +253,7 @@ public class CourseScreen implements Screen {
 
             }
         }
-        this.engine.movement();
+        //this.engine.movement();
 
         // Render the ball
         this.renderBall();
