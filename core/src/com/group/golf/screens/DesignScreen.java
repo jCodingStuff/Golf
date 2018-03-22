@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.group.golf.Golf;
 import com.group.golf.listeners.Mode1Listener;
 import com.group.golf.listeners.Mode2Listener;
+import com.group.golf.listeners.ToExportListener;
 
 /**
  * Created by kim on 20.03.2018.
@@ -75,6 +76,9 @@ class DesignScreen implements Screen {
 
 
         btnExport = new TextButton("Export", skin);
+        btnExport.addListener(new ToExportListener(this.game, this, txtFunction, txtStartPos, txtGoalPos, txtRadius,
+                txtVMax, txtFriction, txtGravity, txtBallMass));
+        
         btnBack = new TextButton("Back", skin);
 
         btnMode1 = new TextButton("Mode 1", skin);
