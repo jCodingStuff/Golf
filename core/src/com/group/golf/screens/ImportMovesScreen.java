@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
@@ -28,7 +29,7 @@ public class ImportMovesScreen implements Screen {
     TextField txt;
     Ball ball;
     Course course;
-    Label label;
+
     TextButton back;
     TextButton playBt;
     Music music;
@@ -62,12 +63,28 @@ public class ImportMovesScreen implements Screen {
 
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-        this.label = new Label("File Name", skin);
-        this.label.setPosition(200, 500);
-        this.txt = new TextField("", skin);
-        this.txt.setPosition(200, 350);
+
+        this.txt = new TextField("Enter file name", skin);
+        this.txt.setSize(200, 60);
+        this.txt.setPosition(400 , 300);
+        txt.addListener(new FocusListener(){
+            @Override
+            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
+                if(focused == true) {
+                    if (txt.getText().equals("Enter file name"))
+                        txt.setText("");
+
+                }
+                else if(focused == false){
+                    if(txt.getText().equals(""))
+                        txt.setText("Enter file name");
+                }
+
+            }
+        });
         this.back = new TextButton("Back", skin);
-        this.back.setPosition(200, 200);
+        this.back.setPosition(100, 300);
+        this.back.setSize(100, 60);
 
         class MovesBackListener extends ChangeListener {
             final Golf game;
@@ -99,10 +116,11 @@ public class ImportMovesScreen implements Screen {
 
 
         this.playBt = new TextButton("Play", skin);
-        this.playBt.setPosition(270, 200);
+        this.playBt.setPosition(800, 300);
+        this.playBt.setSize(100,60);
         this.playBt.addListener(new MovesPlayListener(this.game, this.course, this.ball, this, this.txt));
 
-        this.stage.addActor(this.label);
+
         this.stage.addActor(this.txt);
         this.stage.addActor(this.back);
         this.stage.addActor(this.playBt);
