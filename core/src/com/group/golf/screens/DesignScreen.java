@@ -169,7 +169,7 @@ class DesignScreen implements Screen {
                 if(focused == true) {
                     if (txtFriction.getText().equals("Friction"))
                         txtFriction.setText("");
-                    System.out.println(event.toString());
+
                 }
                 else if(focused == false){
                     if(txtFriction.getText().equals(""))
@@ -184,7 +184,7 @@ class DesignScreen implements Screen {
                 if(focused == true) {
                     if (txtStartPos.getText().equals("Start Position"))
                         txtStartPos.setText("");
-                    System.out.println(event.toString());
+
                 }
                 else if(focused == false){
                     if(txtStartPos.getText().equals(""))
@@ -200,11 +200,91 @@ class DesignScreen implements Screen {
                 if(focused == true) {
                     if (txtFunction.getText().equals("Function"))
                         txtFunction.setText("");
-                    System.out.println(event.toString());
+
                 }
                 else if(focused == false){
                     if(txtFunction.getText().equals(""))
                         txtFunction.setText("Function");
+
+                }
+
+            }
+        });
+        txtGravity.addListener(new FocusListener(){
+            @Override
+            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
+                if(focused == true) {
+                    if (txtGravity.getText().equals("Gravity"))
+                        txtGravity.setText("");
+
+                }
+                else if(focused == false){
+                    if(txtGravity.getText().equals(""))
+                        txtGravity.setText("Gravity");
+
+                }
+
+            }
+        });
+        txtRadius.addListener(new FocusListener(){
+            @Override
+            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
+                if(focused == true) {
+                    if (txtRadius.getText().equals("Radius"))
+                        txtRadius.setText("");
+
+                }
+                else if(focused == false){
+                    if(txtRadius.getText().equals(""))
+                        txtRadius.setText("Radius");
+
+                }
+
+            }
+        });
+        txtGoalPos.addListener(new FocusListener(){
+            @Override
+            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
+                if(focused == true) {
+                    if (txtGoalPos.getText().equals("Goal Position"))
+                        txtGoalPos.setText("");
+
+                }
+                else if(focused == false){
+                    if(txtGoalPos.getText().equals(""))
+                        txtGoalPos.setText("Goal Position");
+
+                }
+
+            }
+        });
+        txtVMax.addListener(new FocusListener(){
+            @Override
+            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
+                if(focused == true) {
+                    if (txtVMax.getText().equals("Maximum Velocity"))
+                        txtVMax.setText("");
+
+                }
+                else if(focused == false){
+                    if(txtVMax.getText().equals(""))
+                        txtVMax.setText("Maximum Velocity");
+
+                }
+
+            }
+        });
+        txtBallMass.addListener(new FocusListener(){
+            @Override
+            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
+                if(focused == true) {
+                    if (txtBallMass.getText().equals("Mass of the ball"))
+                        txtBallMass.setText("");
+
+                }
+                else if(focused == false){
+                    if(txtBallMass.getText().equals(""))
+                        txtBallMass.setText("Mass of the ball");
 
                 }
 
