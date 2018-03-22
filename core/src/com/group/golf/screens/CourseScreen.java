@@ -65,6 +65,9 @@ public class CourseScreen implements Screen {
         this.game = game;
         this.course = course;
 
+        // Setup lastStop
+        this.lastStop = MathLib.copyArr(this.course.getStart());
+
         // Setup moves
         this.counter = 0;
         this.moves = new ArrayList<String>();
@@ -111,6 +114,10 @@ public class CourseScreen implements Screen {
         this.game = game;
         this.course = course;
 
+        // Setup lastStop
+        this.lastStop = MathLib.copyArr(this.course.getStart());
+
+        // Setup moves
         this.moves = null;
 
         // Setup Cam
@@ -256,7 +263,26 @@ public class CourseScreen implements Screen {
 
             }
         }
+        else { // Stopped, store position
+            double ballX = (this.ball.getX() - this.xoffset) * (1/this.scale);
+            double ballY = (this.ball.getY() - this.yoffset) * (1/this.scale);
+            this.lastStop[0] = ballX;
+            this.lastStop[1] = ballY;
+        }
         //this.engine.movement();
+
+        // Check for water
+        if (this.course.getFunction().getZ(this.ball.getX(), this.ball.getY()) < 0) {
+            this.ball.reset();
+            this.ball.setX(this.lastStop[0]);
+            this.ball.setY(this.lastStop[1]);
+        }
+
+        // Check the walls
+        double pixelX = (this.ball.getX() - this.xoffset) * (1/this.scale);
+        double pixelY = (this.ball.getY() - this.yoffset) * (1/this.scale);
+        if (pixelX <= 0 || pixelX >= Golf.VIRTUAL_WIDTH) this.ball.setVelocityX(-this.ball.getVelocityX());
+        if (pixelY <= 0 || pixelY >= Golf.VIRTUAL_HEIGHT) this.ball.setVelocityY(-this.ball.getVelocityY());
 
         // Render the ball
         this.renderBall();
