@@ -38,6 +38,28 @@ public class Ball {
     }
 
     /**
+     * Limit the velocity to a maximum
+     * @param max the limit
+     */
+    public void limit(double max) {
+        double velocity = this.calcVelocity();
+        if (velocity > max) {
+            this.velocityX /= velocity;
+            this.velocityY /= velocity;
+            this.velocityX *= max;
+            this.velocityY *= max;
+        }
+    }
+
+    /**
+     * Compute the velocity modulus
+     * @return the value for the velocity modulus
+     */
+    public double calcVelocity() {
+        return Math.sqrt(Math.pow(this.velocityX, 2) + Math.pow(this.velocityY, 2));
+    }
+
+    /**
      * Get access to the x-component of the velocity
      * @return the x-component of the velocity
      */
