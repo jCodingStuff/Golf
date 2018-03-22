@@ -22,4 +22,17 @@ public class MathLib {
         return result;
     }
 
+    /**
+     * Create a copy of a double array
+     * @param arr the array to copy
+     * @return the copy of the array
+     */
+    public static double[] copyArr(double[] arr) {
+        double[] result = new double[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            result[i] = arr[i];
+        }
+        return result;
+    }
+
 }
