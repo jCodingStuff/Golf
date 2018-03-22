@@ -3,6 +3,7 @@ package com.group.golf.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -32,6 +33,7 @@ public class CourseScreen implements Screen {
     Texture flag;
     OrthographicCamera cam;
     Music music;
+    Sound hitSound;
 
     Physics engine;
 
@@ -77,6 +79,9 @@ public class CourseScreen implements Screen {
         }
         in.close();
 
+        // Setup Hitsound
+        this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
+
         // Setup Cam
         this.cam = new OrthographicCamera();
         this.cam.setToOrtho(false, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
@@ -119,6 +124,9 @@ public class CourseScreen implements Screen {
 
         // Setup moves
         this.moves = null;
+
+        // Setup Hitsound
+        this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
 
         // Setup Cam
         this.cam = new OrthographicCamera();
@@ -264,6 +272,7 @@ public class CourseScreen implements Screen {
                 double angle = Double.parseDouble(tokenizer.nextToken());
                 this.engine.hit(force, angle);
                 this.counter++;
+                this.hitSound.play();
             }
             else { // Mode 1 is active
 
@@ -360,6 +369,7 @@ public class CourseScreen implements Screen {
         this.music.dispose();
         this.ballImage.dispose();
         this.flag.dispose();
+        this.hitSound.dispose();
     }
 
     public Golf getGame() {
