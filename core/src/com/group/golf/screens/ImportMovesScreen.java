@@ -61,19 +61,16 @@ public class ImportMovesScreen implements Screen {
         this.back.setPosition(200, 200);
 
         class MovesBackListener extends ChangeListener {
-
             Golf game;
             Screen screen;
             Course course;
             Ball ball;
-
             public MovesBackListener(Golf game, Screen screen, Course course, Ball ball) {
                 this.game = game;
                 this.screen = screen;
                 this.course = course;
                 this.ball = ball;
             }
-
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 DesignScreen scr = new DesignScreen(this.game);
