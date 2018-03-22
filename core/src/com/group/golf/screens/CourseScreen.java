@@ -11,7 +11,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
+import com.group.golf.Physics.Physics;
 import com.group.golf.math.MathLib;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.StringTokenizer;
 
 /**
  * A class to draw the course
@@ -27,9 +33,14 @@ public class CourseScreen implements Screen {
     OrthographicCamera cam;
     Music music;
 
+    Physics engine;
+
+    // Reading moves stuff
+    private List<String> moves;
+    private int counter;
+
     // Graphing things
     private int goalSize;
-    private String moves;
     private int ballSize;
     private double scale;
     private double xoffset;
@@ -51,7 +62,14 @@ public class CourseScreen implements Screen {
         this.game = game;
         this.course = course;
 
-        this.moves = moves;
+        // Setup moves
+        this.counter = 0;
+        this.moves = new ArrayList<String>();
+        Scanner in = new Scanner(moves);
+        while (in.hasNextLine()) {
+            this.moves.add(in.nextLine());
+        }
+        in.close();
 
         // Setup Cam
         this.cam = new OrthographicCamera();
@@ -75,6 +93,9 @@ public class CourseScreen implements Screen {
         // Setup Goal
         this.goalSize = 20;
         this.flag = new Texture(Gdx.files.internal("golf_flag.png"));
+
+        // Setup engine
+        this.engine = new Physics(this.course, this.ball);
     }
 
     /**
@@ -87,7 +108,7 @@ public class CourseScreen implements Screen {
         this.game = game;
         this.course = course;
 
-        this.moves = "";
+        this.moves = null;
 
         // Setup Cam
         this.cam = new OrthographicCamera();
@@ -215,6 +236,21 @@ public class CourseScreen implements Screen {
 
         // Render the goal
         this.renderGoal();
+
+        // Make a move
+        if (!this.ball.isMoving()) {
+            if (this.moves != null && this.counter < this.moves.size()) { // Mode 2 is active
+                StringTokenizer tokenizer = new StringTokenizer(this.moves.get(this.counter));
+                double force = Double.parseDouble(tokenizer.nextToken());
+                double angle = Double.parseDouble(tokenizer.nextToken());
+                this.engine.hit(force, angle);
+                counter++;
+            }
+            else { // Mode 1 is active
+
+            }
+        }
+        this.engine.movement();
 
         // Render the ball
         this.renderBall();
