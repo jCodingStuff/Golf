@@ -39,6 +39,7 @@ public class ExportListener extends ChangeListener {
 	 */
 	public ExportListener(final Golf game, Screen screen, Course course1, Ball ball1, TextField txt) {
 		this.game = game;
+		this.screen = screen;
 		this.ball1 = ball1;
 		this.course1 = course1;
 		this.txt = txt;
