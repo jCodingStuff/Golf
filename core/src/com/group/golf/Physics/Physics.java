@@ -8,19 +8,31 @@ import com.group.golf.math.Function;
 
 /**
  * Created by alex_ on 21-Mar-18.
+ * A class to hold the Physics engine for the Crazy Golf game
  */
 
 public class Physics {
     private Course course;
     private Ball ball;
 
+    /**
+     * Construct a Physics engine
+     * @param course the course to analyze
+     * @param ball the ball that will roll on the course
+     */
     public Physics(Course course, Ball ball) {
         this.course = course;
         this.ball = ball;
     }
 
 
-    //angle between force and y - basis vector
+    //angle between force and y - basis
+
+    /**
+     * Hit the ball
+     * @param force the force done to the ball
+     * @param angle the angle in which the force was applied
+     */
     public void hit(double force, double angle) {
         double forceX = force * Math.cos(angle);
         double forceY = force * Math.sin(angle);
@@ -29,6 +41,9 @@ public class Physics {
         ball.setVelocityY(Gdx.graphics.getDeltaTime() * forceY / ball.getMass());
     }
 
+    /**
+     * Update the ball state to the following instance of time
+     */
     public void movement() {
         Vector2 grav = gravForce(ball, new Vector2((float) ball.getX(),(float) ball.getY()));
         Vector2 friction =  frictionForce(ball,ball.getVelocityX(),ball.getVelocityY());
@@ -39,22 +54,46 @@ public class Physics {
         ball.setVelocityX(ball.getVelocityX() + Gdx.graphics.getDeltaTime() * (grav.x + friction.x));
         ball.setVelocityY(ball.getVelocityY() + Gdx.graphics.getDeltaTime() * (grav.y + friction.y));
     }
-    
+
+    /**
+     * Compute the friction force that oposes to the movement of the ball
+     * @param ball the ball rolling
+     * @param velocityX the x-component of the velocity of the ball
+     * @param velocityY the y-component of the velocity of the ball
+     * @return a Vector2 instace containig the friction force
+     */
     public Vector2 frictionForce(Ball ball,double velocityX, double velocityY) {
         double multiplier = - this.course.getMu() * this.course.getG() * ball.getMass() / normalLength(velocityX,velocityY);
         return new Vector2((float) (multiplier * velocityX) , (float) (multiplier * velocityY));
     }
 
+    /**
+     * Compute the modulus of the velocity of the ball
+     * @param velocityX the x-component of the velocity
+     * @param velocityY the y-component of the velocity
+     * @return the modulus of the vector formed by X and Y components
+     */
     public double normalLength(double velocityX, double velocityY) {
         return (Math.sqrt(Math.pow(velocityX,2) + Math.pow(velocityY,2)));
     }
 
+    /**
+     * Compute the gravitational force that the ball suffers
+     * @param ball the ball rolling
+     * @param coord the Vector2 containing the actual position of the ball
+     * @return a Vector2 instance containing the gravity force
+     */
     public Vector2 gravForce(Ball ball, Vector2 coord) {
         double multiplier = ball.getMass()* this.course.getG();
         Vector2 slopeMultiplier = calculateSlope(coord);
         return new Vector2((float) - multiplier * slopeMultiplier.x,(float)- multiplier * slopeMultiplier.y);
     }
 
+    /**
+     * Compute the slope of the course in a specific point
+     * @param coord the Vector2 containing the position to analize
+     * @return a Vector2 instance containing the slope at the point provided
+     */
     public Vector2 calculateSlope(Vector2 coord) {
         Vector2 slope = new Vector2();
 
