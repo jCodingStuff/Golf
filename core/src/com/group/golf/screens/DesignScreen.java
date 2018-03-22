@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -73,17 +74,7 @@ class DesignScreen implements Screen {
 
         txtFriction.setPosition(250, 400);
         txtFriction.setSize(200,60);
-        txtFriction.addListener(new FocusListener(){
-            public void focusGained(FocusEvent e) {
-                if(txtFriction.getText().equals("Friction "))
-                    txtFriction.setText("");
-            }
 
-            public void focusLost(FocusEvent e) {
-                if(txtFriction.getText().equals(""))
-                    txtFriction.setText("Friction");
-            }
-        });
 
         txtFunction.setPosition(250, 300);
         txtFunction.setSize(200,60);
@@ -158,22 +149,53 @@ class DesignScreen implements Screen {
         }
         btnBack.addListener(new BackListener(game, this));
 
-        /*class FrictionListener extends FocusListener {
-            final Golf game;
-            private Screen screen;
-            public BackListener(final Golf game, Screen screen){
-                this.game = game;
-                this.screen = screen;
-            }
+        txtFriction.addListener(new FocusListener(){
             @Override
-            public void changed (FocusEvent event, Actor actor) {
+            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
+                if(focused == true) {
+                    if (txtFriction.getText().equals("Friction"))
+                        txtFriction.setText("");
+                    System.out.println(event.toString());
+                }
+                else if(focused == false){
+                    if(txtFriction.getText().equals(""))
+                        txtFriction.setText("Friction");
+                }
 
-                this.game.setScreen(new CourseSelectorScreen(this.game));
-                this.screen.dispose();
             }
+        });
+        txtStartPos.addListener(new FocusListener(){
+            @Override
+            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
+                if(focused == true) {
+                    if (txtStartPos.getText().equals("Start Position"))
+                        txtStartPos.setText("");
+                    System.out.println(event.toString());
+                }
+                else if(focused == false){
+                    if(txtStartPos.getText().equals(""))
+                        txtStartPos.setText("Start Position");
 
-        }
-        btnBack.addListener(new BackListener(game, this));*/
+                }
+
+            }
+        });
+        txtFunction.addListener(new FocusListener(){
+            @Override
+            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
+                if(focused == true) {
+                    if (txtFunction.getText().equals("Function"))
+                        txtFunction.setText("");
+                    System.out.println(event.toString());
+                }
+                else if(focused == false){
+                    if(txtFunction.getText().equals(""))
+                        txtFunction.setText("Function");
+
+                }
+
+            }
+        });
     }
     @Override
     public void show() {
