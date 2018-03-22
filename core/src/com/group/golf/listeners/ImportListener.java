@@ -9,8 +9,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.group.golf.Ball;
+import com.group.golf.Course;
 import com.group.golf.Golf;
+import com.group.golf.math.Function;
 import com.group.golf.screens.CourseScreen;
+
+import java.util.Scanner;
+import java.util.StringTokenizer;
 
 /**
  * Listener for the ImportScreen to import a course
@@ -36,14 +42,40 @@ public class ImportListener extends ChangeListener {
     @Override
     public void changed(ChangeEvent event, Actor actor) {
         String name = this.txtField.getText();
-        String path = "courses/" + name + ".json";
+        String path = "courses/" + name + ".txt";
         if (name != "" && Gdx.files.local(path).exists()) {
-            Json json = new Json();
             FileHandle file = Gdx.files.local(path);
             String text = file.readString();
-            CourseScreen newCourse = json.fromJson(CourseScreen.class, text);
-            newCourse.setGame(this.game);
-            this.game.setScreen(newCourse);
+            Scanner in = new Scanner(text);
+
+            String formula = in.nextLine();
+            Function function = new Function(formula);
+
+            double g = Double.parseDouble(in.nextLine());
+            double tolerance = Double.parseDouble(in.nextLine());
+            double mu = Double.parseDouble(in.nextLine());
+
+            String startText = in.nextLine();
+            StringTokenizer tokStart = new StringTokenizer(startText);
+            double startX = Double.parseDouble(tokStart.nextToken());
+            double startY = Double.parseDouble(tokStart.nextToken());
+            double[] start = new double[]{startX, startY};
+
+            String goalText = in.nextLine();
+            StringTokenizer tokGoal = new StringTokenizer(goalText);
+            double goalX = Double.parseDouble(tokGoal.nextToken());
+            double goalY = Double.parseDouble(tokGoal.nextToken());
+            double[] goal = new double[]{goalX, goalY};
+
+            double vmax = Double.parseDouble(in.nextLine());
+            double mass = Double.parseDouble(in.nextLine());
+
+            in.close();
+
+            Ball ball = new Ball(mass);
+            Course course = new Course(function, g, mu, vmax, start, goal, tolerance);
+
+            this.game.setScreen(new CourseScreen(this.game, course, ball));
             this.screen.dispose();
         }
     }
