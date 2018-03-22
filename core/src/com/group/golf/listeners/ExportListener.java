@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.group.golf.Golf;
 import com.group.golf.screens.CourseScreen;
+import com.group.golf.screens.CourseSelectorScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -48,7 +49,10 @@ public class ExportListener extends ChangeListener {
 			courseText += "\n" + this.ball1.getMass();
 			
 			FileHandle file = Gdx.files.local(path);
-			file.writeString(courseText, true); // True means append, false means overwrite.'
+			file.writeString(courseText, true); // True means append, false means overwrite.
+			
+			this.game.setScreen(new CourseSelectorScreen(this.game));
+			this.screen.dispose();
 		}
 	}
 }
