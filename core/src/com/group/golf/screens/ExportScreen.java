@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
+import com.group.golf.listeners.ExportListener;
 import com.group.golf.listeners.ImportBackListener;
 import com.group.golf.listeners.ImportListener;
 import com.badlogic.gdx.Screen;
@@ -110,7 +111,7 @@ public class ExportScreen implements Screen {
         this.exportButton = new TextButton("Export", skin);
         this.exportButton.setPosition(800, 300);
         this.exportButton.setSize(100, 60);
-        this.exportButton.addListener(new ImportListener(this.game, this.txtf, this));
+        this.exportButton.addListener(new ExportListener(this.game, this, this.course1, this.ball1, this.txtf));
         stage.addActor(this.exportButton);
 
         //this.label = new Label("Course Name", skin);
@@ -122,7 +123,7 @@ public class ExportScreen implements Screen {
 
         // Set up music
         this.music = Gdx.audio.newMusic(Gdx.files.internal("exportmusic.mp3"));
-        this.music.setVolume(0.2f);
+        this.music.setVolume(0.8f);
         this.music.setLooping(true);
     }
     @Override
@@ -133,8 +134,7 @@ public class ExportScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0.5f, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         this.cam.update();
         this.game.batch.setProjectionMatrix(this.cam.combined);
 
