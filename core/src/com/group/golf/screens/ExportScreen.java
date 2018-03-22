@@ -144,7 +144,7 @@ public class ExportScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0.5f, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.cam.update();
         this.game.batch.setProjectionMatrix(this.cam.combined);
 
