@@ -18,6 +18,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import java.io.FileWriter;
 import com.badlogic.gdx.files.FileHandle;
 
+/**
+ * A listener to export a course into a file
+ */
 public class ExportListener extends ChangeListener {
 	
 	Screen screen;
@@ -25,7 +28,15 @@ public class ExportListener extends ChangeListener {
     Course course1;
     Ball ball1;
     TextField txt;
-	
+
+	/**
+	 * Create a new ExportListener instance
+	 * @param game the Golf instance
+	 * @param screen the Screen instance
+	 * @param course1 the Course instance
+	 * @param ball1 the Ball instance
+	 * @param txt the TextField containing the name for the course to export
+	 */
 	public ExportListener(Golf game, Screen screen, Course course1, Ball ball1, TextField txt) {
 		this.game = game;
 		this.ball1 = ball1;
@@ -35,7 +46,6 @@ public class ExportListener extends ChangeListener {
 	
 	@Override
 	public void changed(ChangeEvent event, Actor actor) {
-		// TODO Auto-generated method stub
 		String name = this.txt.getText();
 		String path = "courses/"+ name +".txt";
 		if (name != "" && !Gdx.files.local(path).exists()) {
