@@ -43,7 +43,8 @@ public class ImportListener extends ChangeListener {
     public void changed(ChangeEvent event, Actor actor) {
         String name = this.txtField.getText();
         String path = "courses/" + name + ".txt";
-        if (name != "" && name != "Enter a file name" && Gdx.files.local(path).exists()) {
+        if (!name.equals("") && !name.equalsIgnoreCase("Enter a file name")
+                && Gdx.files.local(path).exists()) {
             FileHandle file = Gdx.files.local(path);
             String text = file.readString();
             Scanner in = new Scanner(text);
