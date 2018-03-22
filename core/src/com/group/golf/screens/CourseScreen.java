@@ -244,7 +244,7 @@ public class CourseScreen implements Screen {
                 double force = Double.parseDouble(tokenizer.nextToken());
                 double angle = Double.parseDouble(tokenizer.nextToken());
                 this.engine.hit(force, angle);
-                counter++;
+                this.counter++;
             }
             else { // Mode 1 is active
 
