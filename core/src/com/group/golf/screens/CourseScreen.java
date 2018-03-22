@@ -260,11 +260,21 @@ public class CourseScreen implements Screen {
 
         // Check if the ball is stopped
         if (!this.ball.isMoving()) {
+            // Check if the goal is achieved
+            double xToGoal = this.course.getGoal()[0] - this.ball.getX();
+            double yToGoal = this.course.getGoal()[1] - this.ball.getY();
+            double distToGoal = Math.sqrt(Math.pow(xToGoal, 2) + Math.pow(yToGoal, 2));
+            if (distToGoal <= this.course.getTolerance()) {
+                this.game.setScreen(new CourseSelectorScreen(this.game));
+                this.dispose();
+            }
+
             // Store position
             double ballX = (this.ball.getX() - this.xoffset) * (1/this.scale);
             double ballY = (this.ball.getY() - this.yoffset) * (1/this.scale);
             this.lastStop[0] = ballX;
             this.lastStop[1] = ballY;
+            
             // Make a move
             if (this.moves != null && this.counter < this.moves.size()) { // Mode 2 is active
                 StringTokenizer tokenizer = new StringTokenizer(this.moves.get(this.counter));
