@@ -164,6 +164,11 @@ public class Course {
         return message;
     }
 
+    /**
+     * Get a string representation of a double array
+     * @param array the array to represent
+     * @return the string representation
+     */
     private static String arrToStr(double[] array) {
         String message = "[";
         for (int i = 0; i < array.length; i++) {
