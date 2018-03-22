@@ -281,8 +281,8 @@ public class CourseScreen implements Screen {
         // Check the walls
         double pixelX = (this.ball.getX() - this.xoffset) * (1/this.scale);
         double pixelY = (this.ball.getY() - this.yoffset) * (1/this.scale);
-        if (pixelX <= 0 || pixelX >= Golf.VIRTUAL_WIDTH) this.ball.setVelocityX(-this.ball.getVelocityX());
-        if (pixelY <= 0 || pixelY >= Golf.VIRTUAL_HEIGHT) this.ball.setVelocityY(-this.ball.getVelocityY());
+        if (pixelX < 0 || pixelX > Golf.VIRTUAL_WIDTH) this.ball.setVelocityX(-this.ball.getVelocityX());
+        if (pixelY < 0 || pixelY > Golf.VIRTUAL_HEIGHT) this.ball.setVelocityY(-this.ball.getVelocityY());
 
         // Render the ball
         this.renderBall();
