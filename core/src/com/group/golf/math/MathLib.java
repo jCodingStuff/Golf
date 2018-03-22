@@ -35,4 +35,15 @@ public class MathLib {
         return result;
     }
 
+    /**
+     * Translate function coordinate to pixel coordinate
+     * @param from function coordinate
+     * @param offset the offset value
+     * @param scale the scale
+     * @return the pixel value
+     */
+    public static double toPixel(double from, double offset, double scale) {
+        return (from - offset) * (1/scale);
+    }
+
 }
