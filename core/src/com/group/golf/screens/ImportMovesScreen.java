@@ -74,7 +74,7 @@ public class ImportMovesScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 DesignScreen scr = new DesignScreen(this.game);
-                scr.txtFunction.setText(this.course.getFunction().formula);
+                scr.txtFunction.setText(this.course.getFunction().getName());
                 scr.txtStartPos.setText(this.course.getStart()[0] + " " + this.course.getStart()[1]);
                 scr.txtGoalPos.setText(this.course.getGoal()[0] + " " + this.course.getGoal()[1]);
                 scr.txtRadius.setText("" + this.course.getTolerance());
