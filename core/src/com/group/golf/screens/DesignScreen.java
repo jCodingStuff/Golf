@@ -20,9 +20,8 @@ import com.group.golf.listeners.Mode2Listener;
 
 /**
  * Created by kim on 20.03.2018.
+ * Screen to design courses
  */
-
-
 class DesignScreen implements Screen {
     Golf game;
 
@@ -45,6 +44,10 @@ class DesignScreen implements Screen {
     TextButton btnBack;
     Texture background;
 
+    /**
+     * Create a new Design Screen
+     * @param game the Golf instace
+     */
     public DesignScreen(Golf game){
         this.game = game;
         this.stage = new Stage();

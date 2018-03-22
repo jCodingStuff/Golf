@@ -12,6 +12,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.group.golf.Golf;
 
+/**
+ * The introductory screen for the game
+ */
 public class IntroScreen implements Screen {
 
     Golf game;
@@ -27,6 +30,10 @@ public class IntroScreen implements Screen {
     BitmapFont titleFont;
     BitmapFont subTitleFont;
 
+    /**
+     * Create a new intro screen
+     * @param game the Golf instance
+     */
     public IntroScreen(Golf game) {
         this.game = game;
 

@@ -39,6 +39,13 @@ public class CourseScreen implements Screen {
     private double minimum;
     private Color[][] colors;
 
+    /**
+     * Create a new course screen
+     * @param game the Golf instance
+     * @param course the Course instance
+     * @param ball the Ball instance
+     * @param moves the moves to read
+     */
     public CourseScreen(Golf game, Course course, Ball ball, String moves) {
         this.game = game;
         this.course = course;
@@ -71,9 +78,9 @@ public class CourseScreen implements Screen {
 
     /**
      * Create a new CourseScreen instance
-     * @param game the game itself
-     * @param course the course instance we want to graph
-     * @param ball the ball to play
+     * @param game the Golf instace
+     * @param course the Course instance
+     * @param ball the Ball instance
      */
     public CourseScreen(Golf game, Course course, Ball ball) {
         this.game = game;
@@ -105,6 +112,9 @@ public class CourseScreen implements Screen {
         this.flag = new Texture(Gdx.files.internal("golf_flag.png"));
     }
 
+    /**
+     * Set up the course for rendering
+     */
     private void setUpCourse() {
         // Set up the scale, each pixel of the screen represents this.scale units
         double dist = this.course.getDistance();
@@ -125,6 +135,9 @@ public class CourseScreen implements Screen {
         this.calcColorsMatrix();
     }
 
+    /**
+     * Compute the heights matrix
+     */
     private void calcHeightsMatrix() {
         this.heights = new double[Golf.VIRTUAL_WIDTH][Golf.VIRTUAL_HEIGHT];
         this.maximum = Double.MIN_VALUE;
@@ -140,6 +153,9 @@ public class CourseScreen implements Screen {
         }
     }
 
+    /**
+     * Compute the colors matrix
+     */
     private void calcColorsMatrix() {
         float minTerrain = 0.1f;
         float maxTerrain = 0.9f;
@@ -164,6 +180,9 @@ public class CourseScreen implements Screen {
         }
     }
 
+    /**
+     * Compute the screen offsets
+     */
     private void calcOffsets() {
         double x1 = this.course.getStart()[0];
         double x2 = this.course.getGoal()[0];
@@ -201,6 +220,9 @@ public class CourseScreen implements Screen {
 
     }
 
+    /**
+     * Render the goal
+     */
     private void renderGoal() {
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         float realX = (float) ((this.course.getGoal()[0] - this.xoffset) * (1/this.scale));
@@ -219,6 +241,9 @@ public class CourseScreen implements Screen {
         this.game.batch.end();
     }
 
+    /**
+     * Render the ball
+     */
     private void renderBall() {
         float realX = (float) ((this.ball.getX() - this.xoffset) * (1/this.scale));
         float realY = (float) ((this.ball.getY() - this.yoffset) * (1/this.scale));
@@ -228,6 +253,9 @@ public class CourseScreen implements Screen {
         this.game.batch.end();
     }
 
+    /**
+     * Render the terrain (course)
+     */
     private void renderTerrain() {
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (int x = 0; x < this.colors.length; x++) {
