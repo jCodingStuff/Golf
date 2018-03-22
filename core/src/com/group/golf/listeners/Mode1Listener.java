@@ -12,6 +12,9 @@ import com.group.golf.screens.CourseScreen;
 
 import java.util.StringTokenizer;
 
+/**
+ * Listener to run the game using mode1 (player takes the control)
+ */
 public class Mode1Listener extends ChangeListener {
 
     Golf game;
@@ -25,6 +28,19 @@ public class Mode1Listener extends ChangeListener {
     TextField txtGravity;
     TextField txtBallMass;
 
+    /**
+     * Create a new Mode1Listener
+     * @param game the Golf instance
+     * @param screen the Screen instance
+     * @param txtFunction the TextField containing the function
+     * @param txtStartPos the TextField containing the Start Coordinates
+     * @param txtGoalPos the TextField containing the Goal Coordinates
+     * @param txtRadius the TextField containing the tolerance
+     * @param txtVMax the TextField containing the maximum velocity
+     * @param txtFriction the TextField containing the friction coefficient
+     * @param txtGravity the TextField containing the gravity
+     * @param txtBallMass the TextF
+     */
     public Mode1Listener(Golf game, Screen screen, TextField txtFunction, TextField txtStartPos, TextField txtGoalPos,
                          TextField txtRadius, TextField txtVMax, TextField txtFriction, TextField txtGravity,
                          TextField txtBallMass) {

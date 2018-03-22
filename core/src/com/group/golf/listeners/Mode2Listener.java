@@ -13,6 +13,9 @@ import com.group.golf.screens.ImportMovesScreen;
 
 import java.util.StringTokenizer;
 
+/**
+ * Listener to run the game using mode2 (file takes the control)
+ */
 public class Mode2Listener extends ChangeListener {
 
     Golf game;
@@ -26,6 +29,19 @@ public class Mode2Listener extends ChangeListener {
     TextField txtGravity;
     TextField txtBallMass;
 
+    /**
+     * Create a new Mode2Listener
+     * @param game the Golf instance
+     * @param screen the Screen instance
+     * @param txtFunction the TextField containing the function
+     * @param txtStartPos the TextField containing the Start Coordinates
+     * @param txtGoalPos the TextField containing the Goal Coordinates
+     * @param txtRadius the TextField containing the tolerance
+     * @param txtVMax the TextField containing the maximum velocity
+     * @param txtFriction the TextField containing the friction coefficient
+     * @param txtGravity the TextField containing the gravity
+     * @param txtBallMass the TextF
+     */
     public Mode2Listener(Golf game, Screen screen, TextField txtFunction, TextField txtStartPos, TextField txtGoalPos,
                          TextField txtRadius, TextField txtVMax, TextField txtFriction, TextField txtGravity,
                          TextField txtBallMass) {
