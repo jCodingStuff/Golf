@@ -81,7 +81,7 @@ public class ExportScreen implements Screen {
         stage.addActor(txtf);
         stage.addActor(back);
 
-        this.exportButton = new TextButton("Import", skin);
+        this.exportButton = new TextButton("Export", skin);
         this.exportButton.setPosition(270, 200);
         this.exportButton.addListener(new ImportListener(this.game, this.txtf, this));
         stage.addActor(this.exportButton);
