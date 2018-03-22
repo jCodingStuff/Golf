@@ -23,6 +23,11 @@ import com.group.golf.listeners.ImportListener;
 import com.badlogic.gdx.Screen;
 import com.group.golf.math.Function;
 
+/**
+ * A screen to export a course into a file.
+ * @author kaspar
+ *
+ */
 public class ExportScreen implements Screen {
 
 	private Stage stage;
@@ -37,7 +42,12 @@ public class ExportScreen implements Screen {
     Course course1;
     Ball ball1;
 
-
+    /**
+     * Create a new export screen instance.
+     * @param game The golf instance.
+     * @param course1 The course1 instance.
+     * @param ball1 The ball1 instance.
+     */
     public ExportScreen(Golf game, Course course1, Ball ball1){
         this.game = game;
         this.stage = new Stage();
@@ -123,7 +133,7 @@ public class ExportScreen implements Screen {
 
         // Set up music
         this.music = Gdx.audio.newMusic(Gdx.files.internal("exportmusic.mp3"));
-        this.music.setVolume(0.8f);
+        this.music.setVolume(1.5f);
         this.music.setLooping(true);
     }
     @Override
