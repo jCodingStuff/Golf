@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.group.golf.Golf;
+import com.group.golf.listeners.Mode1Listener;
 
 /**
  * Created by kim on 20.03.2018.
@@ -69,6 +70,8 @@ class DesignScreen implements Screen {
         btnBack = new TextButton("Back", skin);
 
         btnMode1 = new TextButton("Mode 1", skin);
+        btnMode1.addListener(new Mode1Listener(this.game, this, txtFunction, txtStartPos, txtGoalPos, txtRadius,
+                txtVMax, txtFriction, txtGravity, txtBallMass));
         btnMode2 = new TextButton("Mode 2", skin);
 
         txtFriction.setPosition(250, 400);
