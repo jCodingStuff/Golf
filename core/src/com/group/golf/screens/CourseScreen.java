@@ -210,7 +210,7 @@ public class CourseScreen implements Screen {
                 this.goalSize, this.goalSize);
         this.game.shapeRenderer.end();
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        float tolerance = (float) this.course.getTolerance() * 100;
+        float tolerance = (float) (this.course.getTolerance() * 1/(this.scale));
         this.game.shapeRenderer.setColor(1, 0, 0, 1);
         this.game.shapeRenderer.ellipse(realX - tolerance/2, realY - tolerance/2, tolerance, tolerance);
         this.game.shapeRenderer.end();
