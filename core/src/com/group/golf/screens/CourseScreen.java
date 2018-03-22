@@ -267,6 +267,7 @@ public class CourseScreen implements Screen {
             if (distToGoal <= this.course.getTolerance()) {
                 this.game.setScreen(new CourseSelectorScreen(this.game));
                 this.dispose();
+                return;
             }
 
             // Store position
