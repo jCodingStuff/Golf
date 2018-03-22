@@ -38,6 +38,36 @@ public class Ball {
     }
 
     /**
+     * Limit the velocity to a maximum
+     * @param max the limit
+     */
+    public void limit(double max) {
+        double velocity = this.calcVelocity();
+        if (velocity > max) {
+            this.velocityX /= velocity;
+            this.velocityY /= velocity;
+            this.velocityX *= max;
+            this.velocityY *= max;
+        }
+    }
+
+    /**
+     * Guess if the ball is moving
+     * @return true if it is moving, false otherwise
+     */
+    public boolean isMoving() {
+        return this.velocityX != 0 || this.velocityY != 0;
+    }
+
+    /**
+     * Compute the velocity modulus
+     * @return the value for the velocity modulus
+     */
+    public double calcVelocity() {
+        return Math.sqrt(Math.pow(this.velocityX, 2) + Math.pow(this.velocityY, 2));
+    }
+
+    /**
      * Get access to the x-component of the velocity
      * @return the x-component of the velocity
      */
