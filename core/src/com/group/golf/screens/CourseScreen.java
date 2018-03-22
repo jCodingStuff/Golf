@@ -258,6 +258,10 @@ public class CourseScreen implements Screen {
         // Render the goal
         this.renderGoal();
 
+        // Get pixel position of ball
+        double ballX = MathLib.toPixel(this.ball.getX(), this.xoffset, this.scale);
+        double ballY = MathLib.toPixel(this.ball.getY(), this.yoffset, this.scale);
+
         // Check if the ball is stopped
         if (!this.ball.isMoving()) {
             // Check if the goal is achieved
@@ -271,8 +275,6 @@ public class CourseScreen implements Screen {
             }
 
             // Store position
-            double ballX = (this.ball.getX() - this.xoffset) * (1/this.scale);
-            double ballY = (this.ball.getY() - this.yoffset) * (1/this.scale);
             this.lastStop[0] = ballX;
             this.lastStop[1] = ballY;
 
@@ -299,13 +301,11 @@ public class CourseScreen implements Screen {
         }
 
         // Check the walls
-        double pixelX = (this.ball.getX() - this.xoffset) * (1/this.scale);
-        double pixelY = (this.ball.getY() - this.yoffset) * (1/this.scale);
-        if (pixelX < 0 || pixelX > Golf.VIRTUAL_WIDTH) this.ball.setVelocityX(-this.ball.getVelocityX());
-        if (pixelY < 0 || pixelY > Golf.VIRTUAL_HEIGHT) this.ball.setVelocityY(-this.ball.getVelocityY());
+        if (ballX < 0 || ballX > Golf.VIRTUAL_WIDTH) this.ball.setVelocityX(-this.ball.getVelocityX());
+        if (ballY < 0 || ballY > Golf.VIRTUAL_HEIGHT) this.ball.setVelocityY(-this.ball.getVelocityY());
 
         // Render the ball
-        this.renderBall();
+        this.renderBall(ballX, ballY);
     }
 
     /**
@@ -313,8 +313,8 @@ public class CourseScreen implements Screen {
      */
     private void renderGoal() {
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        float realX = (float) ((this.course.getGoal()[0] - this.xoffset) * (1/this.scale));
-        float realY = (float) ((this.course.getGoal()[1] - this.yoffset) * (1/this.scale));
+        float realX = (float) MathLib.toPixel(this.course.getGoal()[0], this.xoffset, this.scale);
+        float realY = (float) MathLib.toPixel(this.course.getGoal()[1], this.yoffset, this.scale);
         this.game.shapeRenderer.setColor(0, 0, 0, 1);
         this.game.shapeRenderer.ellipse(realX - this.goalSize/2, realY - this.goalSize/2,
                 this.goalSize, this.goalSize);
@@ -331,12 +331,12 @@ public class CourseScreen implements Screen {
 
     /**
      * Render the ball
+     * @param realX the x-pixel position
+     * @param realY the y-pixel position
      */
-    private void renderBall() {
-        float realX = (float) ((this.ball.getX() - this.xoffset) * (1/this.scale));
-        float realY = (float) ((this.ball.getY() - this.yoffset) * (1/this.scale));
+    private void renderBall(double realX, double realY) {
         this.game.batch.begin();
-        this.game.batch.draw(this.ballImage, realX - this.ballSize/2, realY - this.ballSize/2,
+        this.game.batch.draw(this.ballImage, (float) realX - this.ballSize/2, (float)realY - this.ballSize/2,
                 this.ballSize, this.ballSize);
         this.game.batch.end();
     }
