@@ -108,11 +108,12 @@ public class CourseScreen implements Screen {
     private void setUpCourse() {
         // Set up the scale, each pixel of the screen represents this.scale units
         double dist = this.course.getDistance();
-        if (dist <= 1.5) this.scale = 0.0025;
-        else if (dist <= 3) this.scale = 0.005;
-        else if (dist <= 6) this.scale = 0.01;
-        else if (dist <= 12) this.scale = 0.02;
-        else this.scale = 0.03;
+        double limitDist = 0.375;
+        this.scale = 0.000625;
+        while (dist > limitDist) {
+            this.scale *= 2;
+            limitDist *= 2;
+        }
 
         // The center of the screen is the middle point between the start and the goal
         this.calcOffsets();
