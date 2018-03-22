@@ -336,7 +336,7 @@ public class CourseScreen implements Screen {
      */
     private void renderBall(double realX, double realY) {
         this.game.batch.begin();
-        this.game.batch.draw(this.ballImage, (float) realX - this.ballSize/2, (float)realY - this.ballSize/2,
+        this.game.batch.draw(this.ballImage, (float) realX - this.ballSize/2, (float) realY - this.ballSize/2,
                 this.ballSize, this.ballSize);
         this.game.batch.end();
     }
