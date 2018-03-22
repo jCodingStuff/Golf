@@ -9,7 +9,7 @@ package com.group.golf.math;
 
 public class Function {
 
-    private String formula;
+    public String formula;
     private GMath calc;
 
     /**

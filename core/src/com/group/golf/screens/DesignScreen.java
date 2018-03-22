@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.group.golf.Golf;
 import com.group.golf.listeners.Mode1Listener;
+import com.group.golf.listeners.Mode2Listener;
 
 /**
  * Created by kim on 20.03.2018.
@@ -42,8 +43,8 @@ class DesignScreen implements Screen {
     TextButton btnMode1;
     TextButton btnMode2;
     TextButton btnBack;
-    ButtonGroup mode;
     Texture background;
+
     public DesignScreen(Golf game){
         this.game = game;
         this.stage = new Stage();
@@ -80,6 +81,8 @@ class DesignScreen implements Screen {
         btnMode1.addListener(new Mode1Listener(this.game, this, txtFunction, txtStartPos, txtGoalPos, txtRadius,
                 txtVMax, txtFriction, txtGravity, txtBallMass));
         btnMode2 = new TextButton("Mode 2", skin);
+        btnMode2.addListener(new Mode2Listener(this.game, this, txtFunction, txtStartPos, txtGoalPos, txtRadius,
+                txtVMax, txtFriction, txtGravity, txtBallMass));
 
         txtFriction.setPosition(250, 400);
         txtFriction.setSize(200,60);
@@ -129,12 +132,6 @@ class DesignScreen implements Screen {
         btnMode2.setPosition(550, 100);
         btnMode2.setSize(200,60);
 
-
-        mode = new ButtonGroup(btnMode1, btnMode2);
-        mode.setMaxCheckCount(1);
-        mode.setMinCheckCount(1);
-        mode.setUncheckLast(true);
-
         stage.addActor(txtFriction);
         stage.addActor(txtFunction);
         stage.addActor(txtVMax);
@@ -149,7 +146,7 @@ class DesignScreen implements Screen {
         stage.addActor(btnBack);
 
 
-        Gdx.input.setInputProcessor(this.stage);
+        //Gdx.input.setInputProcessor(this.stage);
 
         class BackListener extends ChangeListener {
             final Golf game;

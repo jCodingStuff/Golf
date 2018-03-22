@@ -29,6 +29,7 @@ public class CourseScreen implements Screen {
 
     // Graphing things
     private int goalSize;
+    private String moves;
     private int ballSize;
     private double scale;
     private double xoffset;
@@ -37,6 +38,36 @@ public class CourseScreen implements Screen {
     private double maximum;
     private double minimum;
     private Color[][] colors;
+
+    public CourseScreen(Golf game, Course course, Ball ball, String moves) {
+        this.game = game;
+        this.course = course;
+
+        this.moves = moves;
+
+        // Setup Cam
+        this.cam = new OrthographicCamera();
+        this.cam.setToOrtho(false, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
+
+        // Setup Music
+        this.music = Gdx.audio.newMusic(Gdx.files.internal("mario64_ost.mp3"));
+        this.music.setVolume(0.2f);
+        this.music.setLooping(true);
+
+        // Setup Course
+        this.setUpCourse();
+
+        // Setup Ball
+        this.ball = ball;
+        this.ball.setX(this.course.getStart()[0]);
+        this.ball.setY(this.course.getStart()[1]);
+        this.ballSize = 20;
+        this.ballImage = new Texture(Gdx.files.internal("ball_soccer2.png"));
+
+        // Setup Goal
+        this.goalSize = 20;
+        this.flag = new Texture(Gdx.files.internal("golf_flag.png"));
+    }
 
     /**
      * Create a new CourseScreen instance
@@ -47,6 +78,8 @@ public class CourseScreen implements Screen {
     public CourseScreen(Golf game, Course course, Ball ball) {
         this.game = game;
         this.course = course;
+
+        this.moves = "";
 
         // Setup Cam
         this.cam = new OrthographicCamera();
@@ -75,11 +108,12 @@ public class CourseScreen implements Screen {
     private void setUpCourse() {
         // Set up the scale, each pixel of the screen represents this.scale units
         double dist = this.course.getDistance();
-        if (dist <= 1.5) this.scale = 0.0025;
-        else if (dist <= 3) this.scale = 0.005;
-        else if (dist <= 6) this.scale = 0.01;
-        else if (dist <= 12) this.scale = 0.02;
-        else this.scale = 0.03;
+        double limitDist = 0.375;
+        this.scale = 0.000625;
+        while (dist > limitDist) {
+            this.scale *= 2;
+            limitDist *= 2;
+        }
 
         // The center of the screen is the middle point between the start and the goal
         this.calcOffsets();
