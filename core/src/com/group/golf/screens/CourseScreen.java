@@ -39,6 +39,7 @@ public class CourseScreen implements Screen {
     private double minimum;
     private Color[][] colors;
 
+
     /**
      * Create a new course screen
      * @param game the Golf instance
@@ -217,7 +218,6 @@ public class CourseScreen implements Screen {
 
         // Render the ball
         this.renderBall();
-
     }
 
     /**
