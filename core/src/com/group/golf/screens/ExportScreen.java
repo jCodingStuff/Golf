@@ -19,6 +19,7 @@ import com.group.golf.Golf;
 import com.group.golf.listeners.ImportBackListener;
 import com.group.golf.listeners.ImportListener;
 import com.badlogic.gdx.Screen;
+import com.group.golf.math.Function;
 
 public class ExportScreen implements Screen {
 
@@ -40,6 +41,9 @@ public class ExportScreen implements Screen {
         this.stage = new Stage();
 
         this.background = new Texture(Gdx.files.internal("minigolf_background.jpg"));
+
+        this.course1 = course1;
+        this.ball1 = ball1;
 
         // Setup cam
         this.cam = new OrthographicCamera();
