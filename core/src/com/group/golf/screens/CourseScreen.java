@@ -132,6 +132,9 @@ public class CourseScreen implements Screen {
         // Setup Goal
         this.goalSize = 20;
         this.flag = new Texture(Gdx.files.internal("golf_flag.png"));
+
+        // Setup engine
+        this.engine = new Physics(this.course, this.ball);
     }
 
     /**
