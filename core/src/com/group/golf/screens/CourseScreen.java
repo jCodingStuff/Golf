@@ -18,7 +18,7 @@ import com.group.golf.math.MathLib;
  */
 public class CourseScreen implements Screen {
 
-    Golf game;
+    final Golf game;
 
     Course course;
     Ball ball;
@@ -46,7 +46,7 @@ public class CourseScreen implements Screen {
      * @param ball the Ball instance
      * @param moves the moves to read
      */
-    public CourseScreen(Golf game, Course course, Ball ball, String moves) {
+    public CourseScreen(final Golf game, Course course, Ball ball, String moves) {
         this.game = game;
         this.course = course;
 
@@ -82,7 +82,7 @@ public class CourseScreen implements Screen {
      * @param course the Course instance
      * @param ball the Ball instance
      */
-    public CourseScreen(Golf game, Course course, Ball ball) {
+    public CourseScreen(final Golf game, Course course, Ball ball) {
         this.game = game;
         this.course = course;
 
@@ -297,8 +297,6 @@ public class CourseScreen implements Screen {
     public Golf getGame() {
         return game;
     }
-
-    public void setGame(Golf game) { this.game = game; };
 
     public Course getCourse() {
         return course;

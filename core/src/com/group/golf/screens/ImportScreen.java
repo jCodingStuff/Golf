@@ -26,7 +26,7 @@ import com.group.golf.listeners.ImportListener;
 class ImportScreen implements Screen {
     private Stage stage;
     TextField txtf;
-    Golf game;
+    final Golf game;
     Music music;
     TextButton back;
     //Label label;
@@ -38,7 +38,7 @@ class ImportScreen implements Screen {
      * Create a new Import screen
      * @param game the Golf instance
      */
-    public ImportScreen(Golf game){
+    public ImportScreen(final Golf game){
         this.game = game;
         this.stage = new Stage();
 

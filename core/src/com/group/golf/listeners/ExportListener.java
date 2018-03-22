@@ -24,7 +24,7 @@ import com.badlogic.gdx.files.FileHandle;
 public class ExportListener extends ChangeListener {
 	
 	Screen screen;
-    Golf game;
+    final Golf game;
     Course course1;
     Ball ball1;
     TextField txt;
@@ -37,11 +37,11 @@ public class ExportListener extends ChangeListener {
 	 * @param ball1 the Ball instance
 	 * @param txt the TextField containing the name for the course to export
 	 */
-	public ExportListener(Golf game, Screen screen, Course course1, Ball ball1, TextField txt) {
+	public ExportListener(final Golf game, Screen screen, Course course1, Ball ball1, TextField txt) {
 		this.game = game;
 		this.ball1 = ball1;
 		this.course1 = course1;
-		this.txt =txt;
+		this.txt = txt;
 	}
 	
 	@Override
