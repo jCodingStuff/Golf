@@ -43,7 +43,7 @@ public class MovesPlayListener extends ChangeListener {
     public void changed(ChangeEvent event, Actor actor) {
         String name = this.txt.getText();
         String path = "moves/" + name + ".txt";
-        if (name != "" && Gdx.files.local(path).exists()) {
+        if (name != "" && name != "Enter a file name" && Gdx.files.local(path).exists()) {
             FileHandle file = Gdx.files.local(path);
             String moves = file.readString();
             this.game.setScreen(new CourseScreen(this.game, this.course, this.ball, moves));

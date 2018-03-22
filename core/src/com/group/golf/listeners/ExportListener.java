@@ -49,7 +49,7 @@ public class ExportListener extends ChangeListener {
 	public void changed(ChangeEvent event, Actor actor) {
 		String name = this.txt.getText();
 		String path = "courses/"+ name +".txt";
-		if (name != "" && !Gdx.files.local(path).exists()) {
+		if (name != "" && name != "Enter a file name" && !Gdx.files.local(path).exists()) {
 			String courseText = this.course1.getFunction().getName();
 			courseText += "\n" + this.course1.getG();
 			courseText += "\n" + this.course1.getTolerance();
