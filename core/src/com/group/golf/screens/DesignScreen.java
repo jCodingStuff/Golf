@@ -262,13 +262,13 @@ class DesignScreen implements Screen {
             @Override
             public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
                 if(focused == true) {
-                    if (txtVMax.getText().equals("Maximum Velocity"))
+                    if (txtVMax.getText().equals("Maximum velocity"))
                         txtVMax.setText("");
 
                 }
                 else if(focused == false){
                     if(txtVMax.getText().equals(""))
-                        txtVMax.setText("Maximum Velocity");
+                        txtVMax.setText("Maximum velocity");
 
                 }
 
