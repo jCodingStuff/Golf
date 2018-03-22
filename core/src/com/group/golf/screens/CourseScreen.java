@@ -39,6 +39,9 @@ public class CourseScreen implements Screen {
     private List<String> moves;
     private int counter;
 
+    // Ball stuff
+    double[] lastStop;
+
     // Graphing things
     private int goalSize;
     private int ballSize;
