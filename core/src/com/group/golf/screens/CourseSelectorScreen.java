@@ -17,6 +17,9 @@ import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.math.Function;
 
+/**
+ * The main menu screen for the Crazy Golf game
+ */
 public class CourseSelectorScreen implements Screen {
 
     Golf game;
@@ -29,6 +32,10 @@ public class CourseSelectorScreen implements Screen {
     OrthographicCamera cam;
     Texture background;
 
+    /**
+     * Create a new main menu screen
+     * @param game the Golf instance
+     */
     public CourseSelectorScreen(Golf game) {
         this.game = game;
         stage = new Stage();

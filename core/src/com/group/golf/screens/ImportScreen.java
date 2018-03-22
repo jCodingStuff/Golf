@@ -18,6 +18,7 @@ import com.group.golf.listeners.ImportListener;
 
 /**
  * Created by kim on 20.03.2018.
+ * Screen to import a course
  */
 
 class ImportScreen implements Screen {
@@ -31,7 +32,10 @@ class ImportScreen implements Screen {
     TextButton importButton;
     Texture background;
 
-
+    /**
+     * Create a new Import screen
+     * @param game the Golf instance
+     */
     public ImportScreen(Golf game){
         this.game = game;
         this.stage = new Stage();

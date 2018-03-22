@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.group.golf.screens.IntroScreen;
 
+/**
+ * Main class for the Crazy Golf game
+ */
 public class Golf extends Game {
 
 	public static final String GAME_NAME = "Crazy Golf";

@@ -18,6 +18,9 @@ import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.listeners.MovesPlayListener;
 
+/**
+ * Screen to import a file containing the moves to perform
+ */
 public class ImportMovesScreen implements Screen {
 
     Golf game;
@@ -32,6 +35,12 @@ public class ImportMovesScreen implements Screen {
     OrthographicCamera cam;
     Texture background;
 
+    /**
+     * Create a new moves screen
+     * @param game the Golf instance
+     * @param course the Course instance
+     * @param ball the Ball instance
+     */
     public ImportMovesScreen(Golf game, Course course, Ball ball) {
         this.game = game;
         this.stage = new Stage();

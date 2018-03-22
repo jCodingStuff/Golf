@@ -1,5 +1,8 @@
 package com.group.golf;
 
+/**
+ * A class to save the data of the ball
+ */
 public class Ball {
 
     private double mass;
@@ -34,18 +37,34 @@ public class Ball {
         this.velocityY = 0;
     }
 
+    /**
+     * Get access to the x-component of the velocity
+     * @return the x-component of the velocity
+     */
     public double getVelocityX() {
         return velocityX;
     }
 
+    /**
+     * Set a new value for the x-component of the velocity
+     * @param velocityX the new x-component of the velocity
+     */
     public void setVelocityX(double velocityX) {
         this.velocityX = velocityX;
     }
 
+    /**
+     * Get access to the y-component of the velocity
+     * @return the y-component of the velocity
+     */
     public double getVelocityY() {
         return velocityY;
     }
 
+    /**
+     * Set a new value for the y-component of the velocity
+     * @param velocityY the new y-component of the velocity
+     */
     public void setVelocityY(double velocityY) {
         this.velocityY = velocityY;
     }
