@@ -2,6 +2,7 @@ package com.group.golf.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -26,6 +27,7 @@ class DesignScreen implements Screen {
 
     Stage stage;
     OrthographicCamera cam;
+    Music music;
 
     TextField txtFunction;
     TextField txtStartPos;
@@ -46,6 +48,11 @@ class DesignScreen implements Screen {
         this.game = game;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+
+        // Set up music
+        this.music = Gdx.audio.newMusic(Gdx.files.internal("mariokart8_rainbowroad.mp3"));
+        this.music.setVolume(0.2f);
+        this.music.setLooping(true);
 
         // Setup background image
         this.background = new Texture(Gdx.files.internal("minigolf_background.jpg"));
@@ -180,7 +187,7 @@ class DesignScreen implements Screen {
     }
     @Override
     public void show() {
-
+        this.music.play();
     }
 
     @Override
@@ -214,10 +221,10 @@ class DesignScreen implements Screen {
 
     @Override
     public void hide() {
-
+        this.music.stop();
     }
     @Override
     public void dispose() {
-
+        this.music.dispose();
     }
 }
