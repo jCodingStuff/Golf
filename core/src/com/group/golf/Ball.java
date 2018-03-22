@@ -52,6 +52,14 @@ public class Ball {
     }
 
     /**
+     * Guess if the ball is moving
+     * @return true if it is moving, false otherwise
+     */
+    public boolean isMoving() {
+        return this.velocityX != 0 || this.velocityY != 0;
+    }
+
+    /**
      * Compute the velocity modulus
      * @return the value for the velocity modulus
      */
