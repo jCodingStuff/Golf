@@ -46,6 +46,8 @@ class DesignScreen implements Screen {
     TextButton btnBack;
     Texture background;
 
+    String txt;
+
     /**
      * Create a new Design Screen
      * @param game the Golf instace
@@ -163,134 +165,37 @@ class DesignScreen implements Screen {
         btnBack.addListener(new BackListener(game, this));
 
         // listener for textfields
-        txtFriction.addListener(new FocusListener(){
-            @Override
-            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
-                if(focused == true) {
-                    if (txtFriction.getText().equals("Friction"))
-                        txtFriction.setText("");
+        txtGravity.addListener(setListener("Gravity",txtGravity));
+        txtRadius.addListener(setListener("Radius",txtRadius));
+        txtFriction.addListener(setListener("Friction",txtFriction));
+        txtStartPos.addListener(setListener("Start Position",txtStartPos));
+        txtFunction.addListener(setListener("Function",txtFunction));
+        txtGoalPos.addListener(setListener("Goal Position",txtGoalPos));
+        txtVMax.addListener(setListener("Maximum velocity",txtVMax));
+        txtBallMass.addListener(setListener("Mass of the ball",txtBallMass));
 
-                }
-                else if(focused == false){
-                    if(txtFriction.getText().equals(""))
-                        txtFriction.setText("Friction");
-                }
-
-            }
-        });
-        txtStartPos.addListener(new FocusListener(){
-            @Override
-            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
-                if(focused == true) {
-                    if (txtStartPos.getText().equals("Start Position"))
-                        txtStartPos.setText("");
-
-                }
-                else if(focused == false){
-                    if(txtStartPos.getText().equals(""))
-                        txtStartPos.setText("Start Position");
-
-                }
-
-            }
-        });
-        txtFunction.addListener(new FocusListener(){
-            @Override
-            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
-                if(focused == true) {
-                    if (txtFunction.getText().equals("Function"))
-                        txtFunction.setText("");
-
-                }
-                else if(focused == false){
-                    if(txtFunction.getText().equals(""))
-                        txtFunction.setText("Function");
-
-                }
-
-            }
-        });
-        txtGravity.addListener(new FocusListener(){
-            @Override
-            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
-                if(focused == true) {
-                    if (txtGravity.getText().equals("Gravity"))
-                        txtGravity.setText("");
-
-                }
-                else if(focused == false){
-                    if(txtGravity.getText().equals(""))
-                        txtGravity.setText("Gravity");
-
-                }
-
-            }
-        });
-        txtRadius.addListener(new FocusListener(){
-            @Override
-            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
-                if(focused == true) {
-                    if (txtRadius.getText().equals("Radius"))
-                        txtRadius.setText("");
-
-                }
-                else if(focused == false){
-                    if(txtRadius.getText().equals(""))
-                        txtRadius.setText("Radius");
-
-                }
-
-            }
-        });
-        txtGoalPos.addListener(new FocusListener(){
-            @Override
-            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
-                if(focused == true) {
-                    if (txtGoalPos.getText().equals("Goal Position"))
-                        txtGoalPos.setText("");
-
-                }
-                else if(focused == false){
-                    if(txtGoalPos.getText().equals(""))
-                        txtGoalPos.setText("Goal Position");
-
-                }
-
-            }
-        });
-        txtVMax.addListener(new FocusListener(){
-            @Override
-            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
-                if(focused == true) {
-                    if (txtVMax.getText().equals("Maximum velocity"))
-                        txtVMax.setText("");
-
-                }
-                else if(focused == false){
-                    if(txtVMax.getText().equals(""))
-                        txtVMax.setText("Maximum velocity");
-
-                }
-
-            }
-        });
-        txtBallMass.addListener(new FocusListener(){
-            @Override
-            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
-                if(focused == true) {
-                    if (txtBallMass.getText().equals("Mass of the ball"))
-                        txtBallMass.setText("");
-
-                }
-                else if(focused == false){
-                    if(txtBallMass.getText().equals(""))
-                        txtBallMass.setText("Mass of the ball");
-
-                }
-
-            }
-        });
     }
+    private FocusListener setListener(final String txt, final TextField tf){
+
+        return(new FocusListener(){
+            @Override
+            public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
+                if(focused == true) {
+                    if (tf.getText().equals(txt))
+                        tf.setText("");
+                }
+                else if(focused == false){
+                    if(tf.getText().equals(""))
+                        tf.setText(txt);
+
+                }
+            }
+
+        });
+
+
+    }
+
     @Override
     public void show() {
         this.music.play();
