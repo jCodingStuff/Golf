@@ -51,6 +51,7 @@ class DesignScreen implements Screen {
      * @param game the Golf instace
      */
     public DesignScreen(final Golf game){
+
         this.game = game;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -68,8 +69,9 @@ class DesignScreen implements Screen {
         this.cam.setToOrtho(false, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
 
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-        txtFunction = new TextField("Function", skin);
 
+        // initializing buttons / textfields
+        txtFunction = new TextField("Function", skin);
         txtStartPos = new TextField("Start Position", skin);
         txtGoalPos = new TextField("Goal Position", skin);
         txtRadius = new TextField("Radius", skin);
@@ -77,24 +79,22 @@ class DesignScreen implements Screen {
         txtFriction = new TextField("Friction", skin);
         txtVMax = new TextField("Maximum velocity", skin);
         txtBallMass = new TextField("Mass of the ball",skin);
-
-
+        btnBack = new TextButton("Back", skin);
         btnExport = new TextButton("Export", skin);
+
         btnExport.addListener(new ToExportListener(this.game, this, txtFunction, txtStartPos, txtGoalPos, txtRadius,
                 txtVMax, txtFriction, txtGravity, txtBallMass));
-        
-        btnBack = new TextButton("Back", skin);
 
         btnMode1 = new TextButton("Mode 1", skin);
         btnMode1.addListener(new Mode1Listener(this.game, this, txtFunction, txtStartPos, txtGoalPos, txtRadius,
                 txtVMax, txtFriction, txtGravity, txtBallMass));
+
         btnMode2 = new TextButton("Mode 2", skin);
         btnMode2.addListener(new Mode2Listener(this.game, this, txtFunction, txtStartPos, txtGoalPos, txtRadius,
                 txtVMax, txtFriction, txtGravity, txtBallMass));
 
         txtFriction.setPosition(250, 400);
         txtFriction.setSize(200,60);
-
 
         txtFunction.setPosition(250, 300);
         txtFunction.setSize(200,60);
@@ -104,8 +104,6 @@ class DesignScreen implements Screen {
 
         txtStartPos.setPosition(550, 400);
         txtStartPos.setSize(200,60);
-
-
 
         txtGoalPos.setPosition(550, 300);
         txtGoalPos.setSize(200,60);
@@ -127,6 +125,7 @@ class DesignScreen implements Screen {
 
         btnMode1.setPosition(250, 100);
         btnMode1.setSize(200,60);
+
         btnMode2.setPosition(550, 100);
         btnMode2.setSize(200,60);
 
@@ -143,9 +142,9 @@ class DesignScreen implements Screen {
         stage.addActor(btnExport);
         stage.addActor(btnBack);
 
-
         //Gdx.input.setInputProcessor(this.stage);
 
+        // listener for back button
         class BackListener extends ChangeListener {
             final Golf game;
             private Screen screen;
@@ -163,6 +162,7 @@ class DesignScreen implements Screen {
         }
         btnBack.addListener(new BackListener(game, this));
 
+        // listener for textfields
         txtFriction.addListener(new FocusListener(){
             @Override
             public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
@@ -303,7 +303,6 @@ class DesignScreen implements Screen {
 
         this.cam.update();
         this.game.batch.setProjectionMatrix(this.cam.combined);
-
         this.game.batch.begin();
         this.game.batch.draw(this.background, 0, 0, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
         this.game.batch.end();
