@@ -357,16 +357,16 @@ public class CourseScreen implements Screen {
 
                 double angle = 0;
                 if (this.lastX > this.firstX && this.lastY < this.firstY) {
-                    angle = ((Math.atan((this.lastY - this.firstY)/ (this.lastX - this.firstX))));
+                    angle = ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
                 }
                 else if (this.lastX > this.firstX && this.lastY > this.firstY) {
-                    angle = ((Math.atan((this.lastY - this.firstY)/ (this.lastX - this.firstX))));
+                    angle = ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
                 }
                 else if (this.lastX < this.firstX && this.lastY < this.firstY) {
-                    angle = Math.PI - Math.abs(((Math.atan((this.lastY - this.firstY)/(this.lastX - this.firstX)))));
+                    angle = Math.PI + ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
                 }
                 else if (this.lastX < this.firstX && this.lastY > this.firstY) {
-                    angle = Math.PI + ((Math.atan((this.lastY - this.firstY)/ (this.lastX - this.firstX))));
+                    angle = Math.PI + ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
                 }
                 else if (this.lastX == this.firstX) {
                     if (this.lastY < this.firstY) angle = Math.PI / 2;
@@ -378,7 +378,7 @@ public class CourseScreen implements Screen {
                 }
 
                 double modulus = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
-                double force = MathLib.map(modulus, 0, 300, 0, 500);
+                double force = MathLib.map(modulus, 0, 300, 0, 600);
 
                 this.engine.hit(force, angle);
 
