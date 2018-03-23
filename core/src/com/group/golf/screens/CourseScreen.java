@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
@@ -56,6 +57,13 @@ public class CourseScreen implements Screen {
     private Color[][] colors;
     private double ballX;
     private double ballY;
+
+    // Gaming stuff
+    boolean touchFlag;
+    private int firstX;
+    private int firstY;
+    private int lastX;
+    private int lastY;
 
 
     /**
@@ -297,7 +305,7 @@ public class CourseScreen implements Screen {
                 this.hitSound.play();
             }
             else { // Mode 1 is active
-
+                this.userMoves();
             }
         }
         //this.engine.movement();
@@ -322,6 +330,53 @@ public class CourseScreen implements Screen {
 
         // Render the ball
         this.renderBall();
+    }
+
+    /**
+     * Look for user moves
+     */
+    private void userMoves() {
+        Vector3 firstV = null;
+        Vector3 secondV = null;
+        if (Gdx.input.isTouched()) {
+            if (!this.touchFlag) {
+                this.firstX = Gdx.input.getX();
+                this.firstY = Gdx.input.getY();
+                firstV = new Vector3(this.firstX, this.firstY,0);
+                this.cam.unproject(firstV);
+                this.touchFlag = true;
+            }
+            this.lastX = Gdx.input.getX();
+            this.lastY = Gdx.input.getY();
+        }
+        else if (this.touchFlag) {
+            if (this.firstX != this.lastX && this.firstY != this.lastY) {
+                secondV = new Vector3(this.lastX, this.lastY,0);
+                this.cam.unproject(secondV);
+
+                double angle = 0;
+                if (this.lastX > this.firstX && this.lastY > this.firstY) {
+                    angle = ((Math.atan((secondV.y - firstV.y)/ (secondV.x - firstV.x))));
+                }
+                else if (this.lastX > this.firstX && this.lastY < this.firstX) {
+                    angle = ((Math.atan((secondV.y - firstV.y)/ (secondV.x - firstV.x))));
+                }
+                else if (this.lastX < this.firstX && this.lastY > this.firstY) {
+                    angle = 2*Math.PI + ((Math.atan((secondV.y - firstV.y)/ (secondV.x - firstV.x))));
+                }
+                else if (this.lastX < this.firstX && this.lastY < this.firstY) {
+                    angle = 2*Math.PI + ((Math.atan((secondV.y - firstV.y)/ (secondV.x - firstV.x))));
+                }
+
+//                force is something calculated between the distances of last coordinates and first coordinates
+                double force = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
+
+                this.engine.hit(force, angle);
+
+                System.out.println("Force: " + force + "   angle: " + angle);
+            }
+            this.touchFlag = false;
+        }
     }
 
     /**
