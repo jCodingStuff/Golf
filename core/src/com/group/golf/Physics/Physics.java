@@ -32,8 +32,8 @@ public class Physics {
 
     /**
      * Hit the ball
-     * @param velocityX the velocityX done to the ball
-     * @param velocityY the velocityY done to the ball
+     * @param forceX the velocityX done to the ball
+     * @param forceY the velocityY done to the ball
      */
     public void hit(double forceX, double forceY) {
 //        double velocityX = forceX * Math.cos(angle);
@@ -59,8 +59,9 @@ public class Physics {
         ball.setVelocityX(ball.getVelocityX() + Gdx.graphics.getDeltaTime() * (grav.x + friction.x));
         ball.setVelocityY(ball.getVelocityY() + Gdx.graphics.getDeltaTime() * (grav.y + friction.y));
 
-        if (Math.abs(this.ball.getVelocityX()) < 0.02) this.ball.setVelocityX(0);
-        if (Math.abs(this.ball.getVelocityY()) < 0.02) this.ball.setVelocityY(0);
+        if (Math.abs(this.ball.getVelocityX()) < 0.02 && Math.abs(this.ball.getVelocityY()) < 0.02) {
+            this.ball.reset();
+        }
 
     }
 
