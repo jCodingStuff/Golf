@@ -82,6 +82,8 @@ public class CourseSelectorScreen implements Screen {
                 Function function = new Function(formula);
                 Course course = new Course(function, 9.81, 0.5, 3, start, goal, 0.5);
                 design.setTouchable(Touchable.disabled);
+                importbtn.setTouchable(Touchable.disabled);
+                play.setTouchable(Touchable.disabled);
                 this.game.setScreen(new CourseScreen(this.game, course, new Ball(1)));
 
                 this.screen.dispose();
