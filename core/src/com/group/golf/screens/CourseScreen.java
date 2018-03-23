@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
@@ -56,6 +57,13 @@ public class CourseScreen implements Screen {
     private Color[][] colors;
     private double ballX;
     private double ballY;
+
+    // Gaming stuff
+    boolean touchFlag;
+    private int firstX;
+    private int firstY;
+    private int lastX;
+    private int lastY;
 
 
     /**
@@ -297,10 +305,10 @@ public class CourseScreen implements Screen {
                 this.hitSound.play();
             }
             else { // Mode 1 is active
-
+                this.userMoves();
             }
         }
-        //this.engine.movement();
+        else this.engine.movement();
         this.ball.limit(this.course.getVmax());
 
         // Recompute pixel positions of the ball
@@ -322,6 +330,62 @@ public class CourseScreen implements Screen {
 
         // Render the ball
         this.renderBall();
+    }
+
+    /**
+     * Look for user moves
+     */
+    private void userMoves() {
+        if (Gdx.input.isTouched()) {
+            if (!this.touchFlag) {
+                this.firstX = Gdx.input.getX();
+                this.firstY = Gdx.input.getY();
+                this.touchFlag = true;
+            }
+            this.lastX = Gdx.input.getX();
+            this.lastY = Gdx.input.getY();
+        }
+        else if (this.touchFlag) {
+            if (this.firstX != this.lastX || this.lastY != this.firstY) {
+                Vector3 firstV = new Vector3(this.firstX, this.firstY,0);
+                this.cam.unproject(firstV);
+                Vector3 secondV = new Vector3(this.lastX, this.lastY,0);
+                this.cam.unproject(secondV);
+
+                System.out.println("firstX=" + this.firstX + ", firstY=" + this.firstY);
+                System.out.println("lastX=" + this.lastX + ", lastY=" + this.lastY);
+
+                double angle = 0;
+                if (this.lastX > this.firstX && this.lastY < this.firstY) {
+                    angle = ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
+                }
+                else if (this.lastX > this.firstX && this.lastY > this.firstY) {
+                    angle = ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
+                }
+                else if (this.lastX < this.firstX && this.lastY < this.firstY) {
+                    angle = Math.PI + ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
+                }
+                else if (this.lastX < this.firstX && this.lastY > this.firstY) {
+                    angle = Math.PI + ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
+                }
+                else if (this.lastX == this.firstX) {
+                    if (this.lastY < this.firstY) angle = Math.PI / 2;
+                    else angle = - Math.PI / 2;
+                }
+                else if (this.lastY == this.firstY) {
+                    if (this.lastX > this.firstX) angle = 0;
+                    else angle = Math.PI;
+                }
+
+                double modulus = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
+                double force = MathLib.map(modulus, 0, 300, 0, 600);
+
+                this.engine.hit(force, angle);
+
+                System.out.println("Force: " + force + "   angle: " + angle);
+            }
+            this.touchFlag = false;
+        }
     }
 
     /**
