@@ -59,6 +59,9 @@ public class Physics {
         ball.setVelocityX(ball.getVelocityX() + Gdx.graphics.getDeltaTime() * (grav.x + friction.x));
         ball.setVelocityY(ball.getVelocityY() + Gdx.graphics.getDeltaTime() * (grav.y + friction.y));
 
+        if (Math.abs(this.ball.getVelocityX()) < 0.001) this.ball.setVelocityX(0);
+        if (Math.abs(this.ball.getVelocityY()) < 0.001) this.ball.setVelocityY(0);
+
     }
 
     /**
@@ -70,7 +73,7 @@ public class Physics {
      */
     public Vector2 frictionForce(Ball ball,double velocityX, double velocityY) {
         double multiplier = - this.course.getMu() * this.course.getG() * ball.getMass()
-                /*/ normalLength(velocityX,velocityY)*/;
+                / normalLength(velocityX,velocityY);
         return new Vector2((float) (multiplier * velocityX) , (float) (multiplier * velocityY));
     }
 
