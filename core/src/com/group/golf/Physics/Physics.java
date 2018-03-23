@@ -59,10 +59,6 @@ public class Physics {
         ball.setVelocityX(ball.getVelocityX() + Gdx.graphics.getDeltaTime() * (grav.x + friction.x));
         ball.setVelocityY(ball.getVelocityY() + Gdx.graphics.getDeltaTime() * (grav.y + friction.y));
 
-        if (ball.getVelocityY() < 0.5 && ball.getVelocityY() > -0.5)
-            ball.setVelocityY(0);
-        if (ball.getVelocityX() < 0.5 && ball.getVelocityX() > -0.5)
-            ball.setVelocityX(0);
     }
 
     /**

@@ -35,6 +35,8 @@ public class CourseScreen implements Screen {
     OrthographicCamera cam;
     Music music;
     Sound hitSound;
+    Sound loseSound;
+    Sound winSound;
 
     Physics engine;
 
@@ -89,8 +91,10 @@ public class CourseScreen implements Screen {
         }
         in.close();
 
-        // Setup Hitsound
+        // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
+        this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
+        this.winSound = Gdx.audio.newSound(Gdx.files.internal("success_2.wav"));
 
         // Setup Cam
         this.cam = new OrthographicCamera();
@@ -135,8 +139,10 @@ public class CourseScreen implements Screen {
         // Setup moves
         this.moves = null;
 
-        // Setup Hitsound
+        // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
+        this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
+        this.winSound = Gdx.audio.newSound(Gdx.files.internal("success_2.wav"));
 
         // Setup Cam
         this.cam = new OrthographicCamera();
@@ -286,14 +292,17 @@ public class CourseScreen implements Screen {
             double yToGoal = this.course.getGoal()[1] - this.ball.getY();
             double distToGoal = Math.sqrt(Math.pow(xToGoal, 2) + Math.pow(yToGoal, 2));
             if (distToGoal <= this.course.getTolerance()) {
+                this.winSound.play();
+                try { Thread.sleep(3000); }
+                catch (Exception e) {}
                 this.game.setScreen(new CourseSelectorScreen(this.game));
                 this.dispose();
                 return;
             }
 
             // Store position
-            this.lastStop[0] = this.ballX;
-            this.lastStop[1] = this.ballY;
+            this.lastStop[0] = this.ball.getX();
+            this.lastStop[1] = this.ball.getY();
 
             // Make a move
             if (this.moves != null && this.counter < this.moves.size()) { // Mode 2 is active
@@ -319,6 +328,7 @@ public class CourseScreen implements Screen {
             this.ball.reset();
             this.ball.setX(this.lastStop[0]);
             this.ball.setY(this.lastStop[1]);
+            this.loseSound.play();
         }
 
         // And again, before every check recompute pixel position of the ball
@@ -383,6 +393,7 @@ public class CourseScreen implements Screen {
                 this.engine.hit(force, angle);
 
                 System.out.println("Force: " + force + "   angle: " + angle);
+                this.hitSound.play();
             }
             this.touchFlag = false;
         }
@@ -459,6 +470,8 @@ public class CourseScreen implements Screen {
         this.ballImage.dispose();
         this.flag.dispose();
         this.hitSound.dispose();
+        this.loseSound.dispose();
+        this.winSound.dispose();
     }
 
     public Golf getGame() {
