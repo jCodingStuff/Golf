@@ -178,5 +178,6 @@ public class ExportScreen implements Screen {
     @Override
     public void dispose() {
         this.music.dispose();
+        this.background.dispose();
     }
 }
