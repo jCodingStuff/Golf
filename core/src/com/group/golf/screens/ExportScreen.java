@@ -49,11 +49,10 @@ public class ExportScreen implements Screen {
      * @param ball1 The ball1 instance.
      */
     public ExportScreen(Golf game, Course course1, Ball ball1){
+
         this.game = game;
         this.stage = new Stage();
-
         this.background = new Texture(Gdx.files.internal("minigolf_background.jpg"));
-
         this.course1 = course1;
         this.ball1 = ball1;
 
@@ -79,7 +78,6 @@ public class ExportScreen implements Screen {
                     if(txtf.getText().equals(""))
                         txtf.setText("Enter a file name");
                 }
-
             }
         });
 
@@ -115,18 +113,15 @@ public class ExportScreen implements Screen {
         }
         this.back.addListener(new ExportBackListener(this.game, this, this.course1, this.ball1));
 
-        stage.addActor(txtf);
-        stage.addActor(back);
-
         this.exportButton = new TextButton("Export", skin);
         this.exportButton.setPosition(800, 300);
         this.exportButton.setSize(100, 60);
         this.exportButton.addListener(new ExportListener(this.game, this, this.course1, this.ball1, this.txtf));
+
+        stage.addActor(txtf);
+        stage.addActor(back);
         stage.addActor(this.exportButton);
 
-        //this.label = new Label("Course Name", skin);
-        //this.label.setPosition(200, 500);
-        //stage.addActor(this.label);
 
         // Set the stage as InputProcessor
         Gdx.input.setInputProcessor(this.stage);
@@ -147,7 +142,6 @@ public class ExportScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.cam.update();
         this.game.batch.setProjectionMatrix(this.cam.combined);
-
         this.game.batch.begin();
         this.game.batch.draw(this.background, 0, 0, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
         this.game.batch.end();

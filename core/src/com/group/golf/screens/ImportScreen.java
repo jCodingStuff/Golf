@@ -29,7 +29,6 @@ class ImportScreen implements Screen {
     final Golf game;
     Music music;
     TextButton back;
-    //Label label;
     OrthographicCamera cam;
     TextButton importButton;
     Texture background;
@@ -39,6 +38,7 @@ class ImportScreen implements Screen {
      * @param game the Golf instance
      */
     public ImportScreen(final Golf game){
+
         this.game = game;
         this.stage = new Stage();
 
@@ -49,10 +49,13 @@ class ImportScreen implements Screen {
         this.cam.setToOrtho(false, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
 
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+
+        // initializing textfield for filename
         txtf = new TextField("Enter a file name", skin);
         txtf.setSize(200, 60);
         txtf.setPosition(400, 300);
 
+        // listener for textfield
         txtf.addListener(new FocusListener(){
             @Override
             public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
@@ -69,23 +72,20 @@ class ImportScreen implements Screen {
             }
         });
 
+        // initializing buttons
         this.back = new TextButton("Back", skin);
         this.back.setPosition(100, 300);
         this.back.setSize(100, 60);
         this.back.addListener(new ImportBackListener(this.game, this));
 
-        stage.addActor(txtf);
-        stage.addActor(back);
-
         this.importButton = new TextButton("Import", skin);
         this.importButton.setPosition(800, 300);
         this.importButton.setSize(100, 60);
         this.importButton.addListener(new ImportListener(this.game, this.txtf, this));
-        stage.addActor(this.importButton);
 
-        //this.label = new Label("Course Name", skin);
-        //this.label.setPosition(400, 350);
-        //stage.addActor(this.label);
+        stage.addActor(txtf);
+        stage.addActor(back);
+        stage.addActor(this.importButton);
 
         // Set the stage as InputProcessor
         Gdx.input.setInputProcessor(this.stage);
@@ -107,7 +107,6 @@ class ImportScreen implements Screen {
 
         this.cam.update();
         this.game.batch.setProjectionMatrix(this.cam.combined);
-
         this.game.batch.begin();
         this.game.batch.draw(this.background, 0, 0, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
         this.game.batch.end();
