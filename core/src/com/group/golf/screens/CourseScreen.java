@@ -54,6 +54,8 @@ public class CourseScreen implements Screen {
     private double maximum;
     private double minimum;
     private Color[][] colors;
+    private double ballX;
+    private double ballY;
 
 
     /**
@@ -153,6 +155,14 @@ public class CourseScreen implements Screen {
 
         // Setup engine
         this.engine = new Physics(this.course, this.ball);
+    }
+
+    /**
+     * Compute the pixel coordinates of the ball
+     */
+    private void computeBallPixels() {
+        this.ballX = MathLib.toPixel(this.ball.getX(), this.xoffset, this.scale);
+        this.ballY = MathLib.toPixel(this.ball.getY(), this.yoffset, this.scale);
     }
 
     /**
@@ -258,9 +268,8 @@ public class CourseScreen implements Screen {
         // Render the goal
         this.renderGoal();
 
-        // Get pixel position of ball
-        double ballX = MathLib.toPixel(this.ball.getX(), this.xoffset, this.scale);
-        double ballY = MathLib.toPixel(this.ball.getY(), this.yoffset, this.scale);
+        // Update pixel position of ball
+        this.computeBallPixels();
 
         // Check if the ball is stopped
         if (!this.ball.isMoving()) {
@@ -275,8 +284,8 @@ public class CourseScreen implements Screen {
             }
 
             // Store position
-            this.lastStop[0] = ballX;
-            this.lastStop[1] = ballY;
+            this.lastStop[0] = this.ballX;
+            this.lastStop[1] = this.ballY;
 
             // Make a move
             if (this.moves != null && this.counter < this.moves.size()) { // Mode 2 is active
@@ -294,6 +303,9 @@ public class CourseScreen implements Screen {
         //this.engine.movement();
         this.ball.limit(this.course.getVmax());
 
+        // Recompute pixel positions of the ball
+        this.computeBallPixels();
+
         // Check for water
         if (this.course.getFunction().getZ(this.ball.getX(), this.ball.getY()) < 0) {
             this.ball.reset();
@@ -301,12 +313,15 @@ public class CourseScreen implements Screen {
             this.ball.setY(this.lastStop[1]);
         }
 
+        // And again, before every check recompute pixel position of the ball
+        this.computeBallPixels();
+
         // Check the walls
         if (ballX < 0 || ballX > Golf.VIRTUAL_WIDTH) this.ball.setVelocityX(-this.ball.getVelocityX());
         if (ballY < 0 || ballY > Golf.VIRTUAL_HEIGHT) this.ball.setVelocityY(-this.ball.getVelocityY());
 
         // Render the ball
-        this.renderBall(ballX, ballY);
+        this.renderBall();
     }
 
     /**
@@ -332,13 +347,11 @@ public class CourseScreen implements Screen {
 
     /**
      * Render the ball
-     * @param realX the x-pixel position
-     * @param realY the y-pixel position
      */
-    private void renderBall(double realX, double realY) {
+    private void renderBall() {
         this.game.batch.begin();
-        this.game.batch.draw(this.ballImage, (float) realX - this.ballSize/2, (float) realY - this.ballSize/2,
-                this.ballSize, this.ballSize);
+        this.game.batch.draw(this.ballImage, (float) this.ballX - this.ballSize/2,
+                (float) this.ballY - this.ballSize/2, this.ballSize, this.ballSize);
         this.game.batch.end();
     }
 
