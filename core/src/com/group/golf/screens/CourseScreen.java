@@ -292,6 +292,7 @@ public class CourseScreen implements Screen {
             }
         }
         //this.engine.movement();
+        this.ball.limit(this.course.getVmax());
 
         // Check for water
         if (this.course.getFunction().getZ(this.ball.getX(), this.ball.getY()) < 0) {
