@@ -77,14 +77,14 @@ public class CourseSelectorScreen implements Screen {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                double[] start = new double[]{0, 1};
-                double[] goal = new double[]{4, 3};
+                double[] start = new double[]{4, 3};
+                double[] goal = new double[]{0, 1};
                 Function function = new Function(formula);
-                Course course = new Course(function, 9.81, 0.5, 3, start, goal, 0.5);
+                Course course = new Course(function, 9.81, 0.96, 80, start, goal, 0.5);
                 design.setTouchable(Touchable.disabled);
                 importbtn.setTouchable(Touchable.disabled);
                 play.setTouchable(Touchable.disabled);
-                this.game.setScreen(new CourseScreen(this.game, course, new Ball(1)));
+                this.game.setScreen(new CourseScreen(this.game, course, new Ball(40)));
 
                 this.screen.dispose();
             }

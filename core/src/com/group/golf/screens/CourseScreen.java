@@ -35,6 +35,8 @@ public class CourseScreen implements Screen {
     OrthographicCamera cam;
     Music music;
     Sound hitSound;
+    Sound loseSound;
+    Sound winSound;
 
     Physics engine;
 
@@ -89,8 +91,10 @@ public class CourseScreen implements Screen {
         }
         in.close();
 
-        // Setup Hitsound
+        // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
+        this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
+        this.winSound = Gdx.audio.newSound(Gdx.files.internal("success_2.wav"));
 
         // Setup Cam
         this.cam = new OrthographicCamera();
@@ -135,8 +139,10 @@ public class CourseScreen implements Screen {
         // Setup moves
         this.moves = null;
 
-        // Setup Hitsound
+        // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
+        this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
+        this.winSound = Gdx.audio.newSound(Gdx.files.internal("success_2.wav"));
 
         // Setup Cam
         this.cam = new OrthographicCamera();
@@ -286,21 +292,26 @@ public class CourseScreen implements Screen {
             double yToGoal = this.course.getGoal()[1] - this.ball.getY();
             double distToGoal = Math.sqrt(Math.pow(xToGoal, 2) + Math.pow(yToGoal, 2));
             if (distToGoal <= this.course.getTolerance()) {
+                this.winSound.play();
+                try { Thread.sleep(3000); }
+                catch (Exception e) {}
                 this.game.setScreen(new CourseSelectorScreen(this.game));
                 this.dispose();
                 return;
             }
 
             // Store position
-            this.lastStop[0] = this.ballX;
-            this.lastStop[1] = this.ballY;
+            this.lastStop[0] = this.ball.getX();
+            this.lastStop[1] = this.ball.getY();
 
             // Make a move
             if (this.moves != null && this.counter < this.moves.size()) { // Mode 2 is active
                 StringTokenizer tokenizer = new StringTokenizer(this.moves.get(this.counter));
                 double force = Double.parseDouble(tokenizer.nextToken());
                 double angle = Double.parseDouble(tokenizer.nextToken());
-                this.engine.hit(force, angle);
+                double forceX = force * Math.cos(angle);
+                double forceY = force * Math.sin(angle);
+                this.engine.hit(forceX, forceY);
                 this.counter++;
                 this.hitSound.play();
             }
@@ -319,14 +330,21 @@ public class CourseScreen implements Screen {
             this.ball.reset();
             this.ball.setX(this.lastStop[0]);
             this.ball.setY(this.lastStop[1]);
+            this.loseSound.play();
         }
 
         // And again, before every check recompute pixel position of the ball
         this.computeBallPixels();
 
         // Check the walls
-        if (ballX < 0 || ballX > Golf.VIRTUAL_WIDTH) this.ball.setVelocityX(-this.ball.getVelocityX());
-        if (ballY < 0 || ballY > Golf.VIRTUAL_HEIGHT) this.ball.setVelocityY(-this.ball.getVelocityY());
+        if (ballX < 0 || ballX > Golf.VIRTUAL_WIDTH) {
+            this.ball.setVelocityX(-this.ball.getVelocityX());
+
+        }
+        if (ballY < 0 || ballY > Golf.VIRTUAL_HEIGHT) {
+            this.ball.setVelocityY(-this.ball.getVelocityY());
+            
+        }
 
         // Render the ball
         this.renderBall();
@@ -355,34 +373,43 @@ public class CourseScreen implements Screen {
                 System.out.println("firstX=" + this.firstX + ", firstY=" + this.firstY);
                 System.out.println("lastX=" + this.lastX + ", lastY=" + this.lastY);
 
-                double angle = 0;
-                if (this.lastX > this.firstX && this.lastY < this.firstY) {
-                    angle = ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
-                }
-                else if (this.lastX > this.firstX && this.lastY > this.firstY) {
-                    angle = ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
-                }
-                else if (this.lastX < this.firstX && this.lastY < this.firstY) {
-                    angle = Math.PI + ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
-                }
-                else if (this.lastX < this.firstX && this.lastY > this.firstY) {
-                    angle = Math.PI + ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
-                }
-                else if (this.lastX == this.firstX) {
-                    if (this.lastY < this.firstY) angle = Math.PI / 2;
-                    else angle = - Math.PI / 2;
-                }
-                else if (this.lastY == this.firstY) {
-                    if (this.lastX > this.firstX) angle = 0;
-                    else angle = Math.PI;
-                }
+//                double angle = 0;
+//                if (this.lastX > this.firstX && this.lastY < this.firstY) {
+//                    angle = ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
+//                }
+//                else if (this.lastX > this.firstX && this.lastY > this.firstY) {
+//                    angle = ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
+//                }
+//                else if (this.lastX < this.firstX && this.lastY < this.firstY) {
+//                    angle = Math.PI + ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
+//                }
+//                else if (this.lastX < this.firstX && this.lastY > this.firstY) {
+//                    angle = Math.PI + ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
+//                }
+//                else if (this.lastX == this.firstX) {
+//                    if (this.lastY < this.firstY) angle = Math.PI / 2;
+//                    else angle = - Math.PI / 2;
+//                }
+//                else if (this.lastY == this.firstY) {
+//                    if (this.lastX > this.firstX) angle = 0;
+//                    else angle = Math.PI;
+//                }
+
+                double forceX = Math.abs(lastX - firstX) * 20;
+                double forceY = Math.abs(lastY - firstY) * 20;
+
+                if (lastX < firstX )
+                    forceX *= -1;
+                if (lastY > firstY)
+                    forceY *= -1;
 
                 double modulus = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
                 double force = MathLib.map(modulus, 0, 300, 0, 600);
 
-                this.engine.hit(force, angle);
+                this.engine.hit(forceX, forceY);
 
-                System.out.println("Force: " + force + "   angle: " + angle);
+//                System.out.println("Force: " + force + "   angle: " + angle);
+                this.hitSound.play();
             }
             this.touchFlag = false;
         }
@@ -459,6 +486,8 @@ public class CourseScreen implements Screen {
         this.ballImage.dispose();
         this.flag.dispose();
         this.hitSound.dispose();
+        this.loseSound.dispose();
+        this.winSound.dispose();
     }
 
     public Golf getGame() {

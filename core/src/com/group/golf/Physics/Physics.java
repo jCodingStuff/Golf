@@ -32,12 +32,12 @@ public class Physics {
 
     /**
      * Hit the ball
-     * @param force the force done to the ball
-     * @param angle the angle in which the force was applied
+     * @param velocityX the velocityX done to the ball
+     * @param velocityY the velocityY done to the ball
      */
-    public void hit(double force, double angle) {
-        double forceX = force * Math.cos(angle);
-        double forceY = force * Math.sin(angle);
+    public void hit(double forceX, double forceY) {
+//        double velocityX = forceX * Math.cos(angle);
+//        double velocityY = forceY * Math.sin(angle);
 
         hitCoord.x = (float) ball.getX();
         hitCoord.y = (float) ball.getY();
@@ -59,10 +59,9 @@ public class Physics {
         ball.setVelocityX(ball.getVelocityX() + Gdx.graphics.getDeltaTime() * (grav.x + friction.x));
         ball.setVelocityY(ball.getVelocityY() + Gdx.graphics.getDeltaTime() * (grav.y + friction.y));
 
-        if (ball.getVelocityY() < 0.5 && ball.getVelocityY() > -0.5)
-            ball.setVelocityY(0);
-        if (ball.getVelocityX() < 0.5 && ball.getVelocityX() > -0.5)
-            ball.setVelocityX(0);
+        if (Math.abs(this.ball.getVelocityX()) < 0.02) this.ball.setVelocityX(0);
+        if (Math.abs(this.ball.getVelocityY()) < 0.02) this.ball.setVelocityY(0);
+
     }
 
     /**
@@ -73,7 +72,8 @@ public class Physics {
      * @return a Vector2 instace containig the friction force
      */
     public Vector2 frictionForce(Ball ball,double velocityX, double velocityY) {
-        double multiplier = - this.course.getMu() * this.course.getG() * ball.getMass() / normalLength(velocityX,velocityY);
+        double multiplier = - this.course.getMu() * this.course.getG()
+                / normalLength(velocityX,velocityY);
         return new Vector2((float) (multiplier * velocityX) , (float) (multiplier * velocityY));
     }
 
@@ -94,7 +94,7 @@ public class Physics {
      * @return a Vector2 instance containing the gravity force
      */
     public Vector2 gravForce(Ball ball, Vector2 coord) {
-        double multiplier = - ball.getMass() * this.course.getG();
+        double multiplier = - this.course.getG();
         Vector2 slopeMultiplier = calculateSlope(coord);
         return new Vector2((float) multiplier * slopeMultiplier.x,(float)multiplier * slopeMultiplier.y);
     }
