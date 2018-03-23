@@ -308,7 +308,7 @@ public class CourseScreen implements Screen {
                 this.userMoves();
             }
         }
-        //this.engine.movement();
+        else this.engine.movement();
         this.ball.limit(this.course.getVmax());
 
         // Recompute pixel positions of the ball
@@ -336,40 +336,49 @@ public class CourseScreen implements Screen {
      * Look for user moves
      */
     private void userMoves() {
-        Vector3 firstV = null;
-        Vector3 secondV = null;
         if (Gdx.input.isTouched()) {
             if (!this.touchFlag) {
                 this.firstX = Gdx.input.getX();
                 this.firstY = Gdx.input.getY();
-                firstV = new Vector3(this.firstX, this.firstY,0);
-                this.cam.unproject(firstV);
                 this.touchFlag = true;
             }
             this.lastX = Gdx.input.getX();
             this.lastY = Gdx.input.getY();
         }
         else if (this.touchFlag) {
-            if (this.firstX != this.lastX && this.firstY != this.lastY) {
-                secondV = new Vector3(this.lastX, this.lastY,0);
+            if (this.firstX != this.lastX || this.lastY != this.firstY) {
+                Vector3 firstV = new Vector3(this.firstX, this.firstY,0);
+                this.cam.unproject(firstV);
+                Vector3 secondV = new Vector3(this.lastX, this.lastY,0);
                 this.cam.unproject(secondV);
 
+                System.out.println("firstX=" + this.firstX + ", firstY=" + this.firstY);
+                System.out.println("lastX=" + this.lastX + ", lastY=" + this.lastY);
+
                 double angle = 0;
-                if (this.lastX > this.firstX && this.lastY > this.firstY) {
-                    angle = ((Math.atan((secondV.y - firstV.y)/ (secondV.x - firstV.x))));
+                if (this.lastX > this.firstX && this.lastY < this.firstY) {
+                    angle = ((Math.atan((this.lastY - this.firstY)/ (this.lastX - this.firstX))));
                 }
-                else if (this.lastX > this.firstX && this.lastY < this.firstX) {
-                    angle = ((Math.atan((secondV.y - firstV.y)/ (secondV.x - firstV.x))));
-                }
-                else if (this.lastX < this.firstX && this.lastY > this.firstY) {
-                    angle = 2*Math.PI + ((Math.atan((secondV.y - firstV.y)/ (secondV.x - firstV.x))));
+                else if (this.lastX > this.firstX && this.lastY > this.firstY) {
+                    angle = ((Math.atan((this.lastY - this.firstY)/ (this.lastX - this.firstX))));
                 }
                 else if (this.lastX < this.firstX && this.lastY < this.firstY) {
-                    angle = 2*Math.PI + ((Math.atan((secondV.y - firstV.y)/ (secondV.x - firstV.x))));
+                    angle = Math.PI - Math.abs(((Math.atan((this.lastY - this.firstY)/(this.lastX - this.firstX)))));
+                }
+                else if (this.lastX < this.firstX && this.lastY > this.firstY) {
+                    angle = Math.PI + ((Math.atan((this.lastY - this.firstY)/ (this.lastX - this.firstX))));
+                }
+                else if (this.lastX == this.firstX) {
+                    if (this.lastY < this.firstY) angle = Math.PI / 2;
+                    else angle = - Math.PI / 2;
+                }
+                else if (this.lastY == this.firstY) {
+                    if (this.lastX > this.firstX) angle = 0;
+                    else angle = Math.PI;
                 }
 
-//                force is something calculated between the distances of last coordinates and first coordinates
-                double force = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
+                double modulus = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
+                double force = MathLib.map(modulus, 0, 100, 0, 300);
 
                 this.engine.hit(force, angle);
 

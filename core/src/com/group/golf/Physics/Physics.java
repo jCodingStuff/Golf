@@ -14,6 +14,7 @@ import com.group.golf.math.Function;
 public class Physics {
     private Course course;
     private Ball ball;
+    private Vector2 hitCoord;
 
     /**
      * Construct a Physics engine
@@ -23,6 +24,7 @@ public class Physics {
     public Physics(Course course, Ball ball) {
         this.course = course;
         this.ball = ball;
+        this.hitCoord = new Vector2();
     }
 
 
@@ -36,6 +38,9 @@ public class Physics {
     public void hit(double force, double angle) {
         double forceX = force * Math.cos(angle);
         double forceY = force * Math.sin(angle);
+
+        hitCoord.x = (float) ball.getX();
+        hitCoord.y = (float) ball.getY();
 
         ball.setVelocityX(Gdx.graphics.getDeltaTime() * forceX / ball.getMass());
         ball.setVelocityY(Gdx.graphics.getDeltaTime() * forceY / ball.getMass());
@@ -53,6 +58,11 @@ public class Physics {
 
         ball.setVelocityX(ball.getVelocityX() + Gdx.graphics.getDeltaTime() * (grav.x + friction.x));
         ball.setVelocityY(ball.getVelocityY() + Gdx.graphics.getDeltaTime() * (grav.y + friction.y));
+
+        if (ball.getVelocityY() < 0.5 && ball.getVelocityY() > -0.5)
+            ball.setVelocityY(0);
+        if (ball.getVelocityX() < 0.5 && ball.getVelocityX() > -0.5)
+            ball.setVelocityX(0);
     }
 
     /**
@@ -84,9 +94,9 @@ public class Physics {
      * @return a Vector2 instance containing the gravity force
      */
     public Vector2 gravForce(Ball ball, Vector2 coord) {
-        double multiplier = ball.getMass()* this.course.getG();
+        double multiplier = - ball.getMass() * this.course.getG();
         Vector2 slopeMultiplier = calculateSlope(coord);
-        return new Vector2((float) - multiplier * slopeMultiplier.x,(float)- multiplier * slopeMultiplier.y);
+        return new Vector2((float) multiplier * slopeMultiplier.x,(float)multiplier * slopeMultiplier.y);
     }
 
     /**
@@ -120,4 +130,51 @@ public class Physics {
         return slope;
     }
 
+    /**
+     * Get access to the Course instance
+     * @return the Course instance
+     */
+    public Course getCourse() {
+        return course;
+    }
+
+    /**
+     * Set a new value for the Course instance
+     * @param course the new Course instance
+     */
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    /**
+     * Get access to the Ball instance
+     * @return the Ball instance
+     */
+    public Ball getBall() {
+        return ball;
+    }
+
+    /**
+     * Set a new value for the Ball instance
+     * @param ball the new Ball instance
+     */
+    public void setBall(Ball ball) {
+        this.ball = ball;
+    }
+
+    /**
+     * Get access to the Vector2 instance
+     * @return the Vector2 instance
+     */
+    public Vector2 getHitCoord() {
+        return hitCoord;
+    }
+
+    /**
+     * Set a new value for the Vector2 instance
+     * @param hitCoord the new Vector2 instance
+     */
+    public void setHitCoord(Vector2 hitCoord) {
+        this.hitCoord = hitCoord;
+    }
 }
