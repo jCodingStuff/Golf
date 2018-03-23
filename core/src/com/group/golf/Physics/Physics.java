@@ -69,7 +69,8 @@ public class Physics {
      * @return a Vector2 instace containig the friction force
      */
     public Vector2 frictionForce(Ball ball,double velocityX, double velocityY) {
-        double multiplier = - this.course.getMu() * this.course.getG() * ball.getMass() / normalLength(velocityX,velocityY);
+        double multiplier = - this.course.getMu() * this.course.getG() * ball.getMass()
+                /*/ normalLength(velocityX,velocityY)*/;
         return new Vector2((float) (multiplier * velocityX) , (float) (multiplier * velocityY));
     }
 
