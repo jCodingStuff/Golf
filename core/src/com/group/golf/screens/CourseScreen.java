@@ -309,7 +309,9 @@ public class CourseScreen implements Screen {
                 StringTokenizer tokenizer = new StringTokenizer(this.moves.get(this.counter));
                 double force = Double.parseDouble(tokenizer.nextToken());
                 double angle = Double.parseDouble(tokenizer.nextToken());
-                this.engine.hit(force, angle);
+                double forceX = force * Math.cos(angle);
+                double forceY = force * Math.sin(angle);
+                this.engine.hit(forceX, forceY);
                 this.counter++;
                 this.hitSound.play();
             }
@@ -335,8 +337,14 @@ public class CourseScreen implements Screen {
         this.computeBallPixels();
 
         // Check the walls
-        if (ballX < 0 || ballX > Golf.VIRTUAL_WIDTH) this.ball.setVelocityX(-this.ball.getVelocityX());
-        if (ballY < 0 || ballY > Golf.VIRTUAL_HEIGHT) this.ball.setVelocityY(-this.ball.getVelocityY());
+        if (ballX < 0 || ballX > Golf.VIRTUAL_WIDTH) {
+            this.ball.setVelocityX(-this.ball.getVelocityX());
+
+        }
+        if (ballY < 0 || ballY > Golf.VIRTUAL_HEIGHT) {
+            this.ball.setVelocityY(-this.ball.getVelocityY());
+            
+        }
 
         // Render the ball
         this.renderBall();
@@ -365,34 +373,42 @@ public class CourseScreen implements Screen {
                 System.out.println("firstX=" + this.firstX + ", firstY=" + this.firstY);
                 System.out.println("lastX=" + this.lastX + ", lastY=" + this.lastY);
 
-                double angle = 0;
-                if (this.lastX > this.firstX && this.lastY < this.firstY) {
-                    angle = ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
-                }
-                else if (this.lastX > this.firstX && this.lastY > this.firstY) {
-                    angle = ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
-                }
-                else if (this.lastX < this.firstX && this.lastY < this.firstY) {
-                    angle = Math.PI + ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
-                }
-                else if (this.lastX < this.firstX && this.lastY > this.firstY) {
-                    angle = Math.PI + ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
-                }
-                else if (this.lastX == this.firstX) {
-                    if (this.lastY < this.firstY) angle = Math.PI / 2;
-                    else angle = - Math.PI / 2;
-                }
-                else if (this.lastY == this.firstY) {
-                    if (this.lastX > this.firstX) angle = 0;
-                    else angle = Math.PI;
-                }
+//                double angle = 0;
+//                if (this.lastX > this.firstX && this.lastY < this.firstY) {
+//                    angle = ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
+//                }
+//                else if (this.lastX > this.firstX && this.lastY > this.firstY) {
+//                    angle = ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
+//                }
+//                else if (this.lastX < this.firstX && this.lastY < this.firstY) {
+//                    angle = Math.PI + ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
+//                }
+//                else if (this.lastX < this.firstX && this.lastY > this.firstY) {
+//                    angle = Math.PI + ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
+//                }
+//                else if (this.lastX == this.firstX) {
+//                    if (this.lastY < this.firstY) angle = Math.PI / 2;
+//                    else angle = - Math.PI / 2;
+//                }
+//                else if (this.lastY == this.firstY) {
+//                    if (this.lastX > this.firstX) angle = 0;
+//                    else angle = Math.PI;
+//                }
+
+                double forceX = Math.abs(lastX - firstX) * 20;
+                double forceY = Math.abs(lastY - firstY) * 20;
+
+                if (lastX < firstX )
+                    forceX *= -1;
+                if (lastY > firstY)
+                    forceY *= -1;
 
                 double modulus = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
                 double force = MathLib.map(modulus, 0, 300, 0, 600);
 
-                this.engine.hit(force, angle);
+                this.engine.hit(forceX, forceY);
 
-                System.out.println("Force: " + force + "   angle: " + angle);
+//                System.out.println("Force: " + force + "   angle: " + angle);
                 this.hitSound.play();
             }
             this.touchFlag = false;
