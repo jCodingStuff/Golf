@@ -378,7 +378,7 @@ public class CourseScreen implements Screen {
                 }
 
                 double modulus = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
-                double force = MathLib.map(modulus, 0, 100, 0, 300);
+                double force = MathLib.map(modulus, 0, 300, 0, 500);
 
                 this.engine.hit(force, angle);
 
