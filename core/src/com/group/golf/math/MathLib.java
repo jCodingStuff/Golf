@@ -18,7 +18,10 @@ public class MathLib {
         double result = 0;
         if (value <= min1) result = min2;
         else if (value >= max1) result = max2;
-        else result = value * ((max2 - min2) / (max1 - min1));
+        else {
+            result = min2 + ((value - min1) / (max1 - min1)) * (max2 - min2);
+
+        }
         return result;
     }
 
