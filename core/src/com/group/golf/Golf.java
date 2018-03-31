@@ -12,6 +12,8 @@ import com.group.golf.screens.IntroScreen;
 
 /**
  * Main class for the Crazy Golf game
+ * @author Julian Marrades
+ * @version 0.1, 03/03/2018
  */
 public class Golf extends Game {
 
