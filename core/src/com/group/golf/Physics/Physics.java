@@ -48,16 +48,17 @@ public class Physics {
 
     /**
      * Update the ball state to the following instance of time
+     * @param delta delta time
      */
-    public void movement() {
+    public void movement(float delta) {
         Vector2 grav = gravForce(ball, new Vector2((float) ball.getX(),(float) ball.getY()));
         Vector2 friction =  frictionForce(ball,ball.getVelocityX(),ball.getVelocityY());
 
-        ball.setX(ball.getX() + Gdx.graphics.getDeltaTime() * ball.getVelocityX());
-        ball.setY(ball.getY() + Gdx.graphics.getDeltaTime() * ball.getVelocityY());
+        ball.setX(ball.getX() + delta * ball.getVelocityX());
+        ball.setY(ball.getY() + delta * ball.getVelocityY());
 
-        ball.setVelocityX(ball.getVelocityX() + Gdx.graphics.getDeltaTime() * (grav.x + friction.x));
-        ball.setVelocityY(ball.getVelocityY() + Gdx.graphics.getDeltaTime() * (grav.y + friction.y));
+        ball.setVelocityX(ball.getVelocityX() + delta * (grav.x + friction.x));
+        ball.setVelocityY(ball.getVelocityY() + delta * (grav.y + friction.y));
 
         if (Math.abs(this.ball.getVelocityX()) < 0.02 && Math.abs(this.ball.getVelocityY()) < 0.02) {
             this.ball.reset();

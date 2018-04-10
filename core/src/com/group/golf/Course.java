@@ -65,6 +65,20 @@ public class Course {
     }
 
     /**
+     * Get the height of the course on a given coordinate
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return the height at (x, y)
+     */
+    public double getHeight(double x, double y) {
+        if (this.isSpline()) {
+            return this.getFunctionFor(x, y).getZ(x, y);
+        } else {
+            return this.functions.get(0).getZ(x, y);
+        }
+    }
+
+    /**
      * Get access to the gravity
      * @return the gravity
      */

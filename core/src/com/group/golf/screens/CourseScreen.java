@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
+import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
 import com.group.golf.math.MathLib;
 
@@ -30,7 +31,6 @@ public class CourseScreen implements Screen {
 
     Course course;
     Ball ball;
-    Texture ballImage;
     Texture flag;
     OrthographicCamera cam;
     Music music;
@@ -38,7 +38,8 @@ public class CourseScreen implements Screen {
     Sound loseSound;
     Sound winSound;
 
-    Physics engine;
+    private Physics engine;
+    private Collision collision;
 
     // Reading moves stuff
     private List<String> moves;
@@ -49,7 +50,6 @@ public class CourseScreen implements Screen {
 
     // Graphing things
     private int goalSize;
-    private int ballSize;
     private double scale;
     private double xoffset;
     private double yoffset;
@@ -110,17 +110,17 @@ public class CourseScreen implements Screen {
 
         // Setup Ball
         this.ball = ball;
+        this.ball.setCourseScreen(this);
         this.ball.setX(this.course.getStart()[0]);
         this.ball.setY(this.course.getStart()[1]);
-        this.ballSize = 20;
-        this.ballImage = new Texture(Gdx.files.internal("ball_soccer2.png"));
 
         // Setup Goal
         this.goalSize = 20;
         this.flag = new Texture(Gdx.files.internal("golf_flag.png"));
 
-        // Setup engine
+        // Setup engine and collision system
         this.engine = new Physics(this.course, this.ball);
+        this.collision = new Collision(this.ball, this.course);
     }
 
     /**
@@ -158,17 +158,18 @@ public class CourseScreen implements Screen {
 
         // Setup Ball
         this.ball = ball;
+        this.ball.setCourseScreen(this);
+        this.ball.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
         this.ball.setX(this.course.getStart()[0]);
         this.ball.setY(this.course.getStart()[1]);
-        this.ballSize = 20;
-        this.ballImage = new Texture(Gdx.files.internal("ball_soccer2.png"));
 
         // Setup Goal
         this.goalSize = 20;
         this.flag = new Texture(Gdx.files.internal("golf_flag.png"));
 
-        // Setup engine
+        // Setup engine and collision system
         this.engine = new Physics(this.course, this.ball);
+        this.collision = new Collision(this.ball, this.course);
     }
 
     /**
@@ -213,7 +214,7 @@ public class CourseScreen implements Screen {
         this.minimum = Double.MAX_VALUE;
         for (int x = 0; x < this.heights.length; x++) {
             for (int y = 0; y < this.heights[x].length; y++) {
-                double value = this.course.getFunction().getZ(this.xoffset + x*this.scale,
+                double value = this.course.getHeight(this.xoffset + x*this.scale,
                         this.yoffset + y*this.scale);
                 if (value > this.maximum) this.maximum = value;
                 else if (value < this.minimum) this.minimum = value;
@@ -290,10 +291,7 @@ public class CourseScreen implements Screen {
         // Check if the ball is stopped
         if (!this.ball.isMoving()) {
             // Check if the goal is achieved
-            double xToGoal = this.course.getGoal()[0] - this.ball.getX();
-            double yToGoal = this.course.getGoal()[1] - this.ball.getY();
-            double distToGoal = Math.sqrt(Math.pow(xToGoal, 2) + Math.pow(yToGoal, 2));
-            if (distToGoal <= this.course.getTolerance()) {
+            if (this.collision.isGoalAchieved()) {
                 this.winSound.play();
                 try { Thread.sleep(3000); }
                 catch (Exception e) {}
@@ -308,27 +306,21 @@ public class CourseScreen implements Screen {
 
             // Make a move
             if (this.moves != null && this.counter < this.moves.size()) { // Mode 2 is active
-                StringTokenizer tokenizer = new StringTokenizer(this.moves.get(this.counter));
-                double force = Double.parseDouble(tokenizer.nextToken());
-                double angle = Double.parseDouble(tokenizer.nextToken());
-                double forceX = force * Math.cos(angle);
-                double forceY = force * Math.sin(angle);
-                this.engine.hit(forceX, forceY);
-                this.counter++;
-                this.hitSound.play();
+                this.fileMoves();
             }
             else { // Mode 1 is active
                 this.userMoves();
             }
+        } else {
+            this.engine.movement(delta);
         }
-        else this.engine.movement();
         this.ball.limit(this.course.getVmax());
 
         // Recompute pixel positions of the ball
         this.computeBallPixels();
 
         // Check for water
-        if (this.course.getFunction().getZ(this.ball.getX(), this.ball.getY()) < 0) {
+        if (this.collision.ballInWater()) {
             this.ball.reset();
             this.ball.setX(this.lastStop[0]);
             this.ball.setY(this.lastStop[1]);
@@ -339,17 +331,24 @@ public class CourseScreen implements Screen {
         this.computeBallPixels();
 
         // Check the walls
-        if (ballX < 0 || ballX > Golf.VIRTUAL_WIDTH) {
-            this.ball.setVelocityX(-this.ball.getVelocityX());
-
-        }
-        if (ballY < 0 || ballY > Golf.VIRTUAL_HEIGHT) {
-            this.ball.setVelocityY(-this.ball.getVelocityY());
-            
-        }
+        this.collision.checkForWalls(this.ballX, this.ballY);
 
         // Render the ball
-        this.renderBall();
+        this.ball.render();
+    }
+
+    /**
+     * Perfom a file move
+     */
+    private void fileMoves() {
+        StringTokenizer tokenizer = new StringTokenizer(this.moves.get(this.counter));
+        double force = Double.parseDouble(tokenizer.nextToken());
+        double angle = Double.parseDouble(tokenizer.nextToken());
+        double forceX = force * Math.cos(angle);
+        double forceY = force * Math.sin(angle);
+        this.engine.hit(forceX, forceY);
+        this.counter++;
+        this.hitSound.play();
     }
 
     /**
@@ -417,16 +416,6 @@ public class CourseScreen implements Screen {
     }
 
     /**
-     * Render the ball
-     */
-    private void renderBall() {
-        this.game.batch.begin();
-        this.game.batch.draw(this.ballImage, (float) this.ballX - this.ballSize/2,
-                (float) this.ballY - this.ballSize/2, this.ballSize, this.ballSize);
-        this.game.batch.end();
-    }
-
-    /**
      * Render the terrain (course)
      */
     private void renderTerrain() {
@@ -463,7 +452,6 @@ public class CourseScreen implements Screen {
     @Override
     public void dispose() {
         this.music.dispose();
-        this.ballImage.dispose();
         this.flag.dispose();
         this.hitSound.dispose();
         this.loseSound.dispose();
@@ -488,14 +476,6 @@ public class CourseScreen implements Screen {
 
     public void setBall(Ball ball) {
         this.ball = ball;
-    }
-
-    public Texture getBallImage() {
-        return ballImage;
-    }
-
-    public void setBallImage(Texture ballImage) {
-        this.ballImage = ballImage;
     }
 
     public Texture getFlag() {
@@ -528,14 +508,6 @@ public class CourseScreen implements Screen {
 
     public void setGoalSize(int goalSize) {
         this.goalSize = goalSize;
-    }
-
-    public int getBallSize() {
-        return ballSize;
-    }
-
-    public void setBallSize(int ballSize) {
-        this.ballSize = ballSize;
     }
 
     public double getScale() {
