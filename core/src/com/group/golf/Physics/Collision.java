@@ -1,4 +1,4 @@
 package com.group.golf.Physics;
 
-public class Collisions {
+public class Collision {
 }
