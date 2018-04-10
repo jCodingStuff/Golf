@@ -45,7 +45,7 @@ public class Function {
      * @param y the y-coordinate
      * @return true if the coordinate is inside the domain, false otherwise
      */
-    public boolean isInDomain(double x, double y) {
+    public boolean covers(double x, double y) {
         return x >= this.xRange[0] && x <= this.xRange[1] && y >= this.yRange[0] && y <= this.yRange[1];
     }
 

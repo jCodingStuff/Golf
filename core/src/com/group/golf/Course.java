@@ -47,6 +47,24 @@ public class Course {
     }
 
     /**
+     * Get the functions that covers x and y
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return the function whose domain includes the point (x, y)
+     */
+    public Function getFunctionFor(double x, double y) {
+        Function result = null;
+        boolean found = false;
+        for (int i = 0; i < this.functions.size() && !found; i++) {
+            if (this.functions.get(i).covers(x, y)) {
+                found = true;
+                result = this.functions.get(i);
+            }
+        }
+        return result;
+    }
+
+    /**
      * Get access to the gravity
      * @return the gravity
      */

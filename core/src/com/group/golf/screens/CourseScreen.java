@@ -198,11 +198,7 @@ public class CourseScreen implements Screen {
         this.calcOffsets();
 
         // Setup the heights matrix
-        if (this.course.isSpline()) {
-
-        } else {
-            this.calcHeightsMatrix();
-        }
+        this.calcHeightsMatrix();
 
         // Setup the colors matrix
         this.calcColorsMatrix();
