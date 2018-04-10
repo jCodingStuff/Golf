@@ -1,5 +1,7 @@
 package com.group.golf.math;
 
+import com.group.golf.Golf;
+
 /**
  * A class to hold static methods for Math purposes
  */
@@ -30,7 +32,7 @@ public class MathLib {
      * @param arr the array to copy
      * @return the copy of the array
      */
-    public static double[] copyArr(double[] arr) {
+    public static double[] copyDoubleArr(double[] arr) {
         double[] result = new double[arr.length];
         for (int i = 0; i < arr.length; i++) {
             result[i] = arr[i];
@@ -39,14 +41,29 @@ public class MathLib {
     }
 
     /**
+     * Create a copy of a float array
+     * @param arr the array to copy
+     * @return the copy of the array
+     */
+    public static float[] copyFloatArr(float[] arr) {
+        float[] result = new float[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            result[i] = arr[i];
+        }
+        return result;
+    }
+
+    /**
      * Translate function coordinate to pixel coordinate
-     * @param from function coordinate
-     * @param offset the offset value
+     * @param from function coordinates
+     * @param offsets the offset values
      * @param scale the scale
      * @return the pixel value
      */
-    public static double toPixel(double from, double offset, double scale) {
-        return (from - offset) * (1/scale);
+    public static double[] toPixel(double[] from, double[] offsets, double scale) {
+        double realX = (from[0] - offsets[0]) * (1 / scale);
+        double realY = (from[1] - offsets[1]) * (1 / scale);
+        return new double[]{realX, realY};
     }
 
 }

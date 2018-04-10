@@ -80,7 +80,7 @@ public class CourseScreen implements Screen {
         this.course = course;
 
         // Setup lastStop
-        this.lastStop = MathLib.copyArr(this.course.getStart());
+        this.lastStop = MathLib.copyDoubleArr(this.course.getStart());
 
         // Setup moves
         this.counter = 0;
@@ -134,7 +134,7 @@ public class CourseScreen implements Screen {
         this.course = course;
 
         // Setup lastStop
-        this.lastStop = MathLib.copyArr(this.course.getStart());
+        this.lastStop = MathLib.copyDoubleArr(this.course.getStart());
 
         // Setup moves
         this.moves = null;
@@ -175,8 +175,10 @@ public class CourseScreen implements Screen {
      * Compute the pixel coordinates of the ball
      */
     private void computeBallPixels() {
-        this.ballX = MathLib.toPixel(this.ball.getX(), this.xoffset, this.scale);
-        this.ballY = MathLib.toPixel(this.ball.getY(), this.yoffset, this.scale);
+        double[] ballPixels = MathLib.toPixel(new double[]{this.ball.getX(), this.ball.getY()},
+                new double[]{this.xoffset, this.yoffset}, this.scale);
+        this.ballX = ballPixels[0];
+        this.ballY = ballPixels[1];
     }
 
     /**
@@ -196,7 +198,11 @@ public class CourseScreen implements Screen {
         this.calcOffsets();
 
         // Setup the heights matrix
-        this.calcHeightsMatrix();
+        if (this.course.isSpline()) {
+
+        } else {
+            this.calcHeightsMatrix();
+        }
 
         // Setup the colors matrix
         this.calcColorsMatrix();
@@ -373,28 +379,6 @@ public class CourseScreen implements Screen {
                 System.out.println("firstX=" + this.firstX + ", firstY=" + this.firstY);
                 System.out.println("lastX=" + this.lastX + ", lastY=" + this.lastY);
 
-//                double angle = 0;
-//                if (this.lastX > this.firstX && this.lastY < this.firstY) {
-//                    angle = ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
-//                }
-//                else if (this.lastX > this.firstX && this.lastY > this.firstY) {
-//                    angle = ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
-//                }
-//                else if (this.lastX < this.firstX && this.lastY < this.firstY) {
-//                    angle = Math.PI + ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
-//                }
-//                else if (this.lastX < this.firstX && this.lastY > this.firstY) {
-//                    angle = Math.PI + ((Math.atan((this.firstY - this.lastY)/ (this.lastX - this.firstX))));
-//                }
-//                else if (this.lastX == this.firstX) {
-//                    if (this.lastY < this.firstY) angle = Math.PI / 2;
-//                    else angle = - Math.PI / 2;
-//                }
-//                else if (this.lastY == this.firstY) {
-//                    if (this.lastX > this.firstX) angle = 0;
-//                    else angle = Math.PI;
-//                }
-
                 double forceX = Math.abs(lastX - firstX) * 20;
                 double forceY = Math.abs(lastY - firstY) * 20;
 
@@ -408,7 +392,6 @@ public class CourseScreen implements Screen {
 
                 this.engine.hit(forceX, forceY);
 
-//                System.out.println("Force: " + force + "   angle: " + angle);
                 this.hitSound.play();
             }
             this.touchFlag = false;
@@ -420,8 +403,9 @@ public class CourseScreen implements Screen {
      */
     private void renderGoal() {
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        float realX = (float) MathLib.toPixel(this.course.getGoal()[0], this.xoffset, this.scale);
-        float realY = (float) MathLib.toPixel(this.course.getGoal()[1], this.yoffset, this.scale);
+        double[] real = MathLib.toPixel(this.course.getGoal(), new double[]{this.xoffset, this.yoffset}, this.scale);
+        float realX = (float) real[0];
+        float realY = (float) real[1];
         this.game.shapeRenderer.setColor(0, 0, 0, 1);
         this.game.shapeRenderer.ellipse(realX - this.goalSize/2, realY - this.goalSize/2,
                 this.goalSize, this.goalSize);

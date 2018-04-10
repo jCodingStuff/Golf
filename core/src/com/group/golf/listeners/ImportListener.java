@@ -15,6 +15,8 @@ import com.group.golf.Golf;
 import com.group.golf.math.Function;
 import com.group.golf.screens.CourseScreen;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -74,7 +76,9 @@ public class ImportListener extends ChangeListener {
             in.close();
 
             Ball ball = new Ball(mass);
-            Course course = new Course(function, g, mu, vmax, start, goal, tolerance);
+            List<Function> functions = new ArrayList<Function>();
+            functions.add(function);
+            Course course = new Course(functions, g, mu, vmax, start, goal, tolerance);
 
             this.game.setScreen(new CourseScreen(this.game, course, ball));
             this.screen.dispose();
