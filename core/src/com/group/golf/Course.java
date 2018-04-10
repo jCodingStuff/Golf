@@ -2,6 +2,8 @@ package com.group.golf;
 
 import com.group.golf.math.Function;
 
+import java.util.List;
+
 /**
  * This class represents a course for the Golf Game
  */
@@ -13,11 +15,11 @@ public class Course {
     private double[] start;
     private double[] goal;
     private double tolerance;
-    private Function function;
+    private List<Function> functions;
 
     /**
      * Create a new Course for Golf game
-     * @param function the 3D function that represents the course physically z = f(x, y)
+     * @param functions the 3D function that represents the course physically z = f(x, y), or the splines that build it
      * @param g the gravity
      * @param mu the friction coefficient
      * @param vmax the terminal velocity
@@ -25,14 +27,55 @@ public class Course {
      * @param goal the goal coordinates
      * @param tolerance the radius of the goal
      */
-    public Course(Function function, double g, double mu, double vmax, double[] start, double[] goal, double tolerance) {
+    public Course(List<Function> functions, double g, double mu, double vmax, double[] start, double[] goal,
+                  double tolerance) {
         this.g = g;
         this.mu = mu;
         this.vmax = vmax;
         this.start = start;
         this.goal = goal;
         this.tolerance = tolerance;
-        this.function = function;
+        this.functions = functions;
+    }
+
+    /**
+     * Check if the course is a spline
+     * @return true if it is spline, false otherwise
+     */
+    public boolean isSpline() {
+        return this.functions.size() > 1;
+    }
+
+    /**
+     * Get the functions that covers x and y
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return the function whose domain includes the point (x, y)
+     */
+    public Function getFunctionFor(double x, double y) {
+        Function result = null;
+        boolean found = false;
+        for (int i = 0; i < this.functions.size() && !found; i++) {
+            if (this.functions.get(i).covers(x, y)) {
+                found = true;
+                result = this.functions.get(i);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Get the height of the course on a given coordinate
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return the height at (x, y)
+     */
+    public double getHeight(double x, double y) {
+        if (this.isSpline()) {
+            return this.getFunctionFor(x, y).getZ(x, y);
+        } else {
+            return this.functions.get(0).getZ(x, y);
+        }
     }
 
     /**
@@ -135,16 +178,24 @@ public class Course {
      * Get access to the function
      * @return the function
      */
-    public Function getFunction() {
-        return function;
+    public List<Function> getFunctions() {
+        return functions;
     }
 
     /**
-     * Set a new function
-     * @param function the formula of the function
+     * Get access to the function, if the course is not a spline
+     * @return the function that defines the entire course
      */
-    public void setFunction(Function function) {
-        this.function = function;
+    public Function getFunction() {
+        return functions.get(0);
+    }
+
+    /**
+     * Set a new group of functions
+     * @param functions the formula of the function
+     */
+    public void setFunctions(List<Function> functions) {
+        this.functions = functions;
     }
 
     /**
@@ -158,7 +209,7 @@ public class Course {
 
     @Override
     public String toString() {
-        String message = this.getClass().getName() + " [" + this.function + ", start=" + arrToStr(this.start) + ", ";
+        String message = this.getClass().getName() + " [" + this.functions + ", start=" + arrToStr(this.start) + ", ";
         message += "goal=" + arrToStr(this.goal) + ", tolerance=" + this.tolerance + ", g=" + this.g + ", mu=" + this.mu;
         message += ", vmax=" + this.vmax + "]";
         return message;

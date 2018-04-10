@@ -12,6 +12,9 @@ public class Function {
     private String formula;
     private GMath calc;
 
+    private final double[] xRange;
+    private final double[] yRange;
+
     /**
      * Create a new Function instance
      * @param formula the formula of the function
@@ -19,6 +22,39 @@ public class Function {
     public Function(String formula) {
         this.formula = formula;
         this.calc = new GMath(formula, false);
+        this.xRange = null;
+        this.yRange = null;
+    }
+
+    /**
+     * Create a new Function spline instance
+     * @param formula the formula of the function
+     * @param xRange the domain of x-coordinate
+     * @param yRange the domain of y-coordinate
+     */
+    public Function(String formula, double[] xRange, double[] yRange) {
+        this.formula = formula;
+        this.calc = new GMath(formula, false);
+        this.xRange = xRange;
+        this.yRange = yRange;
+    }
+
+    /**
+     * Check if a given coordinate is in the domain of the current function
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return true if the coordinate is inside the domain, false otherwise
+     */
+    public boolean covers(double x, double y) {
+        return x >= this.xRange[0] && x <= this.xRange[1] && y >= this.yRange[0] && y <= this.yRange[1];
+    }
+
+    /**
+     * Check if the function is a spline
+     * @return true if it is spline, false otherwise
+     */
+    public boolean isSpline() {
+        return this.xRange != null || this.yRange != null;
     }
 
     /**
@@ -56,9 +92,25 @@ public class Function {
         this.calc.setFormula(formula);
     }
 
+    /**
+     * Get access to the x-domain of the function
+     * @return the x-domain
+     */
+    public double[] getxRange() {
+        return xRange;
+    }
+
+    /**
+     * Get access to the y-domain of the function
+     * @return the y-domain
+     */
+    public double[] getyRange() {
+        return yRange;
+    }
+
     @Override
     public Function clone() {
-        return new Function(this.formula);
+        return new Function(this.formula, MathLib.copyDoubleArr(this.xRange), MathLib.copyDoubleArr(this.yRange));
     }
 
     @Override

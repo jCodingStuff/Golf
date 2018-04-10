@@ -17,6 +17,9 @@ import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.math.Function;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The main menu screen for the Crazy Golf game
  */
@@ -80,7 +83,9 @@ public class CourseSelectorScreen implements Screen {
                 double[] start = new double[]{4, 3};
                 double[] goal = new double[]{0, 1};
                 Function function = new Function(formula);
-                Course course = new Course(function, 9.81, 0.96, 80, start, goal, 0.5);
+                List<Function> functions = new ArrayList<Function>();
+                functions.add(function);
+                Course course = new Course(functions, 9.81, 0.96, 80, start, goal, 0.5);
                 design.setTouchable(Touchable.disabled);
                 importbtn.setTouchable(Touchable.disabled);
                 play.setTouchable(Touchable.disabled);

@@ -1,15 +1,25 @@
 package com.group.golf;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.group.golf.math.MathLib;
+import com.group.golf.screens.CourseScreen;
+
 /**
  * A class to save the data of the ball
  */
 public class Ball {
+
+    public static final float RADIUS = 10;
 
     private double mass;
     private double x;
     private double y;
     private double velocityX;
     private double velocityY;
+
+    private Texture texture;
+    private CourseScreen courseScreen;
 
     /**
      * Construct a new Ball object
@@ -57,6 +67,31 @@ public class Ball {
             this.velocityX *= max;
             this.velocityY *= max;
         }
+    }
+
+    public void render() {
+        this.courseScreen.getGame().batch.begin();
+        double[] offsets = new double[]{this.courseScreen.getXoffset(), this.courseScreen.getYoffset()};
+        double[] real = MathLib.toPixel(new double[]{this.x, this.y}, offsets, this.courseScreen.getScale());
+        this.courseScreen.getGame().batch.draw(this.texture, (float) real[0] - RADIUS,
+                (float) real[1] - RADIUS, RADIUS * 2,RADIUS * 2);
+        this.courseScreen.getGame().batch.end();
+    }
+
+    /**
+     * Set a course screen for the ball
+     * @param courseScreen the new courseScreen
+     */
+    public void setCourseScreen(CourseScreen courseScreen) {
+        this.courseScreen = courseScreen;
+    }
+
+    /**
+     * Set a texture for the ball
+     * @param texture the new texture of the ball
+     */
+    public void setTexture(Texture texture) {
+        this.texture = texture;
     }
 
     /**

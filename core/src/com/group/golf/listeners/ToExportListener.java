@@ -1,5 +1,7 @@
 package com.group.golf.listeners;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import com.badlogic.gdx.Gdx;
@@ -17,6 +19,7 @@ import com.group.golf.math.Function;
 import com.group.golf.screens.CourseScreen;
 import com.group.golf.screens.ExportScreen;
 import com.group.golf.screens.ImportMovesScreen;
+import java.util.List;
 
 public class ToExportListener extends ChangeListener {
 	
@@ -70,7 +73,9 @@ public class ToExportListener extends ChangeListener {
         double[] goal = new double[]{goalX, goalY};
         Ball ball = new Ball(Double.parseDouble(this.txtBallMass.getText()));
         Function function = new Function(formula);
-        Course course = new Course(function, g, mu, vmax, start, goal, tolerance);
+        List<Function> functions = new ArrayList<Function>();
+        functions.add(function);
+        Course course = new Course(functions, g, mu, vmax, start, goal, tolerance);
         this.game.setScreen(new ExportScreen(this.game, course, ball));
         this.screen.dispose();
     }
