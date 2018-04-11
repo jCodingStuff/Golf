@@ -11,16 +11,21 @@ public class Collision {
     private final Ball ball;
     private final Course course;
 
+    private double lastX;
+    private double lastY;
+
     public Collision(Ball ball, Course course) {
         this.ball = ball;
         this.course = course;
+        this.lastX = this.course.getStart()[0];
+        this.lastX = this.course.getStart()[1];
     }
 
     public boolean isGoalAchieved() {
         double xToGoal = this.course.getGoal()[0] - this.ball.getX();
         double yToGoal = this.course.getGoal()[1] - this.ball.getY();
         double distToGoal = Math.sqrt(Math.pow(xToGoal, 2) + Math.pow(yToGoal, 2));
-        return distToGoal <= this.course.getTolerance();
+        return distToGoal < this.course.getTolerance();
     }
 
     public void checkForWalls(double ballX, double ballY) {
