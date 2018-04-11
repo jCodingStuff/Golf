@@ -16,7 +16,7 @@ public class Physics {
     private Ball ball;
     private Vector2 hitCoord;
 
-    private static final double H = 1;
+    private static final double H = 0.00001;
 
     /**
      * Construct a Physics engine
@@ -62,7 +62,7 @@ public class Physics {
         ball.setVelocityX(ball.getVelocityX() + delta * (grav.x + friction.x));
         ball.setVelocityY(ball.getVelocityY() + delta * (grav.y + friction.y));
 
-        if (Math.abs(this.ball.getVelocityX()) < 0.02 && Math.abs(this.ball.getVelocityY()) < 0.02) {
+        if (Math.abs(this.ball.getVelocityX()) < 0.01 && Math.abs(this.ball.getVelocityY()) < 0.01) {
             this.ball.reset();
         }
 
