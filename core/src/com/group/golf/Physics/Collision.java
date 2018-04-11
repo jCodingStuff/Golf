@@ -3,8 +3,6 @@ package com.group.golf.Physics;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
-import com.group.golf.math.Function;
-import com.group.golf.screens.CourseSelectorScreen;
 
 public class Collision {
 

@@ -109,22 +109,22 @@ public class Physics {
     public Vector2 calculateSlope(Vector2 coord) {
         Vector2 slope = new Vector2();
 
-        if (this.course.getFunction().getZ(coord.x-1,coord.y) != this.course.getFunction().getZ(coord.x,coord.y) &&
-                (this.course.getFunction().getZ(coord.x+1,coord.y) != this.course.getFunction().getZ(coord.x,coord.y))) {
-            if (this.course.getFunction().getZ(coord.x-1,coord.y) < this.course.getFunction().getZ(coord.x+1,coord.y)) {
-                slope.x = (float) (this.course.getFunction().getZ(coord.x-1,coord.y)-this.course.getFunction().getZ(coord.x,coord.y))/((coord.x-1)-coord.x);
+        if (this.course.getHeight(coord.x-1,coord.y) != this.course.getHeight(coord.x,coord.y) &&
+                (this.course.getHeight(coord.x+1,coord.y) != this.course.getHeight(coord.x,coord.y))) {
+            if (this.course.getHeight(coord.x-1,coord.y) < this.course.getHeight(coord.x+1,coord.y)) {
+                slope.x = (float) (this.course.getHeight(coord.x-1,coord.y)-this.course.getHeight(coord.x,coord.y))/((coord.x-1)-coord.x);
             } else {
-                slope.x = (float) (this.course.getFunction().getZ(coord.x+1,coord.y)-this.course.getFunction().getZ(coord.x,coord.y))/((coord.x+1)-coord.x);
+                slope.x = (float) (this.course.getHeight(coord.x+1,coord.y)-this.course.getHeight(coord.x,coord.y))/((coord.x+1)-coord.x);
             }
         } else {
             slope.x = 0;
         }
-        if (this.course.getFunction().getZ(coord.x,coord.y-1) != this.course.getFunction().getZ(coord.x,coord.y) &&
-                (this.course.getFunction().getZ(coord.x,coord.y+1) != (this.course.getFunction().getZ(coord.x,coord.y)))) {
-            if (this.course.getFunction().getZ(coord.x,coord.y-1) < this.course.getFunction().getZ(coord.x,coord.y+1)) {
-                slope.y = (float) (this.course.getFunction().getZ(coord.x,coord.y-1)-this.course.getFunction().getZ(coord.x,coord.y))/((coord.y-1) - coord.y);
+        if (this.course.getHeight(coord.x,coord.y-1) != this.course.getHeight(coord.x,coord.y) &&
+                (this.course.getHeight(coord.x,coord.y+1) != (this.course.getHeight(coord.x,coord.y)))) {
+            if (this.course.getHeight(coord.x,coord.y-1) < this.course.getHeight(coord.x,coord.y+1)) {
+                slope.y = (float) (this.course.getHeight(coord.x,coord.y-1)-this.course.getHeight(coord.x,coord.y))/((coord.y-1) - coord.y);
             } else {
-                slope.y = (float) (this.course.getFunction().getZ(coord.x,coord.y+1)-this.course.getFunction().getZ(coord.x,coord.y))/((coord.y+1) - coord.y);
+                slope.y = (float) (this.course.getHeight(coord.x,coord.y+1)-this.course.getHeight(coord.x,coord.y))/((coord.y+1) - coord.y);
             }
         } else {
             slope.y = 0;

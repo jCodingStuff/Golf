@@ -99,7 +99,7 @@ public class Ball {
      * @return true if it is moving, false otherwise
      */
     public boolean isMoving() {
-        return Math.abs(this.velocityX) > 1E-16 || Math.abs(this.velocityY) > 1E-16;
+        return this.velocityX != 0 || this.velocityY != 0;
     }
 
     /**
