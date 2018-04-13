@@ -67,9 +67,9 @@ public class MathLib {
     }
     
  // Method to multiply matrices
- 	public int[][] multiply(int[][] a,int[][] b) {
+ 	public static double[][] multiply(double[][] a, double[][] b) {
  		// Create new matrix to store added values
- 	int[][] C = new int[b.length][a[0].length];
+ 	double[][] C = new double[b.length][a[0].length];
  	for (int i = 0; i < b.length; i++) {
  		for (int j = 0; j < a[0].length; j++) {
  			for (int k = 0; k < b[0].length; k++) {
