@@ -48,11 +48,11 @@ public class Collision {
      * @param ballY the pixel-y position of the ball
      */
     public void checkForWalls(double ballX, double ballY) {
-        if (ballX <= 0 || ballX >= Golf.VIRTUAL_WIDTH) {
+        if (ballX < 0 || ballX > Golf.VIRTUAL_WIDTH) {
             this.ball.setVelocityX(-this.ball.getVelocityX());
 
         }
-        if (ballY <= 0 || ballY >= Golf.VIRTUAL_HEIGHT) {
+        if (ballY < 0 || ballY > Golf.VIRTUAL_HEIGHT) {
             this.ball.setVelocityY(-this.ball.getVelocityY());
         }
     }
