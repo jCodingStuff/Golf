@@ -8,12 +8,16 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.group.golf.Golf;
+//import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * Created by kim on 13.04.2018.
@@ -26,18 +30,23 @@ public class SplineScreen implements Screen{
     OrthographicCamera cam;
     Music music;
 
-    TextField point1;
-    TextField point2;
-    TextField point3;
-    TextField point4;
-    TextField point5;
-    TextField point6;
+    TextField xyz;
+    TextField dx;
+    TextField dy;
+    TextField dxy;
+    TextField xUnits;
+    TextField yUnits;
 
+    TextButton btnSubmitUnits;
     TextButton btnBack;
     TextButton btnDesign;
+    TextButton btnSubmit;
     Texture background;
-    String txt;
 
+    int[][] xyzMatrix;
+    int[][] dxMatrix;
+    int[][] dyMatrix;
+    int[][] dxyMatrix;
 
     public SplineScreen(final Golf game){
 
@@ -60,42 +69,52 @@ public class SplineScreen implements Screen{
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 
         // initializing buttons / textfields
-        point1 = new TextField(" ", skin);
-        point2 = new TextField(" ", skin);
-        point3 = new TextField(" ", skin);
-        point4 = new TextField(" ", skin);
-        point5 = new TextField(" ", skin);
-        point6 = new TextField(" ", skin);
+        xyz = new TextField("xyz", skin);
+        dx = new TextField("dx", skin);
+        dy = new TextField("dy", skin);
+        dxy = new TextField("dxy", skin);
+        xUnits = new TextField("x Units", skin);
+        yUnits = new TextField("y Units", skin);
         btnBack = new TextButton("Back", skin);
         btnDesign = new TextButton("Design", skin);
+        btnSubmit = new TextButton("Submit", skin);
+        btnSubmitUnits = new TextButton("Submit Units", skin);
 
-        point1.setPosition(250, 400);
-        point1.setSize(200,60);
-        point2.setPosition(250, 400);
-        point2.setSize(200,60);
-        point3.setPosition(250, 400);
-        point3.setSize(200,60);
-        point4.setPosition(250, 400);
-        point4.setSize(200,60);
-        point5.setPosition(250, 400);
-        point5.setSize(200,60);
-        point6.setPosition(250, 400);
-        point6.setSize(200,60);
+        xyz.setPosition(250, 300);
+        xyz.setSize(200,60);
+        dx.setPosition(550, 300);
+        dx.setSize(200,60);
+        dy.setPosition(250, 200);
+        dy.setSize(200,60);
+        dxy.setPosition(550, 200);
+        dxy.setSize(200,60);
+
+        xUnits.setPosition(250, 400);
+        xUnits.setSize(200,60);
+        yUnits.setPosition(550, 400);
+        yUnits.setSize(200,60);
+
         btnBack.setPosition(100, 300);
         btnBack.setSize(100,60);
-        btnDesign.setPosition(800, 300);
+        btnDesign.setPosition(800, 200);
         btnDesign.setSize(100,60);
+        btnSubmit.setPosition(800, 300);
+        btnSubmit.setSize(100,60);
+        btnSubmitUnits.setPosition(800, 400);
+        btnSubmitUnits.setSize(100,60);
 
-        stage.addActor(point1);
-        stage.addActor(point2);
-        stage.addActor(point3);
-        stage.addActor(point4);
-        stage.addActor(point5);
-        stage.addActor(point6);
+        stage.addActor(xyz);
+        stage.addActor(dx);
+        stage.addActor(dy);
+        stage.addActor(dxy);
+        stage.addActor(xUnits);
+        stage.addActor(yUnits);
+
+        stage.addActor(btnSubmitUnits);
         stage.addActor(btnBack);
+
         stage.addActor(btnDesign);
 
-        //Gdx.input.setInputProcessor(this.stage);
 
         // listener for back button
         class BackListener extends ChangeListener {
@@ -133,16 +152,57 @@ public class SplineScreen implements Screen{
         }
         btnDesign.addListener(new DesignListener(game, this));
 
-        /*// listener for textfields
-        point1.addListener(setListener(" ",point1));
-        point2.addListener(setListener(" ",point2));
-        point3.addListener(setListener(" ",point3));
-        point4.addListener(setListener(" ",point4));
-        point5.addListener(setListener(" ",point5));
-        point6.addListener(setListener(" ",point6));
+       class SubmitListener extends ChangeListener {
+            final Golf game;
+            private Screen screen;
+            public SubmitListener(final Golf game, Screen screen){
+                this.game = game;
+                this.screen = screen;
+            }
+            @Override
+            public void changed (ChangeEvent event, Actor actor) {
+                int x = parseInt(xUnits.getText());
 
-    }*/
-    /*
+            }
+
+        }
+       btnSubmit.addListener(new SubmitListener(game, this));
+
+        class SubmitUnitsListener extends ChangeListener {
+            final Golf game;
+            private Screen screen;
+            public SubmitUnitsListener(final Golf game, Screen screen){
+                this.game = game;
+                this.screen = screen;
+            }
+            @Override
+            public void changed (ChangeEvent event, Actor actor) {
+                int x = parseInt(xUnits.getText());
+                int y = parseInt(yUnits.getText());
+
+                xyzMatrix = new int[x][y];
+                dxMatrix = new int[x][y];
+                dyMatrix = new int[x][y];
+                dxyMatrix = new int[x][y];
+                stage.addActor(btnSubmit);
+                btnSubmitUnits.setTouchable(Touchable.disabled);
+
+            }
+
+        }
+        btnSubmitUnits.addListener(new SubmitUnitsListener(game, this));
+
+       // listener for textfields
+        xyz.addListener(setListener("xyz",xyz));
+        dx.addListener(setListener("dx",dx));
+        dy.addListener(setListener("dy",dy));
+        dxy.addListener(setListener("dxy",dxy));
+        xUnits.addListener(setListener("x Units",xUnits));
+        yUnits.addListener(setListener("y Units",yUnits));
+
+
+    }
+
     private FocusListener setListener(final String txt, final TextField tf){
 
         return(new FocusListener(){
@@ -161,8 +221,8 @@ public class SplineScreen implements Screen{
 
         });
 
-*/
     }
+
 
     @Override
     public void show() {
