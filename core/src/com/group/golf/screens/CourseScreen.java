@@ -324,7 +324,7 @@ public class CourseScreen implements Screen {
             this.ball.reset();
             this.ball.setX(this.lastStop[0]);
             this.ball.setY(this.lastStop[1]);
-            this.loseSound.play();
+            this.loseSound.play(0.2f);
         }
 
         // And again, before every check recompute pixel position of the ball
