@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
+import com.group.golf.math.Computable;
 import com.group.golf.math.Function;
 import com.group.golf.screens.CourseScreen;
 
@@ -77,8 +78,8 @@ public class Mode1Listener extends ChangeListener {
         double[] goal = new double[]{goalX, goalY};
         Ball ball = new Ball(Double.parseDouble(this.txtBallMass.getText()));
         Function function = new Function(formula);
-        List<Function> functions = new ArrayList<Function>();
-        functions.add(function);
+        Computable[][] functions = new Computable[1][1];
+        functions[0][0] = function;
         Course course = new Course(functions, g, mu, vmax, start, goal, tolerance);
         this.game.setScreen(new CourseScreen(this.game, course, ball));
         this.screen.dispose();
