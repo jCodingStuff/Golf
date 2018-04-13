@@ -65,5 +65,20 @@ public class MathLib {
         double realY = (from[1] - offsets[1]) * (1 / scale);
         return new double[]{realX, realY};
     }
+    
+ // Method to multiply matrices
+ 	public static int[][] multiply(int[][] a,int[][] b) {
+ 		// Create new matrix to store added values
+ 	int[][] C = new int[b.length][a[0].length];
+ 	// 
+ 	for (int i = 0; i < b.length; i++) {
+ 		for (int j = 0; j < a[0].length; j++) {
+ 			for (int k = 0; k < b[0].length; k++) {
+ 				C[i][j] += a[i][k] * b[k][j];
+ 			}
+ 		}
+ 	}
+ 	return C;
+ 	}
 
 }
