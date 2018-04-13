@@ -11,7 +11,7 @@ public class Line2D {
     private double k;
 
     /**
-     * Create a new instance of line
+     * Create a new instance of Line2D given the slope and y-intercept
      * @param m the slope
      * @param k the y-intercept
      */
@@ -20,8 +20,39 @@ public class Line2D {
         this.k = k;
     }
 
+    /**
+     * Create new instance of Line2D given the slope and a point
+     * @param m the slope
+     * @param x a x-coordinate
+     * @param y a y-coordinate
+     */
+    public Line2D(double m, double x, double y) {
+        this.m = m;
+        this.k = y - this.m * x;
+    }
+
+    /**
+     * Create a new instance of Line2D given two points
+     * @param x1 first x-coordinate
+     * @param y1 first y-coordinate
+     * @param x2 second x-coordinate
+     * @param y2 second y-coordinate
+     */
+    public Line2D(double x1, double y1, double x2, double y2) {
+        this.m = (y2 - y1) / (x2 - x1);
+        this.k = y1 - this.m * x1;
+    }
+
 
     // GETTER AND SETTER AREA
+    /**
+     * Get the y-value of the line at a given x
+     * @param x the x-coordinate in which the line will be evaluated
+     * @return the y-value for the specified x
+     */
+    public double getY(double x) {
+        return this.m * x + this.k;
+    }
 
     /**
      * Get the slope of the line
