@@ -10,7 +10,8 @@ public class BicubicInterpolator {
                                                        {0, 0, 1, 0},
                                                        {-3, 3, -2, 1},
                                                        {2, -2, 1, 1}};
-    
-    public BicubicInterpolator() {}
+    private double[][] coefficients;
+
+    public BicubicInterpolator(Point3D[][] points, double[][] dx, double[][] dy, double[][] dxy) {}
 
 }
