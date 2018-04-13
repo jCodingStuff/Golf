@@ -61,7 +61,7 @@ public class Course {
         int floorY = (int) y;
         BicubicInterpolator botLeftSquare = (BicubicInterpolator) this.functions[0][0];
         Point3D botLeftPoint = botLeftSquare.getPoints()[0][0];
-        return this.functions[x - botLeftPoint.getX()][y - botLeftPoint.getY()];
+        return this.functions[floorX - (int) botLeftPoint.getX()][floorY - (int) botLeftPoint.getY()];
     }
 
     /**
