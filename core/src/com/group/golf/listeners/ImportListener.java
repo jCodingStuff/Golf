@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
+import com.group.golf.math.Computable;
 import com.group.golf.math.Function;
 import com.group.golf.screens.CourseScreen;
 
@@ -76,8 +77,8 @@ public class ImportListener extends ChangeListener {
             in.close();
 
             Ball ball = new Ball(mass);
-            List<Function> functions = new ArrayList<Function>();
-            functions.add(function);
+            Computable[][] functions = new Computable[1][1];
+            functions[0][0] = function;
             Course course = new Course(functions, g, mu, vmax, start, goal, tolerance);
 
             this.game.setScreen(new CourseScreen(this.game, course, ball));

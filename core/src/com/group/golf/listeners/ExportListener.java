@@ -4,6 +4,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.group.golf.Golf;
+import com.group.golf.math.Function;
 import com.group.golf.screens.CourseScreen;
 import com.group.golf.screens.CourseSelectorScreen;
 import com.badlogic.gdx.Gdx;
@@ -51,7 +52,7 @@ public class ExportListener extends ChangeListener {
 		String path = "courses/"+ name +".txt";
 		if (!name.equals("") && !name.equalsIgnoreCase("Enter a file name")
 				&& !Gdx.files.local(path).exists()) {
-			String courseText = this.course1.getFunction().getName();
+			String courseText = ((Function)this.course1.getFunction()).getName();
 			courseText += "\n" + this.course1.getG();
 			courseText += "\n" + this.course1.getTolerance();
 			courseText += "\n" + this.course1.getMu();

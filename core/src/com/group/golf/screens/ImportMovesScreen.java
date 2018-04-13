@@ -18,6 +18,7 @@ import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.listeners.MovesPlayListener;
+import com.group.golf.math.Function;
 
 /**
  * Screen to import a file containing the moves to perform
@@ -100,7 +101,7 @@ public class ImportMovesScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 DesignScreen scr = new DesignScreen(this.game);
-                scr.txtFunction.setText(this.course.getFunction().getName());
+                scr.txtFunction.setText(((Function)this.course.getFunction()).getName());
                 scr.txtStartPos.setText(this.course.getStart()[0] + " " + this.course.getStart()[1]);
                 scr.txtGoalPos.setText(this.course.getGoal()[0] + " " + this.course.getGoal()[1]);
                 scr.txtRadius.setText("" + this.course.getTolerance());

@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
+import com.group.golf.math.Computable;
 import com.group.golf.math.Function;
 
 import java.util.ArrayList;
@@ -83,8 +84,8 @@ public class CourseSelectorScreen implements Screen {
                 double[] start = new double[]{4, 3};
                 double[] goal = new double[]{0, 1};
                 Function function = new Function(formula);
-                List<Function> functions = new ArrayList<Function>();
-                functions.add(function);
+                Computable[][] functions = new Computable[1][1];
+                functions[0][0] = function;
                 Course course = new Course(functions, 9.81, 0.95, 80, start, goal, 0.5);
                 design.setTouchable(Touchable.disabled);
                 importbtn.setTouchable(Touchable.disabled);
