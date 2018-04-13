@@ -1,6 +1,6 @@
 package com.group.golf.math;
 
-public class BicubicInterpolator {
+public class BicubicInterpolator implements Computable {
 
     private static final double[][] A = new double[][]{{1, 0, 0, 0},
                                                        {0, 0, 1, 0},
@@ -47,4 +47,14 @@ public class BicubicInterpolator {
     	this.coefficients = MathLib.multiply(res1, B);
     }
 
+	@Override
+	public double getZ(double x, double y) {
+		double x0 = this.points[0][0].getX();
+		double y0 = this.points[0][0].getY();
+		double result = 0;
+
+		// CODE HERE!
+
+		return result;
+	}
 }
