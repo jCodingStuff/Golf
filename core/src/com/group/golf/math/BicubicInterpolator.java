@@ -19,7 +19,7 @@ public class BicubicInterpolator {
     	fitter(dx, dy, dxy);
     }
 
-    private Point3D[][] getPoints() {
+    public Point3D[][] getPoints() {
     	return points;
     }
 
