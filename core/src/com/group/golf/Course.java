@@ -1,6 +1,10 @@
 package com.group.golf;
 
+import com.badlogic.gdx.math.MathUtils;
+import com.group.golf.math.BicubicInterpolator;
+import com.group.golf.math.Computable;
 import com.group.golf.math.Function;
+import com.group.golf.math.Point3D;
 
 import java.util.List;
 
@@ -15,7 +19,7 @@ public class Course {
     private double[] start;
     private double[] goal;
     private double tolerance;
-    private List<Function> functions;
+    private Computable[][] functions;
 
     /**
      * Create a new Course for Golf game
@@ -27,7 +31,7 @@ public class Course {
      * @param goal the goal coordinates
      * @param tolerance the radius of the goal
      */
-    public Course(List<Function> functions, double g, double mu, double vmax, double[] start, double[] goal,
+    public Course(Computable[][] functions, double g, double mu, double vmax, double[] start, double[] goal,
                   double tolerance) {
         this.g = g;
         this.mu = mu;
@@ -43,25 +47,21 @@ public class Course {
      * @return true if it is spline, false otherwise
      */
     public boolean isSpline() {
-        return this.functions.size() > 1;
+        return this.functions.length > 1;
     }
 
     /**
-     * Get the functions that covers x and y
+     * Get the computable that covers x and y
      * @param x the x-coordinate
      * @param y the y-coordinate
-     * @return the function whose domain includes the point (x, y)
+     * @return the computable whose domain includes the point (x, y)
      */
-    public Function getFunctionFor(double x, double y) {
-        Function result = null;
-        boolean found = false;
-        for (int i = 0; i < this.functions.size() && !found; i++) {
-            if (this.functions.get(i).covers(x, y)) {
-                found = true;
-                result = this.functions.get(i);
-            }
-        }
-        return result;
+    public Computable getFunctionFor(double x, double y) {
+        int floorX = (int) x;
+        int floorY = (int) y;
+        BicubicInterpolator botLeftSquare = (BicubicInterpolator) this.functions[0][0];
+        Point3D botLeftPoint = botLeftSquare.getPoints()[0][0];
+        return this.functions[x - botLeftPoint.getX()][y - botLeftPoint.getY()];
     }
 
     /**
@@ -74,7 +74,7 @@ public class Course {
         if (this.isSpline()) {
             return this.getFunctionFor(x, y).getZ(x, y);
         } else {
-            return this.functions.get(0).getZ(x, y);
+            return this.functions[0][0].getZ(x, y);
         }
     }
 
@@ -175,10 +175,10 @@ public class Course {
     }
 
     /**
-     * Get access to the function
-     * @return the function
+     * Get access to the computables
+     * @return the computables
      */
-    public List<Function> getFunctions() {
+    public Computable[][] getFunctions() {
         return functions;
     }
 
@@ -186,15 +186,15 @@ public class Course {
      * Get access to the function, if the course is not a spline
      * @return the function that defines the entire course
      */
-    public Function getFunction() {
-        return functions.get(0);
+    public Computable getFunction() {
+        return functions[0][0];
     }
 
     /**
-     * Set a new group of functions
-     * @param functions the formula of the function
+     * Set a new group of computables
+     * @param functions the formula of the computables
      */
-    public void setFunctions(List<Function> functions) {
+    public void setFunctions(Computable[][] functions) {
         this.functions = functions;
     }
 
