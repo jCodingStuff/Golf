@@ -69,9 +69,17 @@ public class Collision {
         Line2D path = new Line2D(this.lastX, this.lastY, this.ball.getX(), this.ball.getY());
 
         // Evaluate the line
-        for (double x = this.lastX; x <= ballX && !water; x += STEP) {
-            if (this.course.getHeight(x, path.getY(x)) < 0) { // Ball in water
-                water = true;
+        if (ballX >= this.lastX) { // Ball is moving to the right
+            for (double x = this.lastX; x <= ballX && !water; x += STEP) {
+                if (this.course.getHeight(x, path.getY(x)) < 0) { // Ball in water
+                    water = true;
+                }
+            }
+        } else { // Ball is moving to the left
+            for (double x = ballX; x <= this.lastX && !water; x += STEP) {
+                if (this.course.getHeight(x, path.getY(x)) < 0) { // Ball in water
+                    water = true;
+                }
             }
         }
 
