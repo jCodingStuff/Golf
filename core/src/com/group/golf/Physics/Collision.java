@@ -38,7 +38,7 @@ public class Collision {
     public boolean isGoalAchieved() {
         double xToGoal = this.course.getGoal()[0] - this.ball.getX();
         double yToGoal = this.course.getGoal()[1] - this.ball.getY();
-        double distToGoal = Math.sqrt(Math.pow(xToGoal, 2) + Math.pow(yToGoal, 2));
+        double distToGoal = Math.sqrt(xToGoal * xToGoal + yToGoal * yToGoal);
         return distToGoal < this.course.getTolerance();
     }
 
@@ -48,11 +48,11 @@ public class Collision {
      * @param ballY the pixel-y position of the ball
      */
     public void checkForWalls(double ballX, double ballY) {
-        if (ballX < 0 || ballX > Golf.VIRTUAL_WIDTH) {
+        if (ballX < Ball.RADIUS || ballX > Golf.VIRTUAL_WIDTH - Ball.RADIUS) {
             this.ball.setVelocityX(-this.ball.getVelocityX());
 
         }
-        if (ballY < 0 || ballY > Golf.VIRTUAL_HEIGHT) {
+        if (ballY < Ball.RADIUS || ballY > Golf.VIRTUAL_HEIGHT - Ball.RADIUS) {
             this.ball.setVelocityY(-this.ball.getVelocityY());
         }
     }
