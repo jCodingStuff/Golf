@@ -66,7 +66,7 @@ public class Collision {
 
         double ballX = this.ball.getX();
         double ballY = this.ball.getY();
-        Line2D path = new Line2D(this.lastX, this.lastY, this.ball.getX(), this.ball.getY());
+        Line2D path = new Line2D(this.lastX, this.lastY, ballX, ballY);
 
         // Evaluate the line
         if (ballX >= this.lastX) { // Ball is moving to the right

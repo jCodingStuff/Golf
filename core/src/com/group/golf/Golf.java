@@ -19,7 +19,7 @@ public class Golf extends Game {
 
 	public static final String GAME_NAME = "Crazy Golf";
 	public static final int VIRTUAL_WIDTH = 1000;
-	public static final int VIRTUAL_HEIGHT = 650;
+	public static final int VIRTUAL_HEIGHT = 700;
 
 	public SpriteBatch batch;
 	public BitmapFont font;
