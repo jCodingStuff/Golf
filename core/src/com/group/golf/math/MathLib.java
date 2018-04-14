@@ -57,7 +57,7 @@ public class MathLib {
      * Translate function coordinate to pixel coordinate
      * @param from function coordinates
      * @param offsets the offset values
-     * @param scale the scale
+     * @param scales the scales
      * @return the pixel value
      */
     public static double[] toPixel(double[] from, double[] offsets, double[] scales) {
@@ -65,8 +65,13 @@ public class MathLib {
         double realY = (from[1] - offsets[1]) * (1 / scales[1]);
         return new double[]{realX, realY};
     }
-    
- // Method to multiply matrices
+
+    /**
+     * Multiply two matrices
+     * @param a the first matrix
+     * @param b the second matrix
+     * @return the matrix resulting of the multiplication of a and b
+     */
  	public static double[][] multiply(double[][] a, double[][] b) {
  		// Create new matrix to store added values
  	double[][] C = new double[b.length][a[0].length];
