@@ -13,9 +13,13 @@ public class BicubicInterpolator implements Computable {
     private double[][] coefficients;
 
     private Point3D[][] points;
+    private double x0;
+    private double y0;
 
     public BicubicInterpolator(Point3D[][] points, double[][] dx, double[][] dy, double[][] dxy) {
     	this.points = points;
+    	this.x0 = this.points[0][0].getX();
+    	this.y0 = this.points[0][0].getY();
     	fitter(dx, dy, dxy);
     }
 
@@ -49,11 +53,13 @@ public class BicubicInterpolator implements Computable {
 
 	@Override
 	public double getZ(double x, double y) {
-		double x0 = this.points[0][0].getX();
-		double y0 = this.points[0][0].getY();
 		double result = 0;
 
-		// CODE HERE!
+		for (int i = 0; i < this.coefficients.length; i++) {
+			for (int j = 0; j < this.coefficients[i].length; j++) {
+				result += this.coefficients[i][j] * Math.pow((x - this.x0), i) * Math.pow((y - this.y0), j);
+			}
+		}
 
 		return result;
 	}

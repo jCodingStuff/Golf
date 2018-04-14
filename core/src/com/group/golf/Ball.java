@@ -72,7 +72,8 @@ public class Ball {
     public void render() {
         this.courseScreen.getGame().batch.begin();
         double[] offsets = new double[]{this.courseScreen.getXoffset(), this.courseScreen.getYoffset()};
-        double[] real = MathLib.toPixel(new double[]{this.x, this.y}, offsets, this.courseScreen.getScale());
+        double[] scales = new double[]{this.courseScreen.getScaleX(), this.courseScreen.getScaleY()};
+        double[] real = MathLib.toPixel(new double[]{this.x, this.y}, offsets, scales);
         this.courseScreen.getGame().batch.draw(this.texture, (float) real[0] - RADIUS,
                 (float) real[1] - RADIUS, RADIUS * 2,RADIUS * 2);
         this.courseScreen.getGame().batch.end();

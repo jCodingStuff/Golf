@@ -203,7 +203,7 @@ public class Course {
      * @return the euclidean disctance between start and goal
      */
     public double getDistance() {
-        double dist = Math.sqrt(Math.pow(this.goal[0] - this.start[0], 2) + Math.pow(this.goal[1] - this.start[0], 2));
+        double dist = Math.sqrt(Math.pow(this.goal[0] - this.start[0], 2) + Math.pow(this.goal[1] - this.start[1], 2));
         return Math.abs(dist);
     }
 

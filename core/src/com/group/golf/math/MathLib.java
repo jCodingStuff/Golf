@@ -60,9 +60,9 @@ public class MathLib {
      * @param scale the scale
      * @return the pixel value
      */
-    public static double[] toPixel(double[] from, double[] offsets, double scale) {
-        double realX = (from[0] - offsets[0]) * (1 / scale);
-        double realY = (from[1] - offsets[1]) * (1 / scale);
+    public static double[] toPixel(double[] from, double[] offsets, double[] scales) {
+        double realX = (from[0] - offsets[0]) * (1 / scales[0]);
+        double realY = (from[1] - offsets[1]) * (1 / scales[1]);
         return new double[]{realX, realY};
     }
     
