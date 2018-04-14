@@ -15,7 +15,9 @@ import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
+import com.group.golf.math.BicubicInterpolator;
 import com.group.golf.math.MathLib;
+import com.group.golf.math.Point3D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -187,10 +189,12 @@ public class CourseScreen implements Screen {
      * Set up the course for rendering
      */
     private void setUpCourse() {
-        // Set up the scale, each pixel of the screen represents this.scale units
-        this.calcScale();
-        // The center of the screen is the middle point between the start and the goal
-        this.calcOffsets();
+        if (!this.course.isSpline()) { // Do normal setup
+            this.calcScale();
+            this.calcOffsets();
+        } else { // Do spline setup
+            this.splineSetup();
+        }
 
         // Setup the heights matrix
         this.calcHeightsMatrix();
@@ -203,7 +207,7 @@ public class CourseScreen implements Screen {
      */
     private void calcScale() {
         double dist = this.course.getDistance();
-        double limitDist = 0.375;
+        double limitDist = 0.40625;
         this.scaleX = 0.000625;
         while (dist > limitDist) {
             this.scaleX *= 2;
@@ -269,6 +273,33 @@ public class CourseScreen implements Screen {
                 }
             }
         }
+    }
+
+    /**
+     * Do setup for splines
+     */
+    private void splineSetup() {
+        // Setup Offsets
+        BicubicInterpolator botLeftInterp = (BicubicInterpolator) this.course.getFunctions()[0][0];
+        Point3D[][] points = botLeftInterp.getPoints();
+        this.xoffset = points[0][0].getX();
+        this.yoffset = points[0][0].getY();
+
+        // Setup scales
+        int xLength = this.course.getFunctions().length;
+        int yLength = this.course.getFunctions()[0].length;
+
+        // scaleX
+        BicubicInterpolator botRightInterp = (BicubicInterpolator) this.course.getFunctions()[xLength - 1][0];
+        Point3D[][] botRightPoints = botRightInterp.getPoints();
+        double rightX = botRightPoints[1][0].getX();
+        this.scaleX = (rightX - this.xoffset) / Golf.VIRTUAL_WIDTH;
+
+        // scaleY
+        BicubicInterpolator topLeftInterp = (BicubicInterpolator) this.course.getFunctions()[0][yLength - 1];
+        Point3D[][] topLeftPoints = topLeftInterp.getPoints();
+        double topY = botRightPoints[0][1].getY();
+        this.scaleX = (topY - this.yoffset) / Golf.VIRTUAL_HEIGHT;
     }
 
     @Override
@@ -418,7 +449,8 @@ public class CourseScreen implements Screen {
         float toleranceX = (float) (tolerance * 1/(this.scaleX));
         float toleranceY = (float) (tolerance * 1/(this.scaleY));
         this.game.shapeRenderer.setColor(1, 0, 0, 1);
-        this.game.shapeRenderer.ellipse(realX - toleranceX/2, realY - toleranceY/2, toleranceX, toleranceY);
+        this.game.shapeRenderer.ellipse(realX - toleranceX, realY - toleranceY,
+                toleranceX*2, toleranceY*2);
         this.game.shapeRenderer.end();
         this.game.batch.begin();
         this.game.batch.draw(this.flag, realX - 3, realY, 52, 62);
