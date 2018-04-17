@@ -2,6 +2,7 @@ package com.group.golf;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Circle;
 import com.group.golf.math.MathLib;
 import com.group.golf.screens.CourseScreen;
 
@@ -20,6 +21,7 @@ public class Ball {
 
     private Texture texture;
     private CourseScreen courseScreen;
+    private Circle collisionCircle;
 
     /**
      * Construct a new Ball object
@@ -33,6 +35,7 @@ public class Ball {
         this.y = y;
         this.velocityX = 0;
         this.velocityY = 0;
+        this.collisionCircle = new Circle((float) this.x, (float) this.y, RADIUS);
     }
 
     /**
@@ -45,6 +48,7 @@ public class Ball {
         this.y = 0;
         this.velocityX = 0;
         this.velocityY = 0;
+        this.collisionCircle = new Circle((float) this.x, (float) this.y, RADIUS);
     }
 
     /**
@@ -77,6 +81,14 @@ public class Ball {
         this.courseScreen.getGame().batch.draw(this.texture, (float) real[0] - RADIUS,
                 (float) real[1] - RADIUS, RADIUS * 2,RADIUS * 2);
         this.courseScreen.getGame().batch.end();
+    }
+
+    /**
+     * Update the collsionCircle
+     */
+    private void updateCollisionCircle() {
+        this.collisionCircle.setX((float) this.x);
+        this.collisionCircle.setY((float) this.y);
     }
 
     /**
@@ -174,6 +186,7 @@ public class Ball {
      */
     public void setX(double x) {
         this.x = x;
+        this.updateCollisionCircle();
     }
 
     /**
@@ -190,5 +203,6 @@ public class Ball {
      */
     public void setY(double y) {
         this.y = y;
+        this.updateCollisionCircle();
     }
 }

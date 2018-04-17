@@ -43,6 +43,16 @@ public class Line2D {
         this.k = y1 - this.m * x1;
     }
 
+    /**
+     * Create a new instance of Line2D given two points
+     * @param a instance of Point3D
+     * @param b instance of Point3D
+     */
+    public Line2D(Point3D a, Point3D b) {
+        this.m = (b.getY() - a.getY()) / (b.getX() - a.getX());
+        this.k = a.getY() - this.m * a.getX();
+    }
+
 
     // GETTER AND SETTER AREA
     /**

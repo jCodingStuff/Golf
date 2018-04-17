@@ -4,6 +4,7 @@ import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.math.Line2D;
+import com.group.golf.math.Point3D;
 
 /**
  * @author Julian Marrades
@@ -87,6 +88,31 @@ public class Collision {
         this.lastX = ballX;
         this.lastY = ballY;
 
+        return water;
+    }
+
+    /**
+     * Check if there is water in the straight line that joins two points
+     * @param a a Point3D instance
+     * @param b a Point3D instance
+     * @return
+     */
+    public boolean isWaterBetween(Point3D a, Point3D b) {
+        Line2D path = new Line2D(a, b);
+        boolean water = false;
+        if (b.getX() >= a.getX()) { // B is on the right of A
+            for (double x = a.getX(); x <= b.getX() && !water; x += STEP) {
+                if (this.course.getHeight(x, path.getY(x)) < 0) { // Ball in water
+                    water = true;
+                }
+            }
+        } else { // B is on the left of A
+            for (double x = b.getX(); x <= a.getX() && !water; x += STEP) {
+                if (this.course.getHeight(x, path.getY(x)) < 0) { // Ball in water
+                    water = true;
+                }
+            }
+        }
         return water;
     }
 
