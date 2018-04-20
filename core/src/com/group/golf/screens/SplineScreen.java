@@ -15,6 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.group.golf.Golf;
+
+import com.group.golf.listeners.SplineSubmitListener;
+import com.group.golf.math.Point3D;
 //import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 
 import static java.lang.Integer.parseInt;
@@ -43,10 +46,11 @@ public class SplineScreen implements Screen{
     TextButton btnSubmit;
     Texture background;
 
-    int[][] xyzMatrix;
-    int[][] dxMatrix;
-    int[][] dyMatrix;
-    int[][] dxyMatrix;
+
+    Point3D[][] xyzMatrix;
+    double[][] dxMatrix;
+    double[][] dyMatrix;
+    double[][] dxyMatrix;
 
     public SplineScreen(final Golf game){
 
@@ -151,7 +155,7 @@ public class SplineScreen implements Screen{
 
         }
         btnDesign.addListener(new DesignListener(game, this));
-
+/*
        class SubmitListener extends ChangeListener {
             final Golf game;
             private Screen screen;
@@ -161,12 +165,17 @@ public class SplineScreen implements Screen{
             }
             @Override
             public void changed (ChangeEvent event, Actor actor) {
-                int x = parseInt(xUnits.getText());
+                int xyzN = parseInt(xyz.getText());
+                int dxN = parseInt(dx.getText());
+                int dyN = parseInt(dy.getText());
+                int dxyN = parseInt(dxy.getText());
+                System.out.println(xyzN);
 
             }
 
         }
-       btnSubmit.addListener(new SubmitListener(game, this));
+       btnSubmit.addListener(new SplineSubmitListener(game, this));
+       */
 
         class SubmitUnitsListener extends ChangeListener {
             final Golf game;
@@ -180,17 +189,22 @@ public class SplineScreen implements Screen{
                 int x = parseInt(xUnits.getText());
                 int y = parseInt(yUnits.getText());
 
-                xyzMatrix = new int[x][y];
-                dxMatrix = new int[x][y];
-                dyMatrix = new int[x][y];
-                dxyMatrix = new int[x][y];
+                xyzMatrix = new Point3D[x][y];
+                dxMatrix = new double[x][y];
+                dyMatrix = new double[x][y];
+                dxyMatrix = new double[x][y];
                 stage.addActor(btnSubmit);
+                btnSubmit.addListener(new SplineSubmitListener(game, screen, xyz, dx, dy, dxy, xyzMatrix, dxMatrix, dyMatrix, dxyMatrix,  xUnits, yUnits));
                 btnSubmitUnits.setTouchable(Touchable.disabled);
+                btnSubmitUnits.setVisible(false);
+//                xUnits.setVisible(false);
+//                yUnits.setVisible(false);
 
             }
 
         }
         btnSubmitUnits.addListener(new SubmitUnitsListener(game, this));
+
 
        // listener for textfields
         xyz.addListener(setListener("xyz",xyz));
@@ -199,6 +213,7 @@ public class SplineScreen implements Screen{
         dxy.addListener(setListener("dxy",dxy));
         xUnits.addListener(setListener("x Units",xUnits));
         yUnits.addListener(setListener("y Units",yUnits));
+
 
 
     }
