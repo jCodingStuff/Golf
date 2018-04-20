@@ -13,6 +13,7 @@ public class BicubicInterpolator implements Computable {
     private double[][] coefficients;
 
     private Point3D[][] points;
+    private Point3D[][] offsetPoints;
     private double x0;
     private double y0;
 
@@ -20,6 +21,9 @@ public class BicubicInterpolator implements Computable {
     	this.points = points;
     	this.x0 = this.points[0][0].getX();
     	this.y0 = this.points[0][0].getY();
+
+    	this.calcOffsetPoints();
+
     	fitter(dx, dy, dxy);
     }
 
@@ -27,17 +31,26 @@ public class BicubicInterpolator implements Computable {
     	return points;
     }
 
+    private void calcOffsetPoints() {
+    	this.offsetPoints = new Point3D[this.points.length][this.points[0].length];
+    	for (int i = 0; i < this.points.length; i++) {
+    		for (int j = 0; j < this.points[i].length; j++) {
+    			this.offsetPoints[i][j] = new Point3D(i, j, this.points[i][j].getZ());
+			}
+		}
+	}
+
     private void fitter(double[][] dx, double[][] dy, double[][] dxy) {
     	double[][] values = new double[4][4];
 
-    	values[0][0] = points[0][0].getZ();
-    	values[0][1] = points[0][1].getZ();
+    	values[0][0] = offsetPoints[0][0].getZ();
+    	values[0][1] = offsetPoints[0][1].getZ();
     	values[0][2] = dy[0][0];
     	values[0][3] = dy[0][1];
-    	values[1][0] = points[1][0].getZ();
+    	values[1][0] = offsetPoints[1][0].getZ();
     	values[2][0] = dx[0][0];
     	values[3][0] = dx[1][0];
-    	values[1][1] = points[0][1].getZ();
+    	values[1][1] = offsetPoints[0][1].getZ();
     	values[2][1] = dx[0][1];
     	values[3][1] = dy[1][1];
     	values[1][2] = dx[1][0];
@@ -54,6 +67,9 @@ public class BicubicInterpolator implements Computable {
 	@Override
 	public double getZ(double x, double y) {
 		double result = 0;
+
+		x -= this.x0;
+		y -= this.y0;
 
 		for (int i = 0; i < this.coefficients.length; i++) {
 			for (int j = 0; j < this.coefficients[i].length; j++) {
