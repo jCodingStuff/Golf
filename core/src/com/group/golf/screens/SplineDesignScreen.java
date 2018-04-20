@@ -16,7 +16,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.group.golf.Golf;
 import com.group.golf.listeners.Mode1Listener;
 import com.group.golf.listeners.Mode2Listener;
+import com.group.golf.listeners.SplineMode1Listener;
 import com.group.golf.listeners.ToExportListener;
+import com.group.golf.math.Computable;
 
 /**
  * Created by kim on 13.04.2018.
@@ -29,6 +31,7 @@ public class SplineDesignScreen implements Screen{
         Stage stage;
         OrthographicCamera cam;
         Music music;
+        Computable[][] computable;
 
         TextField txtStartPos;
         TextField txtGoalPos;
@@ -51,10 +54,11 @@ public class SplineDesignScreen implements Screen{
          * Create a new Design Screen without the function
          * @param game the Golf instace
          */
-        public SplineDesignScreen(final Golf game){
+        public SplineDesignScreen(final Golf game, Computable[][] computable){
 
             this.game = game;
             this.stage = new Stage();
+            this.computable = computable;
             Gdx.input.setInputProcessor(stage);
 
             // Set up music
@@ -86,8 +90,7 @@ public class SplineDesignScreen implements Screen{
                     txtVMax, txtFriction, txtGravity, txtBallMass));
 
             btnMode1 = new TextButton("Mode 1", skin);
-            btnMode1.addListener(new Mode1Listener(this.game, this, txtFunction, txtStartPos, txtGoalPos, txtRadius,
-                    txtVMax, txtFriction, txtGravity, txtBallMass));
+
 
             btnMode2 = new TextButton("Mode 2", skin);
             btnMode2.addListener(new Mode2Listener(this.game, this, txtFunction, txtStartPos, txtGoalPos, txtRadius,
@@ -157,6 +160,8 @@ public class SplineDesignScreen implements Screen{
 
             }
             btnBack.addListener(new BackListener(game, this));
+            btnMode1.addListener(new SplineMode1Listener(this.game, this, computable, txtStartPos, txtGoalPos, txtRadius,
+                    txtVMax, txtFriction, txtGravity, txtBallMass));
 
             // listener for textfields
             txtGravity.addListener(setListener("Gravity",txtGravity));

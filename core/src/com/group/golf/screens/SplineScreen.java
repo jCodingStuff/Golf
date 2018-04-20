@@ -17,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.group.golf.Golf;
 
 import com.group.golf.listeners.SplineSubmitListener;
+import com.group.golf.math.Computable;
+import com.group.golf.math.Interpolator;
 import com.group.golf.math.Point3D;
 //import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 
@@ -148,8 +150,10 @@ public class SplineScreen implements Screen{
             }
             @Override
             public void changed (ChangeEvent event, Actor actor) {
+                Computable[][] computable;
+                computable = Interpolator.getInterpolators(xyzMatrix, dxMatrix, dyMatrix, dxyMatrix);
 
-                this.game.setScreen(new SplineDesignScreen(this.game));
+                this.game.setScreen(new SplineDesignScreen(this.game, computable));
                 this.screen.dispose();
             }
 
@@ -186,8 +190,8 @@ public class SplineScreen implements Screen{
             }
             @Override
             public void changed (ChangeEvent event, Actor actor) {
-                int x = parseInt(xUnits.getText());
-                int y = parseInt(yUnits.getText());
+                int x  = parseInt(xUnits.getText())+1;
+                int y = parseInt(yUnits.getText())+1;
 
                 xyzMatrix = new Point3D[x][y];
                 dxMatrix = new double[x][y];

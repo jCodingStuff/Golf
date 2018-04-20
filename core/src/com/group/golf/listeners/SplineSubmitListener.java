@@ -46,8 +46,8 @@ public class SplineSubmitListener extends ChangeListener {
         this.dx = dx;
         this.dy = dy;
         this.dxy = dxy;
-        this.xUnits = Integer.parseInt(xUnits.getText());
-        this.yUnits = Integer.parseInt(yUnits.getText());
+        this.xUnits = Integer.parseInt(xUnits.getText())+1;
+        this.yUnits = Integer.parseInt(yUnits.getText())+1;
         xCounter = 0;
         yCounter = 0;
     }
@@ -59,11 +59,11 @@ public class SplineSubmitListener extends ChangeListener {
         double x = Double.parseDouble(tokenizerStart.nextToken());
         double y = Double.parseDouble(tokenizerStart.nextToken());
         double z = Double.parseDouble(tokenizerStart.nextToken());
-        xyzMatrix[yCounter][xCounter] = new Point3D(x,y,z);
+        xyzMatrix[xCounter][yCounter] = new Point3D(x,y,z);
 
-        dxMatrix[yCounter][xCounter] = Double.parseDouble(dx.getText());
-        dyMatrix[yCounter][xCounter] = Double.parseDouble(dy.getText());
-        dxyMatrix[yCounter][xCounter] = Double.parseDouble(dxy.getText());
+        dxMatrix[xCounter][yCounter] = Double.parseDouble(dx.getText());
+        dyMatrix[xCounter][yCounter] = Double.parseDouble(dy.getText());
+        dxyMatrix[xCounter][yCounter] = Double.parseDouble(dxy.getText());
         System.out.println(Arrays.deepToString(dxMatrix));
 
         if(xCounter==xUnits-1){
