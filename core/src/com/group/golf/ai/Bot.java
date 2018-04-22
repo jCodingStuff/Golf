@@ -1,11 +1,10 @@
 package com.group.golf.ai;
 
-import java.util.List;
-
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
+import com.group.golf.math.Line2D;
 import com.group.golf.math.Point3D;
 
 import java.util.ArrayList;
@@ -20,6 +19,7 @@ public class Bot {
     private final Collision collision;
 
     private Stack<Point3D> path;
+    private Point3D ballPoint;
 
     /**
      * Create a new Bot instance
@@ -34,6 +34,8 @@ public class Bot {
         this.engine = engine;
         this.collision = collision;
 
+        this.ballPoint = new Point3D(this.ball.getX(), this.ball.getY());
+
         this.fillStack();
     }
 
@@ -41,7 +43,6 @@ public class Bot {
      * Fill the path that the bot will follow to solve the game
      */
     private void fillStack() {
-        Point3D ballPoint = new Point3D(this.ball.getX(), this.ball.getY());
         Point3D tmpGoal = new Point3D(this.course.getGoal()[0], this.course.getGoal()[1]);
         List<Point3D> range = this.getRange(tmpGoal);
         this.path.push(tmpGoal);
@@ -50,7 +51,7 @@ public class Bot {
             range = this.getRange(tmpGoal);
             this.path.push(tmpGoal);
         }
-        if (this.collision.isWaterBetween(ballPoint, tmpGoal)) {
+        if (this.collision.isWaterBetween(this.ballPoint, tmpGoal)) {
             // Solve the water conflict
         }
     }
@@ -62,7 +63,19 @@ public class Bot {
      * @return true if the ball is in range, false otherwise
      */
     private boolean ballInRange(Point3D center, List<Point3D> range) {
-        return false;
+        Line2D tmpGoalToBall = new Line2D(this.ballPoint, center);
+        Point3D[] bounds = this.getBounds(tmpGoalToBall, center, range);
+
+    }
+
+    private Point3D[] getBounds(Line2D line, Point3D center, List<Point3D> points) {
+        Point3D[] bounds = new Point3D[2];
+        if (center.getX() < this.ballPoint.getX()) {
+
+        } else {
+
+        }
+        return bounds;
     }
 
     /**
@@ -87,7 +100,7 @@ public class Bot {
      */
     private Point3D closestPoint(List<Point3D> points) {
     	double starter = Double.MAX_VALUE;
-    	Point3D point = new Point3D(this.ball.getX(), this.ball.getY());
+    	Point3D point = this.ballPoint;
     	
     	for (int i = 0; i < points.size(); i++) {
     		double distance = Math.pow(points.get(i).getX(), 2) + Math.pow(points.get(i).getY(),2);

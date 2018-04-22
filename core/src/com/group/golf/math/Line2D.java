@@ -53,6 +53,23 @@ public class Line2D {
         this.k = a.getY() - this.m * a.getX();
     }
 
+    /**
+     * Check if a point is above a line
+     * @param point the point to check
+     * @return true if the point is above the line, false otherwise
+     */
+    public boolean isAbove(Point3D point) {
+        return point.getY() > this.getY(point.getX());
+    }
+
+    /**
+     * Check if a point is under a line
+     * @param point the point to check
+     * @return true if the point is under the line, false otherwise
+     */
+    public boolean isUnder(Point3D point) {
+        return point.getY() < this.getY(point.getX());
+    }
 
     // GETTER AND SETTER AREA
     /**
