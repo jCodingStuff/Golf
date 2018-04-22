@@ -45,7 +45,7 @@ public class Bot {
         Point3D tmpGoal = new Point3D(this.course.getGoal()[0], this.course.getGoal()[1]);
         List<Point3D> range = this.getRange(tmpGoal);
         this.path.push(tmpGoal);
-        while (this.ballInRange(tmpGoal, range)) {
+        while (this.ballInRange(range)) {
             tmpGoal = closestPoint(range);
             range = this.getRange(tmpGoal);
             this.path.push(tmpGoal);
@@ -60,7 +60,7 @@ public class Bot {
      * @param range the limits of the range
      * @return true if the ball is in range, false otherwise
      */
-    private boolean ballInRange(Point3D center, List<Point3D> range) {
+    private boolean ballInRange(List<Point3D> range) {
         return false;
     }
 
