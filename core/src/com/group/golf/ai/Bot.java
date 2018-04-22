@@ -13,7 +13,7 @@ public class Bot {
     private final Collision collision;
 
     /**
-     * Create a new Bot instace 
+     * Create a new Bot instance
      * @param course
      * @param ball
      * @param engine
