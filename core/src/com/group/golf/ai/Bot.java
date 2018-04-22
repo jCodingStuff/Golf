@@ -1,9 +1,12 @@
 package com.group.golf.ai;
 
+import java.util.List;
+
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
+import com.group.golf.math.Point3D;
 
 public class Bot {
 
@@ -24,6 +27,24 @@ public class Bot {
         this.ball = ball;
         this.engine = engine;
         this.collision = collision;
+    }
+    
+    /**
+     * Find the closest point in the list of points to the ball's location.
+     * @return the found point.
+     */
+    private Point3D closestPoint(List<Point3D> points) {
+    	double starter = Double.MAX_VALUE;
+    	Point3D point = new Point3D(this.ball.getX(), this.ball.getY());
+    	
+    	for (int i = 0; i < points.size(); i++) {
+    		double distance = Math.pow(points.get(i).getX(), 2) + Math.pow(points.get(i).getY(),2);
+    		if ((starter > distance) && (!this.collision.isWaterBetween(point, points.get(i)))) {
+    			starter = distance;
+    			point = points.get(i);
+    		}
+    	}
+    	return point;
     }
 
 
