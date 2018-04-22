@@ -65,6 +65,15 @@ public class Line2D {
     }
 
     /**
+     * Get the x-value of the line at a given y
+     * @param y the y-coordinate in which the line will be evaluated
+     * @return the x-value for the specified y
+     */
+    public double getX(double y) {
+        return (y - this.k) / this.m;
+    }
+
+    /**
      * Get the slope of the line
      * @return the slope of the line
      */
