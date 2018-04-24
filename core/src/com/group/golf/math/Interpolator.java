@@ -1,7 +1,18 @@
 package com.group.golf.math;
 
+/**
+ * A class to hold static methods for interpolation
+ */
 public class Interpolator {
 
+    /**
+     * Get the 2D-array of BicubicInterpolators out of point information
+     * @param points the 2D-array of points
+     * @param dx the 2D-array of dx
+     * @param dy the 2D-array of dy
+     * @param dxy the 2D-array of dxy
+     * @return the 2D-array of BicubicInterpolators
+     */
     public static Computable[][] getInterpolators(Point3D[][] points, double[][] dx, double[][] dy, double[][] dxy) {
         Computable[][] interpolators = new Computable[points.length - 1][points[0].length - 1];
         for (int x = 0; x < points.length - 1; x++) {
