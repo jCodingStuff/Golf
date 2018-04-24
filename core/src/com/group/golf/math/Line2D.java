@@ -59,7 +59,7 @@ public class Line2D {
      * @return true if the point is above the line, false otherwise
      */
     public boolean isAbove(Point3D point) {
-        return point.getY() > this.getY(point.getX());
+        return point.getY() >= this.getY(point.getX());
     }
 
     /**
@@ -68,7 +68,25 @@ public class Line2D {
      * @return true if the point is under the line, false otherwise
      */
     public boolean isUnder(Point3D point) {
-        return point.getY() < this.getY(point.getX());
+        return point.getY() <= this.getY(point.getX());
+    }
+
+    /**
+     * Check if a point is on the right of a line
+     * @param point the point to check
+     * @return true if the point on the right of the line the line, false otherwise
+     */
+    public boolean isRight(Point3D point) {
+        return point.getX() >= this.getX(point.getY());
+    }
+
+    /**
+     * Check if a point is on the left of a line
+     * @param point the point to check
+     * @return true if the point on the left of the line the line, false otherwise
+     */
+    public boolean isLeft(Point3D point) {
+        return point.getX() <= this.getX(point.getY());
     }
 
     // GETTER AND SETTER AREA

@@ -5,6 +5,7 @@ import com.group.golf.Course;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
 import com.group.golf.math.Line2D;
+import com.group.golf.math.MathLib;
 import com.group.golf.math.Point3D;
 
 import java.util.ArrayList;
@@ -64,16 +65,48 @@ public class Bot {
      */
     private boolean ballInRange(Point3D center, List<Point3D> range) {
         Line2D tmpGoalToBall = new Line2D(this.ballPoint, center);
-        Point3D[] bounds = this.getBounds(tmpGoalToBall, center, range);
-
+        Line2D bounds = this.getBounds(tmpGoalToBall, center, range);
+        if (center.getX() <= this.ballPoint.getX()) {
+            return bounds.isRight(this.ballPoint);
+        } else {
+            return bounds.isLeft(this.ballPoint);
+        }
     }
 
-    private Point3D[] getBounds(Line2D line, Point3D center, List<Point3D> points) {
-        Point3D[] bounds = new Point3D[2];
-        if (center.getX() < this.ballPoint.getX()) {
-
+    /**
+     * Get the closest line to ball that cuts the path which joins goal and ball
+     * @param line the line joining ball and goal
+     * @param center the tmpGoal (center of range)
+     * @param points the list of points forming the range
+     * @return
+     */
+    private Line2D getBounds(Line2D line, Point3D center, List<Point3D> points) {
+        Line2D bounds = null;
+        double recordDistance = Double.MAX_VALUE;
+        if (center.getX() <= this.ballPoint.getX()) {
+            /* Obtain the closest point to the ball (under the line), for which the next point is above the line */
+            for (int i = 0; i < points.size(); i++) {
+                Point3D current = points.get(i);
+                Point3D next = points.get(i == points.size() - 1 ? 0 : i+1);
+                double distanceX = this.ballPoint.getX() - current.getX();
+                if (current.getX() >= center.getX() && line.isUnder(current) && line.isAbove(next)
+                        && distanceX < recordDistance) {
+                    bounds = new Line2D(current, next);
+                    recordDistance = distanceX;
+                }
+            }
         } else {
-
+            /* Obtain the closest point to the ball (above the line), for which the next point is under the line */
+            for (int i = 0; i < points.size(); i++) {
+                Point3D current = points.get(i);
+                Point3D next = points.get(i == points.size() - 1 ? 0 : i+1);
+                double distanceX = current.getX() - this.ballPoint.getX();
+                if (current.getX() <= center.getX() && line.isAbove(current) && line.isUnder(next)
+                        && distanceX < recordDistance) {
+                    bounds = new Line2D(current, next);
+                    recordDistance = distanceX;
+                }
+            }
         }
         return bounds;
     }
@@ -103,7 +136,7 @@ public class Bot {
     	Point3D point = this.ballPoint;
     	
     	for (int i = 0; i < points.size(); i++) {
-    		double distance = Math.pow(points.get(i).getX(), 2) + Math.pow(points.get(i).getY(),2);
+    		double distance = MathLib.distanceSquared(point, points.get(i));
     		if ((starter > distance) && (!this.collision.isWaterBetween(point, points.get(i)))) {
     			starter = distance;
     			point = points.get(i);

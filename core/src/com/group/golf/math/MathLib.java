@@ -101,4 +101,16 @@ public class MathLib {
         return true;
     }
 
+    /**
+     * Get euclidean 2D-distance (squared) between two points
+     * @param a one point
+     * @param b another distance
+     * @return squared distance between a and b
+     */
+    public static double distanceSquared(Point3D a, Point3D b) {
+        double x = b.getX() - a.getX();
+        double y = b.getY() - a.getY();
+        return Math.pow(x, 2) + Math.pow(y, 2);
+    }
+
 }
