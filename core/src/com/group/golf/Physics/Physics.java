@@ -8,7 +8,7 @@ import com.group.golf.math.Function;
 
 /**
  * Created by alex_ on 21-Mar-18.
- * A class to hold the Physics engine for the Crazy Golf game
+ * A class to hold the Physics engine for the Crazy Golf gamennn
  */
 
 public class Physics {
