@@ -12,6 +12,11 @@ public class Point3D {
         this.z = z;
     }
 
+    public Point3D(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public double getX() {
         return x;
     }
@@ -34,5 +39,13 @@ public class Point3D {
 
     public void setZ(double z) {
         this.z = z;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj.getClass() != this.getClass()) return false;
+        Point3D other = (Point3D) obj;
+        return this.x == other.x && this.y == other.y && this.z == other.z;
     }
 }

@@ -74,15 +74,43 @@ public class MathLib {
      */
  	public static double[][] multiply(double[][] a, double[][] b) {
  		// Create new matrix to store added values
- 	double[][] C = new double[b.length][a[0].length];
- 	for (int i = 0; i < b.length; i++) {
- 		for (int j = 0; j < a[0].length; j++) {
- 			for (int k = 0; k < b[0].length; k++) {
- 				C[i][j] += a[i][k] * b[k][j];
- 			}
- 		}
+        double[][] C = new double[b.length][a[0].length];
+        for (int i = 0; i < b.length; i++) {
+            for (int j = 0; j < a[0].length; j++) {
+                for (int k = 0; k < b[0].length; k++) {
+                    C[i][j] += a[i][k] * b[k][j];
+                }
+            }
+        }
+        return C;
  	}
- 	return C;
- 	}
+
+    /**
+     * Check if two double arrays match
+     * @param arr1 one array
+     * @param arr2 another array
+     * @return true if they match, false otherwise
+     */
+    public static boolean arrayMatch(double[] arr1, double[] arr2) {
+        if (arr1 == null && arr2 != null) return false;
+        else if (arr1 != null && arr2 == null) return false;
+        else if (arr1.length != arr2.length) return false;
+        for (int i = 0; i < arr1.length; i++) {
+            if (arr1[i] != arr2[i]) return false;
+        }
+        return true;
+    }
+
+    /**
+     * Get euclidean 2D-distance (squared) between two points
+     * @param a one point
+     * @param b another distance
+     * @return squared distance between a and b
+     */
+    public static double distanceSquared(Point3D a, Point3D b) {
+        double x = b.getX() - a.getX();
+        double y = b.getY() - a.getY();
+        return Math.pow(x, 2) + Math.pow(y, 2);
+    }
 
 }

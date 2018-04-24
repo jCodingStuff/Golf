@@ -40,7 +40,7 @@ public class Collision {
         double xToGoal = this.course.getGoal()[0] - this.ball.getX();
         double yToGoal = this.course.getGoal()[1] - this.ball.getY();
         double distToGoal = Math.sqrt(xToGoal * xToGoal + yToGoal * yToGoal);
-        return distToGoal < this.course.getTolerance();
+        return distToGoal <= this.course.getTolerance();
     }
 
     /**

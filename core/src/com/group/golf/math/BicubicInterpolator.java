@@ -1,5 +1,8 @@
 package com.group.golf.math;
 
+/**
+ * A class to use bicubic polynomials for interpolation
+ */
 public class BicubicInterpolator implements Computable {
 
     private static final double[][] A = new double[][]{{1, 0, 0, 0},
@@ -17,6 +20,13 @@ public class BicubicInterpolator implements Computable {
     private double x0;
     private double y0;
 
+	/**
+	 * Create a new Instance of BicubicInterpolator
+	 * @param points the 2D-array of points
+	 * @param dx the 2D-array of dx
+	 * @param dy the 2D-array of dy
+	 * @param dxy the 2D-array of dxy
+	 */
     public BicubicInterpolator(Point3D[][] points, double[][] dx, double[][] dy, double[][] dxy) {
     	this.points = points;
     	this.x0 = this.points[0][0].getX();
@@ -27,11 +37,18 @@ public class BicubicInterpolator implements Computable {
     	fitter(dx, dy, dxy);
     }
 
-    public Point3D[][] getPoints() {
+	/**
+	 * Get access to the 2D-array of points representing the corners of the square
+	 * @return the corners of the square
+	 */
+	public Point3D[][] getPoints() {
     	return points;
     }
 
-    private void calcOffsetPoints() {
+	/**
+	 * Move the points to square with bot-left corner at (0, 0)
+	 */
+	private void calcOffsetPoints() {
     	this.offsetPoints = new Point3D[this.points.length][this.points[0].length];
     	for (int i = 0; i < this.points.length; i++) {
     		for (int j = 0; j < this.points[i].length; j++) {
@@ -40,6 +57,12 @@ public class BicubicInterpolator implements Computable {
 		}
 	}
 
+	/**
+	 * Compute the coefficients for the bicubic polynomial
+	 * @param dx the 2D-array of dx
+	 * @param dy the 2D-array of dy
+	 * @param dxy the 2D-array of dxy
+	 */
     private void fitter(double[][] dx, double[][] dy, double[][] dxy) {
     	double[][] values = new double[4][4];
 
