@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.group.golf.Ball;
 import com.group.golf.Course;
+import com.group.golf.math.Computable;
 import com.group.golf.math.Function;
+import com.sun.xml.internal.stream.util.BufferAllocator;
 
 /**
  * Created by alex_ on 21-Mar-18.
@@ -15,18 +17,51 @@ public class Physics {
     private Course course;
     private Ball ball;
     private Vector2 hitCoord;
+    private Computable function;
+    private double[] solutions;
+    private final double STEP_SIZE = 0.25;
+
 
     private static final double H = 10e-7;
 
     /**
      * Construct a Physics engine
+     *
      * @param course the course to analyze
-     * @param ball the ball that will roll on the course
+     * @param ball   the ball that will roll on the course
      */
     public Physics(Course course, Ball ball) {
         this.course = course;
         this.ball = ball;
         this.hitCoord = new Vector2();
+    }
+
+
+    //Differential equation solver
+
+    public void ODEsolver(double x, double y) {
+        //Runge-Kutta method third. no init
+        for (int i = 0; i <= 3; i += STEP_SIZE) {
+            //      this.solutions[i] = RK3(x,y,STEP_SIZE);
+            //      this.solutions[i] = RK4(x,y,STEP_SIZE);
+        }
+    }
+
+    public double RK3(double x, double y, double h) {
+        double k1 = h * function.getZ(x,y);
+        double k2 = h * function.getZ(x + (h / 3), y + (k1 / 3));
+        double k3 = h * function.getZ(x + h * (2 / 2), y + k2 * (2 / 3));
+        y = y + (k1 + 3 * k3) / 4;
+        return y;
+    }
+
+    public double RK4(double x, double y, double h){
+        double k1 = h * function.getZ(x,y);
+        double k2 = h * function.getZ(x + (h/2), y + (k1 / 2));
+        double k3 = h * function.getZ(x + (h/2), y + (k2 / 2));
+        double k4 = h * function.getZ(x  + h, y + k3);
+        y = y + (k1/6) + (k2/3) + (k3/3) + (k4/6);
+        return y;
     }
 
 
