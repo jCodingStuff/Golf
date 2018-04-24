@@ -28,11 +28,19 @@ public class Interpolator {
         Computable[][] interpolators = new Computable[points.length - 1][points[0].length - 1];
         double[][] dx = computeDx(points);
         double[][] dy = computeDy(points);
-        double[][] dxy = computeDxy(points);
+        double[][] dxy = computeDxy(points, dy);
         fillComputable(points, interpolators, dx, dy, dxy);
         return interpolators;
     }
 
+    /**
+     * Fill the computable 2D-array of interpolators
+     * @param points the point coordinates
+     * @param interpolators the array to fill
+     * @param dx the derivatives in terms of x
+     * @param dy the derivatives in terms of y
+     * @param dxy the mixed derivatives in terms of x and y
+     */
     private static void fillComputable(Point3D[][] points, Computable[][] interpolators, double[][] dx, double[][] dy,
                                        double[][] dxy) {
         for (int x = 0; x < points.length - 1; x++) {
@@ -50,6 +58,11 @@ public class Interpolator {
         }
     }
 
+    /**
+     * Compute the partial derivatives in terms of x
+     * @param points the points coordinates
+     * @return the 2D-array containing the partial derivatives
+     */
     private static double[][] computeDx(Point3D[][] points) {
         double[][] dx = new double[points.length][points[0].length];
         for (int i = 0; i < points.length; i++) {
@@ -66,6 +79,11 @@ public class Interpolator {
         return dx;
     }
 
+    /**
+     * Compute the partial derivatives in terms of y
+     * @param points the points coordinates
+     * @return the 2D-array containing the partial derivatives
+     */
     private static double[][] computeDy(Point3D[][] points) {
         double[][] dy = new double[points.length][points[0].length];
         for (int i = 0; i < points.length; i++) {
@@ -82,14 +100,20 @@ public class Interpolator {
         return dy;
     }
 
-    private static double[][] computeDxy(Point3D[][] points) {
-        double[][] dxy = new double[points.length][points[0].length];
+    /**
+     * Compute the mixed derivatives in terms of x and y
+     * @param points the points coordinates
+     * @param dy the partial derivates in terms of y
+     * @return the mixed derivatives
+     */
+    private static double[][] computeDxy(Point3D[][] points, double[][] dy) {
+        Point3D[][] derivatives = new Point3D[points.length][points[0].length];
         for (int i = 0; i < points.length; i++) {
             for (int j = 0; j < points[i].length; j++) {
-
+                derivatives[i][j] = new Point3D(points[i][j].getX(), points[i][j].getY(), dy[i][j]);
             }
         }
-        return dxy;
+        return computeDx(derivatives);
     }
 
 }
