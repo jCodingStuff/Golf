@@ -47,7 +47,7 @@ public class Course {
      * @return true if it is spline, false otherwise
      */
     public boolean isSpline() {
-        return this.functions.length > 1;
+        return this.functions[0][0].getClass() == BicubicInterpolator.class;
     }
 
     /**
