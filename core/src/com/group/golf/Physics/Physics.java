@@ -37,14 +37,20 @@ public class Physics {
     }
 
 
-    //Differential equation solver
+    /**
+     * differential equation solver, using the fourth and third order Runge-Kutta method to solve the double variable
+     * ODEs.
+     * @param x     the x variable, containing a double.
+     * @param y     the y variable, containing a double. 
+     */
 
     public void ODEsolver(double x, double y) {
         //Runge-Kutta method third. no init
-        for (int i = 0; i <= 3; i += STEP_SIZE) {
+        for (int i = 0; i <= 4; i += STEP_SIZE) {
             //      this.solutions[i] = RK3(x,y,STEP_SIZE);
-            //      this.solutions[i] = RK4(x,y,STEP_SIZE);
+                    this.solutions[i] = RK4(x,y,STEP_SIZE);
         }
+        System.out.println(this.solutions);
     }
 
     public double RK3(double x, double y, double h) {
