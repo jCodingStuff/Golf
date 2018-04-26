@@ -1,12 +1,8 @@
 package com.group.golf;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.group.golf.math.BicubicInterpolator;
 import com.group.golf.math.Computable;
-import com.group.golf.math.Function;
 import com.group.golf.math.Point3D;
-
-import java.util.List;
 
 /**
  * This class represents a course for the Golf Game
