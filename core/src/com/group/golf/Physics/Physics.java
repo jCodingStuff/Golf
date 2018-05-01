@@ -152,8 +152,8 @@ public class Physics {
 
         double step = 0.001;
 
-        slope[0] = (this.course.getHeight(coord.x-step,coord.y) - this.course.getHeight(coord.x+step,coord.y))/(2*step);
-        slope[1] = ((this.course.getHeight(coord.x,coord.y-step) - this.course.getHeight(coord.x,coord.y+step))/(2*step));
+        slope[0] = (this.course.getHeight(coord.x+step,coord.y) - this.course.getHeight(coord.x-step,coord.y))/(2*step);
+        slope[1] = ((this.course.getHeight(coord.x,coord.y+step) - this.course.getHeight(coord.x,coord.y-step))/(2*step));
 //
 //        if (this.course.getHeight(coord.x-H,coord.y) != this.course.getHeight(coord.x,coord.y) &&
 //                (this.course.getHeight(coord.x+H,coord.y) != this.course.getHeight(coord.x,coord.y))) {
