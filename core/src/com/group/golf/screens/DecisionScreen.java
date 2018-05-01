@@ -30,6 +30,7 @@ public class DecisionScreen implements Screen {
     Music music;
 
     TextButton spline;
+    TextButton splineWithout;
     TextButton function;
     TextButton btnBack;
     Texture background;
@@ -60,7 +61,8 @@ public class DecisionScreen implements Screen {
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 
         // initializing buttons / textfields
-        spline = new TextButton("Spline", skin);
+        spline = new TextButton("Spline with derivatives", skin);
+        splineWithout = new TextButton("Spline without derivatives",skin);
         function = new TextButton("Function", skin);
         btnBack = new TextButton("Back", skin);
 
@@ -71,13 +73,18 @@ public class DecisionScreen implements Screen {
         spline.setPosition(300, 400);
         spline.setSize(200, 60);
 
-        function.setPosition(300, 300);
+        splineWithout.setPosition(300, 300);
+        splineWithout.setSize(200, 60);
+
+
+        function.setPosition(300, 200);
         function.setSize(200, 60);
 
         btnBack.setPosition(100, 300);
         btnBack.setSize(100, 60);
 
         stage.addActor(spline);
+        stage.addActor(splineWithout);
         stage.addActor(function);
         stage.addActor(btnBack);
 
@@ -115,6 +122,25 @@ public class DecisionScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
 
                 this.game.setScreen(new SplineScreen(this.game));
+                this.screen.dispose();
+            }
+
+        }
+        spline.addListener(new SplineListener(game, this));
+
+        class SplineWithoutListener extends ChangeListener {
+            final Golf game;
+            private Screen screen;
+
+            public SplineWithoutListener(final Golf game, Screen screen) {
+                this.game = game;
+                this.screen = screen;
+            }
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+               // this.game.setScreen(new SplineWithoutScreen(this.game));
                 this.screen.dispose();
             }
 
