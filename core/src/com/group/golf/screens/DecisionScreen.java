@@ -140,12 +140,12 @@ public class DecisionScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
 
-               // this.game.setScreen(new SplineWithoutScreen(this.game));
+              this.game.setScreen(new SplineWithoutScreen(this.game));
                 this.screen.dispose();
             }
 
         }
-        spline.addListener(new SplineListener(game, this));
+        splineWithout.addListener(new SplineWithoutListener(game, this));
 
         // listener for function button
         class FunctionListener extends ChangeListener {
