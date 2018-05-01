@@ -53,11 +53,17 @@ public class Course {
      * @return the computable whose domain includes the point (x, y)
      */
     public Computable getFunctionFor(double x, double y) {
+        //System.out.println("Coordinate to compute: " + x + ", " + y);
         int floorX = (int) x;
         int floorY = (int) y;
         BicubicInterpolator botLeftSquare = (BicubicInterpolator) this.functions[0][0];
         Point3D botLeftPoint = botLeftSquare.getPoints()[0][0];
-        return this.functions[floorX - (int) botLeftPoint.getX()][floorY - (int) botLeftPoint.getY()];
+        int i = floorX - (int) botLeftPoint.getX();
+        int j = floorY - (int) botLeftPoint.getY();
+        //System.out.println("Indices:" + i + ", " + j);
+        if (i >= this.functions.length) i--;
+        if (j >= this.functions[i].length) j--;
+        return this.functions[i][j];
     }
 
     /**
