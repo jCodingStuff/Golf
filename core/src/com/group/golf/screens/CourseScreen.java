@@ -15,6 +15,7 @@ import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
+import com.group.golf.ai.Bot;
 import com.group.golf.math.BicubicInterpolator;
 import com.group.golf.math.MathLib;
 import com.group.golf.math.Point3D;
@@ -70,6 +71,9 @@ public class CourseScreen implements Screen {
     private int lastX;
     private int lastY;
 
+    // Bot
+    private Bot bot;
+
 
     /**
      * Create a new course screen
@@ -82,8 +86,14 @@ public class CourseScreen implements Screen {
         this.game = game;
         this.course = course;
 
-        // Setup lastStop
-        this.lastStop = MathLib.copyDoubleArr(this.course.getStart());
+        // Setup Ball
+        this.ball = ball;
+        this.ball.setCourseScreen(this);
+        this.ball.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
+        this.ball.setX(this.course.getStart()[0]);
+        this.ball.setY(this.course.getStart()[1]);
+
+        this.setupCommon();
 
         // Setup moves
         this.counter = 0;
@@ -93,37 +103,6 @@ public class CourseScreen implements Screen {
             this.moves.add(in.nextLine());
         }
         in.close();
-
-        // Setup sounds
-        this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
-        this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
-        this.winSound = Gdx.audio.newSound(Gdx.files.internal("success_2.wav"));
-
-        // Setup Cam
-        this.cam = new OrthographicCamera();
-        this.cam.setToOrtho(false, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
-
-        // Setup Music
-        this.music = Gdx.audio.newMusic(Gdx.files.internal("mario64_ost.mp3"));
-        this.music.setVolume(0.2f);
-        this.music.setLooping(true);
-
-        // Setup Course
-        this.setUpCourse();
-
-        // Setup Ball
-        this.ball = ball;
-        this.ball.setCourseScreen(this);
-        this.ball.setX(this.course.getStart()[0]);
-        this.ball.setY(this.course.getStart()[1]);
-
-        // Setup Goal
-        this.goalSize = 20;
-        this.flag = new Texture(Gdx.files.internal("golf_flag.png"));
-
-        // Setup engine and collision system
-        this.engine = new Physics(this.course, this.ball);
-        this.collision = new Collision(this.ball, this.course);
     }
 
     /**
@@ -136,11 +115,45 @@ public class CourseScreen implements Screen {
         this.game = game;
         this.course = course;
 
-        // Setup lastStop
-        this.lastStop = MathLib.copyDoubleArr(this.course.getStart());
+        // Setup Ball
+        this.ball = ball;
+        this.ball.setCourseScreen(this);
+        this.ball.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
+        this.ball.setX(this.course.getStart()[0]);
+        this.ball.setY(this.course.getStart()[1]);
+
+        this.setupCommon();
 
         // Setup moves
         this.moves = null;
+        // Setup bot
+        this.bot = null;
+    }
+
+    public CourseScreen(final Golf game, Course course, Ball ball, Bot bot) {
+        this.game = game;
+        this.course = course;
+
+        // Setup Ball
+        this.ball = ball;
+        this.ball.setCourseScreen(this);
+        this.ball.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
+        this.ball.setX(this.course.getStart()[0]);
+        this.ball.setY(this.course.getStart()[1]);
+
+        this.setupCommon();
+
+        this.bot = bot;
+        this.moves = null;
+    }
+
+    /**
+     * Setup common properties to all gamemodes
+     */
+    private void setupCommon() {
+
+        // Setup lastStop
+        this.lastStop = MathLib.copyDoubleArr(this.course.getStart());
 
         // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
@@ -158,13 +171,6 @@ public class CourseScreen implements Screen {
 
         // Setup Course
         this.setUpCourse();
-
-        // Setup Ball
-        this.ball = ball;
-        this.ball.setCourseScreen(this);
-        this.ball.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
-        this.ball.setX(this.course.getStart()[0]);
-        this.ball.setY(this.course.getStart()[1]);
 
         // Setup Goal
         this.goalSize = 20;
@@ -343,7 +349,8 @@ public class CourseScreen implements Screen {
             this.lastStop[1] = this.ball.getY();
 
             // Make a move
-            if (this.moves != null && this.counter < this.moves.size()) { // Mode 2 is active
+            if (this.bot != null) this.bot.makeMove();
+            else if (this.moves != null && this.counter < this.moves.size()) { // Mode 2 is active
                 this.fileMoves();
             }
             else { // Mode 1 is active
