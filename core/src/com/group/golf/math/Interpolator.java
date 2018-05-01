@@ -30,6 +30,9 @@ public class Interpolator {
         double[][] dy = computeDy(points);
         double[][] dxy = computeDxy(points, dy);
         fillComputable(points, interpolators, dx, dy, dxy);
+        for (int i = 0; i < interpolators.length; i++) {
+
+        }
         return interpolators;
     }
 
@@ -43,16 +46,16 @@ public class Interpolator {
      */
     private static void fillComputable(Point3D[][] points, Computable[][] interpolators, double[][] dx, double[][] dy,
                                        double[][] dxy) {
-        for (int x = 0; x < points.length - 1; x++) {
-            for (int y = 0; y < points[x].length - 1; y++) {
-                Point3D[][] localPoints = new Point3D[][]{{points[x][y], points[x][y+1]},
-                        {points[x+1][y], points[x+1][y+1]}};
-                double[][] localDx = new double[][]{{dx[x][y], dx[x][y+1]},
-                        {dx[x+1][y], dx[x+1][y+1]}};
-                double[][] localDy = new double[][]{{dy[x][y], dy[x][y+1]},
-                        {dy[x+1][y], dy[x+1][y+1]}};
-                double[][] localDxy = new double[][]{{dxy[x][y], dxy[x][y+1]},
-                        {dxy[x+1][y], dxy[x+1][y+1]}};
+        for (int y = 0; y < interpolators[0].length; y++) {
+            for (int x = 0; x < interpolators.length; x++) {
+                Point3D[][] localPoints = new Point3D[][]{{points[x][y], points[x][y + 1]},
+                        {points[x + 1][y], points[x + 1][y + 1]}};
+                double[][] localDx = new double[][]{{dx[x][y], dx[x][y + 1]},
+                        {dx[x + 1][y], dx[x + 1][y + 1]}};
+                double[][] localDy = new double[][]{{dy[x][y], dy[x][y + 1]},
+                        {dy[x + 1][y], dy[x + 1][y + 1]}};
+                double[][] localDxy = new double[][]{{dxy[x][y], dxy[x][y + 1]},
+                        {dxy[x + 1][y], dxy[x + 1][y + 1]}};
                 interpolators[x][y] = new BicubicInterpolator(localPoints, localDx, localDy, localDxy);
             }
         }

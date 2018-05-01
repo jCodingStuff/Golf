@@ -16,7 +16,6 @@ public class BicubicInterpolator implements Computable {
     private double[][] coefficients;
 
     private Point3D[][] points;
-    private Point3D[][] offsetPoints;
     private double x0;
     private double y0;
 
@@ -32,10 +31,33 @@ public class BicubicInterpolator implements Computable {
     	this.x0 = this.points[0][0].getX();
     	this.y0 = this.points[0][0].getY();
 
-    	this.calcOffsetPoints();
-
     	fitter(dx, dy, dxy);
+
+    	this.printInfo();
+
     }
+
+	/**
+	 * Print info about the instance of BicubicInterpolator
+	 */
+	private void printInfo() {
+		System.out.println("Bicubic interpolator info:");
+		System.out.println("\tPoints:");
+		for (int x = 0; x < points.length; x++) {
+			for (int y = 0; y < points[x].length; y++) {
+				System.out.println("\t\t[" + x + ", " + y + "] -> " + this.points[x][y]);
+			}
+		}
+		System.out.println("\tCoefficients:");
+		for (int i = 0; i < this.coefficients.length; i++) {
+			System.out.print("\t\t[");
+			for (int j = 0; j < this.coefficients[i].length; j++) {
+				System.out.print(this.coefficients[i][j]);
+				if (j != coefficients[i].length - 1) System.out.print(" ");
+			}
+			System.out.println("]");
+		}
+	}
 
 	/**
 	 * Get access to the 2D-array of points representing the corners of the square
@@ -45,17 +67,6 @@ public class BicubicInterpolator implements Computable {
     	return points;
     }
 
-	/**
-	 * Move the points to square with bot-left corner at (0, 0)
-	 */
-	private void calcOffsetPoints() {
-    	this.offsetPoints = new Point3D[this.points.length][this.points[0].length];
-    	for (int i = 0; i < this.points.length; i++) {
-    		for (int j = 0; j < this.points[i].length; j++) {
-    			this.offsetPoints[i][j] = new Point3D(i, j, this.points[i][j].getZ());
-			}
-		}
-	}
 
 	/**
 	 * Compute the coefficients for the bicubic polynomial
@@ -66,22 +77,29 @@ public class BicubicInterpolator implements Computable {
     private void fitter(double[][] dx, double[][] dy, double[][] dxy) {
     	double[][] values = new double[4][4];
 
-    	values[0][0] = offsetPoints[0][0].getZ();
-    	values[0][1] = offsetPoints[0][1].getZ();
-    	values[0][2] = dy[0][0];
-    	values[0][3] = dy[0][1];
-    	values[1][0] = offsetPoints[1][0].getZ();
-    	values[2][0] = dx[0][0];
-    	values[3][0] = dx[1][0];
-    	values[1][1] = offsetPoints[0][1].getZ();
-    	values[2][1] = dx[0][1];
-    	values[3][1] = dy[1][1];
-    	values[1][2] = dx[1][0];
-    	values[2][2] = dxy[0][0];
-    	values[3][2] = dxy[1][0];
-    	values[1][3] = dy[1][1];
-    	values[2][3] = dxy[0][1];
-    	values[3][3] = dy[1][1];
+    	// First row
+    	values[0][0] = this.points[0][0].getZ();
+		values[0][1] = this.points[0][1].getZ();
+		values[0][2] = dy[0][0];
+		values[0][3] = dy[0][1];
+
+		// Second row
+		values[1][0] = this.points[1][0].getZ();
+		values[1][1] = this.points[1][1].getZ();
+		values[1][2] = dy[1][0];
+		values[1][3] = dy[1][1];
+
+		// Third row
+		values[2][0] = dx[0][0];
+		values[2][1] = dx[0][1];
+		values[2][2] = dxy[0][0];
+		values[2][3] = dxy[0][1];
+
+		// Forth row
+		values[3][0] = dx[1][0];
+		values[3][1] = dx[1][1];
+		values[3][2] = dxy[1][0];
+		values[3][3] = dxy[1][1];
 
     	double[][] res1 = MathLib.multiply(values, A);
     	this.coefficients = MathLib.multiply(res1, B);
@@ -96,7 +114,7 @@ public class BicubicInterpolator implements Computable {
 
 		for (int i = 0; i < this.coefficients.length; i++) {
 			for (int j = 0; j < this.coefficients[i].length; j++) {
-				result += this.coefficients[i][j] * Math.pow((x - this.x0), i) * Math.pow((y - this.y0), j);
+				result += this.coefficients[i][j] * Math.pow(x, i) * Math.pow(y, j);
 			}
 		}
 

@@ -305,7 +305,7 @@ public class CourseScreen implements Screen {
         BicubicInterpolator topLeftInterp = (BicubicInterpolator) this.course.getFunctions()[0][yLength - 1];
         Point3D[][] topLeftPoints = topLeftInterp.getPoints();
         double topY = botRightPoints[0][1].getY();
-        this.scaleX = (topY - this.yoffset) / Golf.VIRTUAL_HEIGHT;
+        this.scaleY = (topY - this.yoffset) / Golf.VIRTUAL_HEIGHT;
     }
 
     @Override
@@ -328,6 +328,9 @@ public class CourseScreen implements Screen {
 
         // Render the goal
         this.renderGoal();
+
+        // Check the walls
+        this.collision.checkForWalls(this.ballX, this.ballY);
 
         // Update pixel position of ball
         this.computeBallPixels();
@@ -374,9 +377,6 @@ public class CourseScreen implements Screen {
 
         // And again, before every check recompute pixel position of the ball
         this.computeBallPixels();
-
-        // Check the walls
-        this.collision.checkForWalls(this.ballX, this.ballY);
 
         // Render the ball
         this.ball.render();
