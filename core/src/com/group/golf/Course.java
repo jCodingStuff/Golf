@@ -1,5 +1,6 @@
 package com.group.golf;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.group.golf.math.BicubicInterpolator;
 import com.group.golf.math.Computable;
 import com.group.golf.math.Point3D;
@@ -54,8 +55,8 @@ public class Course {
      */
     public Computable getFunctionFor(double x, double y) {
         //System.out.println("Coordinate to compute: " + x + ", " + y);
-        int floorX = (int) x;
-        int floorY = (int) y;
+        int floorX = MathUtils.floor((float) x);
+        int floorY = MathUtils.floor((float) y);
         BicubicInterpolator botLeftSquare = (BicubicInterpolator) this.functions[0][0];
         Point3D botLeftPoint = botLeftSquare.getPoints()[0][0];
         int i = floorX - (int) botLeftPoint.getX();
