@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.group.golf.Ball;
 import com.group.golf.Course;
+import com.group.golf.math.Computable;
 import com.group.golf.math.Function;
+import com.sun.xml.internal.stream.util.BufferAllocator;
 
 /**
  * Created by alex_ on 21-Mar-18.
@@ -15,18 +17,57 @@ public class Physics {
     private Course course;
     private Ball ball;
     private Vector2 hitCoord;
+    private Computable function;
+    private double[] solutions;
+    private final double STEP_SIZE = 0.25;
 
-    private static final double H = 0.00001;
+
+    private static final double H = 10e-7;
 
     /**
      * Construct a Physics engine
+     *
      * @param course the course to analyze
-     * @param ball the ball that will roll on the course
+     * @param ball   the ball that will roll on the course
      */
     public Physics(Course course, Ball ball) {
         this.course = course;
         this.ball = ball;
         this.hitCoord = new Vector2();
+    }
+
+
+    /**
+     * differential equation solver, using the fourth and third order Runge-Kutta method to solve the double variable
+     * ODEs.
+     * @param x     the x variable, containing a double.
+     * @param y     the y variable, containing a double. 
+     */
+
+    public void ODEsolver(double x, double y) {
+        //Runge-Kutta method third. no init
+        for (int i = 0; i <= 4; i += STEP_SIZE) {
+            //      this.solutions[i] = RK3(x,y,STEP_SIZE);
+                    this.solutions[i] = RK4(x,y,STEP_SIZE);
+        }
+        System.out.println(this.solutions);
+    }
+
+    public double RK3(double x, double y, double h) {
+        double k1 = h * function.getZ(x,y);
+        double k2 = h * function.getZ(x + (h / 3), y + (k1 / 3));
+        double k3 = h * function.getZ(x + h * (2 / 2), y + k2 * (2 / 3));
+        y = y + (k1 + 3 * k3) / 4;
+        return y;
+    }
+
+    public double RK4(double x, double y, double h){
+        double k1 = h * function.getZ(x,y);
+        double k2 = h * function.getZ(x + (h/2), y + (k1 / 2));
+        double k3 = h * function.getZ(x + (h/2), y + (k2 / 2));
+        double k4 = h * function.getZ(x  + h, y + k3);
+        y = y + (k1/6) + (k2/3) + (k3/3) + (k4/6);
+        return y;
     }
 
 
@@ -53,14 +94,14 @@ public class Physics {
      * @param delta delta time
      */
     public void movement(float delta) {
-        Vector2 grav = gravForce(ball, new Vector2((float) ball.getX(),(float) ball.getY()));
-        Vector2 friction =  frictionForce(ball,ball.getVelocityX(),ball.getVelocityY());
+        double[] grav = gravForce(ball, new Vector2((float) ball.getX(),(float) ball.getY()));
+        double[] friction =  frictionForce(ball,ball.getVelocityX(),ball.getVelocityY());
 
-        ball.setX(ball.getX() + delta * ball.getVelocityX());
-        ball.setY(ball.getY() + delta * ball.getVelocityY());
+        ball.setX((float) (ball.getX() + delta * ball.getVelocityX()));
+        ball.setY((float) (ball.getY() + delta * ball.getVelocityY()));
 
-        ball.setVelocityX(ball.getVelocityX() + delta * (grav.x + friction.x));
-        ball.setVelocityY(ball.getVelocityY() + delta * (grav.y + friction.y));
+        ball.setVelocityX(ball.getVelocityX() + delta * (grav[0] + friction[0]));
+        ball.setVelocityY(ball.getVelocityY() + delta * (grav[1] + friction[1]));
 
         if (Math.abs(this.ball.getVelocityX()) < 0.01 && Math.abs(this.ball.getVelocityY()) < 0.01) {
             this.ball.reset();
@@ -75,10 +116,10 @@ public class Physics {
      * @param velocityY the y-component of the velocity of the ball
      * @return a Vector2 instace containig the friction force
      */
-    public Vector2 frictionForce(Ball ball,double velocityX, double velocityY) {
+    public double[] frictionForce(Ball ball,double velocityX, double velocityY) {
         double multiplier = - this.course.getMu() * this.course.getG()
                 / normalLength(velocityX,velocityY);
-        return new Vector2((float) (multiplier * velocityX) , (float) (multiplier * velocityY));
+        return new double[]{(multiplier * velocityX) ,(multiplier * velocityY)};
     }
 
     /**
@@ -97,10 +138,10 @@ public class Physics {
      * @param coord the Vector2 containing the actual position of the ball
      * @return a Vector2 instance containing the gravity force
      */
-    public Vector2 gravForce(Ball ball, Vector2 coord) {
+    public double[] gravForce(Ball ball, Vector2 coord) {
         double multiplier = - this.course.getG();
-        Vector2 slopeMultiplier = calculateSlope(coord);
-        return new Vector2((float) multiplier * slopeMultiplier.x,(float)multiplier * slopeMultiplier.y);
+        double[] slopeMultiplier = calculateSlope(coord);
+        return new double[] {multiplier * slopeMultiplier[0],multiplier * slopeMultiplier[1]};
     }
 
     /**
@@ -108,29 +149,34 @@ public class Physics {
      * @param coord the Vector2 containing the position to analize
      * @return a Vector2 instance containing the slope at the point provided
      */
-    public Vector2 calculateSlope(Vector2 coord) {
-        Vector2 slope = new Vector2();
+    public double[] calculateSlope(Vector2 coord) {
+        double[] slope = new double[2];
 
-        if (this.course.getHeight(coord.x-H,coord.y) != this.course.getHeight(coord.x,coord.y) &&
-                (this.course.getHeight(coord.x+H,coord.y) != this.course.getHeight(coord.x,coord.y))) {
-            if (this.course.getHeight(coord.x-H,coord.y) < this.course.getHeight(coord.x+H,coord.y)) {
-                slope.x = (float) ((this.course.getHeight(coord.x-H,coord.y)-this.course.getHeight(coord.x,coord.y))/((coord.x-H)-coord.x));
-            } else {
-                slope.x = (float) ((this.course.getHeight(coord.x+H,coord.y)-this.course.getHeight(coord.x,coord.y))/((coord.x+H)-coord.x));
-            }
-        } else {
-            slope.x = 0;
-        }
-        if (this.course.getHeight(coord.x,coord.y-H) != this.course.getHeight(coord.x,coord.y) &&
-                (this.course.getHeight(coord.x,coord.y+H) != (this.course.getHeight(coord.x,coord.y)))) {
-            if (this.course.getHeight(coord.x,coord.y-H) < this.course.getHeight(coord.x,coord.y+H)) {
-                slope.y = (float) ((this.course.getHeight(coord.x,coord.y-H)-this.course.getHeight(coord.x,coord.y))/((coord.y-H) - coord.y));
-            } else {
-                slope.y = (float) ((this.course.getHeight(coord.x,coord.y+H)-this.course.getHeight(coord.x,coord.y))/((coord.y+H) - coord.y));
-            }
-        } else {
-            slope.y = 0;
-        }
+        double step = 0.001;
+
+        slope[0] = (this.course.getHeight(coord.x-step,coord.y) - this.course.getHeight(coord.x+step,coord.y))/(2*step);
+        slope[1] = ((this.course.getHeight(coord.x,coord.y-step) - this.course.getHeight(coord.x,coord.y+step))/(2*step));
+//
+//        if (this.course.getHeight(coord.x-H,coord.y) != this.course.getHeight(coord.x,coord.y) &&
+//                (this.course.getHeight(coord.x+H,coord.y) != this.course.getHeight(coord.x,coord.y))) {
+//            if (this.course.getHeight(coord.x-H,coord.y) < this.course.getHeight(coord.x+H,coord.y)) {
+//                slope.x = (float) ((this.course.getHeight(coord.x-H,coord.y)-this.course.getHeight(coord.x,coord.y))/((coord.x-H)-coord.x));
+//            } else {
+//                slope.x = (float) ((this.course.getHeight(coord.x+H,coord.y)-this.course.getHeight(coord.x,coord.y))/((coord.x+H)-coord.x));
+//            }
+//        } else {
+//            slope.x = 0;
+//        }
+//        if (this.course.getHeight(coord.x,coord.y-H) != this.course.getHeight(coord.x,coord.y) &&
+//                (this.course.getHeight(coord.x,coord.y+H) != (this.course.getHeight(coord.x,coord.y)))) {
+//            if (this.course.getHeight(coord.x,coord.y-H) < this.course.getHeight(coord.x,coord.y+H)) {
+//                slope.y = (float) ((this.course.getHeight(coord.x,coord.y-H)-this.course.getHeight(coord.x,coord.y))/((coord.y-H) - coord.y));
+//            } else {
+//                slope.y = (float) ((this.course.getHeight(coord.x,coord.y+H)-this.course.getHeight(coord.x,coord.y))/((coord.y+H) - coord.y));
+//            }
+//        } else {
+//            slope.y = 0;
+//        }
         return slope;
     }
 
