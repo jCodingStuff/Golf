@@ -5,8 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.math.Computable;
-import com.group.golf.math.Function;
-import com.sun.xml.internal.stream.util.BufferAllocator;
 
 /**
  * Created by alex_ on 21-Mar-18.
