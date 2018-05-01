@@ -50,8 +50,8 @@ public class SplineWithoutSubmitListener extends ChangeListener {
         double z = Double.parseDouble(tokenizerStart.nextToken());
         xyzMatrix[xCounter][yCounter] = new Point3D(x,y,z);
 
-        //System.out.println("Coordinates: " + x + ", " + y + ", " + z);
-        //System.out.println("Indices: " + xCounter + ", " + yCounter);
+        System.out.println("Coordinates: " + x + ", " + y + ", " + z);
+        System.out.println("Indices: " + xCounter + ", " + yCounter);
 
         if(xCounter==xUnits-1){
             yCounter++;

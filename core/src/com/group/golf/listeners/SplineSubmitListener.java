@@ -66,6 +66,9 @@ public class SplineSubmitListener extends ChangeListener {
         dxyMatrix[xCounter][yCounter] = Double.parseDouble(dxy.getText());
         System.out.println(Arrays.deepToString(dxMatrix));
 
+        System.out.println("Coordinates: " + x + ", " + y + ", " + z);
+        System.out.println("Indices: " + xCounter + ", " + yCounter);
+
         if(xCounter==xUnits-1){
             yCounter++;
             xCounter=0;

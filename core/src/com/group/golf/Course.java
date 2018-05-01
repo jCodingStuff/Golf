@@ -55,12 +55,10 @@ public class Course {
      */
     public Computable getFunctionFor(double x, double y) {
         //System.out.println("Coordinate to compute: " + x + ", " + y);
-        int floorX = MathUtils.floor((float) x);
-        int floorY = MathUtils.floor((float) y);
         BicubicInterpolator botLeftSquare = (BicubicInterpolator) this.functions[0][0];
         Point3D botLeftPoint = botLeftSquare.getPoints()[0][0];
-        int i = floorX - (int) botLeftPoint.getX();
-        int j = floorY - (int) botLeftPoint.getY();
+        int i = (int)(x - botLeftPoint.getX());
+        int j = (int)(y - botLeftPoint.getY());
         //System.out.println("Indices:" + i + ", " + j);
         if (i >= this.functions.length) i--;
         if (j >= this.functions[i].length) j--;
