@@ -141,9 +141,9 @@ public class SplineWithoutScreen implements Screen{
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 Computable[][] computable;
-                //computable = Interpolator.getInterpolators(xyzMatrix);
+                computable = Interpolator.getInterpolators(xyzMatrix);
 
-                //this.game.setScreen(new SplineDesignScreen(this.game, computable));
+                this.game.setScreen(new SplineDesignScreen(this.game, computable));
                 this.screen.dispose();
             }
 
