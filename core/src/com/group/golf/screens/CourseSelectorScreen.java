@@ -15,8 +15,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
+
 import com.group.golf.Physics.Physics;
 import com.group.golf.ai.RandomBot;
+
+import com.group.golf.ai.Bot;
+import com.group.golf.ai.DumBot;
+
 import com.group.golf.math.Computable;
 import com.group.golf.math.Function;
 
@@ -101,7 +106,10 @@ public class CourseSelectorScreen implements Screen {
                 design.setTouchable(Touchable.disabled);
                 importbtn.setTouchable(Touchable.disabled);
                 play.setTouchable(Touchable.disabled);
-                this.game.setScreen(new CourseScreen(this.game, course, new Ball(40)));
+
+                Ball ball = new Ball(40);
+                this.game.setScreen(new CourseScreen(this.game, course, ball));
+
                 this.screen.dispose();
             }
 

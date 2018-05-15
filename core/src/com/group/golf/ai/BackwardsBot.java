@@ -16,8 +16,8 @@ public class BackwardsBot implements Bot {
 
     private final Course course;
     private final Ball ball;
-    private final Physics engine;
-    private final Collision collision;
+    private Physics engine;
+    private Collision collision;
 
     private Stack<Point3D> path;
     private Point3D ballPoint;
@@ -26,18 +26,24 @@ public class BackwardsBot implements Bot {
      * Create a new Bot instance
      * @param course
      * @param ball
-     * @param engine
-     * @param collision
      */
-    public BackwardsBot(Course course, Ball ball, Physics engine, Collision collision) {
+    public BackwardsBot(Course course, Ball ball) {
         this.course = course;
         this.ball = ball;
-        this.engine = engine;
-        this.collision = collision;
 
         this.ballPoint = new Point3D(this.ball.getX(), this.ball.getY());
 
         this.fillStack();
+    }
+
+    @Override
+    public void setPhysics(Physics physics) {
+        this.engine = physics;
+    }
+
+    @Override
+    public void setCollision(Collision collision) {
+        this.collision = collision;
     }
 
     /**
