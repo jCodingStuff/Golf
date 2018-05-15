@@ -12,8 +12,8 @@ import com.group.golf.math.Computable;
  */
 
 public class Physics {
-    private Course course;
-    private Ball ball;
+    public Course course;
+    public Ball ball;
     private Vector2 hitCoord;
     private Computable function;
     private double[] solutions;
