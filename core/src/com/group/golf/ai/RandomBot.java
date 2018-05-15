@@ -16,6 +16,7 @@ import java.util.Random;
 
 public class RandomBot implements Bot{
 
+
     private Ball ball;
     private Physics engine;
     private Random rand;
@@ -29,12 +30,18 @@ public class RandomBot implements Bot{
  * @param engine the Physics instance
  * @param ball the BALL instance
  */
+
     public RandomBot(Physics engine, Ball ball){
         this.ball = ball;
         this.engine = engine;
         this.rand = new Random();
     }
+    public void setCollision(Collision collision){
 
+    }
+    public void setPhysics(Physics physics){
+
+    }
     private double GetRandomForce(double maximum){
         return this.rand.nextDouble() * maximum;
     }
@@ -59,15 +66,15 @@ public class RandomBot implements Bot{
     @Override
     public void makeMove() {
         while(!checkPath()){
-            forceX = GetBestRandomChoice(this.engine.course.getGoal()[0]);
-            forceY = GetBestRandomChoice(this.engine.course.getGoal()[1]);
+            forceX = GetBestRandomChoice(this.engine.getCourse().getGoal()[0]);
+            forceY = GetBestRandomChoice(this.engine.getCourse().getGoal()[1]);
         }
         this.engine.hit(forceX, forceY);
     }
 
     private boolean checkPath(){
         for(double c = 0.1; c <= 1.0; c += 0.1){
-            if(this.engine.course.getHeight(forceX*Math.pow(c, 2), forceY*Math.pow(c, 2)) < 0)
+            if(this.engine.getCourse().getHeight(forceX*Math.pow(c, 2), forceY*Math.pow(c, 2)) < 0)
                 return false;
         }
         return true;
