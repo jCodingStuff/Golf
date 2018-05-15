@@ -39,6 +39,9 @@ public class DumBot implements Bot {
 
     @Override
     public void makeMove() {
+    	double[] goalCoords = this.course.getGoal();
+    	double[] XnY = new double[] {goalCoords[0]-this.ball.getX(), goalCoords[1]-this.ball.getY()};
+    	this.engine.hit(XnY[0], XnY[1]);
 
     }
 }
