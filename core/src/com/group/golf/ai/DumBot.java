@@ -56,7 +56,7 @@ public class DumBot implements Bot {
     }
 
     private void scale(double[] forces) {
-        double[] derivatives = this.engine.calculateSlope(new Vector2((float)this.ball.getX(), (float)this.ball.getY()));
+        double[] derivatives = this.engine.calculateSlope(new double[]{this.ball.getX(), this.ball.getY()});
         for (int i = 0; i < forces.length; i++) {
             forces[i] = this.scaleForce(forces[i], derivatives[i]);
         }
