@@ -15,8 +15,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
+
+import com.group.golf.Physics.Physics;
+import com.group.golf.ai.RandomBot;
+
 import com.group.golf.ai.Bot;
 import com.group.golf.ai.DumBot;
+
 import com.group.golf.math.Computable;
 import com.group.golf.math.Function;
 
@@ -30,10 +35,14 @@ public class CourseSelectorScreen implements Screen {
 
     final Golf game;
     Stage stage;
+    Physics engine;
+    Ball ball;
 
     TextButton play;
     TextButton importbtn;
     TextButton design;
+    TextButton bot;
+
     Music menuMusic;
     OrthographicCamera cam;
     Texture background;
@@ -50,16 +59,21 @@ public class CourseSelectorScreen implements Screen {
         play = new TextButton("Play", skin);
         importbtn = new TextButton("Import", skin);
         design = new TextButton("Design", skin);
+        bot = new TextButton("Random Bot", skin);
+
         play.setPosition(300, 400);
         importbtn.setPosition(300, 300);
-        design.setPosition(300, 200);
+        design.setPosition(600, 300);
         play.setSize(200, 60);
         importbtn.setSize(200, 60);
         design.setSize(200, 60);
+        bot.setPosition(600, 400);
+        bot.setSize(200, 60);
 
         stage.addActor(play);
         stage.addActor(importbtn);
         stage.addActor(design);
+        stage.addActor(bot);
 
         // Setup cam
         this.cam = new OrthographicCamera();
@@ -92,6 +106,7 @@ public class CourseSelectorScreen implements Screen {
                 design.setTouchable(Touchable.disabled);
                 importbtn.setTouchable(Touchable.disabled);
                 play.setTouchable(Touchable.disabled);
+
                 Ball ball = new Ball(40);
                 this.game.setScreen(new CourseScreen(this.game, course, ball));
 
@@ -133,7 +148,32 @@ public class CourseSelectorScreen implements Screen {
         design.addListener(new DesignListener(game, this));
 
 
+        // Does not start the random bot yet
+        class RandomBotListener extends ChangeListener{
+            final Golf game;
+            private Screen screen;
+            public RandomBotListener(final Golf game, Screen screen){
+                this.game = game;
+                this.screen = screen;
+            }
+            @Override
+            public void changed (ChangeEvent event, Actor actor) {
+                String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
+                double[] start = new double[]{4, 3};
+                double[] goal = new double[]{0, 1};
+                Function function = new Function(formula);
+                Computable[][] functions = new Computable[1][1];
+                functions[0][0] = function;
+                Course course = new Course(functions, 9.81, 0.95, 80, start, goal, 0.5);
+                design.setTouchable(Touchable.disabled);
+                importbtn.setTouchable(Touchable.disabled);
+                play.setTouchable(Touchable.disabled);
+                this.game.setScreen(new CourseScreen(this.game, course, new Ball(40)));
+                this.screen.dispose();
+            }
 
+        }
+        bot.addListener(new RandomBotListener(game, this));
     }
 
     @Override
