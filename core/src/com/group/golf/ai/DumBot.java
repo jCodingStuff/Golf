@@ -1,5 +1,6 @@
 package com.group.golf.ai;
 
+import com.badlogic.gdx.math.Vector2;
 /**
  * Class to generate instances of DumBot
  * @author Kaspar Kallast
@@ -53,8 +54,26 @@ public class DumBot implements Bot {
         forces[1] = this.scaleY(forces[1]);
     }
 
-    private double scaleX(double forceX {
-        
+    private double scaleX(double forceX) { 
+    	double scaledForce;
+    	double dx = this.engine.calculateSlope(new Vector2((float)this.ball.getX(), (float)this.ball.getY()))[0];
+    	if (forceX > 0 && dx > 0) {
+    		scaledForce = forceX * Math.abs(dx) * A_SCALAR; 
+    	}
+    	else if (forceX > 0 && dx < 0) {
+    		scaledForce = forceX * Math.abs(dx) * F_SCALAR;
+    	}
+    	else if (forceX < 0 && dx > 0) {
+    		scaledForce = forceX * Math.abs(dx) * F_SCALAR;
+    	}
+    	else if (forceX < 0 && dx < 0) {
+    		scaledForce = forceX * Math.abs(dx) * A_SCALAR;
+    	}
+    	else {
+    		scaledForce = forceX;
+    	}
+    	
+    	return scaledForce;
     }
 
     private double scaleY(double forceY) {
