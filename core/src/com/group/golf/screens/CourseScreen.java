@@ -146,6 +146,9 @@ public class CourseScreen implements Screen {
 
         this.bot = bot;
         this.moves = null;
+
+        this.bot.setPhysics(this.engine);
+        this.bot.setCollision(this.collision);
     }
 
     /**

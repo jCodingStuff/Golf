@@ -9,6 +9,7 @@ import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
+import com.group.golf.math.Point3D;
 
 public class DumBot implements Bot {
 	
