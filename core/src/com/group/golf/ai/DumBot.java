@@ -1,5 +1,6 @@
 package com.group.golf.ai;
 
+import com.badlogic.gdx.math.Vector2;
 /**
  * Class to generate instances of DumBot
  * @author Kaspar Kallast
@@ -14,9 +15,9 @@ import com.group.golf.math.Point3D;
 
 public class DumBot implements Bot {
 
-    private static final double A_SCALAR = 10;
+    private static final double A_SCALAR = 100;
     private static final double F_SCALAR = 10;
-    private static final double BIG_SCALAR = 100;
+    private static final double BIG_SCALAR = 1000;
 
 	private final Course course;
     private final Ball ball;
@@ -46,37 +47,39 @@ public class DumBot implements Bot {
     @Override
     public void makeMove() {
     	double[] goalCoords = this.course.getGoal();
-    	double[] forces = new double[] {goalCoords[0]-this.ball.getX(), goalCoords[1]-this.ball.getY()};
-    	for (int i = 0; i < forces.length; i++) {
-    	    forces[i] *= BIG_SCALAR;
+    	double[] distances = new double[] {goalCoords[0]-this.ball.getX(), goalCoords[1]-this.ball.getY()};
+    	for (int i = 0; i < distances.length; i++) {
+    	    distances[i] *= BIG_SCALAR;
         }
-        this.scale(forces);
-    	this.engine.hit(forces[0], forces[1]);
+        this.scale(distances);
+    	this.engine.hit(distances[0], distances[1]);
     }
 
     private void scale(double[] forces) {
-        forces[0] = this.scaleX(forces[0]);
-        forces[1] = this.scaleY(forces[1]);
-    }
-
-    private double scaleX(double forceX) {
-
-    }
-
-    private double scaleY(double forceY) {
-        double scaledForce;
-        double dy = this.engine.calculateSlope(new Vector2((float) this.ball.getX(), (float) this.ball.getY()))[1];
-        if (forceY > 0 && dy > 0) { // Moving right against the slope
-            scaledForce = forceY * Math.abs(dy) * A_SCALAR;
-        } else if (forceY > 0 && dy < 0) { // Moving right in favour of the slope
-            scaledForce = forceY / (Math.abs(dy) * F_SCALAR);
-        } else if (forceY < 0 && dy > 0) { // Moving left in favour of the slope
-            scaledForce = forceY / (Math.abs(dy) * F_SCALAR);
-        } else if (forceY < 0 && dy < 0) { // Moving left against the slope
-            scaledForce = forceY * Math.abs(dy) * A_SCALAR;
-        } else {
-            scaledForce = forceY;
+        double[] derivatives = this.engine.calculateSlope(new Vector2((float)this.ball.getX(), (float)this.ball.getY()));
+        for (int i = 0; i < forces.length; i++) {
+            forces[i] = this.scaleForce(forces[i], derivatives[i]);
         }
-        return scaledForce;
+    }
+
+    private double scaleForce(double force, double d) {
+    	double scaledForce;
+    	if (force > 0 && d > 0) {
+    		scaledForce = force * Math.abs(d) * A_SCALAR;
+    	}
+    	else if (force > 0 && d < 0) {
+    		scaledForce = force / (Math.abs(d) * F_SCALAR);
+    	}
+    	else if (force < 0 && d > 0) {
+    		scaledForce = force / (Math.abs(d) * F_SCALAR);
+    	}
+    	else if (force < 0 && d < 0) {
+    		scaledForce = force * Math.abs(d) * A_SCALAR;
+    	}
+    	else {
+    		scaledForce = force;
+    	}
+    	
+    	return scaledForce;
     }
 }
