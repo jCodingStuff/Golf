@@ -6,6 +6,8 @@ import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.math.Computable;
 
+import java.util.ArrayList;
+
 /**
  * Created by alex_ on 21-Mar-18.
  * A class to hold the Physics engine for the Crazy Golf game
@@ -14,13 +16,7 @@ import com.group.golf.math.Computable;
 public class Physics {
     private Course course;
     private Ball ball;
-    private Vector2 hitCoord;
-    private Computable function;
-    private double[] solutions;
-    private final double STEP_SIZE = 0.25;
-
-
-    private static final double H = 10e-7;
+    private double[] hitCoord;
 
     /**
      * Construct a Physics engine
@@ -31,45 +27,39 @@ public class Physics {
     public Physics(Course course, Ball ball) {
         this.course = course;
         this.ball = ball;
-        this.hitCoord = new Vector2();
+        this.hitCoord = new double[2];
     }
 
 
-    /**
-     * differential equation solver, using the fourth and third order Runge-Kutta method to solve the double variable
-     * ODEs.
-     * @param x     the x variable, containing a double.
-     * @param y     the y variable, containing a double. 
-     */
+    //https://www.haroldserrano.com/blog/visualizing-the-runge-kutta-method
+    public double[] RK4(double h){
 
-    public void ODEsolver(double x, double y) {
-        //Runge-Kutta method third. no init
-        for (int i = 0; i <= 4; i += STEP_SIZE) {
-            //      this.solutions[i] = RK3(x,y,STEP_SIZE);
-                    this.solutions[i] = RK4(x,y,STEP_SIZE);
-        }
-        System.out.println(this.solutions);
-    }
+        double[] grav = gravForce(ball, new double[]{ball.getX(),ball.getY()});
+        double[] friction =  frictionForce(ball,ball.getVelocityX(),ball.getVelocityY());
 
-    public double RK3(double x, double y, double h) {
-        double k1 = h * function.getZ(x,y);
-        double k2 = h * function.getZ(x + (h / 3), y + (k1 / 3));
-        double k3 = h * function.getZ(x + h * (2 / 2), y + k2 * (2 / 3));
-        y = y + (k1 + 3 * k3) / 4;
-        return y;
-    }
 
-    public double RK4(double x, double y, double h){
-        double k1 = h * function.getZ(x,y);
-        double k2 = h * function.getZ(x + (h/2), y + (k1 / 2));
-        double k3 = h * function.getZ(x + (h/2), y + (k2 / 2));
-        double k4 = h * function.getZ(x  + h, y + k3);
-        y = y + (k1/6) + (k2/3) + (k3/3) + (k4/6);
-        return y;
+        double v1x = ball.getVelocityX();       double v1y = ball.getVelocityY();
+
+        double a1x = grav[0] + friction[0];     double a1y = grav[1] + friction[1];
+        double v2x = v1x + a1x * h/2;           double v2y = v1y + a1y * h/2;
+
+        friction =  frictionForce(ball,v2x,v2y);
+        double a2x = grav[0] + friction[0];     double a2y = grav[1] + friction[1];
+        double v3x = v1x + a2x * h/2;           double v3y = v1y + a2y * h/2;
+
+        friction = frictionForce(ball,v3x,v3y);
+        double a3x = grav[0] + friction[0];     double a3y = grav[1] + friction[1];
+        double v4x = v1x + h * a3x;             double v4y = v1y + h * a3y;
+
+        friction = frictionForce(ball,v4x,v4y);
+        double a4x = grav[0] + friction[0];     double a4y = grav[1] + friction[1];
+
+        double[] resV = {v1x + h/6 * (a1x + 2*a2x + 2*a3x + a4x), v1y + h/6 * (a1y + 2*a2y + 2*a3y + a4y)};
+        return resV;
+
     }
 
 
-    //angle between force and y - basis
 
     /**
      * Hit the ball
@@ -77,11 +67,9 @@ public class Physics {
      * @param forceY the velocityY done to the ball
      */
     public void hit(double forceX, double forceY) {
-//        double velocityX = forceX * Math.cos(angle);
-//        double velocityY = forceY * Math.sin(angle);
 
-        hitCoord.x = (float) ball.getX();
-        hitCoord.y = (float) ball.getY();
+        hitCoord[0] = ball.getX();
+        hitCoord[1] = ball.getY();
 
         ball.setVelocityX(Gdx.graphics.getDeltaTime() * forceX / ball.getMass());
         ball.setVelocityY(Gdx.graphics.getDeltaTime() * forceY / ball.getMass());
@@ -92,16 +80,16 @@ public class Physics {
      * @param delta delta time
      */
     public void movement(float delta) {
-        double[] grav = gravForce(ball, new Vector2((float) ball.getX(),(float) ball.getY()));
-        double[] friction =  frictionForce(ball,ball.getVelocityX(),ball.getVelocityY());
 
-        ball.setX((float) (ball.getX() + delta * ball.getVelocityX()));
-        ball.setY((float) (ball.getY() + delta * ball.getVelocityY()));
+        ball.setX(ball.getX() + delta * ball.getVelocityX());
+        ball.setY(ball.getY() + delta * ball.getVelocityY());
 
-        ball.setVelocityX(ball.getVelocityX() + delta * (grav[0] + friction[0]));
-        ball.setVelocityY(ball.getVelocityY() + delta * (grav[1] + friction[1]));
+        double[] vel = RK4(delta);
+        ball.setVelocityX(vel[0]);
+        ball.setVelocityY(vel[1]);
 
-        if (Math.abs(this.ball.getVelocityX()) < 0.01 && Math.abs(this.ball.getVelocityY()) < 0.01) {
+        System.out.println("VelocityX: " + ball.getVelocityX() + "   VelocityY: " + ball.getVelocityY());
+        if (Math.abs(this.ball.getVelocityX()) < 0.0776 && Math.abs(this.ball.getVelocityY()) < 0.0776) {
             this.ball.reset();
         }
 
@@ -136,7 +124,7 @@ public class Physics {
      * @param coord the Vector2 containing the actual position of the ball
      * @return a Vector2 instance containing the gravity force
      */
-    public double[] gravForce(Ball ball, Vector2 coord) {
+    public double[] gravForce(Ball ball, double[] coord) {
         double multiplier = - this.course.getG();
         double[] slopeMultiplier = calculateSlope(coord);
         return new double[] {multiplier * slopeMultiplier[0],multiplier * slopeMultiplier[1]};
@@ -147,13 +135,13 @@ public class Physics {
      * @param coord the Vector2 containing the position to analize
      * @return a Vector2 instance containing the slope at the point provided
      */
-    public double[] calculateSlope(Vector2 coord) {
+    public double[] calculateSlope(double[] coord) {
         double[] slope = new double[2];
 
         double step = 0.001;
 
-        slope[0] = (this.course.getHeight(coord.x+step,coord.y) - this.course.getHeight(coord.x-step,coord.y))/(2*step);
-        slope[1] = ((this.course.getHeight(coord.x,coord.y+step) - this.course.getHeight(coord.x,coord.y-step))/(2*step));
+        slope[0] = (this.course.getHeight(coord[0]+step,coord[1]) - this.course.getHeight(coord[0]-step,coord[1]))/(2*step);
+        slope[1] = ((this.course.getHeight(coord[0],coord[1]+step) - this.course.getHeight(coord[0],coord[1]-step))/(2*step));
 //
 //        if (this.course.getHeight(coord.x-H,coord.y) != this.course.getHeight(coord.x,coord.y) &&
 //                (this.course.getHeight(coord.x+H,coord.y) != this.course.getHeight(coord.x,coord.y))) {
@@ -214,7 +202,7 @@ public class Physics {
      * Get access to the Vector2 instance
      * @return the Vector2 instance
      */
-    public Vector2 getHitCoord() {
+    public double[] getHitCoord() {
         return hitCoord;
     }
 
@@ -222,7 +210,7 @@ public class Physics {
      * Set a new value for the Vector2 instance
      * @param hitCoord the new Vector2 instance
      */
-    public void setHitCoord(Vector2 hitCoord) {
+    public void setHitCoord(double[] hitCoord) {
         this.hitCoord = hitCoord;
     }
 }
