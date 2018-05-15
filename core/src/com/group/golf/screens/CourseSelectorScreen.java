@@ -93,8 +93,7 @@ public class CourseSelectorScreen implements Screen {
                 importbtn.setTouchable(Touchable.disabled);
                 play.setTouchable(Touchable.disabled);
                 Ball ball = new Ball(40);
-                Bot bot = new DumBot(course, ball);
-                this.game.setScreen(new CourseScreen(this.game, course, ball, bot));
+                this.game.setScreen(new CourseScreen(this.game, course, ball));
 
                 this.screen.dispose();
             }
