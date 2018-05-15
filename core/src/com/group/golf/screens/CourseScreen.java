@@ -1,6 +1,7 @@
 package com.group.golf.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -352,7 +353,7 @@ public class CourseScreen implements Screen {
             this.lastStop[1] = this.ball.getY();
 
             // Make a move
-            if (this.bot != null) this.bot.makeMove();
+            if (this.bot != null && Gdx.input.isKeyPressed(Input.Keys.SPACE)) this.bot.makeMove();
             else if (this.moves != null && this.counter < this.moves.size()) { // Mode 2 is active
                 this.fileMoves();
             }
