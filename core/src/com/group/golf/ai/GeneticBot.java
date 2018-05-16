@@ -25,7 +25,7 @@ public class GeneticBot implements Bot {
     private int counter = 0;
 
     private static final int POPULATION_SIZE = 100;
-    private static final int MAX_SHOTS = 10;
+    private static final int DNA_LENGHT = 10;
 
     private Individual[] population;
 

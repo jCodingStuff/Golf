@@ -4,26 +4,21 @@ import java.util.List;
 
 public class Individual {
 
-    private List<double[]> genes;
-    private double[] finishCoords;
+    private double[][] genes;
 
-    public Individual(List<double[]> genes) {
+    public Individual(double[][] genes) {
         this.genes = genes;
     }
 
-    public List<double[]> getGenes() {
+    public double[][] getGenes() {
         return genes;
     }
 
-    public void setGenes(List<double[]> genes) {
+    public void setGenes(double[][] genes) {
         this.genes = genes;
     }
 
-    public double[] getFinishCoords() {
-        return finishCoords;
-    }
+    public double[] getMovement(int index) {return this.genes[index];}
 
-    public void setFinishCoords(double[] finishCoords) {
-        this.finishCoords = finishCoords;
-    }
+    public void setMovement(int index, double[] forces) {this.genes[index] = forces;}
 }
