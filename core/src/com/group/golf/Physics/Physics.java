@@ -14,6 +14,7 @@ import java.util.ArrayList;
  */
 
 public class Physics {
+
     private Course course;
     private Ball ball;
     private double[] hitCoord;

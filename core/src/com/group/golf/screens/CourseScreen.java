@@ -56,6 +56,7 @@ public class CourseScreen implements Screen {
     private int goalSize;
     private double scaleX;
     private double scaleY;
+    private static final double SCALE_MULTIPLIER = 100;
     private double xoffset;
     private double yoffset;
     private double[][] heights;
@@ -432,7 +433,12 @@ public class CourseScreen implements Screen {
                     forceY *= -1;
 
                 double modulus = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
+                // we don't need this !!
                 double force = MathLib.map(modulus, 0, 300, 0, 600);
+
+                // Use the scales to normalize forces
+                forceX *= this.scaleX * SCALE_MULTIPLIER;
+                forceY *= this.scaleY * SCALE_MULTIPLIER;
 
                 this.engine.hit(forceX, forceY);
 
