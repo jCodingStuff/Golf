@@ -92,7 +92,7 @@ public class GeneticBot implements Bot {
      * @return a random individual for the first population
      */
     private Individual generateIndividual() {
-        return null;
+        double[][] moves = new double[DNA_LENGHT][2];
     }
 
 
