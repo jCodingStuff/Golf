@@ -34,6 +34,8 @@ public class GeneticBot implements Bot {
     private static final int DNA_LENGHT = 10;
     private static final double MAX_FORCE = 100;
 
+    private static final double GENERATION_LIMIT = 10000;
+
     private Individual[] population;
 
     /**
@@ -75,7 +77,10 @@ public class GeneticBot implements Bot {
      */
     private void startEvolution() {
         this.initPopulation();
+        int counter = 0;
+        while (!this.goalReached() && this.counter < GENERATION_LIMIT) {
 
+        }
     }
 
     /**
@@ -102,5 +107,13 @@ public class GeneticBot implements Bot {
         return new Individual(genes);
     }
 
+    /**
+     * Check if some individual has reached the goal without going through water
+     * @return
+     */
+    private boolean goalReached() {
+        boolean reached = false;
+        return reached;
+    }
 
 }
