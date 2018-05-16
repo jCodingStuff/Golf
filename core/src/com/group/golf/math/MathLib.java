@@ -113,4 +113,14 @@ public class MathLib {
         return Math.pow(x, 2) + Math.pow(y, 2);
     }
 
+    /**
+     * Get a random double value within a range
+     * @param low lower bound of the range
+     * @param high upper bound of the range
+     * @return a random double x such that low <= x < high
+     */
+    public static double randomDouble(double low, double high) {
+        return Math.random()*(high - low) + low;
+    }
+
 }

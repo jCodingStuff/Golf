@@ -52,6 +52,19 @@ public class Ball {
     }
 
     /**
+     * Create a new Ball using another one as a template
+     * @param other the template ball
+     */
+    public Ball(Ball other) {
+        this.mass = other.mass;
+        this.x = other.x;
+        this.y = other.y;
+        this.velocityX = other.velocityX;
+        this.velocityY = other.velocityY;
+        this.collisionCircle = new Circle((float) this.x, (float) this.y, RADIUS);
+    }
+
+    /**
      * Reset the velocity of the ball to 0
      */
     public void reset() {

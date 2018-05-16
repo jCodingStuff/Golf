@@ -1,11 +1,14 @@
 package com.group.golf.ai;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
 import com.group.golf.genetics.Individual;
+import com.group.golf.math.JVector2;
+import com.group.golf.math.MathLib;
 
 import java.util.List;
 
@@ -21,11 +24,15 @@ public class GeneticBot implements Bot {
     private Physics engine;
     private Collision collision;
 
-    private List<double[]> path;
+    private Physics virtualEngine;
+    private Collision virtualCollision;
+
+    private JVector2[] path;
     private int counter = 0;
 
     private static final int POPULATION_SIZE = 100;
     private static final int DNA_LENGHT = 10;
+    private static final double MAX_FORCE = 100;
 
     private Individual[] population;
 
@@ -37,13 +44,18 @@ public class GeneticBot implements Bot {
     public GeneticBot(Course course, Ball ball) {
         this.course = course;
         this.ball = ball;
+
+        this.virtualEngine = new Physics(course, ball);
+        this.virtualCollision = new Collision(ball, course);
+
+        this.startEvolution();
     }
 
     @Override
     public void makeMove() {
-        if (this.counter < this.path.size()) {
-            double[] currentShot = this.path.get(this.counter);
-            this.engine.hit(currentShot[0], currentShot[1]);
+        if (this.counter < this.path.length) {
+            JVector2 currentShot = this.path[this.counter];
+            this.engine.hit(currentShot.getX(), currentShot.getY());
             this.counter++;
         }
     }
@@ -51,21 +63,11 @@ public class GeneticBot implements Bot {
     @Override
     public void setPhysics(Physics physics) {
         this.engine = physics;
-        if (this.startAllowed()) this.startEvolution();
     }
 
     @Override
     public void setCollision(Collision collision) {
         this.collision = collision;
-        if (this.startAllowed()) this.startEvolution();
-    }
-
-    /**
-     * Check if the bot is ready to work
-     * @return true if engine and collision are not null, but path is
-     */
-    private boolean startAllowed() {
-        return this.engine != null && this.collision != null && this.path == null;
     }
 
     /**
@@ -73,8 +75,7 @@ public class GeneticBot implements Bot {
      */
     private void startEvolution() {
         this.initPopulation();
-        // While not done, evolve
-        // When done, get genes from best individual
+
     }
 
     /**
@@ -92,7 +93,13 @@ public class GeneticBot implements Bot {
      * @return a random individual for the first population
      */
     private Individual generateIndividual() {
-        double[][] moves = new double[DNA_LENGHT][2];
+        JVector2[] genes = new JVector2[DNA_LENGHT];
+        for (int i = 0; i < DNA_LENGHT; i++) {
+            double forceX = MathLib.randomDouble(-MAX_FORCE, MAX_FORCE);
+            double forceY = MathLib.randomDouble(-MAX_FORCE, MAX_FORCE);
+            genes[i] = new JVector2(forceX, forceY);
+        }
+        return new Individual(genes);
     }
 
 

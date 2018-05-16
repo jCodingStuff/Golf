@@ -1,24 +1,29 @@
 package com.group.golf.genetics;
 
-import java.util.List;
+import com.group.golf.math.JVector2;
 
 public class Individual {
 
-    private double[][] genes;
+    private JVector2[] genes;
+    private double score;
 
-    public Individual(double[][] genes) {
+    public Individual(JVector2[] genes) {
         this.genes = genes;
     }
 
-    public double[][] getGenes() {
+    public JVector2[] getGenes() {
         return genes;
     }
 
-    public void setGenes(double[][] genes) {
+    public void setGenes(JVector2[] genes) {
         this.genes = genes;
     }
 
-    public double[] getMovement(int index) {return this.genes[index];}
+    public double getScore() {
+        return score;
+    }
 
-    public void setMovement(int index, double[] forces) {this.genes[index] = forces;}
+    public void setScore(double score) {
+        this.score = score;
+    }
 }
