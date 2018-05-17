@@ -37,6 +37,7 @@ public class GeneticBot implements Bot {
     private static final double GENERATION_LIMIT = 10000;
 
     private Individual[] population;
+    private Individual winner;
 
     /**
      * Create a new instance of GeneticBot
@@ -113,6 +114,15 @@ public class GeneticBot implements Bot {
      */
     private boolean goalReached() {
         boolean reached = false;
+        double[] goal = this.course.getGoal();
+        for (int i = 0; i < this.population.length && !reached; i++) {
+            JVector2 lastSpot = this.population[i].getLastSpot();
+            double dist = Math.sqrt(Math.pow(goal[0] - lastSpot.getX(), 2) + Math.pow(goal[1] - lastSpot.getY(), 2));
+            if (dist <= this.course.getTolerance()) {
+                reached = true;
+                this.winner = this.population[i];
+            }
+        }
         return reached;
     }
 
