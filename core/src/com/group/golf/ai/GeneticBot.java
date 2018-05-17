@@ -27,7 +27,6 @@ public class GeneticBot implements Bot {
     private Physics virtualEngine;
     private Collision virtualCollision;
 
-    private JVector2[] path;
     private int counter = 0;
 
     private static final int POPULATION_SIZE = 100;
@@ -56,8 +55,8 @@ public class GeneticBot implements Bot {
 
     @Override
     public void makeMove() {
-        if (this.counter < this.path.length) {
-            JVector2 currentShot = this.path[this.counter];
+        if (this.counter < this.winner.getGenes().length) {
+            JVector2 currentShot = this.winner.getGenes()[this.counter];
             this.engine.hit(currentShot.getX(), currentShot.getY());
             this.counter++;
         }

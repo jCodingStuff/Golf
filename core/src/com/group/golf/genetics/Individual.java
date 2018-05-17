@@ -7,7 +7,7 @@ public class Individual {
     private JVector2[] genes;
     private double score;
     private JVector2 lastSpot;
-    private JVector2 landings;
+    private JVector2[] landings;
 
     public Individual(JVector2[] genes) {
         this.genes = genes;
@@ -37,11 +37,11 @@ public class Individual {
         this.lastSpot = lastSpot;
     }
 
-    public JVector2 getLandings() {
+    public JVector2[] getLandings() {
         return landings;
     }
 
-    public void setLandings(JVector2 landings) {
+    public void setLandings(JVector2[] landings) {
         this.landings = landings;
     }
 }
