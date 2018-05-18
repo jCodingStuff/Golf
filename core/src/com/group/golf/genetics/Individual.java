@@ -14,6 +14,13 @@ public class Individual {
         this.landings = landings;
     }
 
+    public Individual(Individual other) {
+        this.genes = duplicateData(other.genes);
+        this.landings = duplicateData(other.landings);
+        this.score = other.score;
+        this.lastMove = other.lastMove;
+    }
+
     public JVector2[] getGenes() {
         return genes;
     }
@@ -44,5 +51,13 @@ public class Individual {
 
     public void setLandings(JVector2[] landings) {
         this.landings = landings;
+    }
+
+    private static JVector2[] duplicateData(JVector2[] data) {
+        JVector2[] result = new JVector2[data.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = new JVector2(data[i]);
+        }
+        return result;
     }
 }

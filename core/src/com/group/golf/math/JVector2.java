@@ -12,6 +12,12 @@ public class JVector2 {
         this.updateMagnitude();
     }
 
+    public JVector2(JVector2 other) {
+        this.x = other.x;
+        this.y = other.y;
+        this.updateMagnitude();
+    }
+
     private void updateMagnitude() {
         this.magnitude = Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
     }

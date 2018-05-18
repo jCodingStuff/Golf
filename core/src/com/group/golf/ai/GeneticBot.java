@@ -36,6 +36,7 @@ public class GeneticBot implements Bot {
     private static final double MAX_FORCE = 100;
 
     private static final double GENERATION_LIMIT = 10000;
+    private static final double MUTATION_RATE = 0.01;
 
     private Individual[] population;
     private Individual winner;
@@ -86,9 +87,12 @@ public class GeneticBot implements Bot {
     private void startEvolution() {
         this.initPopulation();
         int gCounter = 0;
-        while (!this.goalReached() && this.counter < GENERATION_LIMIT) {
-            this.computeScore();
+        while (true) {
+            if (gCounter != 0) this.computeScore();
             this.normalizeScore();
+            if (this.goalReached() || this.counter < GENERATION_LIMIT) {
+                break;
+            }
             this.nextGeneration();
             gCounter++;
         }
@@ -99,6 +103,69 @@ public class GeneticBot implements Bot {
      */
     private void nextGeneration() {
         Individual[] newGeneration = new Individual[POPULATION_SIZE];
+        for (int i = 0; i < newGeneration.length; i++) {
+            Individual indA = this.pickOne();
+            Individual indB = this.pickOne();
+            Individual child = this.crossOver(indA.getGenes(), indB.getGenes());
+            this.mutate(child);
+            newGeneration[i] = child;
+        }
+        this.population = newGeneration;
+    }
+
+    /**
+     * Mutate an individual
+     * @param ind the individual to mutate
+     */
+    private void mutate(Individual ind) {
+        if (Math.random() < MUTATION_RATE) {
+            int indexA = (int) (Math.random()*DNA_LENGHT);
+            int indexB = (int) (Math.random()*DNA_LENGHT);
+            JVector2[] genes = ind.getGenes();
+            JVector2 tmp = genes[indexA];
+            genes[indexA] = genes[indexB];
+            genes[indexB] = tmp;
+        }
+    }
+
+    /**
+     * Select one individual from population using roulette wheel
+     * @return a copy of the selected individual
+     */
+    private Individual pickOne() {
+        int index = 0;
+        double r = Math.random();
+        while (r > 0) {
+            r -= this.population[index].getScore();
+            index++;
+        }
+        index--;
+        return new Individual(this.population[index]);
+    }
+
+    /**
+     * Crossover over 2 genes chains
+     * @param genesA the first chain
+     * @param genesB the second chain
+     * @return the individual combining both chains
+     */
+    private Individual crossOver(JVector2[] genesA, JVector2[] genesB) {
+        JVector2[] newGenes = new JVector2[DNA_LENGHT];
+        JVector2[] landings = new JVector2[DNA_LENGHT + 1];
+        landings[0] = new JVector2(this.course.getStart()[0], this.course.getStart()[1]);
+
+        int middle = (int) (Math.random()*DNA_LENGHT);
+
+        // Simple crossover
+        for (int i = 0; i <= middle; i++) {
+            newGenes[i] = new JVector2(genesA[i]);
+        }
+        for (int i = middle + 1; i < DNA_LENGHT; i++) {
+            newGenes[i] = new JVector2(genesB[i]);
+        }
+
+        this.fillLandings(newGenes, landings);
+        return new Individual(newGenes, landings);
     }
 
     /**
@@ -174,20 +241,36 @@ public class GeneticBot implements Bot {
      */
     private boolean goalReached() {
         boolean reached = false;
+        double recordDistance = Double.MAX_VALUE;
         double[] goal = this.course.getGoal();
         for (int i = 0; i < this.population.length && !reached; i++) {
+
+            // Get closest position to the goal for a given individual
             int index = this.population[i].getLastMove() + 1;
             JVector2 lastSpot = this.population[i].getLandings()[index];
+
+            // Compute distance to goal and register it
+            double dist = JVector2.dist(goal[0], goal[1], lastSpot.getX(), lastSpot.getY());
+            if (dist < recordDistance) {
+                this.winner = this.population[i];
+                recordDistance = dist;
+            }
+
+            // Check if goal has been reached
             this.virtualBall.setPosition(lastSpot.getX(), lastSpot.getY());
             if (this.virtualCollision.isGoalAchieved()) {
                 reached = true;
-                this.winner = this.population[i];
             }
+
         }
         return reached;
     }
 
-
+    /**
+     * Fill landing spots
+     * @param forces the array of forces to apply
+     * @param landings the array to fill using the landing spots
+     */
     private void fillLandings(JVector2[] forces, JVector2[] landings) {
         this.virtualBall.setPosition(landings[0].getX(), landings[0].getY());
         for (int i = 1; i < landings.length; i++) {
