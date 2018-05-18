@@ -69,11 +69,13 @@ public class Collision {
      */
     public void checkForWalls() {
         double[] real = MathLib.toPixel(new double[]{this.ball.getX(), this.ball.getY()}, this.offsets, this.scales);
-        if (real[0] < Ball.RADIUS || real[0] > Golf.VIRTUAL_WIDTH - Ball.RADIUS) {
+        double vx = this.ball.getVelocityX();
+        double vy = this.ball.getVelocityY();
+        if ((real[0] < Ball.RADIUS && vx < 0) || (real[0] > Golf.VIRTUAL_WIDTH - Ball.RADIUS && vx > 0)) {
             this.ball.setVelocityX(-this.ball.getVelocityX());
 
         }
-        if (real[1] < Ball.RADIUS || real[1] > Golf.VIRTUAL_HEIGHT - Ball.RADIUS) {
+        if ((real[1] < Ball.RADIUS && vy < 0) || (real[1] > Golf.VIRTUAL_HEIGHT - Ball.RADIUS && vy > 0)) {
             this.ball.setVelocityY(-this.ball.getVelocityY());
         }
     }
