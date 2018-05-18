@@ -85,9 +85,11 @@ public class GeneticBot implements Bot {
      */
     private void startEvolution() {
         this.initPopulation();
-        int counter = 0;
+        int gCounter = 0;
         while (!this.goalReached() && this.counter < GENERATION_LIMIT) {
-
+            this.computeScore();
+            this.normalizeScore();
+            gCounter++;
         }
     }
 
@@ -116,6 +118,27 @@ public class GeneticBot implements Bot {
         }
         this.fillLandings(genes, landings);
         return new Individual(genes, landings);
+    }
+
+    /**
+     * Compute score for each individual of the population
+     */
+    private void computeScore() {
+        for (int i = 0; i < this.population.length; i++) {
+            
+        }
+    }
+
+    /**
+     * Normalize the score of the population such that in total there is only 1 point
+     */
+    private void normalizeScore() {
+        double totalScore = 0;
+        for (Individual individual : this.population) totalScore += individual.getScore();
+        for (int i = 0; i < this.population.length; i++) {
+            double indScore = this.population[i].getScore();
+            this.population[i].setScore(indScore/totalScore);
+        }
     }
 
     /**
