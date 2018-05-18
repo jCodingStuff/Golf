@@ -4,6 +4,7 @@ import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.math.Line2D;
+import com.group.golf.math.MathLib;
 import com.group.golf.math.Point3D;
 
 /**
@@ -14,8 +15,11 @@ public class Collision {
 
     private static final double STEP = 0.001;
 
-    private final Ball ball;
+    private Ball ball;
     private final Course course;
+
+    private double[] offsets;
+    private double[] scales;
 
     private double lastX;
     private double lastY;
@@ -24,12 +28,29 @@ public class Collision {
      * Create a new instace of Collision
      * @param ball the ball to evaluate
      * @param course the course in which the ball rolls
+     * @param offsets the offsets of the course
+     * @param scales the scales of the course
      */
-    public Collision(Ball ball, Course course) {
+    public Collision(Ball ball, Course course, double[] offsets, double[] scales) {
         this.ball = ball;
         this.course = course;
+        this.offsets = offsets;
+        this.scales = scales;
         this.lastX = this.course.getStart()[0];
         this.lastX = this.course.getStart()[1];
+    }
+
+    /**
+     * Create a new instance of Collision from a template
+     * @param other the template
+     */
+    public Collision(Collision other) {
+        this.ball = other.ball;
+        this.course = other.course;
+        this.offsets = other.offsets;
+        this.scales = other.scales;
+        this.lastX = other.lastX;
+        this.lastX = other.lastY;
     }
 
     /**
@@ -45,15 +66,14 @@ public class Collision {
 
     /**
      * React when the ball hits a wall
-     * @param ballX the pixel-x position of the ball
-     * @param ballY the pixel-y position of the ball
      */
-    public void checkForWalls(double ballX, double ballY) {
-        if (ballX < Ball.RADIUS || ballX > Golf.VIRTUAL_WIDTH - Ball.RADIUS) {
+    public void checkForWalls() {
+        double[] real = MathLib.toPixel(new double[]{this.ball.getX(), this.ball.getY()}, this.offsets, this.scales);
+        if (real[0] < Ball.RADIUS || real[0] > Golf.VIRTUAL_WIDTH - Ball.RADIUS) {
             this.ball.setVelocityX(-this.ball.getVelocityX());
 
         }
-        if (ballY < Ball.RADIUS || ballY > Golf.VIRTUAL_HEIGHT - Ball.RADIUS) {
+        if (real[1] < Ball.RADIUS || real[1] > Golf.VIRTUAL_HEIGHT - Ball.RADIUS) {
             this.ball.setVelocityY(-this.ball.getVelocityY());
         }
     }
@@ -116,4 +136,31 @@ public class Collision {
         return water;
     }
 
+    public Ball getBall() {
+        return ball;
+    }
+
+    public void setBall(Ball ball) {
+        this.ball = ball;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public double[] getOffsets() {
+        return offsets;
+    }
+
+    public void setOffsets(double[] offsets) {
+        this.offsets = offsets;
+    }
+
+    public double[] getScales() {
+        return scales;
+    }
+
+    public void setScales(double[] scales) {
+        this.scales = scales;
+    }
 }

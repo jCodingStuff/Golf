@@ -9,8 +9,9 @@ public class Individual {
     private JVector2 lastSpot;
     private JVector2[] landings;
 
-    public Individual(JVector2[] genes) {
+    public Individual(JVector2[] genes, JVector2[] landings) {
         this.genes = genes;
+        this.landings = landings;
     }
 
     public JVector2[] getGenes() {

@@ -183,7 +183,8 @@ public class CourseScreen implements Screen {
 
         // Setup engine and collision system
         this.engine = new Physics(this.course, this.ball);
-        this.collision = new Collision(this.ball, this.course);
+        this.collision = new Collision(this.ball, this.course, new double[]{this.xoffset, this.yoffset},
+                new double[]{this.scaleX, this.scaleY});
     }
 
     /**
@@ -335,10 +336,7 @@ public class CourseScreen implements Screen {
         this.renderGoal();
 
         // Check the walls
-        this.collision.checkForWalls(this.ballX, this.ballY);
-
-        // Update pixel position of ball
-        this.computeBallPixels();
+        this.collision.checkForWalls();
 
         // Check if the ball is stopped
         if (!this.ball.isMoving()) {
@@ -369,22 +367,18 @@ public class CourseScreen implements Screen {
         }
         this.ball.limit(this.course.getVmax());
 
-        // Recompute pixel positions of the ball
-        this.computeBallPixels();
-
         // Check for water
         if (this.collision.ballInWater()) {
             this.ball.reset();
-            this.ball.setX(this.lastStop[0]);
-            this.ball.setY(this.lastStop[1]);
+            this.ball.setPosition(this.lastStop[0], this.lastStop[1]);
             this.loseSound.play(0.2f);
         }
 
-        // And again, before every check recompute pixel position of the ball
+        // Compute pixel position of the ball
         this.computeBallPixels();
 
         // Render the ball
-        this.ball.render();
+        this.ball.render(this.ballX, this.ballY);
     }
 
     /**

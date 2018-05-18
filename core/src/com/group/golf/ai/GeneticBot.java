@@ -1,5 +1,6 @@
 package com.group.golf.ai;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.group.golf.Ball;
@@ -9,6 +10,7 @@ import com.group.golf.Physics.Physics;
 import com.group.golf.genetics.Individual;
 import com.group.golf.math.JVector2;
 import com.group.golf.math.MathLib;
+import sun.management.snmp.jvmmib.EnumJvmClassesVerboseLevel;
 
 import java.util.List;
 
@@ -47,13 +49,13 @@ public class GeneticBot implements Bot {
         this.course = course;
 
         this.virtualBall = new Ball(ball);
-        this.virtualBall.setX(this.course.getStart()[0]);
-        this.virtualBall.setY(this.course.getStart()[1]);
+        this.resetVirtualBallToStart();
 
         this.virtualEngine = new Physics(course, this.virtualBall);
-        this.virtualCollision = new Collision(this.virtualBall, course);
+    }
 
-        this.startEvolution();
+    private void resetVirtualBallToStart() {
+        this.virtualBall.setPosition(this.course.getStart()[0], this.course.getStart()[1]);
     }
 
     @Override
@@ -73,6 +75,9 @@ public class GeneticBot implements Bot {
     @Override
     public void setCollision(Collision collision) {
         this.collision = collision;
+        this.virtualCollision = new Collision(collision);
+        this.virtualCollision.setBall(this.virtualBall);
+        this.startEvolution();
     }
 
     /**
@@ -102,12 +107,15 @@ public class GeneticBot implements Bot {
      */
     private Individual generateIndividual() {
         JVector2[] genes = new JVector2[DNA_LENGHT];
+        JVector2[] landings = new JVector2[DNA_LENGHT + 1];
+        landings[0] = new JVector2(this.course.getStart()[0], this.course.getStart()[1]);
         for (int i = 0; i < DNA_LENGHT; i++) {
             double forceX = MathLib.randomDouble(-MAX_FORCE, MAX_FORCE);
             double forceY = MathLib.randomDouble(-MAX_FORCE, MAX_FORCE);
             genes[i] = new JVector2(forceX, forceY);
         }
-        return new Individual(genes);
+        this.fillLandings(genes, landings);
+        return new Individual(genes, landings);
     }
 
     /**
@@ -119,8 +127,8 @@ public class GeneticBot implements Bot {
         double[] goal = this.course.getGoal();
         for (int i = 0; i < this.population.length && !reached; i++) {
             JVector2 lastSpot = this.population[i].getLastSpot();
-            double dist = Math.sqrt(Math.pow(goal[0] - lastSpot.getX(), 2) + Math.pow(goal[1] - lastSpot.getY(), 2));
-            if (dist <= this.course.getTolerance()) {
+            this.virtualBall.setPosition(lastSpot.getX(), lastSpot.getY());
+            if (this.virtualCollision.isGoalAchieved()) {
                 reached = true;
                 this.winner = this.population[i];
             }
@@ -128,11 +136,28 @@ public class GeneticBot implements Bot {
         return reached;
     }
 
+
+    private void fillLandings(JVector2[] forces, JVector2[] landings) {
+        this.virtualBall.setPosition(landings[0].getX(), landings[0].getY());
+        for (int i = 1; i < landings.length; i++) {
+            this.simulateShot(forces[i-1], landings[i-1]);
+            landings[i] = new JVector2(this.virtualBall.getX(), this.virtualBall.getY());
+        }
+    }
+
     /**
      * Simulate a shot
      */
-    private void simulateShot(double forceX, double forceY) {
-        
+    private void simulateShot(JVector2 force, JVector2 last) {
+        this.virtualEngine.hit(force.getX(), force.getY());
+        while (this.virtualBall.isMoving()) {
+            this.virtualEngine.movement(Gdx.graphics.getDeltaTime());
+            this.virtualBall.limit(this.course.getVmax());
+            if (this.virtualCollision.ballInWater()) {
+                this.virtualBall.reset();
+                this.virtualBall.setPosition(last.getX(), last.getY());
+            }
+        }
     }
 
 }
