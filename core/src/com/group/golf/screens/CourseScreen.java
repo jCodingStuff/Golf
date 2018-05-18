@@ -355,7 +355,10 @@ public class CourseScreen implements Screen {
             this.lastStop[1] = this.ball.getY();
 
             // Make a move
-            if (this.bot != null && Gdx.input.isKeyPressed(Input.Keys.SPACE)) this.bot.makeMove();
+            if (this.bot != null && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                System.out.println("Bot moving!");
+                this.bot.makeMove();
+            }
             else if (this.moves != null && this.counter < this.moves.size()) { // Mode 2 is active
                 this.fileMoves();
             }
@@ -363,7 +366,7 @@ public class CourseScreen implements Screen {
                 this.userMoves();
             }
         } else {
-            this.engine.movement(delta, true);
+            this.engine.movement(delta, false);
         }
         this.ball.limit(this.course.getVmax());
 
