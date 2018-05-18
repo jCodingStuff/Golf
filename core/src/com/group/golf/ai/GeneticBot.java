@@ -55,6 +55,9 @@ public class GeneticBot implements Bot {
         this.virtualEngine = new Physics(course, this.virtualBall);
     }
 
+    /**
+     * Put virtual ball in starting point
+     */
     private void resetVirtualBallToStart() {
         this.virtualBall.setPosition(this.course.getStart()[0], this.course.getStart()[1]);
     }
@@ -272,6 +275,7 @@ public class GeneticBot implements Bot {
      * @param landings the array to fill using the landing spots
      */
     private void fillLandings(JVector2[] forces, JVector2[] landings) {
+        this.virtualBall.reset();
         this.virtualBall.setPosition(landings[0].getX(), landings[0].getY());
         for (int i = 1; i < landings.length; i++) {
             this.simulateShot(forces[i-1], landings[i-1]);
