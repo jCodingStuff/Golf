@@ -20,10 +20,10 @@ import java.util.List;
 public class GeneticBot implements Bot {
 
     private final Course course;
-    private final Ball ball;
     private Physics engine;
     private Collision collision;
 
+    private Ball virtualBall;
     private Physics virtualEngine;
     private Collision virtualCollision;
 
@@ -41,14 +41,17 @@ public class GeneticBot implements Bot {
     /**
      * Create a new instance of GeneticBot
      * @param course the course
-     * @param ball the ball
+     * @param ball the original ball
      */
     public GeneticBot(Course course, Ball ball) {
         this.course = course;
-        this.ball = ball;
 
-        this.virtualEngine = new Physics(course, ball);
-        this.virtualCollision = new Collision(ball, course);
+        this.virtualBall = new Ball(ball);
+        this.virtualBall.setX(this.course.getStart()[0]);
+        this.virtualBall.setY(this.course.getStart()[1]);
+
+        this.virtualEngine = new Physics(course, this.virtualBall);
+        this.virtualCollision = new Collision(this.virtualBall, course);
 
         this.startEvolution();
     }
@@ -123,6 +126,13 @@ public class GeneticBot implements Bot {
             }
         }
         return reached;
+    }
+
+    /**
+     * Simulate a shot
+     */
+    private void simulateShot(double forceX, double forceY) {
+        
     }
 
 }
