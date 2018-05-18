@@ -33,7 +33,7 @@ public class GeneticBot implements Bot {
 
     private static final int POPULATION_SIZE = 100;
     private static final int DNA_LENGHT = 10;
-    private static final double MAX_FORCE = 100;
+    private static final double MAX_FORCE = 1500;
 
     private static final double GENERATION_LIMIT = 10000;
     private static final double MUTATION_RATE = 0.01;
@@ -99,6 +99,11 @@ public class GeneticBot implements Bot {
             this.nextGeneration();
             gCounter++;
         }
+        if (this.counter >= GENERATION_LIMIT) System.out.println("Not able to reach goal...");
+        else System.out.println("GOAAAAL!");
+        System.out.println("Winner Info:");
+        System.out.println(this.winner);
+
     }
 
     /**
@@ -207,8 +212,8 @@ public class GeneticBot implements Bot {
             JVector2[] landings = this.population[i].getLandings();
             double closestDist = Double.MAX_VALUE;
             int closestIndex = 0;
-            for (int j = 1; j < landings.length; i++) {
-                double dist = JVector2.dist(landings[i].getX(), landings[i].getY(), goal[0], goal[1]);
+            for (int j = 1; j < landings.length; j++) {
+                double dist = JVector2.dist(landings[j].getX(), landings[j].getY(), goal[0], goal[1]);
                 if (dist < closestDist) {
                     closestDist = dist;
                     closestIndex = j;
@@ -291,6 +296,7 @@ public class GeneticBot implements Bot {
         while (this.virtualBall.isMoving()) {
             this.virtualEngine.movement(Gdx.graphics.getDeltaTime(), false);
             this.virtualBall.limit(this.course.getVmax());
+            this.virtualCollision.checkForWalls();
             if (this.virtualCollision.ballInWater()) {
                 this.virtualBall.reset();
                 this.virtualBall.setPosition(last.getX(), last.getY());

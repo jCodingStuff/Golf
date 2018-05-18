@@ -2,6 +2,8 @@ package com.group.golf.genetics;
 
 import com.group.golf.math.JVector2;
 
+import java.util.Arrays;
+
 public class Individual {
 
     private JVector2[] genes;
@@ -59,5 +61,15 @@ public class Individual {
             result[i] = new JVector2(data[i]);
         }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Individual{" +
+                "\ngenes=" + Arrays.toString(genes) +
+                "\n, score=" + score +
+                "\n, lastMove=" + lastMove +
+                "\n, landings=" + Arrays.toString(landings) +
+                '}';
     }
 }

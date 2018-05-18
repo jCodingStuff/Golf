@@ -135,4 +135,12 @@ public class JVector2 {
         return Math.acos(cosine);
     }
 
+    @Override
+    public String toString() {
+        return "JVector2{" +
+                "x=" + x +
+                ", y=" + y +
+                ", magnitude=" + magnitude +
+                '}';
+    }
 }
