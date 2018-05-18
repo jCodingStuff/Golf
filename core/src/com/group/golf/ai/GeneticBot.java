@@ -89,8 +89,16 @@ public class GeneticBot implements Bot {
         while (!this.goalReached() && this.counter < GENERATION_LIMIT) {
             this.computeScore();
             this.normalizeScore();
+            this.nextGeneration();
             gCounter++;
         }
+    }
+
+    /**
+     * Create the next generation of individuals
+     */
+    private void nextGeneration() {
+        Individual[] newGeneration = new Individual[POPULATION_SIZE];
     }
 
     /**
@@ -124,7 +132,7 @@ public class GeneticBot implements Bot {
      * Compute score for each individual of the population
      */
     private void computeScore() {
-        double[] goal = this.course.getGoal()
+        double[] goal = this.course.getGoal();
         for (int i = 0; i < this.population.length; i++) {
             JVector2[] landings = this.population[i].getLandings();
             double closestDist = Double.MAX_VALUE;
@@ -168,7 +176,8 @@ public class GeneticBot implements Bot {
         boolean reached = false;
         double[] goal = this.course.getGoal();
         for (int i = 0; i < this.population.length && !reached; i++) {
-            JVector2 lastSpot = this.population[i].getLastSpot();
+            int index = this.population[i].getLastMove() + 1;
+            JVector2 lastSpot = this.population[i].getLandings()[index];
             this.virtualBall.setPosition(lastSpot.getX(), lastSpot.getY());
             if (this.virtualCollision.isGoalAchieved()) {
                 reached = true;
