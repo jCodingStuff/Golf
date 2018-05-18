@@ -363,7 +363,7 @@ public class CourseScreen implements Screen {
                 this.userMoves();
             }
         } else {
-            this.engine.movement(delta);
+            this.engine.movement(delta, true);
         }
         this.ball.limit(this.course.getVmax());
 

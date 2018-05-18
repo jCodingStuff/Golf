@@ -17,6 +17,7 @@ import com.group.golf.Course;
 import com.group.golf.Golf;
 
 import com.group.golf.Physics.Physics;
+import com.group.golf.ai.GeneticBot;
 import com.group.golf.ai.RandomBot;
 
 import com.group.golf.ai.Bot;
@@ -108,7 +109,10 @@ public class CourseSelectorScreen implements Screen {
                 play.setTouchable(Touchable.disabled);
 
                 Ball ball = new Ball(40);
-                this.game.setScreen(new CourseScreen(this.game, course, ball));
+
+                Bot bot = new GeneticBot(course, ball);
+
+                this.game.setScreen(new CourseScreen(this.game, course, ball, bot));
 
                 this.screen.dispose();
             }
