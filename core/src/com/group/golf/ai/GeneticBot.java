@@ -60,7 +60,7 @@ public class GeneticBot implements Bot {
 
     @Override
     public void makeMove() {
-        if (this.counter < this.winner.getGenes().length) {
+        if (this.counter <= this.winner.getLastMove()) {
             JVector2 currentShot = this.winner.getGenes()[this.counter];
             this.engine.hit(currentShot.getX(), currentShot.getY());
             this.counter++;
@@ -124,8 +124,27 @@ public class GeneticBot implements Bot {
      * Compute score for each individual of the population
      */
     private void computeScore() {
+        double[] goal = this.course.getGoal()
         for (int i = 0; i < this.population.length; i++) {
-            
+            JVector2[] landings = this.population[i].getLandings();
+            double closestDist = Double.MAX_VALUE;
+            int closestIndex = 0;
+            for (int j = 1; j < landings.length; i++) {
+                double dist = JVector2.dist(landings[i].getX(), landings[i].getY(), goal[0], goal[1]);
+                if (dist < closestDist) {
+                    closestDist = dist;
+                    closestIndex = j;
+                }
+            }
+            this.population[i].setLastMove(closestIndex - 1);
+            double score;
+            if (closestIndex == 0) {
+                score = 0;
+            }
+            else {
+                score = (1/closestIndex) + (1/closestDist);
+            }
+            this.population[i].setScore(score);
         }
     }
 
