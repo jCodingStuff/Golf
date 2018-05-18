@@ -66,10 +66,10 @@ public class Individual {
     @Override
     public String toString() {
         return "Individual{" +
-                "\ngenes=" + Arrays.toString(genes) +
-                "\n, score=" + score +
-                "\n, lastMove=" + lastMove +
-                "\n, landings=" + Arrays.toString(landings) +
+                "\n - genes=" + Arrays.toString(genes) +
+                "\n - score=" + score +
+                "\n - lastMove=" + lastMove +
+                "\n - landings=" + Arrays.toString(landings) +
                 '}';
     }
 }

@@ -8,6 +8,16 @@ import com.group.golf.Golf;
 public class MathLib {
 
     /**
+     * Compute the average of 2 numbers
+     * @param a one number
+     * @param b another number
+     * @return the average of a and b
+     */
+    public static double average(double a, double b) {
+        return (a+b)/2;
+    }
+
+    /**
      * Map a value ranging from [min1, max2] to another value in the interval [min2, max2]
      * @param value tha value to map
      * @param min1 the left extreme of the initial interval (inclusive)
