@@ -143,4 +143,14 @@ public class JVector2 {
                 ", magnitude=" + magnitude +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JVector2 other = (JVector2) o;
+        return other.x == this.x &&
+                other.y == this.y;
+    }
+
 }

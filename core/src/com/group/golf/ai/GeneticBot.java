@@ -53,6 +53,9 @@ public class GeneticBot implements Bot {
     @Override
     public void makeMove() {
         if (this.counter <= this.winner.getLastMove()) {
+            if (this.winner.getLandings()[this.counter+1].equals(this.winner.getLandings()[this.counter])) {
+                this.counter++;
+            }
             JVector2 currentShot = this.winner.getGenes()[this.counter];
             this.engine.hit(currentShot.getX(), currentShot.getY());
             this.counter++;
