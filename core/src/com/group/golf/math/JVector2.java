@@ -79,6 +79,12 @@ public class JVector2 {
         }
     }
 
+    public void swap() {
+        double tmp = this.x;
+        this.x = this.y;
+        this.y = tmp;
+    }
+
     public static JVector2 opposite(JVector2 vector) {
         double invX = vector.y;
         double invY = vector.x;

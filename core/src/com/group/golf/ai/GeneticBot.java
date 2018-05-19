@@ -28,7 +28,7 @@ public class GeneticBot implements Bot {
 
     private static final int POPULATION_SIZE = 100;
     private static final int DNA_LENGHT = 5;
-    private static final double MAX_FORCE = 5000;
+    private static final double MAX_FORCE = 3000;
 
     private static final double GENERATION_LIMIT = 5;
     private static final double MUTATION_RATE = 0.01;
@@ -113,7 +113,7 @@ public class GeneticBot implements Bot {
             Individual indA = this.pickOne();
             Individual indB = this.pickOne();
             Individual child = this.averageCrossOver(indA.getGenes(), indB.getGenes());
-            this.swapMutate(child);
+            this.alterMutate(child);
             newGeneration[i] = child;
         }
         this.population = newGeneration;
@@ -149,6 +149,18 @@ public class GeneticBot implements Bot {
             JVector2 tmp = genes[indexA];
             genes[indexA] = genes[indexB];
             genes[indexB] = tmp;
+        }
+    }
+
+    /**
+     * Mutate an individual altering a shot
+     * @param ind the individual to mutate
+     */
+    private void alterMutate(Individual ind) {
+        if (Math.random() < MUTATION_RATE) {
+            int index = (int) (Math.random()*DNA_LENGHT);
+            JVector2 force = ind.getGenes()[index];
+            force.swap();
         }
     }
 

@@ -75,6 +75,7 @@ public class CourseScreen implements Screen {
 
     // Bot
     private Bot bot;
+    private boolean landed = true;
 
 
     /**
@@ -340,6 +341,11 @@ public class CourseScreen implements Screen {
 
         // Check if the ball is stopped
         if (!this.ball.isMoving()) {
+            // Print position of the ball
+            if (landed) {
+                System.out.println("Ball landed at: " + this.ball.getX() + " " + this.ball.getY());
+                this.landed = false;
+            }
             // Check if the goal is achieved
             if (this.collision.isGoalAchieved()) {
                 this.winSound.play();
@@ -356,10 +362,13 @@ public class CourseScreen implements Screen {
 
             // Make a move
             if (this.bot != null && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                System.out.println("Bot moving!");
+                System.out.println("\nBot moving!");
                 this.bot.makeMove();
+                this.landed = true;
             }
-            else if (this.moves != null && this.counter < this.moves.size()) { // Mode 2 is active
+            else if (this.moves != null && this.counter < this.moves.size() &&
+                    Gdx.input.isKeyPressed(Input.Keys.SPACE)) { // Mode 2 is active
+                System.out.println("\nFile moves!");
                 this.fileMoves();
             }
             else { // Mode 1 is active
@@ -438,6 +447,7 @@ public class CourseScreen implements Screen {
                 forceY *= this.scaleY * SCALE_MULTIPLIER;
 
                 this.engine.hit(forceX, forceY);
+                this.landed = true;
 
                 this.hitSound.play();
             }
