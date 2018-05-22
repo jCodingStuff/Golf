@@ -5,7 +5,7 @@ import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
-import com.group.golf.genetics.Individual;
+import com.group.golf.genetics.*;
 import com.group.golf.math.JVector2;
 import com.group.golf.math.MathLib;
 
@@ -36,6 +36,10 @@ public class GeneticBot implements Bot {
     private Individual[] population;
     private Individual winner;
 
+    // Algorithms
+    private CrossOver crossOver;
+    private Mutation mutation;
+
     /**
      * Create a new instance of GeneticBot
      * @param course the course
@@ -48,6 +52,9 @@ public class GeneticBot implements Bot {
         this.virtualBall.setPosition(this.course.getStart()[0], this.course.getStart()[1]);
 
         this.virtualEngine = new Physics(course, this.virtualBall);
+
+        this.crossOver = new AverageCrossOver(this);
+        this.mutation = new AlterMutation();
     }
 
     @Override
@@ -112,8 +119,8 @@ public class GeneticBot implements Bot {
         for (int i = 0; i < newGeneration.length; i++) {
             Individual indA = this.pickOne();
             Individual indB = this.pickOne();
-            Individual child = this.averageCrossOver(indA.getGenes(), indB.getGenes());
-            this.alterMutate(child);
+            Individual child = this.crossOver.crossOver(indA.getGenes(), indB.getGenes());
+            this.mutation.mutate(child, MUTATION_RATE);
             newGeneration[i] = child;
         }
         this.population = newGeneration;
@@ -132,89 +139,6 @@ public class GeneticBot implements Bot {
         }
         index--;
         return new Individual(this.population[index]);
-    }
-
-
-
-    // MUTATION AREA
-    /**
-     * Mutate an individual swapping
-     * @param ind the individual to mutate
-     */
-    private void swapMutate(Individual ind) {
-        if (Math.random() < MUTATION_RATE) {
-            int indexA = (int) (Math.random()*DNA_LENGHT);
-            int indexB = (int) (Math.random()*DNA_LENGHT);
-            JVector2[] genes = ind.getGenes();
-            JVector2 tmp = genes[indexA];
-            genes[indexA] = genes[indexB];
-            genes[indexB] = tmp;
-        }
-    }
-
-    /**
-     * Mutate an individual altering a shot
-     * @param ind the individual to mutate
-     */
-    private void alterMutate(Individual ind) {
-        if (Math.random() < MUTATION_RATE) {
-            int index = (int) (Math.random()*DNA_LENGHT);
-            JVector2 force = ind.getGenes()[index];
-            force.swap();
-        }
-    }
-
-
-    // CROSSOVER AREA
-    /**
-     * SimpleCrossover over 2 genes chains
-     * @param genesA the first chain
-     * @param genesB the second chain
-     * @return the individual combining both chains
-     */
-    private Individual simpleCrossOver(JVector2[] genesA, JVector2[] genesB) {
-        JVector2[] newGenes = new JVector2[DNA_LENGHT];
-        JVector2[] landings = new JVector2[DNA_LENGHT + 1];
-        landings[0] = new JVector2(this.course.getStart()[0], this.course.getStart()[1]);
-
-        int middle = (int) (Math.random()*DNA_LENGHT);
-
-        // Simple crossover
-        for (int i = 0; i <= middle; i++) {
-            newGenes[i] = new JVector2(genesA[i]);
-        }
-        for (int i = middle + 1; i < DNA_LENGHT; i++) {
-            newGenes[i] = new JVector2(genesB[i]);
-        }
-
-        this.fillLandings(newGenes, landings);
-        return new Individual(newGenes, landings);
-    }
-
-    /**
-     * AverageCrossover over 2 genes chains
-     * @param genesA the first chain
-     * @param genesB the second chain
-     * @return the individual combining both chains
-     */
-    private Individual averageCrossOver(JVector2[] genesA, JVector2[] genesB) {
-        JVector2[] newGenes = new JVector2[DNA_LENGHT];
-        JVector2[] landings = new JVector2[DNA_LENGHT + 1];
-        landings[0] = new JVector2(this.course.getStart()[0], this.course.getStart()[1]);
-
-        // Average crossover
-        for (int i = 0; i < newGenes.length; i++) {
-            double aX = genesA[i].getX(); double aY = genesA[i].getY();
-            double bX = genesB[i].getX(); double bY = genesB[i].getY();
-            double x = MathLib.average(Math.abs(aX), Math.abs(bX));
-            if (Math.random() < 0.5) x = -x;
-            double y = MathLib.average(Math.abs(aY), Math.abs(bY));
-            if (Math.random() < 0.5) y = -y;
-            JVector2 gene = new JVector2(x, y);
-            newGenes[i] = gene;
-        }
-        this.fillLandings(newGenes, landings);
-        return new Individual(newGenes, landings);
     }
 
     /**
@@ -322,7 +246,7 @@ public class GeneticBot implements Bot {
      * @param forces the array of forces to apply
      * @param landings the array to fill using the landing spots
      */
-    private void fillLandings(JVector2[] forces, JVector2[] landings) {
+    public void fillLandings(JVector2[] forces, JVector2[] landings) {
         this.virtualBall.reset();
         this.virtualBall.setPosition(landings[0].getX(), landings[0].getY());
         for (int i = 1; i < landings.length; i++) {
@@ -347,4 +271,9 @@ public class GeneticBot implements Bot {
         }
     }
 
+
+    // GETTER AND SETTER AREA
+    public Course getCourse() {
+        return course;
+    }
 }
