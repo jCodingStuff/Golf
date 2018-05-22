@@ -37,7 +37,7 @@ public class botMartijn implements Bot {
 
         private double bestAngle;
         private double bestForce;
-        private Point3D ballCor;  //initialize
+        private Point3D ballCor;
         private double maxForce; // open for adjustment
         private boolean hit = false;
         private ArrayList<Double> prevScore = new ArrayList<Double>();
@@ -78,7 +78,7 @@ public class botMartijn implements Bot {
 
                     Point3D goal = new Point3D(this.virtualBall.getX(),this.virtualBall.getY()); // get the coordinates of the ball after hitting it.
                     this.ballCor = new Point3D(this.ball.getX(), this.ball.getY());
-                    
+
 
                 currentScore += this.waterScore(this.ballCor, goal) * WATER_SCORE;
                 currentScore -= this.distanceScore(goal) * DISTANCE_SCORE;
