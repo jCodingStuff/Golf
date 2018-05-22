@@ -261,9 +261,9 @@ public class GeneticBot implements Bot {
     private void simulateShot(JVector2 force, JVector2 last) {
         this.virtualEngine.hit(force.getX(), force.getY());
         while (this.virtualBall.isMoving()) {
+            this.virtualCollision.checkForWalls();
             this.virtualEngine.movement(Gdx.graphics.getDeltaTime(), false);
             this.virtualBall.limit(this.course.getVmax());
-            this.virtualCollision.checkForWalls();
             if (this.virtualCollision.ballInWater()) {
                 this.virtualBall.reset();
                 this.virtualBall.setPosition(last.getX(), last.getY());
