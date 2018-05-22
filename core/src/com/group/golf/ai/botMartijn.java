@@ -31,11 +31,9 @@ public class botMartijn implements Bot {
         private double bestAngle;
         private double bestForce;
         private Point3D ballCor;  //initialize
-        private Point3D maxRangeCor;
         private double maxForce; // open for adjustment
         private boolean hit = false;
-        //private Point3D ballPoint;
-        private double prevScore;
+        private ArrayList<Double> prevScore = new ArrayList<Double>();
 
         public botMartijn(Course course, Ball ball) {
             this.course = course;
@@ -64,10 +62,11 @@ public class botMartijn implements Bot {
                     double forceX = force * Math.cos(Math.toRadians(angle));
                     double forceY = force * Math.sin(Math.toRadians(angle));
                     this.engine.hit(forceX,forceY); // crete virtual engine;
+                    Point3D goal = new Point3D(ball.getX(),ball.getY()); // get the coordinates of the ball after hitting it.
 
-                currentScore += this.waterScore(this.ballCor, this.maxRangeCor) * WATER_SCORE; //see what input arguments are needed.
-                currentScore -= this.distanceScore(maxRangeCor) * DISTANCE_SCORE; //see what input arguments are viable
-//              currentScore += this.previousScore * PREVIOUS_SCORE;  add a score for the next move that can be done. add the previous score to the new score
+                currentScore += this.waterScore(this.ballCor, goal) * WATER_SCORE;
+                currentScore -= this.distanceScore(goal) * DISTANCE_SCORE;
+                currentScore += this.previousScore() * PREVIOUS_SCORE;
 //              currentScore += this.method4 * METHOD4;
 
 
@@ -76,7 +75,8 @@ public class botMartijn implements Bot {
                     bestScore = currentScore;
                     bestAngle = angle;
                     bestForce = force;
-                    this.prevScore = currentScore;
+                    this.prevScore.add(currentScore);
+                    System.out.println(currentScore); //showing the score change.
                     }
                 }
             }
@@ -91,11 +91,12 @@ public class botMartijn implements Bot {
         //needs adjusting
         private double waterScore(Point3D ballPoint, Point3D goal){
             if (this.collision.isWaterBetween(ballPoint, goal))
-                return 0;
+                return Double.NEGATIVE_INFINITY;
 
             else {
                 //figure out what you want to do with this.
-                Line2D line = new Line2D(ballPoint, goal);
+                //find outer borders of the water, and see which coordinate is the closest to your goal coordinate;
+                //connect a score to this.
                 return 0;
             }
 
@@ -108,12 +109,11 @@ public class botMartijn implements Bot {
            return distance;
         }
 
-        //needs adjusting
+
         private double previousScore(){
             if(this.hit == true) {
-
-
-                return 0; //return the previous best score.
+                int size = this.prevScore.size() -1;
+                return prevScore.get(size);
             }
             else  return 0;
         }
