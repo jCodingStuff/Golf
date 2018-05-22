@@ -12,6 +12,12 @@ public class JVector2 {
         this.updateMagnitude();
     }
 
+    public JVector2(JVector2 other) {
+        this.x = other.x;
+        this.y = other.y;
+        this.updateMagnitude();
+    }
+
     private void updateMagnitude() {
         this.magnitude = Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
     }
@@ -73,6 +79,12 @@ public class JVector2 {
         }
     }
 
+    public void swap() {
+        double tmp = this.x;
+        this.x = this.y;
+        this.y = tmp;
+    }
+
     public static JVector2 opposite(JVector2 vector) {
         double invX = vector.y;
         double invY = vector.x;
@@ -127,6 +139,24 @@ public class JVector2 {
         double botPart = vector1.getMagnitude() * vector2.getMagnitude();
         double cosine = topPart / botPart;
         return Math.acos(cosine);
+    }
+
+    @Override
+    public String toString() {
+        return "JVector2{" +
+                "x=" + x +
+                ", y=" + y +
+                ", magnitude=" + magnitude +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JVector2 other = (JVector2) o;
+        return other.x == this.x &&
+                other.y == this.y;
     }
 
 }

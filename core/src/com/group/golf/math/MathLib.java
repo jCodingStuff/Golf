@@ -8,6 +8,16 @@ import com.group.golf.Golf;
 public class MathLib {
 
     /**
+     * Compute the average of 2 numbers
+     * @param a one number
+     * @param b another number
+     * @return the average of a and b
+     */
+    public static double average(double a, double b) {
+        return (a+b)/2;
+    }
+
+    /**
      * Map a value ranging from [min1, max2] to another value in the interval [min2, max2]
      * @param value tha value to map
      * @param min1 the left extreme of the initial interval (inclusive)
@@ -111,6 +121,16 @@ public class MathLib {
         double x = b.getX() - a.getX();
         double y = b.getY() - a.getY();
         return Math.pow(x, 2) + Math.pow(y, 2);
+    }
+
+    /**
+     * Get a random double value within a range
+     * @param low lower bound of the range
+     * @param high upper bound of the range
+     * @return a random double x such that low <= x < high
+     */
+    public static double randomDouble(double low, double high) {
+        return Math.random()*(high - low) + low;
     }
 
 }

@@ -52,6 +52,19 @@ public class Ball {
     }
 
     /**
+     * Create a new Ball using another one as a template
+     * @param other the template ball
+     */
+    public Ball(Ball other) {
+        this.mass = other.mass;
+        this.x = other.x;
+        this.y = other.y;
+        this.velocityX = other.velocityX;
+        this.velocityY = other.velocityY;
+        this.collisionCircle = new Circle((float) this.x, (float) this.y, RADIUS);
+    }
+
+    /**
      * Reset the velocity of the ball to 0
      */
     public void reset() {
@@ -73,13 +86,10 @@ public class Ball {
         }
     }
 
-    public void render() {
+    public void render(double realX, double realY) {
         this.courseScreen.getGame().batch.begin();
-        double[] offsets = new double[]{this.courseScreen.getXoffset(), this.courseScreen.getYoffset()};
-        double[] scales = new double[]{this.courseScreen.getScaleX(), this.courseScreen.getScaleY()};
-        double[] real = MathLib.toPixel(new double[]{this.x, this.y}, offsets, scales);
-        this.courseScreen.getGame().batch.draw(this.texture, (float) real[0] - RADIUS,
-                (float) real[1] - RADIUS, RADIUS * 2,RADIUS * 2);
+        this.courseScreen.getGame().batch.draw(this.texture, (float) realX - RADIUS,
+                (float) realY - RADIUS, RADIUS * 2,RADIUS * 2);
         this.courseScreen.getGame().batch.end();
     }
 
@@ -202,6 +212,17 @@ public class Ball {
      * @param y the new y-position
      */
     public void setY(double y) {
+        this.y = y;
+        this.updateCollisionCircle();
+    }
+
+    /**
+     * Set a new position for the ball
+     * @param x the new x-position
+     * @param y the new y-position
+     */
+    public void setPosition(double x, double y) {
+        this.x = x;
         this.y = y;
         this.updateCollisionCircle();
     }
