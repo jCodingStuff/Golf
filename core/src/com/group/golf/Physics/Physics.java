@@ -14,6 +14,7 @@ import java.util.ArrayList;
  */
 
 public class Physics {
+
     private Course course;
     private Ball ball;
     private double[] hitCoord;
@@ -79,7 +80,7 @@ public class Physics {
      * Update the ball state to the following instance of time
      * @param delta delta time
      */
-    public void movement(float delta) {
+    public void movement(float delta, boolean debug) {
 
         ball.setX(ball.getX() + delta * ball.getVelocityX());
         ball.setY(ball.getY() + delta * ball.getVelocityY());
@@ -88,7 +89,7 @@ public class Physics {
         ball.setVelocityX(vel[0]);
         ball.setVelocityY(vel[1]);
 
-        System.out.println("VelocityX: " + ball.getVelocityX() + "   VelocityY: " + ball.getVelocityY());
+        if (debug) System.out.println("VelocityX: " + ball.getVelocityX() + "   VelocityY: " + ball.getVelocityY());
         if (Math.abs(this.ball.getVelocityX()) < 0.0776 && Math.abs(this.ball.getVelocityY()) < 0.0776) {
             this.ball.reset();
         }
