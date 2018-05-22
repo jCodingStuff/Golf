@@ -1,6 +1,7 @@
 package com.group.golf.ai;
 
 
+import com.badlogic.gdx.Gdx;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
 import com.badlogic.gdx.math.Vector2;
@@ -13,6 +14,7 @@ import javax.sound.sampled.Line;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.group.golf.math.JVector2;
 
 
 public class botMartijn implements Bot {
@@ -28,6 +30,11 @@ public class botMartijn implements Bot {
         private final Ball ball;
         private Physics engine;
         private Collision collision;
+
+        private Ball virtualBall;
+        private Physics virtualEngine;
+        private Collision virtualCollision;
+
         private double bestAngle;
         private double bestForce;
         private Point3D ballCor;  //initialize
@@ -38,6 +45,11 @@ public class botMartijn implements Bot {
         public botMartijn(Course course, Ball ball) {
             this.course = course;
             this.ball = ball;
+
+            this.virtualBall = new Ball(ball);
+            this.virtualBall.setPosition(this.course.getStart()[0], this.course.getStart()[1]);
+            this.virtualEngine = new Physics(course, this.virtualBall);
+
             this.maxForce = this.ball.getMass() * this.course.getVmax();  //open for adjustment
         }
 
@@ -61,8 +73,12 @@ public class botMartijn implements Bot {
                 for (double force = 0; force < maxForce; force += 3) {// try which number works best
                     double forceX = force * Math.cos(Math.toRadians(angle));
                     double forceY = force * Math.sin(Math.toRadians(angle));
-                    this.engine.hit(forceX,forceY); // crete virtual engine;
-                    Point3D goal = new Point3D(ball.getX(),ball.getY()); // get the coordinates of the ball after hitting it.
+                    JVector2 forceVec = new JVector2(forceX,forceY);
+                    this.simulateShot(forceVec);
+
+                    Point3D goal = new Point3D(this.virtualBall.getX(),this.virtualBall.getY()); // get the coordinates of the ball after hitting it.
+                    this.ballCor = new Point3D(this.ball.getX(), this.ball.getY());
+                    
 
                 currentScore += this.waterScore(this.ballCor, goal) * WATER_SCORE;
                 currentScore -= this.distanceScore(goal) * DISTANCE_SCORE;
@@ -109,7 +125,6 @@ public class botMartijn implements Bot {
            return distance;
         }
 
-
         private double previousScore(){
             if(this.hit == true) {
                 int size = this.prevScore.size() -1;
@@ -124,6 +139,29 @@ public class botMartijn implements Bot {
             p[1] = point.getY();
             return p;
         }
+
+        private void simulateShot(JVector2 force, JVector2 last) {
+        this.virtualEngine.hit(force.getX(),force.getY());
+        while (this.virtualBall.isMoving()) {
+            this.virtualEngine.movement(Gdx.graphics.getDeltaTime(), false);
+            this.virtualBall.limit(this.course.getVmax());
+            this.virtualCollision.checkForWalls();
+            if (this.virtualCollision.ballInWater()) {
+                this.virtualBall.reset();
+                this.virtualBall.setPosition(last.getX(), last.getY());
+            }
+        }
+    }
+
+        private void simulateShot(JVector2 force) {
+        this.virtualEngine.hit(force.getX(),force.getY());
+        while (this.virtualBall.isMoving()) {
+            this.virtualEngine.movement(Gdx.graphics.getDeltaTime(), false);
+            this.virtualBall.limit(this.course.getVmax());
+            this.virtualCollision.checkForWalls();
+        }
+    }
+
 
 
 }
