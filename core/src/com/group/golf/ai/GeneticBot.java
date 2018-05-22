@@ -27,7 +27,7 @@ public class GeneticBot implements Bot {
     private int counter = 0;
 
     private static final int POPULATION_SIZE = 100;
-    private static final int DNA_LENGHT = 5;
+    private static final int DNA_LENGTH = 5;
     private static final double MAX_FORCE = 3000;
 
     private static final double GENERATION_LIMIT = 5;
@@ -156,10 +156,10 @@ public class GeneticBot implements Bot {
      * @return a random individual for the first population
      */
     private Individual generateIndividual() {
-        JVector2[] genes = new JVector2[DNA_LENGHT];
-        JVector2[] landings = new JVector2[DNA_LENGHT + 1];
+        JVector2[] genes = new JVector2[DNA_LENGTH];
+        JVector2[] landings = new JVector2[DNA_LENGTH + 1];
         landings[0] = new JVector2(this.course.getStart()[0], this.course.getStart()[1]);
-        for (int i = 0; i < DNA_LENGHT; i++) {
+        for (int i = 0; i < DNA_LENGTH; i++) {
             double forceX = MathLib.randomDouble(-MAX_FORCE, MAX_FORCE);
             double forceY = MathLib.randomDouble(-MAX_FORCE, MAX_FORCE);
             genes[i] = new JVector2(forceX, forceY);
