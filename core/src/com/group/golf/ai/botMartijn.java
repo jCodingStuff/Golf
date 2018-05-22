@@ -18,9 +18,9 @@ import java.util.List;
 public class botMartijn implements Bot {
 
     //Constants for the method Score
-        private static final double WATER_SCORE = 0.0;
-        private static final double DISTANCE_SCORE = 0.0;
-        private static final double METHOD3 = 0.0;
+        private static final double WATER_SCORE = 0.0; //needs adjusting by trial and error
+        private static final double DISTANCE_SCORE = 0.0; //needs adjusting by trial and error
+        private static final double PREVIOUS_SCORE = 0.0; //needs adjusting by trial and error
         private static final double METHOD4 = 0.0;
 
 
@@ -32,14 +32,15 @@ public class botMartijn implements Bot {
         private double bestForce;
         private Point3D ballCor;  //initialize
         private Point3D maxRangeCor;
-        private double maxForce = 0; // figure out what this has to be
-
+        private double maxForce; // open for adjustment
+        private boolean hit = false;
         //private Point3D ballPoint;
         private double prevScore;
 
         public botMartijn(Course course, Ball ball) {
             this.course = course;
             this.ball = ball;
+            this.maxForce = this.ball.getMass() * this.course.getVmax();  //open for adjustment
         }
 
         @Override
@@ -56,15 +57,17 @@ public class botMartijn implements Bot {
         public void makeMove() {
             System.out.print("BOT");
             double bestScore = Double.NEGATIVE_INFINITY;
-
             double currentScore = 0.0;
 
             for(double angle = 0; angle <= 360; angle++) {
                 for (double force = 0; force < maxForce; force += 3) {// try which number works best
+                    double forceX = force * Math.cos(Math.toRadians(angle));
+                    double forceY = force * Math.sin(Math.toRadians(angle));
+                    this.engine.hit(forceX,forceY); // crete virtual engine;
 
-                currentScore += this.waterScore(this.ballCor, this.maxRangeCor) * WATER_SCORE;
-                currentScore -= this.distanceScore(maxRangeCor) * DISTANCE_SCORE;
-//              currentScore += this.method3 * METHOD3; maybe add a score for the next move that can be done. add the previous score to the new score
+                currentScore += this.waterScore(this.ballCor, this.maxRangeCor) * WATER_SCORE; //see what input arguments are needed.
+                currentScore -= this.distanceScore(maxRangeCor) * DISTANCE_SCORE; //see what input arguments are viable
+//              currentScore += this.previousScore * PREVIOUS_SCORE;  add a score for the next move that can be done. add the previous score to the new score
 //              currentScore += this.method4 * METHOD4;
 
 
@@ -80,11 +83,12 @@ public class botMartijn implements Bot {
 
 
             //make move with the correct angle and force.
-            double forceX = this.bestForce * Math.cos(this.bestAngle);
-            double forceY = this.bestForce * Math.sin(this.bestAngle);
-            engine.hit(forceX,forceY);
+            double forceX = this.bestForce * Math.cos(Math.toRadians(this.bestAngle));
+            double forceY = this.bestForce * Math.sin(Math.toRadians(this.bestAngle));
+            this.engine.hit(forceX,forceY);
         }
 
+        //needs adjusting
         private double waterScore(Point3D ballPoint, Point3D goal){
             if (this.collision.isWaterBetween(ballPoint, goal))
                 return 0;
@@ -104,10 +108,14 @@ public class botMartijn implements Bot {
            return distance;
         }
 
+        //needs adjusting
         private double previousScore(){
+            if(this.hit == true) {
 
 
-            return 0;
+                return 0; //return the previous best score.
+            }
+            else  return 0;
         }
 
         private double[] Point3Dto2D(Point3D point){
