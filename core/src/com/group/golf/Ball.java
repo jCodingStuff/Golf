@@ -22,6 +22,8 @@ public class Ball {
     private double y;
     private double velocityX;
     private double velocityY;
+    private double accelerationX;
+    private double accelerationY;
 
 
     private Texture texture;
@@ -57,6 +59,13 @@ public class Ball {
         this.collisionCircle = new Circle((float) this.x, (float) this.y, RADIUS);
         this.movementCoord = new Queue();
 
+    }
+
+    public double[] dequeue() {
+        double[] coord = movementCoord.dequeue();
+        setX(coord[0]);
+        setY(coord[1]);
+        return coord;
     }
 
     public void addCoord(double[] coord) {
@@ -139,8 +148,7 @@ public class Ball {
      * Get access to the x-component of the velocity
      * @return the x-component of the velocity
      */
-    public double getVelocityX() {
-        return velocityX;
+    public double getVelocityX() {return velocityX;
     }
 
     /**
@@ -188,7 +196,8 @@ public class Ball {
      * @return the x-coordinate for position
      */
     public double getX() {
-        return x;
+//        System.out.print("X: " + movementCoord.last()[0]);
+        return movementCoord.last()[0];
     }
 
 
@@ -198,6 +207,7 @@ public class Ball {
      */
     public void setX(double x) {
         this.x = x;
+        movementCoord.setX(x);
         this.updateCollisionCircle();
     }
 
@@ -206,7 +216,8 @@ public class Ball {
      * @return the y-coordinate for position
      */
     public double getY() {
-        return y;
+//        System.out.println(    "   Y: " + movementCoord.last()[1]);
+        return movementCoord.last()[1];
     }
 
     /**
@@ -215,10 +226,27 @@ public class Ball {
      */
     public void setY(double y) {
         this.y = y;
+        movementCoord.setY(y);
         this.updateCollisionCircle();
     }
 
     public Queue getMovementCoord() {
         return movementCoord;
+    }
+
+    public void setAccelerationX(double accelerationX) {
+        this.accelerationX = accelerationX;
+    }
+
+    public void setAccelerationY(double accelerationY) {
+        this.accelerationY = accelerationY;
+    }
+
+    public double getAccelerationX() {
+        return accelerationX;
+    }
+
+    public double getAccelerationY() {
+        return accelerationY;
     }
 }

@@ -6,6 +6,7 @@ package com.group.golf.Physics;
 public class Coordinates {
     double[] coord;
     Coordinates next;
+    Coordinates prev;
 
     public Coordinates(double[] coord) {
         this.coord = coord;

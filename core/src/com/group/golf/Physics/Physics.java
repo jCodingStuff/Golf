@@ -59,17 +59,18 @@ public class Physics {
         ball.setVelocityX(velo[0][0] + h * accelX);
         ball.setVelocityY(velo[0][1] + h * accelY);
 
-        System.out.println("Acceleration x: " + accelX + "   Acceleration y: " + accelY);
+//        System.out.println("VelocityX: " + ball.getVelocityX() + "   VelocityY: " + ball.getVelocityY());
+        if (Math.abs(this.ball.getVelocityX()) < 0.0776 && Math.abs(this.ball.getVelocityY()) < 0.0776) {
+            this.ball.reset();
+        }
 
-//        if (Math.abs(this.ball.getVelocityX()) < 0.0776 && Math.abs(this.ball.getVelocityY()) < 0.0776) {
-//            this.ball.reset();
-//        }
-
-        double[] coord = new double[]{ball.getX() + h/6 * (velo[0][0] + 2 * velo[1][0] + 2 * velo[2][0] + velo[3][0]),ball.getY() + h/6 * (velo[0][1] + 2 * velo[1][1] + 2 * velo[2][1] + velo[3][1])};
+        double[] coord = new double[]{ball.getX() + h/6 * (velo[0][0] + 2 * velo[1][0] + 2 * velo[2][0] + velo[3][0]),
+                                      ball.getY() + h/6 * (velo[0][1] + 2 * velo[1][1] + 2 * velo[2][1] + velo[3][1])};
         ball.addCoord(coord);
 
-        ball.setX(ball.getX() + h/6 * (velo[0][0] + 2 * velo[1][0] + 2 * velo[2][0] + velo[3][0]));
-        ball.setY(ball.getY() + h/6 * (velo[0][1] + 2 * velo[1][1] + 2 * velo[2][1] + velo[3][1]));
+        //this is going to be removed
+//        ball.setX(ball.getX() + h/6 * (velo[0][0] + 2 * velo[1][0] + 2 * velo[2][0] + velo[3][0]));
+//        ball.setY(ball.getY() + h/6 * (velo[0][1] + 2 * velo[1][1] + 2 * velo[2][1] + velo[3][1]));
     }
 
     private double[] updateRKStep(double[] startPos, double[] prev, double h, double k) {
@@ -90,14 +91,15 @@ public class Physics {
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
 
+        double frameRate = 0.04;
 
-//        double frameRate = 1/fps;
-//        while (this.ball.isMoving()) {
-//            RK4(frameRate);
-//        }
+        ball.setVelocityX(frameRate * forceX / ball.getMass());
+        ball.setVelocityY(frameRate * forceY / ball.getMass());
 
-        ball.setVelocityX(Gdx.graphics.getDeltaTime() * forceX / ball.getMass());
-        ball.setVelocityY(Gdx.graphics.getDeltaTime() * forceY / ball.getMass());
+        while (this.ball.isMoving()) {
+            RK4(frameRate);
+        }
+
     }
 
     /**

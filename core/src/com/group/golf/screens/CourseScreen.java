@@ -339,8 +339,10 @@ public class CourseScreen implements Screen {
         // Update pixel position of ball
         this.computeBallPixels();
 
+
+
         // Check if the ball is stopped
-        if (!this.ball.isMoving()) {
+        if (this.ball.getMovementCoord().getSize() == 0) {
             // Check if the goal is achieved
             if (this.collision.isGoalAchieved()) {
                 this.winSound.play();
@@ -364,7 +366,10 @@ public class CourseScreen implements Screen {
                 this.userMoves();
             }
         } else {
-            this.engine.movement(delta);
+
+
+
+            this.ball.dequeue();
         }
         this.ball.limit(this.course.getVmax());
 
