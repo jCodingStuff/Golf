@@ -33,28 +33,31 @@ public class Physics {
     //https://www.haroldserrano.com/blog/visualizing-the-runge-kutta-method
     public void RK4(double h){
 
-        double[] grav = gravForce(new double[]{ball.getX(),ball.getY()});
-        double[] friction =  frictionForce(ball.getVelocityX(),ball.getVelocityY());
+
 
         double[][] accel = new double[4][2];
-        accel[0] = new double[]{grav[0]+friction[0],grav[1]+friction[1]};
+        accel[0] = new double[]{ball.getAccelerationX(),ball.getAccelerationY()};
 
         double[][] velo = new double[4][2];
         velo[0] = new double[]{ball.getVelocityX(),ball.getVelocityY()};
 
         for (int i = 1; i < 4; i++) {
+            System.out.println(i);
            double[] v = updateRKStep(velo[0],accel[i-1],h,i);
            velo[i] = v;
 
            double[] p = updateRKStep(new double[]{ball.getX(),ball.getY()},v,h,i);
-           grav = gravForce(p);
 
-           friction = frictionForce(v[0],v[1]);
+           double[] grav = gravForce(p);
+           double[] friction = frictionForce(v[0],v[1]);
+
            accel[i] = new double[]{grav[0] + friction[0], grav[1] + friction[1]};
         }
 
         double accelX = (accel[0][0] + 2 * accel[1][0] + 2 * accel[2][0] + accel[3][0])/6;
         double accelY = (accel[0][1] + 2 * accel[1][1] + 2 * accel[2][1] + accel[3][1])/6;
+        ball.setAccelerationX(accelX);
+        ball.setAccelerationY(accelY);
 
         ball.setVelocityX(velo[0][0] + h * accelX);
         ball.setVelocityY(velo[0][1] + h * accelY);
@@ -67,6 +70,12 @@ public class Physics {
         double[] coord = new double[]{ball.getX() + h/6 * (velo[0][0] + 2 * velo[1][0] + 2 * velo[2][0] + velo[3][0]),
                                       ball.getY() + h/6 * (velo[0][1] + 2 * velo[1][1] + 2 * velo[2][1] + velo[3][1])};
         ball.addCoord(coord);
+
+//        double[] grav = gravForce(new double[]{ball.getX(),ball.getY()});
+//        double[] friction =  frictionForce(ball.getVelocityX(),ball.getVelocityY());
+
+//        ball.setAccelerationX(accelX);
+//        ball.setAccelerationY(accelY);
 
         //this is going to be removed
 //        ball.setX(ball.getX() + h/6 * (velo[0][0] + 2 * velo[1][0] + 2 * velo[2][0] + velo[3][0]));
@@ -83,19 +92,25 @@ public class Physics {
 
     /**
      * Hit the ball
-     * @param forceX the velocityX done to the ball
-     * @param forceY the velocityY done to the ball
+     * @param xLength the length that the mouse was dragged horizontally
+     * @param yLength the length that the mouse was dragged vertically
      */
-    public void hit(double forceX, double forceY) {
+    public void hit(double xLength, double yLength) {
 
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
 
         double frameRate = 0.04;
 
-        ball.setVelocityX(frameRate * forceX / ball.getMass());
-        ball.setVelocityY(frameRate * forceY / ball.getMass());
+        xLength *= 90;
+        yLength *= 90;
 
+        ball.setAccelerationX(xLength/ball.getMass());
+        ball.setAccelerationY(yLength/ball.getMass());
+//        ball.setVelocityX(frameRate * forceX / ball.getMass());
+//        ball.setVelocityY(frameRate * forceY / ball.getMass());
+
+        RK4(frameRate);
         while (this.ball.isMoving()) {
             RK4(frameRate);
         }

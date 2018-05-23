@@ -423,21 +423,19 @@ public class CourseScreen implements Screen {
                 Vector3 secondV = new Vector3(this.lastX, this.lastY,0);
                 this.cam.unproject(secondV);
 
-                System.out.println("firstX=" + this.firstX + ", firstY=" + this.firstY);
-                System.out.println("lastX=" + this.lastX + ", lastY=" + this.lastY);
 
-                double forceX = Math.abs(lastX - firstX) * 20;
-                double forceY = Math.abs(lastY - firstY) * 20;
+                double xLength = Math.abs(lastX - firstX);
+                double yLength = Math.abs(lastY - firstY);
 
                 if (lastX < firstX )
-                    forceX *= -1;
+                    xLength *= -1;
                 if (lastY > firstY)
-                    forceY *= -1;
+                    yLength *= -1;
 
                 double modulus = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
                 double force = MathLib.map(modulus, 0, 300, 0, 600);
 
-                this.engine.hit(forceX, forceY);
+                this.engine.hit(xLength, yLength);
 
                 this.hitSound.play();
             }

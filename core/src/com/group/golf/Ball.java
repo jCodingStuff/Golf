@@ -10,7 +10,7 @@ import com.group.golf.screens.CourseScreen;
 /**
  * A class to save the data of the ball
  */
-public class Ball extends Queue{
+public class Ball extends Queue<double[]>{
 
     public static final float RADIUS = 10;
 
@@ -193,7 +193,8 @@ public class Ball extends Queue{
      * @return the x-coordinate for position
      */
     public double getX() {
-//        System.out.print("X: " + movementCoord.last()[0]);
+        if (super.tail == null)
+            return x;
         return super.last()[0];
     }
 
@@ -204,7 +205,6 @@ public class Ball extends Queue{
      */
     public void setX(double x) {
         this.x = x;
-        super.setX(x);
         this.updateCollisionCircle();
     }
 
@@ -213,7 +213,8 @@ public class Ball extends Queue{
      * @return the y-coordinate for position
      */
     public double getY() {
-//        System.out.println(    "   Y: " + movementCoord.last()[1]);
+        if (super.tail == null)
+            return y;
         return super.last()[1];
     }
 
@@ -223,7 +224,6 @@ public class Ball extends Queue{
      */
     public void setY(double y) {
         this.y = y;
-        super.setY(y);
         this.updateCollisionCircle();
     }
 
