@@ -15,7 +15,7 @@ public class Physics {
     private Course course;
     private Ball ball;
     private double[] hitCoord;
-    private final int fps = 30;
+
 
     /**
      * Construct a Physics engine
@@ -54,16 +54,15 @@ public class Physics {
            accel[i] = new double[]{grav[0] + friction[0], grav[1] + friction[1]};
         }
 
-        double accelX = (accel[0][0] + 2 * accel[1][0] + 2 * accel[2][0] + accel[3][0])/6;
-        double accelY = (accel[0][1] + 2 * accel[1][1] + 2 * accel[2][1] + accel[3][1])/6;
-        ball.setAccelerationX(accelX);
-        ball.setAccelerationY(accelY);
 
-        ball.setVelocityX(velo[0][0] + h * accelX);
-        ball.setVelocityY(velo[0][1] + h * accelY);
+        ball.setAccelerationX((accel[0][0] + 2 * accel[1][0] + 2 * accel[2][0] + accel[3][0])/6);
+        ball.setAccelerationY((accel[0][1] + 2 * accel[1][1] + 2 * accel[2][1] + accel[3][1])/6);
 
-//        System.out.println("VelocityX: " + ball.getVelocityX() + "   VelocityY: " + ball.getVelocityY());
-        if (Math.abs(this.ball.getVelocityX()) < 0.0776 && Math.abs(this.ball.getVelocityY()) < 0.0776) {
+        ball.setVelocityX(velo[0][0] + h * ball.getAccelerationX());
+        ball.setVelocityY(velo[0][1] + h * ball.getAccelerationY());
+
+
+        if (Math.abs(this.ball.getVelocityX()) < 0.05 && Math.abs(this.ball.getVelocityY()) < 0.05) {
             this.ball.reset();
         }
 
@@ -71,15 +70,6 @@ public class Physics {
                                       ball.getY() + h/6 * (velo[0][1] + 2 * velo[1][1] + 2 * velo[2][1] + velo[3][1])};
         ball.addCoord(coord);
 
-//        double[] grav = gravForce(new double[]{ball.getX(),ball.getY()});
-//        double[] friction =  frictionForce(ball.getVelocityX(),ball.getVelocityY());
-
-//        ball.setAccelerationX(accelX);
-//        ball.setAccelerationY(accelY);
-
-        //this is going to be removed
-//        ball.setX(ball.getX() + h/6 * (velo[0][0] + 2 * velo[1][0] + 2 * velo[2][0] + velo[3][0]));
-//        ball.setY(ball.getY() + h/6 * (velo[0][1] + 2 * velo[1][1] + 2 * velo[2][1] + velo[3][1]));
     }
 
     private double[] updateRKStep(double[] startPos, double[] prev, double h, double k) {
@@ -107,8 +97,6 @@ public class Physics {
 
         ball.setAccelerationX(xLength/ball.getMass());
         ball.setAccelerationY(yLength/ball.getMass());
-//        ball.setVelocityX(frameRate * forceX / ball.getMass());
-//        ball.setVelocityY(frameRate * forceY / ball.getMass());
 
         RK4(frameRate);
         while (this.ball.isMoving()) {
