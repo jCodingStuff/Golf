@@ -1,10 +1,12 @@
 package com.group.golf;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Circle;
+import com.group.golf.Physics.Queue;
 import com.group.golf.math.MathLib;
 import com.group.golf.screens.CourseScreen;
+
+import java.util.Deque;
 
 /**
  * A class to save the data of the ball
@@ -12,12 +14,15 @@ import com.group.golf.screens.CourseScreen;
 public class Ball {
 
     public static final float RADIUS = 10;
+    private Queue movementCoord;
+
 
     private double mass;
     private double x;
     private double y;
     private double velocityX;
     private double velocityY;
+
 
     private Texture texture;
     private CourseScreen courseScreen;
@@ -36,6 +41,7 @@ public class Ball {
         this.velocityX = 0;
         this.velocityY = 0;
         this.collisionCircle = new Circle((float) this.x, (float) this.y, RADIUS);
+        this.movementCoord = new Queue();
     }
 
     /**
@@ -49,6 +55,12 @@ public class Ball {
         this.velocityX = 0;
         this.velocityY = 0;
         this.collisionCircle = new Circle((float) this.x, (float) this.y, RADIUS);
+        this.movementCoord = new Queue();
+
+    }
+
+    public void addCoord(double[] coord) {
+        movementCoord.enqueue(coord);
     }
 
     /**
@@ -204,5 +216,9 @@ public class Ball {
     public void setY(double y) {
         this.y = y;
         this.updateCollisionCircle();
+    }
+
+    public Queue getMovementCoord() {
+        return movementCoord;
     }
 }
