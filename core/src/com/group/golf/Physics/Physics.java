@@ -3,6 +3,8 @@ package com.group.golf.Physics;
 import com.badlogic.gdx.Gdx;
 import com.group.golf.Ball;
 import com.group.golf.Course;
+import com.group.golf.Golf;
+import com.group.golf.math.MathLib;
 
 import java.util.ArrayList;
 
@@ -15,7 +17,13 @@ public class Physics {
     private Course course;
     private Ball ball;
     private double[] hitCoord;
-
+    private Collision collision;
+    private double scaleX;
+    private double scaleY;
+    private double xoffset;
+    private double yoffset;
+    private double ballX;
+    private double ballY;
 
     /**
      * Construct a Physics engine
@@ -27,12 +35,57 @@ public class Physics {
         this.course = course;
         this.ball = ball;
         this.hitCoord = new double[2];
+        this.collision = new Collision(this.ball, this.course);
+
     }
+
+
+    /**
+     * Compute the pixel coordinates of the ball
+     */
+    public void computeBallPixels() {
+        double[] ballPixels = MathLib.toPixel(new double[]{this.ball.getX(), this.ball.getY()},
+                new double[]{this.xoffset, this.yoffset}, new double[]{this.scaleX, this.scaleY});
+        this.ballX = ballPixels[0];
+        this.ballY = ballPixels[1];
+    }
+
+    /**
+     * Compute the scale
+     */
+    public void calcScale() {
+        double dist = this.course.getDistance();
+        double limitDist = 0.40625;
+        this.scaleX = 0.000625;
+        while (dist > limitDist) {
+            this.scaleX *= 2;
+            limitDist *= 2;
+        }
+        this.scaleY = scaleX;
+    }
+
+    /**
+     * Compute the screen offsets
+     */
+    public void calcOffsets() {
+        double x1 = this.course.getStart()[0];
+        double x2 = this.course.getGoal()[0];
+        double xUnits = Golf.VIRTUAL_WIDTH / (1/this.scaleX);
+        this.xoffset = (x1 + x2 - xUnits) / 2.0;
+        double y1 = this.course.getStart()[1];
+        double y2 = this.course.getGoal()[1];
+        double yUnits = Golf.VIRTUAL_HEIGHT / (1/this.scaleY);
+        this.yoffset = (y1 + y2 - yUnits) / 2.0;
+    }
+
 
 
     //https://www.haroldserrano.com/blog/visualizing-the-runge-kutta-method
     public void RK4(double h){
-
+        calcOffsets();
+        calcScale();
+        computeBallPixels();
+        this.collision.checkForWalls(this.ballX, this.ballY);
 
 
         double[][] accel = new double[4][2];
@@ -102,7 +155,6 @@ public class Physics {
         while (this.ball.isMoving()) {
             RK4(frameRate);
         }
-
     }
 
     /**
@@ -215,5 +267,53 @@ public class Physics {
      */
     public void setHitCoord(double[] hitCoord) {
         this.hitCoord = hitCoord;
+    }
+
+    public void setScaleX(double scaleX) {
+        this.scaleX = scaleX;
+    }
+
+    public void setScaleY(double scaleY) {
+        this.scaleY = scaleY;
+    }
+
+    public void setXoffset(double xoffset) {
+        this.xoffset = xoffset;
+    }
+
+    public void setYoffset(double yoffset) {
+        this.yoffset = yoffset;
+    }
+
+    public double getScaleX() {
+        return scaleX;
+    }
+
+    public double getScaleY() {
+        return scaleY;
+    }
+
+    public double getXoffset() {
+        return xoffset;
+    }
+
+    public double getYoffset() {
+        return yoffset;
+    }
+
+    public void setBallX(double ballX) {
+        this.ballX = ballX;
+    }
+
+    public void setBallY(double ballY) {
+        this.ballY = ballY;
+    }
+
+    public double getBallX() {
+        return ballX;
+    }
+
+    public double getBallY() {
+        return ballY;
     }
 }

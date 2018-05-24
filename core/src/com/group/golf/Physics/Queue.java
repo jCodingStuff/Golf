@@ -3,6 +3,7 @@ package com.group.golf.Physics;
 /**
  * Created by alex_ on 23-May-18.
  */
+
 public class Queue<E> {
     protected node<E> head;
     protected node<E> tail;

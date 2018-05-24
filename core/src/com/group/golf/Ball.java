@@ -93,8 +93,8 @@ public class Ball extends Queue<double[]>{
 
     public void render() {
         this.courseScreen.getGame().batch.begin();
-        double[] offsets = new double[]{this.courseScreen.getXoffset(), this.courseScreen.getYoffset()};
-        double[] scales = new double[]{this.courseScreen.getScaleX(), this.courseScreen.getScaleY()};
+        double[] offsets = new double[]{this.courseScreen.getEngine().getXoffset(), this.courseScreen.getEngine().getYoffset()};
+        double[] scales = new double[]{this.courseScreen.getEngine().getScaleX(), this.courseScreen.getEngine().getScaleY()};
         double[] real = MathLib.toPixel(new double[]{this.x, this.y}, offsets, scales);
         this.courseScreen.getGame().batch.draw(this.texture, (float) real[0] - RADIUS,
                 (float) real[1] - RADIUS, RADIUS * 2,RADIUS * 2);
