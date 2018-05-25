@@ -83,17 +83,30 @@ public class MathLib {
      * @return the matrix resulting of the multiplication of a and b
      */
  	public static double[][] multiply(double[][] a, double[][] b) {
- 		// Create new matrix to store added values
-        double[][] C = new double[b.length][a[0].length];
-        for (int i = 0; i < b.length; i++) {
-            for (int j = 0; j < a[0].length; j++) {
-                for (int k = 0; k < b[0].length; k++) {
-                    C[i][j] += a[i][k] * b[k][j];
-                }
+ 		double[][] result = new double[a.length][b[0].length];
+ 		for (int i = 0; i < result.length; i++) {
+ 		    for (int j = 0; j < result[i].length; j++) {
+ 		        result[i][j] = rowByColumn(a, b, i, j);
             }
         }
-        return C;
+ 		return result;
  	}
+
+    /**
+     * Multiply the row of a matrix by the column of another matrix
+     * @param matrix1 the first matrix
+     * @param matrix2 the second matrix
+     * @param row the row of the first matrix
+     * @param column the column of the second matrix
+     * @return the dot-product of row and column
+     */
+ 	public static double rowByColumn(double[][] matrix1, double[][] matrix2, int row, int column) {
+ 	    double result = 0;
+ 	    for (int j = 0; j < matrix1[row].length; j++) {
+ 	        result += matrix1[row][j] * matrix2[j][column];
+        }
+        return result;
+    }
 
     /**
      * Check if two double arrays match
