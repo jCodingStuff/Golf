@@ -54,8 +54,6 @@ public class Ball extends Queue<double[]>{
         this.velocityX = 0;
         this.velocityY = 0;
         this.collisionCircle = new Circle((float) this.x, (float) this.y, RADIUS);
-//        this.movementCoord = new Queue();
-
     }
 
     public double[] dequeue() {
@@ -93,8 +91,8 @@ public class Ball extends Queue<double[]>{
 
     public void render() {
         this.courseScreen.getGame().batch.begin();
-        double[] offsets = new double[]{this.courseScreen.getEngine().getXoffset(), this.courseScreen.getEngine().getYoffset()};
-        double[] scales = new double[]{this.courseScreen.getEngine().getScaleX(), this.courseScreen.getEngine().getScaleY()};
+        double[] offsets = new double[]{this.courseScreen.getXoffset(), this.courseScreen.getYoffset()};
+        double[] scales = new double[]{this.courseScreen.getScaleX(), this.courseScreen.getScaleY()};
         double[] real = MathLib.toPixel(new double[]{this.x, this.y}, offsets, scales);
         this.courseScreen.getGame().batch.draw(this.texture, (float) real[0] - RADIUS,
                 (float) real[1] - RADIUS, RADIUS * 2,RADIUS * 2);
@@ -197,6 +195,8 @@ public class Ball extends Queue<double[]>{
             return x;
         return super.last()[0];
     }
+
+
 
 
     /**

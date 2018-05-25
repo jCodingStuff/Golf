@@ -40,6 +40,11 @@ public class Queue<E> {
         return tail.element;
     }
 
+    public void clear() {
+        head = null;
+        tail = null;
+        size = 0;
+    }
 
     public int getSize() {
         return size;

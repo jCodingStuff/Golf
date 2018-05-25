@@ -20,6 +20,8 @@ public class Collision {
     private double lastX;
     private double lastY;
 
+
+
     /**
      * Create a new instace of Collision
      * @param ball the ball to evaluate
@@ -50,13 +52,11 @@ public class Collision {
      */
     public void checkForWalls(double ballX, double ballY) {
         if (ballX < Ball.RADIUS || ballX > Golf.VIRTUAL_WIDTH - Ball.RADIUS) {
-            System.out.println("x wall");
-
             this.ball.setVelocityX(-this.ball.getVelocityX());
 
         }
         if (ballY < Ball.RADIUS || ballY > Golf.VIRTUAL_HEIGHT - Ball.RADIUS) {
-            System.out.println("y wall");
+//            System.out.println("y wall");
             this.ball.setVelocityY(-this.ball.getVelocityY());
         }
     }
@@ -87,9 +87,15 @@ public class Collision {
             }
         }
 
-        // Make the current position of the ball the last
-        this.lastX = ballX;
-        this.lastY = ballY;
+
+        if (water) {
+            // Make the current position of the ball the last
+            this.lastX = Physics.hitCoord[0];
+            this.lastY = Physics.hitCoord[1];
+        } else {
+            this.lastX = ballX;
+            this.lastY = ballY;
+        }
 
         return water;
     }

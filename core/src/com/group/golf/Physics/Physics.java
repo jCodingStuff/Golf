@@ -16,14 +16,13 @@ import java.util.ArrayList;
 public class Physics {
     private Course course;
     private Ball ball;
-    private double[] hitCoord;
     private Collision collision;
-    private double scaleX;
-    private double scaleY;
-    private double xoffset;
-    private double yoffset;
-    private double ballX;
-    private double ballY;
+    private double[] offsets;
+    private double[] scales;
+    private boolean water;
+    public static double[] hitCoord;
+
+
 
     /**
      * Construct a Physics engine
@@ -40,54 +39,12 @@ public class Physics {
     }
 
 
-    /**
-     * Compute the pixel coordinates of the ball
-     */
-    public void computeBallPixels() {
-        double[] ballPixels = MathLib.toPixel(new double[]{this.ball.getX(), this.ball.getY()},
-                new double[]{this.xoffset, this.yoffset}, new double[]{this.scaleX, this.scaleY});
-        this.ballX = ballPixels[0];
-        this.ballY = ballPixels[1];
-    }
 
-    /**
-     * Compute the scale
-     */
-    public void calcScale() {
-        double dist = this.course.getDistance();
-        double limitDist = 0.40625;
-        this.scaleX = 0.000625;
-        while (dist > limitDist) {
-            this.scaleX *= 2;
-            limitDist *= 2;
-        }
-        this.scaleY = scaleX;
-    }
-
-    /**
-     * Compute the screen offsets
-     */
-    public void calcOffsets() {
-        double x1 = this.course.getStart()[0];
-        double x2 = this.course.getGoal()[0];
-        double xUnits = Golf.VIRTUAL_WIDTH / (1/this.scaleX);
-        this.xoffset = (x1 + x2 - xUnits) / 2.0;
-        double y1 = this.course.getStart()[1];
-        double y2 = this.course.getGoal()[1];
-        double yUnits = Golf.VIRTUAL_HEIGHT / (1/this.scaleY);
-        this.yoffset = (y1 + y2 - yUnits) / 2.0;
-    }
 
 
 
     //https://www.haroldserrano.com/blog/visualizing-the-runge-kutta-method
     public void RK4(double h){
-        calcOffsets();
-        calcScale();
-        computeBallPixels();
-        this.collision.checkForWalls(this.ballX, this.ballY);
-
-
         double[][] accel = new double[4][2];
         accel[0] = new double[]{ball.getAccelerationX(),ball.getAccelerationY()};
 
@@ -95,7 +52,6 @@ public class Physics {
         velo[0] = new double[]{ball.getVelocityX(),ball.getVelocityY()};
 
         for (int i = 1; i < 4; i++) {
-            System.out.println(i);
            double[] v = updateRKStep(velo[0],accel[i-1],h,i);
            velo[i] = v;
 
@@ -114,14 +70,27 @@ public class Physics {
         ball.setVelocityX(velo[0][0] + h * ball.getAccelerationX());
         ball.setVelocityY(velo[0][1] + h * ball.getAccelerationY());
 
+        ball.limit(this.course.getVmax());
 
-        if (Math.abs(this.ball.getVelocityX()) < 0.05 && Math.abs(this.ball.getVelocityY()) < 0.05) {
-            this.ball.reset();
-        }
 
         double[] coord = new double[]{ball.getX() + h/6 * (velo[0][0] + 2 * velo[1][0] + 2 * velo[2][0] + velo[3][0]),
                                       ball.getY() + h/6 * (velo[0][1] + 2 * velo[1][1] + 2 * velo[2][1] + velo[3][1])};
         ball.addCoord(coord);
+
+        double[] ballCoords = MathLib.toPixel(new double[]{ball.getX(),ball.getY()},offsets,scales);
+        this.collision.checkForWalls(ballCoords[0], ballCoords[1]);
+
+        if (this.collision.ballInWater()) {
+            ball.reset();
+            water = true;
+        }
+
+
+        if (Math.abs(this.ball.getVelocityX()) < 0.07 && Math.abs(this.ball.getVelocityY()) < 0.07) {
+            this.ball.reset();
+        }
+
+
 
     }
 
@@ -139,6 +108,7 @@ public class Physics {
      * @param yLength the length that the mouse was dragged vertically
      */
     public void hit(double xLength, double yLength) {
+        water = false;
 
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
@@ -152,9 +122,10 @@ public class Physics {
         ball.setAccelerationY(yLength/ball.getMass());
 
         RK4(frameRate);
-        while (this.ball.isMoving()) {
+        while (this.ball.isMoving() && !water) {
             RK4(frameRate);
         }
+
     }
 
     /**
@@ -181,6 +152,7 @@ public class Physics {
     public double[] frictionForce(double velocityX, double velocityY) {
         double multiplier = - this.course.getMu() * this.course.getG()
                 / normalLength(velocityX,velocityY);
+//        System.out.println(multiplier * velocityX);
         return new double[]{(multiplier * velocityX) ,(multiplier * velocityY)};
     }
 
@@ -269,51 +241,20 @@ public class Physics {
         this.hitCoord = hitCoord;
     }
 
-    public void setScaleX(double scaleX) {
-        this.scaleX = scaleX;
+
+    public void setOffsets(double[] offsets) {
+        this.offsets = offsets;
     }
 
-    public void setScaleY(double scaleY) {
-        this.scaleY = scaleY;
+    public void setScales(double[] scales) {
+        this.scales = scales;
     }
 
-    public void setXoffset(double xoffset) {
-        this.xoffset = xoffset;
+    public boolean isWater() {
+        return water;
     }
 
-    public void setYoffset(double yoffset) {
-        this.yoffset = yoffset;
-    }
-
-    public double getScaleX() {
-        return scaleX;
-    }
-
-    public double getScaleY() {
-        return scaleY;
-    }
-
-    public double getXoffset() {
-        return xoffset;
-    }
-
-    public double getYoffset() {
-        return yoffset;
-    }
-
-    public void setBallX(double ballX) {
-        this.ballX = ballX;
-    }
-
-    public void setBallY(double ballY) {
-        this.ballY = ballY;
-    }
-
-    public double getBallX() {
-        return ballX;
-    }
-
-    public double getBallY() {
-        return ballY;
+    public void setWater(boolean water) {
+        this.water = water;
     }
 }
