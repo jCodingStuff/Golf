@@ -53,10 +53,8 @@ public class Collision {
     public void checkForWalls(double ballX, double ballY) {
         if (ballX < Ball.RADIUS || ballX > Golf.VIRTUAL_WIDTH - Ball.RADIUS) {
             this.ball.setVelocityX(-this.ball.getVelocityX());
-
         }
         if (ballY < Ball.RADIUS || ballY > Golf.VIRTUAL_HEIGHT - Ball.RADIUS) {
-//            System.out.println("y wall");
             this.ball.setVelocityY(-this.ball.getVelocityY());
         }
     }

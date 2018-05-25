@@ -20,9 +20,8 @@ public class Physics {
     private double[] offsets;
     private double[] scales;
     private boolean water;
+
     public static double[] hitCoord;
-
-
 
     /**
      * Construct a Physics engine
@@ -39,10 +38,11 @@ public class Physics {
     }
 
 
-
-
-
-
+    /**
+     * Sets the acceleration , velocity and position
+     * after an h time-step using runge-kutta 4th order
+     * @param h time step
+     */
     //https://www.haroldserrano.com/blog/visualizing-the-runge-kutta-method
     public void RK4(double h){
         double[][] accel = new double[4][2];
@@ -77,7 +77,7 @@ public class Physics {
                                       ball.getY() + h/6 * (velo[0][1] + 2 * velo[1][1] + 2 * velo[2][1] + velo[3][1])};
         ball.addCoord(coord);
 
-        double[] ballCoords = MathLib.toPixel(new double[]{ball.getX(),ball.getY()},offsets,scales);
+        double[] ballCoords = MathLib.toPixel(coord,offsets,scales);
         this.collision.checkForWalls(ballCoords[0], ballCoords[1]);
 
         if (this.collision.ballInWater()) {
@@ -113,7 +113,7 @@ public class Physics {
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
 
-        double frameRate = 0.04;
+        double frameRate = 0.04; //
 
         xLength *= 90;
         yLength *= 90;
