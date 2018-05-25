@@ -39,6 +39,7 @@ public class GeneticBot implements Bot {
     // Algorithms
     private CrossOver crossOver;
     private Mutation mutation;
+    private ScoreComputer computer;
 
     /**
      * Create a new instance of GeneticBot
@@ -55,6 +56,7 @@ public class GeneticBot implements Bot {
 
         this.crossOver = new AverageCrossOver(this);
         this.mutation = new AlterMutation();
+        this.computer = new InverseScoreComputer();
     }
 
     @Override
@@ -93,7 +95,7 @@ public class GeneticBot implements Bot {
         while (true) {
             int generations = gCounter + 1;
             System.out.println("Generations: " + generations);
-            this.computeScore();
+            this.computer.compute(this.course, this.population);
             if (this.goalReached()) {
                 reached = true;
                 break;
@@ -166,34 +168,6 @@ public class GeneticBot implements Bot {
         }
         this.fillLandings(genes, landings);
         return new Individual(genes, landings);
-    }
-
-    /**
-     * Compute score for each individual of the population
-     */
-    private void computeScore() {
-        double[] goal = this.course.getGoal();
-        for (int i = 0; i < this.population.length; i++) {
-            JVector2[] landings = this.population[i].getLandings();
-            double closestDist = Double.MAX_VALUE;
-            int closestIndex = 0;
-            for (int j = 1; j < landings.length; j++) {
-                double dist = JVector2.dist(landings[j].getX(), landings[j].getY(), goal[0], goal[1]);
-                if (dist < closestDist) {
-                    closestDist = dist;
-                    closestIndex = j;
-                }
-            }
-            this.population[i].setLastMove(closestIndex - 1);
-            double score;
-            if (closestIndex == 0) {
-                score = 0;
-            }
-            else {
-                score = (1/closestIndex) + (1/closestDist);
-            }
-            this.population[i].setScore(score);
-        }
     }
 
     /**

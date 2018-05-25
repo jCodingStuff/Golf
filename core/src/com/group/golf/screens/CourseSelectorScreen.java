@@ -110,7 +110,9 @@ public class CourseSelectorScreen implements Screen {
 
                 Ball ball = new Ball(40);
 
-                this.game.setScreen(new CourseScreen(this.game, course, ball));
+                Bot bot = new GeneticBot(course, ball);
+
+                this.game.setScreen(new CourseScreen(this.game, course, ball, bot));
 
                 this.screen.dispose();
             }
