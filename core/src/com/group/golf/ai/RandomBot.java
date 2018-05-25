@@ -63,6 +63,7 @@ public class RandomBot implements Bot{
         double choice;
         for (int i = 0; i < numGuesses; i++){
             choice = this.rand.nextDouble() * MAXFORCE;
+
             // choice closer than best
             if (Math.abs(choice - best) < Math.abs(closest - best)) closest = choice;
         }
@@ -74,8 +75,12 @@ public class RandomBot implements Bot{
     @Override
     public void makeMove() {
         double[] goal = this.course.getGoal();
+        System.out.println(Arrays.toString(goal));
+        forceX = GetBestRandomChoice(goal[0]);
+        forceY = GetBestRandomChoice(goal[1]);
         while(!checkPath()){
             forceX = GetBestRandomChoice(goal[0]);
+            System.out.println(forceX);
             forceY = GetBestRandomChoice(goal[1]);
         }
         this.engine.hit(forceX, forceY);
