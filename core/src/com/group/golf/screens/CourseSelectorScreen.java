@@ -60,7 +60,7 @@ public class CourseSelectorScreen implements Screen {
         play = new TextButton("Play", skin);
         importbtn = new TextButton("Import", skin);
         design = new TextButton("Design", skin);
-        bot = new TextButton("Random Bot", skin);
+        bot = new TextButton("Bot", skin);
 
         play.setPosition(300, 400);
         importbtn.setPosition(300, 300);
@@ -150,32 +150,29 @@ public class CourseSelectorScreen implements Screen {
         design.addListener(new DesignListener(game, this));
 
 
-        // Does not start the random bot yet
-        class RandomBotListener extends ChangeListener{
+
+        class BotListener extends ChangeListener{
             final Golf game;
             private Screen screen;
-            public RandomBotListener(final Golf game, Screen screen){
+            public BotListener(final Golf game, Screen screen){
                 this.game = game;
                 this.screen = screen;
             }
             @Override
             public void changed (ChangeEvent event, Actor actor) {
-                String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                double[] start = new double[]{4, 3};
-                double[] goal = new double[]{0, 1};
-                Function function = new Function(formula);
-                Computable[][] functions = new Computable[1][1];
-                functions[0][0] = function;
-                Course course = new Course(functions, 9.81, 0.95, 80, start, goal, 0.5);
+
+
+
                 design.setTouchable(Touchable.disabled);
                 importbtn.setTouchable(Touchable.disabled);
                 play.setTouchable(Touchable.disabled);
-                this.game.setScreen(new CourseScreen(this.game, course, new Ball(40)));
+
+                this.game.setScreen(new BotScreen(this.game));
                 this.screen.dispose();
             }
 
         }
-        bot.addListener(new RandomBotListener(game, this));
+        bot.addListener(new BotListener(game, this));
     }
 
     @Override

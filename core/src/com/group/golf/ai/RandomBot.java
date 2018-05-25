@@ -7,6 +7,7 @@ import com.group.golf.Physics.Physics;
 import com.group.golf.ai.Bot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 
@@ -19,11 +20,14 @@ public class RandomBot implements Bot{
 
     private Ball ball;
     private Physics engine;
+    private Collision collision;
+    private final Course course;
     private Random rand;
     double MAXFORCE = 100.0;
     int numGuesses = 10;
     double forceX = 0;
     double forceY = 0;
+
 
 /**
  * Create a new RandomBot instance
@@ -31,16 +35,19 @@ public class RandomBot implements Bot{
  * @param ball the BALL instance
  */
 
-    public RandomBot(Physics engine, Ball ball){
+    public RandomBot(Course course, Physics engine, Ball ball){
         this.ball = ball;
         this.engine = engine;
         this.rand = new Random();
+        this.course = course;
     }
+    @Override
     public void setCollision(Collision collision){
-
+        this.collision = collision;
     }
+    @Override
     public void setPhysics(Physics physics){
-
+            this.engine = physics;
     }
     private double GetRandomForce(double maximum){
         return this.rand.nextDouble() * maximum;
@@ -59,15 +66,17 @@ public class RandomBot implements Bot{
             // choice closer than best
             if (Math.abs(choice - best) < Math.abs(closest - best)) closest = choice;
         }
+        System.out.println(closest);
         return closest;
     }
 
 
     @Override
     public void makeMove() {
+        double[] goal = this.course.getGoal();
         while(!checkPath()){
-            forceX = GetBestRandomChoice(this.engine.getCourse().getGoal()[0]);
-            forceY = GetBestRandomChoice(this.engine.getCourse().getGoal()[1]);
+            forceX = GetBestRandomChoice(goal[0]);
+            forceY = GetBestRandomChoice(goal[1]);
         }
         this.engine.hit(forceX, forceY);
     }
