@@ -17,6 +17,7 @@ import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.Physics.Physics;
 import com.group.golf.ai.Bot;
+import com.group.golf.ai.DumBot;
 import com.group.golf.ai.GeneticBot;
 import com.group.golf.ai.RandomBot;
 import com.group.golf.math.Computable;
@@ -115,6 +116,40 @@ public class BotScreen implements Screen {
             }
             genetic.addListener(new GeneticBotListener(game, this));
 
+            class RandomBotListener extends ChangeListener {
+                final Golf game;
+                private Screen screen;
+
+                public RandomBotListener(final Golf game, Screen screen) {
+                    this.game = game;
+                    this.screen = screen;
+                }
+
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+
+                    String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
+                    double[] start = new double[]{4, 3};
+                    double[] goal = new double[]{0, 1};
+                    Function function = new Function(formula);
+                    Computable[][] functions = new Computable[1][1];
+                    functions[0][0] = function;
+                    Course course = new Course(functions, 9.81, 0.95, 80, start, goal, 0.5);
+                    genetic.setTouchable(Touchable.disabled);
+                    random.setTouchable(Touchable.disabled);
+                    martijn.setTouchable(Touchable.disabled);
+                    dum.setTouchable(Touchable.disabled);
+                    back.setTouchable(Touchable.disabled);
+                    Ball ball = new Ball(40);
+
+                    Bot ranBot = new RandomBot(course, engine, ball);
+                    this.game.setScreen(new CourseScreen(this.game, course, new Ball(40), ranBot));
+                    this.screen.dispose();
+                }
+
+            }
+            random.addListener(new RandomBotListener(game, this));
+
             class MartijnListener extends ChangeListener {
                 final Golf game;
                 private Screen screen;
@@ -170,8 +205,9 @@ public class BotScreen implements Screen {
                     martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
-                    Bot ranBot = new RandomBot(course, engine, ball);
-                    this.game.setScreen(new CourseScreen(this.game, course, new Ball(40), ranBot));
+                    Ball ball = new Ball(40);
+                    Bot dumBot = new DumBot(course, ball);
+                    this.game.setScreen(new CourseScreen(this.game, course, ball, dumBot));
                     this.screen.dispose();
                 }
 
@@ -189,21 +225,15 @@ public class BotScreen implements Screen {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
 
-                    String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                    double[] start = new double[]{4, 3};
-                    double[] goal = new double[]{0, 1};
-                    Function function = new Function(formula);
-                    Computable[][] functions = new Computable[1][1];
-                    functions[0][0] = function;
-                    Course course = new Course(functions, 9.81, 0.95, 80, start, goal, 0.5);
+
                     genetic.setTouchable(Touchable.disabled);
                     random.setTouchable(Touchable.disabled);
                     martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
-                    Bot ranBot = new RandomBot(course, engine, ball);
-                    this.game.setScreen(new CourseScreen(this.game, course, new Ball(40), ranBot));
-                    this.screen.dispose();
+
+                    this.game.setScreen(new CourseSelectorScreen(this.game));
+
                 }
 
             }
