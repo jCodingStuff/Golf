@@ -46,45 +46,72 @@ public class Physics {
     }
 
 
+    class Derivative {
+        double dx;  // dx/dt = velocity
+        double dy;
+        double dvx;  // dv/dt = acceleration
+        double dvy;
 
-    /**
-     * Sets the acceleration , velocity and position
-     * after an h time-step using runge-kutta 4th order
-     * @param h time step
-     */
-    //https://www.haroldserrano.com/blog/visualizing-the-runge-kutta-method
-    public void RK4(double h){
-        double[][] accel = new double[4][2];
-        accel[0] = new double[]{ball.getAccelerationX(),ball.getAccelerationY()};
-
-        double[][] velo = new double[4][2];
-        velo[0] = new double[]{ball.getVelocityX(),ball.getVelocityY()};
-
-        for (int i = 1; i < 4; i++) {
-           double[] v = updateRKStep(velo[0],accel[i-1],h,i);
-           velo[i] = v;
-
-           double[] p = updateRKStep(ball.last(),v,h,i);
-
-           double[] grav = gravForce(p);
-           double[] friction = frictionForce(v[0],v[1]);
-
-           accel[i] = new double[]{grav[0] + friction[0], grav[1] + friction[1]};
+        Derivative() {
         }
+        Derivative(double dx,double dy,double dvx,double dvy) {
+            this.dx = dx;
+            this.dy = dy;
+            this.dvx = dvx;
+            this.dvy = dvy;
+        }
+    }
 
+    public Derivative evaluate(double[] coord,double[] velocities, double dt, Derivative d) {
 
-        ball.setAccelerationX((accel[0][0] + 2 * accel[1][0] + 2 * accel[2][0] + accel[3][0])/6);
-        ball.setAccelerationY((accel[0][1] + 2 * accel[1][1] + 2 * accel[2][1] + accel[3][1])/6);
+        coord[0] = coord[0] + d.dx*dt;
+        coord[1] = coord[1] + d.dy*dt;
+        velocities[0] = velocities[0] + d.dvx*dt;
+        velocities[1] = velocities[1] + d.dvy*dt;
 
-        ball.setVelocityX(velo[0][0] + h * ball.getAccelerationX());
-        ball.setVelocityY(velo[0][1] + h * ball.getAccelerationY());
+        Derivative output = new Derivative();
+        output.dx = velocities[0];
+        output.dy = velocities[1];
 
-        ball.limit(this.course.getVmax());
+        double[] helper = acceleration(coord,velocities);
+        output.dvx = helper[0];
+        output.dvy = helper[1];
+        return output;
+    }
 
+    public double[] acceleration(double[] coord, double[] velocities) {
+        double[] gravForce = gravForce(coord);
+        double[] frictionForce = frictionForce(velocities);
+        return new double[]{gravForce[0]+frictionForce[0],gravForce[1]+frictionForce[1]};
+    }
 
-        double[] coord = new double[]{ball.getX() + h/6 * (velo[0][0] + 2 * velo[1][0] + 2 * velo[2][0] + velo[3][0]),
-                                      ball.getY() + h/6 * (velo[0][1] + 2 * velo[1][1] + 2 * velo[2][1] + velo[3][1])};
-        ball.addCoord(coord);
+    //https://www.haroldserrano.com/blog/visualizing-the-runge-kutta-method
+    public void integrate(double[] coord,double[] velocities,  double dt) {
+
+        Derivative k1,k2,k3,k4;
+        k1 = evaluate(coord,velocities,0.0,new Derivative(0,0,0,0));
+        k2 = evaluate(coord,velocities,dt*0.5,k1);
+        k3 = evaluate(coord,velocities,dt*0.5,k2);
+        k4 = evaluate(coord,velocities,dt,k3);
+
+        double dxdt = 1.0/6.0 * (k1.dx + 2.0*(k2.dx + k3.dx) + k4.dx);
+        double dydt = 1.0/6.0 * (k1.dy + 2.0*(k2.dy + k3.dy) + k4.dy);
+
+        double dvxdt = 1.0/6.0 * (k1.dvx + 2.0*(k2.dvx + k3.dvx) + k4.dvx);
+        double dvydt = 1.0/6.0 * (k1.dvy + 2.0*(k2.dvy + k3.dvy) + k4.dvy);
+
+        this.ball.limit(this.course.getVmax());
+
+        double[] newCoord = new double[]{coord[0]+dxdt*dt,
+                                         coord[1]+dydt*dt};
+
+        ball.addCoord(newCoord);
+
+        double[] newVelocities = new double[]{velocities[0]+dvxdt*dt,
+                                              velocities[1]+dvydt*dt};
+        ball.setVelocityX(newVelocities[0]);
+        ball.setVelocityY(newVelocities[1]);
+
 
         double[] ballCoords = MathLib.toPixel(coord,offsets,scales);
         this.collision.checkForWalls(ballCoords[0], ballCoords[1]);
@@ -94,100 +121,56 @@ public class Physics {
             water = true;
         }
 
+        System.out.println("x  " + newVelocities[0] + "   y   " + newVelocities[1]);
 
-//        if (Math.abs(this.ball.getVelocityX()) < 0.07 && Math.abs(this.ball.getVelocityY()) < 0.07) {
-//            this.ball.reset();
-//        }
-
-
-
-    }
-
-    private double[] updateRKStep(double[] startPos, double[] prev, double h, double k) {
-        if (k < 3) {
-            return new double[]{startPos[0] + prev[0] * h/2,startPos[1] + prev[1] * h/2};
-        } else {
-            return new double[]{startPos[0] + prev[0] * h, startPos[1] + prev[1] * h};
+        if (Math.abs(this.ball.getVelocityX()) < 0.06 && Math.abs(this.ball.getVelocityY()) < 0.06) {
+            this.ball.reset();
         }
+
+
     }
 
-    /**
-     * Hit the ball
-     * @param xLength the length that the mouse was dragged horizontally
-     * @param yLength the length that the mouse was dragged vertically
-     */
     public void hit(double xLength, double yLength) {
-        water = false;
-
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
 
-        ball.addCoord(hitCoord);
         double frameRate = 0.04;
 
-        xLength = 100000;
-        yLength = 100000;
+        this.ball.setVelocityX(xLength/this.ball.getMass());
+        this.ball.setVelocityY(yLength/this.ball.getMass());
+        double[] velocities = new double[]{this.ball.getVelocityX(),this.ball.getVelocityY()};
 
-        ball.setAccelerationX(xLength/ball.getMass());
-        ball.setAccelerationY(yLength/ball.getMass());
+        ball.addCoord(hitCoord);
 
+        double timer = 0;
+        integrate(hitCoord,velocities,frameRate);
+        timer += frameRate;
 
-        RK4(frameRate);
-
-        double modulusV = normalLength(ball.getVelocityX(),ball.getVelocityY());
-        double modulusA = normalLength(ball.getAccelerationX(),ball.getAccelerationY());
-
-        time += frameRate;
-
-        velocities.writeString(Double.toString(modulusV) + " \n",true);
-        time_steps.writeString(Double.toString(time) + " \n",true);
-        accelerations.writeString(Double.toString(modulusA) + "\n",true);
-
-        while (this.ball.isMoving() && !water) {
-            RK4(frameRate);
-
-            modulusV = normalLength(ball.getVelocityX(),ball.getVelocityY());
-            modulusA = normalLength(ball.getAccelerationX(),ball.getAccelerationY());
-
-            time += frameRate*1000;
-
-            velocities.writeString(Double.toString(modulusV) + " \n",true);
-            time_steps.writeString(Double.toString(time) + " \n",true);
-            accelerations.writeString(Double.toString(modulusA) + "\n",true);
-
-            System.out.println(time);
-            if (time>20000)
-                ball.reset();
+        while (this.ball.isMoving() && timer < 10) {
+            velocities = new double[]{this.ball.getVelocityX(),this.ball.getVelocityY()};
+            integrate(this.ball.last(),velocities,frameRate);
+            timer += frameRate;
         }
 
-    }
 
-    /**
-     * Update the ball state to the following instance of time
-     * @param delta delta time
-     */
-    public void movement(float delta) {
-
-        RK4(delta);
-
-//        System.out.println("VelocityX: " + ball.getVelocityX() + "   VelocityY: " + ball.getVelocityY());
-//        if (Math.abs(this.ball.getVelocityX()) < 0.0776 && Math.abs(this.ball.getVelocityY()) < 0.0776) {
-//            this.ball.reset();
-//        }
 
     }
+
+
+
+
+
 
     /**
      * Compute the friction force that oposes to the movement of the ball
-     * @param velocityX the x-component of the velocity of the ball
-     * @param velocityY the y-component of the velocity of the ball
-     * @return a Vector2 instace containig the friction force
+     * @param velocities an array containing the x - velocities and y - velocities
+     * @return a double[] instace containig the friction force
      */
-    public double[] frictionForce(double velocityX, double velocityY) {
+    public double[] frictionForce(double[] velocities) {
         double multiplier = - this.course.getMu() * this.course.getG()
-                / normalLength(velocityX,velocityY);
+                / normalLength(velocities[0],velocities[1]);
 //        System.out.println(multiplier * velocityX);
-        return new double[]{(multiplier * velocityX) ,(multiplier * velocityY)};
+        return new double[]{(multiplier * velocities[0]) ,(multiplier * velocities[1])};
     }
 
     /**
