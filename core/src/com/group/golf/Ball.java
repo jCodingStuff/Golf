@@ -201,9 +201,9 @@ public class Ball extends Queue<double[]>{
      * @return the x-coordinate for position
      */
     public double getX() {
-        if (super.tail == null)
+//        if (super.tail == null)
             return x;
-        return super.last()[0];
+//        return super.last()[0];
     }
 
 
@@ -223,9 +223,9 @@ public class Ball extends Queue<double[]>{
      * @return the y-coordinate for position
      */
     public double getY() {
-        if (super.tail == null)
+//        if (super.tail == null)
             return y;
-        return super.last()[1];
+//        return super.last()[1];
     }
 
     /**
@@ -246,6 +246,7 @@ public class Ball extends Queue<double[]>{
         this.x = x;
         this.y = y;
         this.updateCollisionCircle();
+    }
 
     public void setAccelerationX(double accelerationX) {
         this.accelerationX = accelerationX;

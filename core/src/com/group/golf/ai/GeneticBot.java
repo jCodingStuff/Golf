@@ -81,7 +81,6 @@ public class GeneticBot implements Bot {
     public void setCollision(Collision collision) {
         this.collision = collision;
         this.virtualCollision = new Collision(collision);
-        this.virtualCollision.setBall(this.virtualBall);
         this.startEvolution();
     }
 
@@ -224,7 +223,7 @@ public class GeneticBot implements Bot {
         this.virtualBall.reset();
         this.virtualBall.setPosition(landings[0].getX(), landings[0].getY());
         for (int i = 1; i < landings.length; i++) {
-            this.simulateShot(forces[i-1], landings[i-1]);
+            this.simulateShot(forces[i-1]);
             landings[i] = new JVector2(this.virtualBall.getX(), this.virtualBall.getY());
         }
     }
@@ -232,15 +231,14 @@ public class GeneticBot implements Bot {
     /**
      * Simulate a shot
      */
-    private void simulateShot(JVector2 force, JVector2 last) {
+    private void simulateShot(JVector2 force) {
         this.virtualEngine.hit(force.getX(), force.getY());
-        while (this.virtualBall.isMoving()) {
-            this.virtualCollision.checkForWalls();
-            this.virtualEngine.movement(Gdx.graphics.getDeltaTime(), false);
-            this.virtualBall.limit(this.course.getVmax());
-            if (this.virtualCollision.ballInWater()) {
-                this.virtualBall.reset();
-                this.virtualBall.setPosition(last.getX(), last.getY());
+        while (this.virtualBall.getSize() != 0) {
+            this.virtualBall.dequeue();
+            if (this.virtualEngine.isWater() && this.virtualBall.getSize() == 0) {
+                this.virtualBall.clear();
+                this.virtualBall.setX(this.engine.getHitCoord()[0]);
+                this.virtualBall.setY(this.engine.getHitCoord()[1]);
             }
         }
     }

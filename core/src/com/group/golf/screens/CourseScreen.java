@@ -186,8 +186,9 @@ public class CourseScreen implements Screen {
 
         // Setup engine and collision system
         this.engine = new Physics(this.course, this.ball);
-        this.collision = new Collision(this.ball, this.course, new double[]{this.xoffset, this.yoffset},
-                new double[]{this.scaleX, this.scaleY});
+        this.collision = new Collision(this.ball, this.course);
+        this.engine.setOffsets(new double[]{this.xoffset, this.yoffset});
+        this.engine.setScales(new double[]{this.scaleX, this.scaleY});
 
     }
 
@@ -341,6 +342,7 @@ public class CourseScreen implements Screen {
             this.ball.dequeue();
         }
 
+        this.computeBallPixels();
 
         // Check for water
         if (this.engine.isWater() && this.ball.getSize() == 0) {

@@ -56,7 +56,7 @@ public class Physics {
            double[] v = updateRKStep(velo[0],accel[i-1],h,i);
            velo[i] = v;
 
-           double[] p = updateRKStep(new double[]{ball.getX(),ball.getY()},v,h,i);
+           double[] p = updateRKStep(ball.last(),v,h,i);
 
            double[] grav = gravForce(p);
            double[] friction = frictionForce(v[0],v[1]);
@@ -74,8 +74,8 @@ public class Physics {
         ball.limit(this.course.getVmax());
 
 
-        double[] coord = new double[]{ball.getX() + h/6 * (velo[0][0] + 2 * velo[1][0] + 2 * velo[2][0] + velo[3][0]),
-                                      ball.getY() + h/6 * (velo[0][1] + 2 * velo[1][1] + 2 * velo[2][1] + velo[3][1])};
+        double[] coord = new double[]{ball.last()[0] + h/6 * (velo[0][0] + 2 * velo[1][0] + 2 * velo[2][0] + velo[3][0]),
+                                      ball.last()[1] + h/6 * (velo[0][1] + 2 * velo[1][1] + 2 * velo[2][1] + velo[3][1])};
         ball.addCoord(coord);
 
         double[] ballCoords = MathLib.toPixel(coord,offsets,scales);
@@ -113,6 +113,8 @@ public class Physics {
 
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
+
+        ball.addCoord(hitCoord);
 
         double frameRate = 0.04; //
 
