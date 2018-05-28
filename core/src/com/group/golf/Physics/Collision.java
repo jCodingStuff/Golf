@@ -24,6 +24,8 @@ public class Collision {
     private double lastX;
     private double lastY;
 
+
+
     /**
      * Create a new instace of Collision
      * @param ball the ball to evaluate
@@ -73,7 +75,6 @@ public class Collision {
         double vy = this.ball.getVelocityY();
         if ((real[0] < Ball.RADIUS && vx < 0) || (real[0] > Golf.VIRTUAL_WIDTH - Ball.RADIUS && vx > 0)) {
             this.ball.setVelocityX(-this.ball.getVelocityX());
-
         }
         if ((real[1] < Ball.RADIUS && vy < 0) || (real[1] > Golf.VIRTUAL_HEIGHT - Ball.RADIUS && vy > 0)) {
             this.ball.setVelocityY(-this.ball.getVelocityY());
@@ -106,9 +107,15 @@ public class Collision {
             }
         }
 
-        // Make the current position of the ball the last
-        this.lastX = ballX;
-        this.lastY = ballY;
+
+        if (water) {
+            // Make the current position of the ball the last
+            this.lastX = Physics.hitCoord[0];
+            this.lastY = Physics.hitCoord[1];
+        } else {
+            this.lastX = ballX;
+            this.lastY = ballY;
+        }
 
         return water;
     }

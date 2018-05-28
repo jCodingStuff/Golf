@@ -1,23 +1,28 @@
 package com.group.golf;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Circle;
+import com.group.golf.Physics.Queue;
 import com.group.golf.math.MathLib;
 import com.group.golf.screens.CourseScreen;
+
 
 /**
  * A class to save the data of the ball
  */
-public class Ball {
+public class Ball extends Queue<double[]>{
 
     public static final float RADIUS = 10;
+
 
     private double mass;
     private double x;
     private double y;
     private double velocityX;
     private double velocityY;
+    private double accelerationX;
+    private double accelerationY;
+
 
     private Texture texture;
     private CourseScreen courseScreen;
@@ -49,6 +54,17 @@ public class Ball {
         this.velocityX = 0;
         this.velocityY = 0;
         this.collisionCircle = new Circle((float) this.x, (float) this.y, RADIUS);
+    }
+
+    public double[] dequeue() {
+        double[] coord = super.dequeue();
+        setX(coord[0]);
+        setY(coord[1]);
+        return coord;
+    }
+
+    public void addCoord(double[] coord) {
+        super.enqueue(coord);
     }
 
     /**
@@ -137,8 +153,7 @@ public class Ball {
      * Get access to the x-component of the velocity
      * @return the x-component of the velocity
      */
-    public double getVelocityX() {
-        return velocityX;
+    public double getVelocityX() {return velocityX;
     }
 
     /**
@@ -186,8 +201,12 @@ public class Ball {
      * @return the x-coordinate for position
      */
     public double getX() {
-        return x;
+        if (super.tail == null)
+            return x;
+        return super.last()[0];
     }
+
+
 
 
     /**
@@ -204,7 +223,9 @@ public class Ball {
      * @return the y-coordinate for position
      */
     public double getY() {
-        return y;
+        if (super.tail == null)
+            return y;
+        return super.last()[1];
     }
 
     /**
@@ -225,5 +246,20 @@ public class Ball {
         this.x = x;
         this.y = y;
         this.updateCollisionCircle();
+
+    public void setAccelerationX(double accelerationX) {
+        this.accelerationX = accelerationX;
+    }
+
+    public void setAccelerationY(double accelerationY) {
+        this.accelerationY = accelerationY;
+    }
+
+    public double getAccelerationX() {
+        return accelerationX;
+    }
+
+    public double getAccelerationY() {
+        return accelerationY;
     }
 }

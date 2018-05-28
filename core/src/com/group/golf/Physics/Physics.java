@@ -1,10 +1,10 @@
 package com.group.golf.Physics;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.group.golf.Ball;
 import com.group.golf.Course;
-import com.group.golf.math.Computable;
+import com.group.golf.Golf;
+import com.group.golf.math.MathLib;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,12 @@ public class Physics {
 
     private Course course;
     private Ball ball;
-    private double[] hitCoord;
+    private Collision collision;
+    private double[] offsets;
+    private double[] scales;
+    private boolean water;
+
+    public static double[] hitCoord;
 
     /**
      * Construct a Physics engine
@@ -29,83 +34,111 @@ public class Physics {
         this.course = course;
         this.ball = ball;
         this.hitCoord = new double[2];
-    }
-
-
-    //https://www.haroldserrano.com/blog/visualizing-the-runge-kutta-method
-    public double[] RK4(double h){
-
-        double[] grav = gravForce(ball, new double[]{ball.getX(),ball.getY()});
-        double[] friction =  frictionForce(ball,ball.getVelocityX(),ball.getVelocityY());
-
-
-        double v1x = ball.getVelocityX();       double v1y = ball.getVelocityY();
-
-        double a1x = grav[0] + friction[0];     double a1y = grav[1] + friction[1];
-        double v2x = v1x + a1x * h/2;           double v2y = v1y + a1y * h/2;
-
-        friction =  frictionForce(ball,v2x,v2y);
-        double a2x = grav[0] + friction[0];     double a2y = grav[1] + friction[1];
-        double v3x = v1x + a2x * h/2;           double v3y = v1y + a2y * h/2;
-
-        friction = frictionForce(ball,v3x,v3y);
-        double a3x = grav[0] + friction[0];     double a3y = grav[1] + friction[1];
-        double v4x = v1x + h * a3x;             double v4y = v1y + h * a3y;
-
-        friction = frictionForce(ball,v4x,v4y);
-        double a4x = grav[0] + friction[0];     double a4y = grav[1] + friction[1];
-
-        double[] resV = {v1x + h/6 * (a1x + 2*a2x + 2*a3x + a4x), v1y + h/6 * (a1y + 2*a2y + 2*a3y + a4y)};
-        return resV;
+        this.collision = new Collision(this.ball, this.course);
 
     }
-
 
 
     /**
-     * Hit the ball
-     * @param forceX the velocityX done to the ball
-     * @param forceY the velocityY done to the ball
+     * Sets the acceleration , velocity and position
+     * after an h time-step using runge-kutta 4th order
+     * @param h time step
      */
-    public void hit(double forceX, double forceY) {
+    //https://www.haroldserrano.com/blog/visualizing-the-runge-kutta-method
+    public void RK4(double h){
+        double[][] accel = new double[4][2];
+        accel[0] = new double[]{ball.getAccelerationX(),ball.getAccelerationY()};
+
+        double[][] velo = new double[4][2];
+        velo[0] = new double[]{ball.getVelocityX(),ball.getVelocityY()};
+
+        for (int i = 1; i < 4; i++) {
+           double[] v = updateRKStep(velo[0],accel[i-1],h,i);
+           velo[i] = v;
+
+           double[] p = updateRKStep(new double[]{ball.getX(),ball.getY()},v,h,i);
+
+           double[] grav = gravForce(p);
+           double[] friction = frictionForce(v[0],v[1]);
+
+           accel[i] = new double[]{grav[0] + friction[0], grav[1] + friction[1]};
+        }
+
+
+        ball.setAccelerationX((accel[0][0] + 2 * accel[1][0] + 2 * accel[2][0] + accel[3][0])/6);
+        ball.setAccelerationY((accel[0][1] + 2 * accel[1][1] + 2 * accel[2][1] + accel[3][1])/6);
+
+        ball.setVelocityX(velo[0][0] + h * ball.getAccelerationX());
+        ball.setVelocityY(velo[0][1] + h * ball.getAccelerationY());
+
+        ball.limit(this.course.getVmax());
+
+
+        double[] coord = new double[]{ball.getX() + h/6 * (velo[0][0] + 2 * velo[1][0] + 2 * velo[2][0] + velo[3][0]),
+                                      ball.getY() + h/6 * (velo[0][1] + 2 * velo[1][1] + 2 * velo[2][1] + velo[3][1])};
+        ball.addCoord(coord);
+
+        double[] ballCoords = MathLib.toPixel(coord,offsets,scales);
+        this.collision.checkForWalls(ballCoords[0], ballCoords[1]);
+
+        if (this.collision.ballInWater()) {
+            ball.reset();
+            water = true;
+        }
+
+
+        if (Math.abs(this.ball.getVelocityX()) < 0.07 && Math.abs(this.ball.getVelocityY()) < 0.07) {
+            this.ball.reset();
+        }
+
+
+
+    }
+
+    private double[] updateRKStep(double[] startPos, double[] prev, double h, double k) {
+        if (k < 3) {
+            return new double[]{startPos[0] + prev[0] * h/2,startPos[1] + prev[1] * h/2};
+        } else {
+            return new double[]{startPos[0] + prev[0] * h, startPos[1] + prev[1] * h};
+        }
+    }
+
+    /**
+     * Hit the ball
+     * @param xLength the length that the mouse was dragged horizontally
+     * @param yLength the length that the mouse was dragged vertically
+     */
+    public void hit(double xLength, double yLength) {
+        water = false;
 
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
 
-        ball.setVelocityX(Gdx.graphics.getDeltaTime() * forceX / ball.getMass());
-        ball.setVelocityY(Gdx.graphics.getDeltaTime() * forceY / ball.getMass());
-    }
+        double frameRate = 0.04; //
 
-    /**
-     * Update the ball state to the following instance of time
-     * @param delta delta time
-     */
-    public void movement(float delta, boolean debug) {
+        xLength *= 90;
+        yLength *= 90;
 
-        ball.setX(ball.getX() + delta * ball.getVelocityX());
-        ball.setY(ball.getY() + delta * ball.getVelocityY());
+        ball.setAccelerationX(xLength/ball.getMass());
+        ball.setAccelerationY(yLength/ball.getMass());
 
-        double[] vel = RK4(delta);
-        ball.setVelocityX(vel[0]);
-        ball.setVelocityY(vel[1]);
-
-        if (debug) System.out.println("VelocityX: " + ball.getVelocityX() + "   VelocityY: " + ball.getVelocityY());
-        if (Math.abs(this.ball.getVelocityX()) < 0.0776 && Math.abs(this.ball.getVelocityY()) < 0.0776) {
-            this.ball.reset();
+        RK4(frameRate);
+        while (this.ball.isMoving() && !water) {
+            RK4(frameRate);
         }
 
     }
 
     /**
      * Compute the friction force that oposes to the movement of the ball
-     * @param ball the ball rolling
      * @param velocityX the x-component of the velocity of the ball
      * @param velocityY the y-component of the velocity of the ball
      * @return a Vector2 instace containig the friction force
      */
-    public double[] frictionForce(Ball ball,double velocityX, double velocityY) {
+    public double[] frictionForce(double velocityX, double velocityY) {
         double multiplier = - this.course.getMu() * this.course.getG()
                 / normalLength(velocityX,velocityY);
+//        System.out.println(multiplier * velocityX);
         return new double[]{(multiplier * velocityX) ,(multiplier * velocityY)};
     }
 
@@ -121,11 +154,10 @@ public class Physics {
 
     /**
      * Compute the gravitational force that the ball suffers
-     * @param ball the ball rolling
      * @param coord the Vector2 containing the actual position of the ball
      * @return a Vector2 instance containing the gravity force
      */
-    public double[] gravForce(Ball ball, double[] coord) {
+    public double[] gravForce(double[] coord) {
         double multiplier = - this.course.getG();
         double[] slopeMultiplier = calculateSlope(coord);
         return new double[] {multiplier * slopeMultiplier[0],multiplier * slopeMultiplier[1]};
@@ -143,6 +175,7 @@ public class Physics {
 
         slope[0] = (this.course.getHeight(coord[0]+step,coord[1]) - this.course.getHeight(coord[0]-step,coord[1]))/(2*step);
         slope[1] = ((this.course.getHeight(coord[0],coord[1]+step) - this.course.getHeight(coord[0],coord[1]-step))/(2*step));
+
         return slope;
     }
 
@@ -192,5 +225,22 @@ public class Physics {
      */
     public void setHitCoord(double[] hitCoord) {
         this.hitCoord = hitCoord;
+    }
+
+
+    public void setOffsets(double[] offsets) {
+        this.offsets = offsets;
+    }
+
+    public void setScales(double[] scales) {
+        this.scales = scales;
+    }
+
+    public boolean isWater() {
+        return water;
+    }
+
+    public void setWater(boolean water) {
+        this.water = water;
     }
 }
