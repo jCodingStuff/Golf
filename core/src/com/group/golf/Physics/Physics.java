@@ -1,12 +1,14 @@
 package com.group.golf.Physics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.math.MathLib;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by alex_ on 21-Mar-18.
@@ -22,12 +24,15 @@ public class Physics {
     private boolean water;
 
     public static double[] hitCoord;
+    private FileHandle velocities;
+    private FileHandle time_steps;
+    private FileHandle accelerations;
+    private double time = 0;
 
     /**
      * Construct a Physics engine
-     *
      * @param course the course to analyze
-     * @param ball   the ball that will roll on the course
+     * @param ball the ball that will roll on the course
      */
     public Physics(Course course, Ball ball) {
         this.course = course;
@@ -35,7 +40,11 @@ public class Physics {
         this.hitCoord = new double[2];
         this.collision = new Collision(this.ball, this.course);
 
+        velocities = Gdx.files.local("velocitiesRK");
+        time_steps = Gdx.files.local("time_stepsRK");
+        accelerations = Gdx.files.local("accelerationsRK");
     }
+
 
 
     /**
@@ -55,7 +64,7 @@ public class Physics {
            double[] v = updateRKStep(velo[0],accel[i-1],h,i);
            velo[i] = v;
 
-           double[] p = updateRKStep(new double[]{ball.getX(),ball.getY()},v,h,i);
+           double[] p = updateRKStep(ball.last(),v,h,i);
 
            double[] grav = gravForce(p);
            double[] friction = frictionForce(v[0],v[1]);
@@ -86,9 +95,9 @@ public class Physics {
         }
 
 
-        if (Math.abs(this.ball.getVelocityX()) < 0.07 && Math.abs(this.ball.getVelocityY()) < 0.07) {
-            this.ball.reset();
-        }
+//        if (Math.abs(this.ball.getVelocityX()) < 0.07 && Math.abs(this.ball.getVelocityY()) < 0.07) {
+//            this.ball.reset();
+//        }
 
 
 
@@ -113,17 +122,42 @@ public class Physics {
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
 
-        double frameRate = 0.04; //
+        ball.addCoord(hitCoord);
+        double frameRate = 0.04;
 
-        xLength *= 90;
-        yLength *= 90;
+        xLength = 100000;
+        yLength = 100000;
 
         ball.setAccelerationX(xLength/ball.getMass());
         ball.setAccelerationY(yLength/ball.getMass());
 
+
         RK4(frameRate);
+
+        double modulusV = normalLength(ball.getVelocityX(),ball.getVelocityY());
+        double modulusA = normalLength(ball.getAccelerationX(),ball.getAccelerationY());
+
+        time += frameRate;
+
+        velocities.writeString(Double.toString(modulusV) + " \n",true);
+        time_steps.writeString(Double.toString(time) + " \n",true);
+        accelerations.writeString(Double.toString(modulusA) + "\n",true);
+
         while (this.ball.isMoving() && !water) {
             RK4(frameRate);
+
+            modulusV = normalLength(ball.getVelocityX(),ball.getVelocityY());
+            modulusA = normalLength(ball.getAccelerationX(),ball.getAccelerationY());
+
+            time += frameRate*1000;
+
+            velocities.writeString(Double.toString(modulusV) + " \n",true);
+            time_steps.writeString(Double.toString(time) + " \n",true);
+            accelerations.writeString(Double.toString(modulusA) + "\n",true);
+
+            System.out.println(time);
+            if (time>20000)
+                ball.reset();
         }
 
     }
