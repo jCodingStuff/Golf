@@ -29,9 +29,11 @@ import com.group.golf.math.Function;
 
 public class BotScreen implements Screen {
     final Golf game;
+
     Stage stage;
-    Physics engine;
-    Ball ball;
+
+    private Course course;
+    private Ball ball;
 
     TextButton genetic;
     TextButton random;
@@ -42,12 +44,14 @@ public class BotScreen implements Screen {
     OrthographicCamera cam;
     Texture background;
 
-        public BotScreen(final Golf game) {
+        public BotScreen(final Golf game, Course course, Ball ball) {
             this.game = game;
+            this.course = course;
+            this.ball = ball;
             stage = new Stage();
             Gdx.input.setInputProcessor(stage);
             Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-            genetic = new TextButton("Genetic Bot", skin);
+            genetic = new TextButton(" GeneticBot", skin);
             random = new TextButton("Random Bot", skin);
             martijn = new TextButton("Bot Martijn", skin);
             dum = new TextButton("Dumb Bot", skin);
@@ -87,132 +91,113 @@ public class BotScreen implements Screen {
             class GeneticBotListener extends ChangeListener {
                 final Golf game;
                 private Screen screen;
+                private Course course;
+                private Ball ball;
 
-                public GeneticBotListener(final Golf game, Screen screen) {
+                public GeneticBotListener(final Golf game, Screen screen, Course course, Ball ball) {
                     this.game = game;
                     this.screen = screen;
+                    this.course = course;
+                    this.ball = ball;
                 }
 
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-
-                    String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                    double[] start = new double[]{4, 3};
-                    double[] goal = new double[]{0, 1};
-                    Function function = new Function(formula);
-                    Computable[][] functions = new Computable[1][1];
-                    functions[0][0] = function;
-                    Course course = new Course(functions, 9.81, 0.95, 80, start, goal, 0.5);
                     genetic.setTouchable(Touchable.disabled);
                     random.setTouchable(Touchable.disabled);
                     martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
                     Bot genBot = new GeneticBot(course, ball);
-                    this.game.setScreen(new CourseScreen(this.game, course, new Ball(40), genBot));
+                    this.game.setScreen(new CourseScreen(this.game, this.course, this.ball, genBot));
                     this.screen.dispose();
                 }
 
             }
-            genetic.addListener(new GeneticBotListener(game, this));
+            genetic.addListener(new GeneticBotListener(game, this, this.course, this.ball));
 
             class RandomBotListener extends ChangeListener {
                 final Golf game;
                 private Screen screen;
+                private Course course;
+                private Ball ball;
 
-                public RandomBotListener(final Golf game, Screen screen) {
+                public RandomBotListener(final Golf game, Screen screen, Course course, Ball ball) {
                     this.game = game;
                     this.screen = screen;
+                    this.course = course;
+                    this.ball = ball;
                 }
 
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-
-                    String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                    double[] start = new double[]{4, 3};
-                    double[] goal = new double[]{0, 1};
-                    Function function = new Function(formula);
-                    Computable[][] functions = new Computable[1][1];
-                    functions[0][0] = function;
-                    Course course = new Course(functions, 9.81, 0.95, 80, start, goal, 0.5);
                     genetic.setTouchable(Touchable.disabled);
                     random.setTouchable(Touchable.disabled);
                     martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
-                    Ball ball = new Ball(40);
-
-                    Bot ranBot = new RandomBot(course, engine, ball);
-                    this.game.setScreen(new CourseScreen(this.game, course, new Ball(40), ranBot));
+                    Bot ranBot = new RandomBot(course, ball);
+                    this.game.setScreen(new CourseScreen(this.game, this.course, this.ball, ranBot));
                     this.screen.dispose();
                 }
 
             }
-            random.addListener(new RandomBotListener(game, this));
+            random.addListener(new RandomBotListener(game, this, this.course, this.ball));
 
             class MartijnListener extends ChangeListener {
                 final Golf game;
                 private Screen screen;
+                private Course course;
+                private Ball ball;
 
-                public MartijnListener(final Golf game, Screen screen) {
+                public MartijnListener(final Golf game, Screen screen, Course course, Ball ball) {
                     this.game = game;
                     this.screen = screen;
+                    this.course = course;
+                    this.ball = ball;
                 }
 
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-
-                    String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                    double[] start = new double[]{4, 3};
-                    double[] goal = new double[]{0, 1};
-                    Function function = new Function(formula);
-                    Computable[][] functions = new Computable[1][1];
-                    functions[0][0] = function;
-                    Course course = new Course(functions, 9.81, 0.95, 80, start, goal, 0.5);
                     genetic.setTouchable(Touchable.disabled);
                     random.setTouchable(Touchable.disabled);
                     martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
                     Bot genBot = new GeneticBot(course, ball);
-                    this.game.setScreen(new CourseScreen(this.game, course, new Ball(40), genBot));
+                    this.game.setScreen(new CourseScreen(this.game, this.course, this.ball, genBot));
                     this.screen.dispose();
                 }
 
             }
-            martijn.addListener(new MartijnListener(game, this));
+            martijn.addListener(new MartijnListener(game, this, this.course, this.ball));
             class DumBotListener extends ChangeListener {
                 final Golf game;
                 private Screen screen;
+                private Course course;
+                private Ball ball;
 
-                public DumBotListener(final Golf game, Screen screen) {
+                public DumBotListener(final Golf game, Screen screen, Course course, Ball ball) {
                     this.game = game;
                     this.screen = screen;
+                    this.course = course;
+                    this.ball = ball;
                 }
 
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-
-                    String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                    double[] start = new double[]{4, 3};
-                    double[] goal = new double[]{0, 1};
-                    Function function = new Function(formula);
-                    Computable[][] functions = new Computable[1][1];
-                    functions[0][0] = function;
-                    Course course = new Course(functions, 9.81, 0.95, 80, start, goal, 0.5);
                     genetic.setTouchable(Touchable.disabled);
                     random.setTouchable(Touchable.disabled);
                     martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
-                    Ball ball = new Ball(40);
                     Bot dumBot = new DumBot(course, ball);
-                    this.game.setScreen(new CourseScreen(this.game, course, ball, dumBot));
+                    this.game.setScreen(new CourseScreen(this.game, this.course, this.ball, dumBot));
                     this.screen.dispose();
                 }
 
             }
-            dum.addListener(new DumBotListener(game, this));
+            dum.addListener(new DumBotListener(game, this, this.course, this.ball));
             class BackListener extends ChangeListener {
                 final Golf game;
                 private Screen screen;

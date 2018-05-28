@@ -31,13 +31,11 @@ public class RandomBot implements Bot{
 
 /**
  * Create a new RandomBot instance
- * @param engine the Physics instance
  * @param ball the BALL instance
  */
 
-    public RandomBot(Course course, Physics engine, Ball ball){
+    public RandomBot(Course course, Ball ball){
         this.ball = ball;
-        this.engine = engine;
         this.rand = new Random();
         this.course = course;
     }
