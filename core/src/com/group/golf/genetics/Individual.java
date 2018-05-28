@@ -68,7 +68,7 @@ public class Individual {
         return "Individual{" +
                 "\n - genes=" + Arrays.toString(genes) +
                 "\n - score=" + score +
-                "\n - lastMove=" + lastMove +
+                "\n - lastMove (index) =" + lastMove +
                 "\n - landings=" + Arrays.toString(landings) +
                 '}';
     }
