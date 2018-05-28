@@ -310,6 +310,12 @@ public class CourseScreen implements Screen {
 
         // Check if the ball is stopped
         if (this.ball.getSize() == 0) {
+            // If landed print
+            if (this.landed) {
+                System.out.println("Ball landed: " + this.ball.getX() + " " + this.ball.getY());
+                this.landed = false;
+            }
+
             // Check if the goal is achieved
             if (this.collision.isGoalAchieved()) {
                 this.winSound.play();
@@ -369,6 +375,7 @@ public class CourseScreen implements Screen {
         double forceX = force * Math.cos(angle);
         double forceY = force * Math.sin(angle);
         this.engine.hit(forceX, forceY);
+        this.landed = true;
         this.counter++;
         this.hitSound.play();
     }
@@ -407,6 +414,7 @@ public class CourseScreen implements Screen {
                 double force = MathLib.map(modulus, 0, 300, 0, 600);
 
                 this.engine.hit(xLength, yLength);
+                this.landed = true;
 
                 this.hitSound.play();
             }
