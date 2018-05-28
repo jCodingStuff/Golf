@@ -16,10 +16,7 @@ import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.Physics.Physics;
-import com.group.golf.ai.Bot;
-import com.group.golf.ai.DumBot;
-import com.group.golf.ai.GeneticBot;
-import com.group.golf.ai.RandomBot;
+import com.group.golf.ai.*;
 import com.group.golf.math.Computable;
 import com.group.golf.math.Function;
 
@@ -164,7 +161,7 @@ public class BotScreen implements Screen {
                     martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
-                    Bot genBot = new GeneticBot(course, ball);
+                    Bot genBot = new botMartijn(course, ball);
                     this.game.setScreen(new CourseScreen(this.game, this.course, this.ball, genBot));
                     this.screen.dispose();
                 }

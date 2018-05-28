@@ -26,9 +26,9 @@ public class GeneticBot implements Bot {
 
     private int counter = 0;
 
-    private static final int POPULATION_SIZE = 100;
+    private static final int POPULATION_SIZE = 50;
     private static final int DNA_LENGTH = 5;
-    private static final double MAX_FORCE = 3000;
+    private static final double MAX_FORCE = 500;
 
     private static final int GENERATION_LIMIT = 5;
     private static final double MUTATION_RATE = 0.01;
@@ -52,8 +52,6 @@ public class GeneticBot implements Bot {
         this.virtualBall = new Ball(ball);
         this.virtualBall.setPosition(this.course.getStart()[0], this.course.getStart()[1]);
 
-        this.virtualEngine = new Physics(course, this.virtualBall);
-
         this.crossOver = new AverageCrossOver(this);
         this.mutation = new AlterMutation();
         this.computer = new InverseScoreComputer();
@@ -75,12 +73,16 @@ public class GeneticBot implements Bot {
     @Override
     public void setPhysics(Physics physics) {
         this.engine = physics;
+        this.virtualEngine = new Physics(physics);
+        this.virtualEngine.setBall(this.virtualBall);
     }
 
     @Override
     public void setCollision(Collision collision) {
         this.collision = collision;
         this.virtualCollision = new Collision(collision);
+        this.virtualCollision.setBall(this.virtualEngine.getBall());
+        this.virtualEngine.setCollision(this.virtualCollision);
         this.startEvolution();
     }
 

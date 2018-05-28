@@ -21,8 +21,8 @@ public class botMartijn implements Bot {
 
     //Constants for the method Score
         private static final double WATER_SCORE = 0.0; //needs adjusting by trial and error
-        private static final double DISTANCE_SCORE = 0.0; //needs adjusting by trial and error
-        private static final double PREVIOUS_SCORE = 0.0; //needs adjusting by trial and error
+        private static final double DISTANCE_SCORE = 0.6; //needs adjusting by trial and error
+        private static final double PREVIOUS_SCORE = 0.3; //needs adjusting by trial and error
         private static final double METHOD4 = 0.0;
 
 
@@ -48,7 +48,6 @@ public class botMartijn implements Bot {
 
             this.virtualBall = new Ball(ball);
             this.virtualBall.setPosition(this.course.getStart()[0], this.course.getStart()[1]);
-            this.virtualEngine = new Physics(course, this.virtualBall);
 
             this.maxForce = this.ball.getMass() * this.course.getVmax();  //open for adjustment
         }
@@ -56,11 +55,16 @@ public class botMartijn implements Bot {
         @Override
         public void setPhysics(Physics physics) {
             this.engine = physics;
+            this.virtualEngine = new Physics(physics);
+            this.virtualEngine.setBall(this.virtualBall);
         }
 
         @Override
         public void setCollision(Collision collision) {
             this.collision = collision;
+            this.virtualCollision = new Collision(collision);
+            this.virtualCollision.setBall(this.virtualEngine.getBall());
+            this.virtualEngine.setCollision(this.virtualCollision);
         }
 
         @Override

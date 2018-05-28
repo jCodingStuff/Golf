@@ -38,6 +38,15 @@ public class Physics {
 
     }
 
+    public Physics(Physics other) {
+        this.course = other.course;
+        this.ball = other.ball;
+        this.collision = other.collision;
+        this.offsets = other.offsets;
+        this.scales = other.scales;
+        this.water = other.water;
+    }
+
 
     /**
      * Sets the acceleration , velocity and position
@@ -244,5 +253,9 @@ public class Physics {
 
     public void setWater(boolean water) {
         this.water = water;
+    }
+
+    public void setCollision(Collision collision) {
+        this.collision = collision;
     }
 }
