@@ -68,7 +68,7 @@ public class BotScreen implements Screen {
 
             stage.addActor(genetic);
             stage.addActor(random);
-            stage.addActor(martijn);
+            //stage.addActor(martijn);
             stage.addActor(dum);
             stage.addActor(back);
 
