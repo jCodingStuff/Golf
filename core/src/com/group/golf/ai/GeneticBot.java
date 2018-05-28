@@ -60,7 +60,7 @@ public class GeneticBot implements Bot {
     @Override
     public void makeMove() {
         if (this.counter <= this.winner.getLastMove()) {
-            if (this.counter < this.winner.getLandings().length &&
+            while (this.counter < this.winner.getLandings().length &&
                     this.winner.getLandings()[this.counter+1].equals(this.winner.getLandings()[this.counter])) {
                 this.counter++;
             }
