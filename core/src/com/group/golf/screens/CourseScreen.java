@@ -49,29 +49,26 @@ public class CourseScreen implements Screen {
     private List<String> moves;
     private int counter;
 
-    // Ball stuff
-    double[] lastStop;
-
     // Graphing things
     private int goalSize;
-    private double scaleX;
-    private double scaleY;
-    private static final double SCALE_MULTIPLIER = 100;
-    private double xoffset;
-    private double yoffset;
     private double[][] heights;
     private double maximum;
     private double minimum;
     private Color[][] colors;
-    private double ballX;
-    private double ballY;
 
     // Gaming stuff
-    boolean touchFlag;
+    private boolean touchFlag;
     private int firstX;
     private int firstY;
     private int lastX;
     private int lastY;
+
+    private double scaleX;
+    private double scaleY;
+    private double xoffset;
+    private double yoffset;
+    private double ballX;
+    private double ballY;
 
     // Bot
     private Bot bot;
@@ -158,9 +155,6 @@ public class CourseScreen implements Screen {
      */
     private void setupCommon() {
 
-        // Setup lastStop
-        this.lastStop = MathLib.copyDoubleArr(this.course.getStart());
-
         // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
         this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
@@ -175,8 +169,16 @@ public class CourseScreen implements Screen {
         this.music.setVolume(0.2f);
         this.music.setLooping(true);
 
+        // Setup engine and collision system
+        this.engine = new Physics(this.course, this.ball);
+        this.collision = new Collision(this.ball, this.course);
+
         // Setup Course
         this.setUpCourse();
+
+        this.engine.setOffsets(new double[]{this.xoffset,this.yoffset});
+        this.engine.setScales(new double[]{this.scaleX,this.scaleY});
+
 
         // Setup Goal
         this.goalSize = 20;
@@ -184,18 +186,10 @@ public class CourseScreen implements Screen {
 
         // Setup engine and collision system
         this.engine = new Physics(this.course, this.ball);
-        this.collision = new Collision(this.ball, this.course, new double[]{this.xoffset, this.yoffset},
-                new double[]{this.scaleX, this.scaleY});
-    }
+        this.collision = new Collision(this.ball, this.course);
+        this.engine.setOffsets(new double[]{this.xoffset, this.yoffset});
+        this.engine.setScales(new double[]{this.scaleX, this.scaleY});
 
-    /**
-     * Compute the pixel coordinates of the ball
-     */
-    private void computeBallPixels() {
-        double[] ballPixels = MathLib.toPixel(new double[]{this.ball.getX(), this.ball.getY()},
-                new double[]{this.xoffset, this.yoffset}, new double[]{this.scaleX, this.scaleY});
-        this.ballX = ballPixels[0];
-        this.ballY = ballPixels[1];
     }
 
     /**
@@ -215,33 +209,6 @@ public class CourseScreen implements Screen {
         this.calcColorsMatrix();
     }
 
-    /**
-     * Compute the scale
-     */
-    private void calcScale() {
-        double dist = this.course.getDistance();
-        double limitDist = 0.40625;
-        this.scaleX = 0.000625;
-        while (dist > limitDist) {
-            this.scaleX *= 2;
-            limitDist *= 2;
-        }
-        this.scaleY = scaleX;
-    }
-
-    /**
-     * Compute the screen offsets
-     */
-    private void calcOffsets() {
-        double x1 = this.course.getStart()[0];
-        double x2 = this.course.getGoal()[0];
-        double xUnits = Golf.VIRTUAL_WIDTH / (1/this.scaleX);
-        this.xoffset = (x1 + x2 - xUnits) / 2.0;
-        double y1 = this.course.getStart()[1];
-        double y2 = this.course.getGoal()[1];
-        double yUnits = Golf.VIRTUAL_HEIGHT / (1/this.scaleY);
-        this.yoffset = (y1 + y2 - yUnits) / 2.0;
-    }
 
     /**
      * Compute the heights matrix
@@ -252,8 +219,8 @@ public class CourseScreen implements Screen {
         this.minimum = Double.MAX_VALUE;
         for (int x = 0; x < this.heights.length; x++) {
             for (int y = 0; y < this.heights[x].length; y++) {
-                double value = this.course.getHeight(this.xoffset + x*this.scaleX,
-                        this.yoffset + y*this.scaleY);
+                double value = this.course.getHeight(this.getXoffset() + x*this.getScaleX(),
+                        this.getYoffset() + y*this.getScaleY());
                 if (value > this.maximum) this.maximum = value;
                 else if (value < this.minimum) this.minimum = value;
                 this.heights[x][y] = value;
@@ -295,8 +262,8 @@ public class CourseScreen implements Screen {
         // Setup Offsets
         BicubicInterpolator botLeftInterp = (BicubicInterpolator) this.course.getFunctions()[0][0];
         Point3D[][] points = botLeftInterp.getPoints();
-        this.xoffset = points[0][0].getX();
-        this.yoffset = points[0][0].getY();
+        this.setXoffset(points[0][0].getX());
+        this.setYoffset(points[0][0].getY());
 
         // Setup scales
         int xLength = this.course.getFunctions().length;
@@ -306,13 +273,13 @@ public class CourseScreen implements Screen {
         BicubicInterpolator botRightInterp = (BicubicInterpolator) this.course.getFunctions()[xLength - 1][0];
         Point3D[][] botRightPoints = botRightInterp.getPoints();
         double rightX = botRightPoints[1][0].getX();
-        this.scaleX = (rightX - this.xoffset) / Golf.VIRTUAL_WIDTH;
+        this.setScaleX((rightX - this.getXoffset()) / Golf.VIRTUAL_WIDTH);
 
         // scaleY
         BicubicInterpolator topLeftInterp = (BicubicInterpolator) this.course.getFunctions()[0][yLength - 1];
         Point3D[][] topLeftPoints = topLeftInterp.getPoints();
         double topY = botRightPoints[0][1].getY();
-        this.scaleY = (topY - this.yoffset) / Golf.VIRTUAL_HEIGHT;
+        this.setScaleY((topY - this.getYoffset()) / Golf.VIRTUAL_HEIGHT);
     }
 
     @Override
@@ -336,16 +303,13 @@ public class CourseScreen implements Screen {
         // Render the goal
         this.renderGoal();
 
-        // Check the walls
-        this.collision.checkForWalls();
+        // Update pixel position of ball
+        this.computeBallPixels();
+
+
 
         // Check if the ball is stopped
-        if (!this.ball.isMoving()) {
-            // Print position of the ball
-            if (landed) {
-                System.out.println("Ball landed at: " + this.ball.getX() + " " + this.ball.getY());
-                this.landed = false;
-            }
+        if (this.ball.getSize() == 0) {
             // Check if the goal is achieved
             if (this.collision.isGoalAchieved()) {
                 this.winSound.play();
@@ -356,9 +320,8 @@ public class CourseScreen implements Screen {
                 return;
             }
 
-            // Store position
-            this.lastStop[0] = this.ball.getX();
-            this.lastStop[1] = this.ball.getY();
+
+
 
             // Make a move
             if (this.bot != null && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
@@ -375,14 +338,17 @@ public class CourseScreen implements Screen {
                 this.userMoves();
             }
         } else {
-            this.engine.movement(delta, false);
+
+            this.ball.dequeue();
         }
-        this.ball.limit(this.course.getVmax());
+
+        this.computeBallPixels();
 
         // Check for water
-        if (this.collision.ballInWater()) {
-            this.ball.reset();
-            this.ball.setPosition(this.lastStop[0], this.lastStop[1]);
+        if (this.engine.isWater() && this.ball.getSize() == 0) {
+            this.ball.clear();
+            this.ball.setX(this.engine.getHitCoord()[0]);
+            this.ball.setY(this.engine.getHitCoord()[1]);
             this.loseSound.play(0.2f);
         }
 
@@ -427,27 +393,20 @@ public class CourseScreen implements Screen {
                 Vector3 secondV = new Vector3(this.lastX, this.lastY,0);
                 this.cam.unproject(secondV);
 
-                System.out.println("firstX=" + this.firstX + ", firstY=" + this.firstY);
-                System.out.println("lastX=" + this.lastX + ", lastY=" + this.lastY);
 
-                double forceX = Math.abs(lastX - firstX) * 20;
-                double forceY = Math.abs(lastY - firstY) * 20;
+                double xLength = Math.abs(lastX - firstX);
+                double yLength = Math.abs(lastY - firstY);
 
                 if (lastX < firstX )
-                    forceX *= -1;
+                    xLength *= -1;
                 if (lastY > firstY)
-                    forceY *= -1;
+                    yLength *= -1;
 
                 double modulus = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
                 // we don't need this !!
                 double force = MathLib.map(modulus, 0, 300, 0, 600);
 
-                // Use the scales to normalize forces
-                forceX *= this.scaleX * SCALE_MULTIPLIER;
-                forceY *= this.scaleY * SCALE_MULTIPLIER;
-
-                this.engine.hit(forceX, forceY);
-                this.landed = true;
+                this.engine.hit(xLength, yLength);
 
                 this.hitSound.play();
             }
@@ -455,13 +414,52 @@ public class CourseScreen implements Screen {
         }
     }
 
+
+    /**
+     * Compute the pixel coordinates of the ball
+     */
+    public void computeBallPixels() {
+        double[] ballPixels = MathLib.toPixel(new double[]{this.ball.getX(), this.ball.getY()},
+                new double[]{this.xoffset, this.yoffset}, new double[]{this.scaleX, this.scaleY});
+        this.ballX = ballPixels[0];
+        this.ballY = ballPixels[1];
+    }
+
+    /**
+     * Compute the scale
+     */
+    public void calcScale() {
+        double dist = this.course.getDistance();
+        double limitDist = 0.40625;
+        this.scaleX = 0.000625;
+        while (dist > limitDist) {
+            this.scaleX *= 2;
+            limitDist *= 2;
+        }
+        this.scaleY = scaleX;
+    }
+
+    /**
+     * Compute the screen offsets
+     */
+    public void calcOffsets() {
+        double x1 = this.course.getStart()[0];
+        double x2 = this.course.getGoal()[0];
+        double xUnits = Golf.VIRTUAL_WIDTH / (1/this.scaleX);
+        this.xoffset = (x1 + x2 - xUnits) / 2.0;
+        double y1 = this.course.getStart()[1];
+        double y2 = this.course.getGoal()[1];
+        double yUnits = Golf.VIRTUAL_HEIGHT / (1/this.scaleY);
+        this.yoffset = (y1 + y2 - yUnits) / 2.0;
+    }
+
     /**
      * Render the goal
      */
     private void renderGoal() {
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        double[] real = MathLib.toPixel(this.course.getGoal(), new double[]{this.xoffset, this.yoffset},
-                new double[]{this.scaleX, this.scaleY});
+        double[] real = MathLib.toPixel(this.course.getGoal(), new double[]{this.getXoffset(), this.getYoffset()},
+                new double[]{this.getScaleX(), this.getScaleY()});
         float realX = (float) real[0];
         float realY = (float) real[1];
         this.game.shapeRenderer.setColor(0, 0, 0, 1);
@@ -470,8 +468,8 @@ public class CourseScreen implements Screen {
         this.game.shapeRenderer.end();
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         double tolerance = this.course.getTolerance();
-        float toleranceX = (float) (tolerance * 1/(this.scaleX));
-        float toleranceY = (float) (tolerance * 1/(this.scaleY));
+        float toleranceX = (float) (tolerance * 1/(this.getScaleX()));
+        float toleranceY = (float) (tolerance * 1/(this.getScaleY()));
         this.game.shapeRenderer.setColor(1, 0, 0, 1);
         this.game.shapeRenderer.ellipse(realX - toleranceX, realY - toleranceY,
                 toleranceX*2, toleranceY*2);
@@ -576,6 +574,43 @@ public class CourseScreen implements Screen {
         this.goalSize = goalSize;
     }
 
+
+    public double[][] getHeights() {
+        return heights;
+    }
+
+    public void setHeights(double[][] heights) {
+        this.heights = heights;
+    }
+
+    public double getMaximum() {
+        return maximum;
+    }
+
+    public void setMaximum(double maximum) {
+        this.maximum = maximum;
+    }
+
+    public double getMinimum() {
+        return minimum;
+    }
+
+    public void setMinimum(double minimum) {
+        this.minimum = minimum;
+    }
+
+    public Color[][] getColors() {
+        return colors;
+    }
+
+    public void setColors(Color[][] colors) {
+        this.colors = colors;
+    }
+
+    public Physics getEngine() {
+        return engine;
+    }
+
     public double getScaleX() {
         return scaleX;
     }
@@ -608,35 +643,19 @@ public class CourseScreen implements Screen {
         this.yoffset = yoffset;
     }
 
-    public double[][] getHeights() {
-        return heights;
+    public double getBallX() {
+        return ballX;
     }
 
-    public void setHeights(double[][] heights) {
-        this.heights = heights;
+    public void setBallX(double ballX) {
+        this.ballX = ballX;
     }
 
-    public double getMaximum() {
-        return maximum;
+    public double getBallY() {
+        return ballY;
     }
 
-    public void setMaximum(double maximum) {
-        this.maximum = maximum;
-    }
-
-    public double getMinimum() {
-        return minimum;
-    }
-
-    public void setMinimum(double minimum) {
-        this.minimum = minimum;
-    }
-
-    public Color[][] getColors() {
-        return colors;
-    }
-
-    public void setColors(Color[][] colors) {
-        this.colors = colors;
+    public void setBallY(double ballY) {
+        this.ballY = ballY;
     }
 }

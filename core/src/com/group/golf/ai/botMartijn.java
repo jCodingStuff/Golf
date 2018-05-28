@@ -140,27 +140,17 @@ public class botMartijn implements Bot {
             return p;
         }
 
-        private void simulateShot(JVector2 force, JVector2 last) {
-        this.virtualEngine.hit(force.getX(),force.getY());
-        while (this.virtualBall.isMoving()) {
-            this.virtualEngine.movement(Gdx.graphics.getDeltaTime(), false);
-            this.virtualBall.limit(this.course.getVmax());
-            this.virtualCollision.checkForWalls();
-            if (this.virtualCollision.ballInWater()) {
-                this.virtualBall.reset();
-                this.virtualBall.setPosition(last.getX(), last.getY());
+        private void simulateShot(JVector2 force) {
+            this.virtualEngine.hit(force.getX(), force.getY());
+            while (this.virtualBall.getSize() != 0) {
+                this.virtualBall.dequeue();
+                if (this.virtualEngine.isWater() && this.virtualBall.getSize() == 0) {
+                    this.virtualBall.clear();
+                    this.virtualBall.setX(this.engine.getHitCoord()[0]);
+                    this.virtualBall.setY(this.engine.getHitCoord()[1]);
+                }
             }
         }
-    }
-
-        private void simulateShot(JVector2 force) {
-        this.virtualEngine.hit(force.getX(),force.getY());
-        while (this.virtualBall.isMoving()) {
-            this.virtualEngine.movement(Gdx.graphics.getDeltaTime(), false);
-            this.virtualBall.limit(this.course.getVmax());
-            this.virtualCollision.checkForWalls();
-        }
-    }
 
 
 
