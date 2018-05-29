@@ -22,12 +22,13 @@ public class Physics {
     private double[] offsets;
     private double[] scales;
     private boolean water;
+    private Queue<double[]> tester = new Queue<double[]>();
 
     public static double[] hitCoord;
     private FileHandle velocities;
     private FileHandle time_steps;
     private FileHandle accelerations;
-    private double time = 0;
+
 
     /**
      * Construct a Physics engine
@@ -53,15 +54,18 @@ public class Physics {
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
 
+        ball.addCoord(hitCoord);
+
         double frameRate = Gdx.graphics.getDeltaTime();
 
         System.out.println(course.getVmax());
+
         this.ball.setVelocityX(xLength/this.ball.getMass());
         this.ball.setVelocityY(yLength/this.ball.getMass());
         this.ball.limit(course.getVmax());
+        System.out.println("MOTHERFUCKING: " + ball.getVelocityX());
         double[] velocities = new double[]{this.ball.getVelocityX(),this.ball.getVelocityY()};
 
-        ball.addCoord(hitCoord);
 
         double timer = 0;
         integrate(hitCoord,velocities,frameRate);
@@ -72,18 +76,15 @@ public class Physics {
             integrate(this.ball.last(),velocities,frameRate);
             timer += frameRate;
         }
-
-
-
     }
 
     //https://www.haroldserrano.com/blog/visualizing-the-runge-kutta-method
     public void integrate(double[] coord,double[] velocities,  double dt) {
 
         Derivative k1,k2,k3,k4;
-        k1 = evaluate(coord,velocities,0.0,new Derivative(0,0,0,0));
-        k2 = evaluate(coord,velocities,dt*0.5,k1);
-        k3 = evaluate(coord,velocities,dt*0.5,k2);
+        k1 = evaluate(coord,velocities,dt,new Derivative(0,0,0,0));
+        k2 = evaluate(coord,velocities,dt*0.5,new Derivative(k1));
+        k3 = evaluate(coord,velocities,dt*0.5,new Derivative(k2));
         k4 = evaluate(coord,velocities,dt,k3);
 
         double dxdt = 1.0/6.0 * (k1.dx + 2.0*(k2.dx + k3.dx) + k4.dx);
@@ -115,10 +116,14 @@ public class Physics {
             water = true;
         }
 
-//        System.out.println("x  " + newVelocities[0] + "   y   " + newVelocities[1]);
+        System.out.println("x  " + newVelocities[0] + "   y   " + newVelocities[1]);
 
-        if (Math.abs(this.ball.getVelocityX()) < 0.05 && Math.abs(this.ball.getVelocityY()) < 0.05) {
-            this.ball.reset();
+//        if (Math.abs(this.ball.getVelocityX()) < 0.05 && Math.abs(this.ball.getVelocityY()) < 0.05) {
+//            this.ball.reset();
+//        }
+
+        if (checkRepetion(velocities)) {
+            ball.reset();
         }
     }
 
@@ -137,18 +142,22 @@ public class Physics {
             this.dvx = dvx;
             this.dvy = dvy;
         }
+        Derivative(Derivative d) {
+            dx = d.dx * 0.5;
+            dy = d.dy * 0.5;
+            dvx = d.dvx * 0.5;
+            dvy = d.dvy * 0.5;
+        }
     }
 
     public Derivative evaluate(double[] coord,double[] velocities, double dt, Derivative d) {
 
         coord[0] = coord[0] + d.dx*dt;
         coord[1] = coord[1] + d.dy*dt;
-        velocities[0] = velocities[0] + d.dvx*dt;
-        velocities[1] = velocities[1] + d.dvy*dt;
 
         Derivative output = new Derivative();
-        output.dx = velocities[0];
-        output.dy = velocities[1];
+        output.dx = velocities[0] + d.dvx*dt;
+        output.dy = velocities[1] + d.dvy*dt;
 
         double[] helper = acceleration(coord,velocities);
         output.dvx = helper[0];
@@ -162,10 +171,36 @@ public class Physics {
         return new double[]{gravForce[0]+frictionForce[0],gravForce[1]+frictionForce[1]};
     }
 
+    public boolean checkRepetion(double[] velocities) {
+        velocities[0] = Math.abs(velocities[0]);
+        velocities[1] = Math.abs(velocities[1]);
+        if (velocities[0] < 1.5 && velocities[1] < 1.5) {
+            tester.enqueue(velocities);
+            double error = 1e-5;
+            if (tester.getSize() == 6) {
 
+                double[][] arrayVel = new double[6][2];
+                for (int i = 0; i < 6; i++) {
+                    arrayVel[i] = tester.dequeue();
+                }
+                for (int i = 0; i < 6; i++) {
+                    tester.enqueue(arrayVel[i]);
+                }
 
+                if (arrayVel[0][0] - arrayVel[2][0] < error && arrayVel[2][0] - arrayVel[4][0] < error &&
+                        arrayVel[0][1] - arrayVel[2][1] < error && arrayVel[2][1] - arrayVel[4][1] < error) {
+                    System.out.println("forcing stop");
+                    tester.clear();
+                    for (int i = 0; i < 4; i++)
+                        this.ball.dequeue();
 
-
+                    return true;
+                }
+                tester.dequeue();
+            }
+        }
+        return false;
+    }
 
 
     /**
@@ -208,7 +243,7 @@ public class Physics {
     public double[] calculateSlope(double[] coord) {
         double[] slope = new double[2];
 
-        double step = 0.001;
+        double step = 1e-10;
 
         slope[0] = (this.course.getHeight(coord[0]+step,coord[1]) - this.course.getHeight(coord[0]-step,coord[1]))/(2*step);
         slope[1] = ((this.course.getHeight(coord[0],coord[1]+step) - this.course.getHeight(coord[0],coord[1]-step))/(2*step));
