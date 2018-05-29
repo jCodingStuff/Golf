@@ -15,9 +15,9 @@ import com.group.golf.math.Point3D;
 
 public class DumBot implements Bot {
 
-    private static final double A_SCALAR = 120;
-    private static final double F_SCALAR = 10;
-    private static final double BIG_SCALAR = 1000;
+    private static final double A_SCALAR = 15; // 120
+    private static final double F_SCALAR = 2; // 10
+    private static final double BIG_SCALAR = 30; // 1000
 
 	private final Course course;
     private final Ball ball;
@@ -46,12 +46,15 @@ public class DumBot implements Bot {
 
     @Override
     public void makeMove() {
-    	double extraPower = 0.4;
-    	double distanceLimit = 0.5;
+    	double extraPower = 3; // 0.4
+    	double distanceLimit = 0.26; // 0.5
     	double[] goalCoords = this.course.getGoal();
     	double[] distances = new double[] {goalCoords[0]-this.ball.getX(), goalCoords[1]-this.ball.getY()};
     	for (int i = 0; i < distances.length; i++) {
-    		if (distances[i] < distanceLimit) distances[i] += extraPower;
+    		if (Math.abs(distances[i]) < distanceLimit) {
+    			distances[i] += extraPower;
+    			System.out.println("distanceLimit applied.");
+    		}
     	    distances[i] *= BIG_SCALAR;
         }
         this.scale(distances);
