@@ -107,6 +107,7 @@ public class CourseSelectorScreen implements Screen {
                 design.setTouchable(Touchable.disabled);
                 importbtn.setTouchable(Touchable.disabled);
                 play.setTouchable(Touchable.disabled);
+                bot.setTouchable(Touchable.disabled);
 
                 Ball ball = new Ball(40);
 
