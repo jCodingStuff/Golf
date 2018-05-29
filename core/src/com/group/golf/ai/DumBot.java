@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 /**
  * Class to generate instances of DumBot
  * @author Kaspar Kallast
- * @version 0.1, 15-05-2018
+ * @version 0.2, 29-05-2018
  */
 import com.badlogic.gdx.math.Vector2;
 import com.group.golf.Ball;
@@ -15,9 +15,9 @@ import com.group.golf.math.Point3D;
 
 public class DumBot implements Bot {
 
-    private static final double A_SCALAR = 120;
-    private static final double F_SCALAR = 10;
-    private static final double BIG_SCALAR = 1000;
+    private static final double A_SCALAR = 15; 
+    private static final double F_SCALAR = 2; 
+    private static final double BIG_SCALAR = 30; 
 
 	private final Course course;
     private final Ball ball;
@@ -46,14 +46,33 @@ public class DumBot implements Bot {
 
     @Override
     public void makeMove() {
-    	double extraPower = 0.4;
-    	double distanceLimit = 0.5;
+    	double extraPower = 6.5; 
+    	double distanceLimit = 0.75; 
     	double[] goalCoords = this.course.getGoal();
     	double[] distances = new double[] {goalCoords[0]-this.ball.getX(), goalCoords[1]-this.ball.getY()};
+    	/*
     	for (int i = 0; i < distances.length; i++) {
-    		if (distances[i] < distanceLimit) distances[i] += extraPower;
+    		if (Math.abs(distances[i]) < Math.abs(distanceLimit)) {
+    			// distances[i] += extraPower;
+    			if (i == 0) {
+    				distances[i] *= (extraPower);
+    				System.out.println("distanceLimit applied to distances[0].");
+    			}
+    			else {
+    				if (i == 1) distances[i] *= (extraPower);
+        			System.out.println("distanceLimit applied to distances[1].");
+    			}
+    		}
     	    distances[i] *= BIG_SCALAR;
         }
+    	*/
+    	if ((Math.abs(distances[0]) + Math.abs(distances[1])) / 2 < Math.abs(distanceLimit)) {
+    		System.out.println("distanceLimit applied");
+    		distances[0] *= extraPower;
+        	distances[1] *= extraPower; 
+    	}
+    	distances[0] *= BIG_SCALAR;
+    	distances[1] *= BIG_SCALAR; 
         this.scale(distances);
     	this.engine.hit(distances[0], distances[1]);
     }
