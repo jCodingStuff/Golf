@@ -45,6 +45,83 @@ public class Physics {
         accelerations = Gdx.files.local("accelerationsRK");
     }
 
+    public void hit(double xLength, double yLength) {
+        water = false;
+
+        System.out.println("xLength:  " + xLength + "  yLength:  " + yLength);
+
+        hitCoord[0] = ball.getX();
+        hitCoord[1] = ball.getY();
+
+        double frameRate = Gdx.graphics.getDeltaTime();
+
+        System.out.println(course.getVmax());
+        this.ball.setVelocityX(xLength/this.ball.getMass());
+        this.ball.setVelocityY(yLength/this.ball.getMass());
+        this.ball.limit(course.getVmax());
+        double[] velocities = new double[]{this.ball.getVelocityX(),this.ball.getVelocityY()};
+
+        ball.addCoord(hitCoord);
+
+        double timer = 0;
+        integrate(hitCoord,velocities,frameRate);
+        timer += frameRate;
+
+        while (this.ball.isMoving() && timer < 10) {
+            velocities = new double[]{this.ball.getVelocityX(),this.ball.getVelocityY()};
+            integrate(this.ball.last(),velocities,frameRate);
+            timer += frameRate;
+        }
+
+
+
+    }
+
+    //https://www.haroldserrano.com/blog/visualizing-the-runge-kutta-method
+    public void integrate(double[] coord,double[] velocities,  double dt) {
+
+        Derivative k1,k2,k3,k4;
+        k1 = evaluate(coord,velocities,0.0,new Derivative(0,0,0,0));
+        k2 = evaluate(coord,velocities,dt*0.5,k1);
+        k3 = evaluate(coord,velocities,dt*0.5,k2);
+        k4 = evaluate(coord,velocities,dt,k3);
+
+        double dxdt = 1.0/6.0 * (k1.dx + 2.0*(k2.dx + k3.dx) + k4.dx);
+        double dydt = 1.0/6.0 * (k1.dy + 2.0*(k2.dy + k3.dy) + k4.dy);
+
+        double dvxdt = 1.0/6.0 * (k1.dvx + 2.0*(k2.dvx + k3.dvx) + k4.dvx);
+        double dvydt = 1.0/6.0 * (k1.dvy + 2.0*(k2.dvy + k3.dvy) + k4.dvy);
+
+        this.ball.limit(this.course.getVmax());
+
+        double[] newCoord = new double[]{coord[0]+dxdt*dt,
+                                         coord[1]+dydt*dt};
+
+        ball.addCoord(newCoord);
+
+        double[] newVelocities = new double[]{velocities[0]+dvxdt*dt,
+                                              velocities[1]+dvydt*dt};
+
+        ball.setVelocityX(newVelocities[0]);
+        ball.setVelocityY(newVelocities[1]);
+
+
+        double[] ballCoords = MathLib.toPixel(newCoord,offsets,scales);
+        this.collision.checkForWalls(ballCoords[0], ballCoords[1]);
+
+        if (this.collision.ballInWater()) {
+            ball.reset();
+            ball.addCoord(hitCoord);
+            water = true;
+        }
+
+//        System.out.println("x  " + newVelocities[0] + "   y   " + newVelocities[1]);
+
+        if (Math.abs(this.ball.getVelocityX()) < 0.05 && Math.abs(this.ball.getVelocityY()) < 0.05) {
+            this.ball.reset();
+        }
+    }
+
 
     class Derivative {
         double dx;  // dx/dt = velocity
@@ -85,76 +162,6 @@ public class Physics {
         return new double[]{gravForce[0]+frictionForce[0],gravForce[1]+frictionForce[1]};
     }
 
-    //https://www.haroldserrano.com/blog/visualizing-the-runge-kutta-method
-    public void integrate(double[] coord,double[] velocities,  double dt) {
-
-        Derivative k1,k2,k3,k4;
-        k1 = evaluate(coord,velocities,0.0,new Derivative(0,0,0,0));
-        k2 = evaluate(coord,velocities,dt*0.5,k1);
-        k3 = evaluate(coord,velocities,dt*0.5,k2);
-        k4 = evaluate(coord,velocities,dt,k3);
-
-        double dxdt = 1.0/6.0 * (k1.dx + 2.0*(k2.dx + k3.dx) + k4.dx);
-        double dydt = 1.0/6.0 * (k1.dy + 2.0*(k2.dy + k3.dy) + k4.dy);
-
-        double dvxdt = 1.0/6.0 * (k1.dvx + 2.0*(k2.dvx + k3.dvx) + k4.dvx);
-        double dvydt = 1.0/6.0 * (k1.dvy + 2.0*(k2.dvy + k3.dvy) + k4.dvy);
-
-        this.ball.limit(this.course.getVmax());
-
-        double[] newCoord = new double[]{coord[0]+dxdt*dt,
-                                         coord[1]+dydt*dt};
-
-        ball.addCoord(newCoord);
-
-        double[] newVelocities = new double[]{velocities[0]+dvxdt*dt,
-                                              velocities[1]+dvydt*dt};
-        ball.setVelocityX(newVelocities[0]);
-        ball.setVelocityY(newVelocities[1]);
-
-
-        double[] ballCoords = MathLib.toPixel(coord,offsets,scales);
-        this.collision.checkForWalls(ballCoords[0], ballCoords[1]);
-
-        if (this.collision.ballInWater()) {
-            ball.reset();
-            water = true;
-        }
-
-        System.out.println("x  " + newVelocities[0] + "   y   " + newVelocities[1]);
-
-        if (Math.abs(this.ball.getVelocityX()) < 0.06 && Math.abs(this.ball.getVelocityY()) < 0.06) {
-            this.ball.reset();
-        }
-
-
-    }
-
-    public void hit(double xLength, double yLength) {
-        hitCoord[0] = ball.getX();
-        hitCoord[1] = ball.getY();
-
-        double frameRate = 0.04;
-
-        this.ball.setVelocityX(xLength/this.ball.getMass());
-        this.ball.setVelocityY(yLength/this.ball.getMass());
-        double[] velocities = new double[]{this.ball.getVelocityX(),this.ball.getVelocityY()};
-
-        ball.addCoord(hitCoord);
-
-        double timer = 0;
-        integrate(hitCoord,velocities,frameRate);
-        timer += frameRate;
-
-        while (this.ball.isMoving() && timer < 10) {
-            velocities = new double[]{this.ball.getVelocityX(),this.ball.getVelocityY()};
-            integrate(this.ball.last(),velocities,frameRate);
-            timer += frameRate;
-        }
-
-
-
-    }
 
 
 
@@ -169,7 +176,6 @@ public class Physics {
     public double[] frictionForce(double[] velocities) {
         double multiplier = - this.course.getMu() * this.course.getG()
                 / normalLength(velocities[0],velocities[1]);
-//        System.out.println(multiplier * velocityX);
         return new double[]{(multiplier * velocities[0]) ,(multiplier * velocities[1])};
     }
 

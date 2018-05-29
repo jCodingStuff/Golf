@@ -340,6 +340,7 @@ public class CourseScreen implements Screen {
             this.ball.setX(this.engine.getHitCoord()[0]);
             this.ball.setY(this.engine.getHitCoord()[1]);
             this.loseSound.play(0.2f);
+            this.engine.setWater(false);
         }
 
         // And again, before every check recompute pixel position of the ball
