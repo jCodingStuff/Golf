@@ -24,10 +24,10 @@ public class RandomBot implements Bot{
     private final Course course;
     private Random rand;
     double MAXFORCE = 100.0;
-    int numGuesses = 10;
+    int numGuesses = 2;
     double forceX = 0;
     double forceY = 0;
-
+    int counter = 0;
 
 /**
  * Create a new RandomBot instance
@@ -53,17 +53,18 @@ public class RandomBot implements Bot{
 
     /**
      * generates random options and searches for the best out of 10 guesses
-     * @param best the Best choice sofar
+     * @param goal the Best choice sofar
      */
 
-    private double GetBestRandomChoice(double best) {
+    private double GetBestRandomChoice(double goal) {
         double closest = Double.POSITIVE_INFINITY;
         double choice;
         for (int i = 0; i < numGuesses; i++){
             choice = this.rand.nextDouble() * MAXFORCE;
 
-            // choice closer than best
-            if (Math.abs(choice - best) < Math.abs(closest - best)) closest = choice;
+            // choice closer than goal
+            if (Math.abs(choice - goal) < Math.abs(closest - goal))
+                closest = choice;
         }
         System.out.println(closest);
         return closest;
@@ -72,16 +73,19 @@ public class RandomBot implements Bot{
 
     @Override
     public void makeMove() {
+
         double[] goal = this.course.getGoal();
         System.out.println(Arrays.toString(goal));
         forceX = GetBestRandomChoice(goal[0]);
         forceY = GetBestRandomChoice(goal[1]);
         while(!checkPath()){
             forceX = GetBestRandomChoice(goal[0]);
-            System.out.println(forceX);
+            //System.out.println(forceX);
             forceY = GetBestRandomChoice(goal[1]);
         }
-        this.engine.hit(forceX, forceY);
+        this.engine.hit(forceX, -forceY);
+        counter += 1;
+        System.out.print(counter);
     }
 
     private boolean checkPath(){
