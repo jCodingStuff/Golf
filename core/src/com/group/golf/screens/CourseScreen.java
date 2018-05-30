@@ -65,6 +65,7 @@ public class CourseScreen implements Screen {
 
     private double scaleX;
     private double scaleY;
+    private static final double SCALE_MULTIPLIER = 75;
     private double xoffset;
     private double yoffset;
     private double ballX;
@@ -412,6 +413,9 @@ public class CourseScreen implements Screen {
                 double modulus = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
                 // we don't need this !!
                 double force = MathLib.map(modulus, 0, 300, 0, 600);
+
+                xLength *= this.scaleX * SCALE_MULTIPLIER;
+                yLength *= this.scaleY * SCALE_MULTIPLIER;
 
                 this.engine.hit(xLength, yLength);
                 this.landed = true;
