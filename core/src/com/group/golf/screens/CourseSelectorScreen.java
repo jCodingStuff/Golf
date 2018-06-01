@@ -42,7 +42,6 @@ public class CourseSelectorScreen implements Screen {
     TextButton play;
     TextButton importbtn;
     TextButton design;
-    TextButton bot;
 
     Music menuMusic;
     OrthographicCamera cam;
@@ -60,7 +59,6 @@ public class CourseSelectorScreen implements Screen {
         play = new TextButton("Play", skin);
         importbtn = new TextButton("Import", skin);
         design = new TextButton("Design", skin);
-        bot = new TextButton("Bot", skin);
 
         play.setPosition(300, 400);
         importbtn.setPosition(300, 300);
@@ -68,13 +66,10 @@ public class CourseSelectorScreen implements Screen {
         play.setSize(200, 60);
         importbtn.setSize(200, 60);
         design.setSize(200, 60);
-        bot.setPosition(600, 400);
-        bot.setSize(200, 60);
 
         stage.addActor(play);
         stage.addActor(importbtn);
         stage.addActor(design);
-        stage.addActor(bot);
 
         // Setup cam
         this.cam = new OrthographicCamera();
@@ -107,11 +102,10 @@ public class CourseSelectorScreen implements Screen {
                 design.setTouchable(Touchable.disabled);
                 importbtn.setTouchable(Touchable.disabled);
                 play.setTouchable(Touchable.disabled);
-                bot.setTouchable(Touchable.disabled);
 
                 Ball ball = new Ball(40);
 
-                this.game.setScreen(new CourseScreen(this.game, course, ball));
+                this.game.setScreen(new ModeScreen(this.game, course, ball));
 
                 this.screen.dispose();
             }
@@ -149,38 +143,6 @@ public class CourseSelectorScreen implements Screen {
             }
         }
         design.addListener(new DesignListener(game, this));
-
-
-
-        class BotListener extends ChangeListener{
-            final Golf game;
-            private Screen screen;
-            public BotListener(final Golf game, Screen screen){
-                this.game = game;
-                this.screen = screen;
-            }
-            @Override
-            public void changed (ChangeEvent event, Actor actor) {
-
-                String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                double[] start = new double[]{4, 3};
-                double[] goal = new double[]{0, 1};
-                Function function = new Function(formula);
-                Computable[][] functions = new Computable[1][1];
-                functions[0][0] = function;
-                Course course = new Course(functions, 9.81, 0.95, 80, start, goal, 0.5);
-                design.setTouchable(Touchable.disabled);
-                importbtn.setTouchable(Touchable.disabled);
-                play.setTouchable(Touchable.disabled);
-
-                Ball ball = new Ball(40);
-
-                this.game.setScreen(new BotScreen(this.game, course, ball));
-                this.screen.dispose();
-            }
-
-        }
-        bot.addListener(new BotListener(game, this));
     }
 
     @Override

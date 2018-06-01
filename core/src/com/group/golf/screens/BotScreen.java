@@ -215,7 +215,7 @@ public class BotScreen implements Screen {
                     back.setTouchable(Touchable.disabled);
 
                     this.game.setScreen(new CourseSelectorScreen(this.game));
-
+                    this.screen.dispose();
                 }
 
             }

@@ -10,6 +10,7 @@ import com.group.golf.Golf;
 import com.group.golf.math.Computable;
 import com.group.golf.math.Function;
 import com.group.golf.screens.CourseScreen;
+import com.group.golf.screens.ModeScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,7 @@ public class Mode1Listener extends ChangeListener {
         Computable[][] functions = new Computable[1][1];
         functions[0][0] = function;
         Course course = new Course(functions, g, mu, vmax, start, goal, tolerance);
-        this.game.setScreen(new CourseScreen(this.game, course, ball));
+        this.game.setScreen(new ModeScreen(this.game, course, ball));
         this.screen.dispose();
     }
 }

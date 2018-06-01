@@ -6,9 +6,12 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
@@ -18,8 +21,8 @@ public class ModeScreen implements Screen {
     private final Golf game;
     private Stage stage;
 
-    private Course course;
-    private Ball ball;
+    private final Course course;
+    private final Ball ball;
 
     private TextButton singlePlayer;
     private TextButton playerVSPlayer;
@@ -31,7 +34,7 @@ public class ModeScreen implements Screen {
     private OrthographicCamera cam;
     private Texture background;
 
-    public ModeScreen(final Golf game, Course course, Ball ball) {
+    public ModeScreen(final Golf game, final Course course, final Ball ball) {
         this.game = game;
         this.course = course;
         this.ball = ball;
@@ -46,15 +49,89 @@ public class ModeScreen implements Screen {
         aiVSai = new TextButton("Bot vs Bot", skin);
 
         back.setPosition(100, 300);
+        singlePlayer.setPosition(300, 300);
+        ai.setPosition(600, 300);
 
         back.setSize(100, 60);
+        singlePlayer.setSize(150, 60);
+        ai.setSize(150, 60);
 
         stage.addActor(back);
         stage.addActor(singlePlayer);
-        stage.addActor(playerVSPlayer);
+        //stage.addActor(playerVSPlayer);
         stage.addActor(ai);
-        stage.addActor(playerVSai);
-        stage.addActor(aiVSai);
+        //stage.addActor(playerVSai);
+        //stage.addActor(aiVSai);
+
+        // Setup button listeners
+        class BackListener extends ChangeListener {
+            final Golf game;
+            private Screen screen;
+
+            public BackListener(final Golf game, Screen screen) {
+                this.game = game;
+                this.screen = screen;
+            }
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                singlePlayer.setTouchable(Touchable.disabled);
+                playerVSai.setTouchable(Touchable.disabled);
+                ai.setTouchable(Touchable.disabled);
+                aiVSai.setTouchable(Touchable.disabled);
+                playerVSai.setTouchable(Touchable.disabled);
+                back.setTouchable(Touchable.disabled);
+                this.game.setScreen(new CourseSelectorScreen(this.game));
+                this.screen.dispose();
+            }
+        }
+        back.addListener(new BackListener(game, this));
+
+        class BotListener extends ChangeListener {
+            final Golf game;
+            private Screen screen;
+
+            public BotListener(final Golf game, Screen screen) {
+                this.game = game;
+                this.screen = screen;
+            }
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                singlePlayer.setTouchable(Touchable.disabled);
+                playerVSai.setTouchable(Touchable.disabled);
+                ai.setTouchable(Touchable.disabled);
+                aiVSai.setTouchable(Touchable.disabled);
+                playerVSai.setTouchable(Touchable.disabled);
+                back.setTouchable(Touchable.disabled);
+                this.game.setScreen(new BotScreen(this.game, course, ball));
+                this.screen.dispose();
+            }
+        }
+        ai.addListener(new BotListener(game, this));
+
+        class SingleListener extends ChangeListener {
+            final Golf game;
+            private Screen screen;
+
+            public SingleListener(final Golf game, Screen screen) {
+                this.game = game;
+                this.screen = screen;
+            }
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                singlePlayer.setTouchable(Touchable.disabled);
+                playerVSai.setTouchable(Touchable.disabled);
+                ai.setTouchable(Touchable.disabled);
+                aiVSai.setTouchable(Touchable.disabled);
+                playerVSai.setTouchable(Touchable.disabled);
+                back.setTouchable(Touchable.disabled);
+                this.game.setScreen(new CourseScreen(this.game, course, ball));
+                this.screen.dispose();
+            }
+        }
+        singlePlayer.addListener(new SingleListener(this.game, this));
 
         // Setup cam
         this.cam = new OrthographicCamera();
