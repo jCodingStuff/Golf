@@ -39,6 +39,11 @@ public class ModeScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         back = new TextButton("Back", skin);
+        singlePlayer = new TextButton("SinglePlayer", skin);
+        playerVSPlayer = new TextButton("Player vs Player", skin);
+        ai = new TextButton("Bot", skin);
+        playerVSai = new TextButton("Player vs Bot", skin);
+        aiVSai = new TextButton("Bot vs Bot", skin);
 
         back.setPosition(100, 300);
 
