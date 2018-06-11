@@ -1,6 +1,7 @@
 package com.group.golf;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Circle;
 import com.group.golf.Physics.Queue;
 import com.group.golf.math.MathLib;
@@ -25,7 +26,6 @@ public class Ball extends Queue<double[]>{
 
 
     private Texture texture;
-    private CourseScreen courseScreen;
     private Circle collisionCircle;
 
     /**
@@ -102,11 +102,11 @@ public class Ball extends Queue<double[]>{
         }
     }
 
-    public void render(double realX, double realY) {
-        this.courseScreen.getGame().batch.begin();
-        this.courseScreen.getGame().batch.draw(this.texture, (float) realX - RADIUS,
+    public void render(Batch batch, double realX, double realY) {
+        batch.begin();
+        batch.draw(this.texture, (float) realX - RADIUS,
                 (float) realY - RADIUS, RADIUS * 2,RADIUS * 2);
-        this.courseScreen.getGame().batch.end();
+        batch.end();
     }
 
     /**
@@ -115,14 +115,6 @@ public class Ball extends Queue<double[]>{
     private void updateCollisionCircle() {
         this.collisionCircle.setX((float) this.x);
         this.collisionCircle.setY((float) this.y);
-    }
-
-    /**
-     * Set a course screen for the ball
-     * @param courseScreen the new courseScreen
-     */
-    public void setCourseScreen(CourseScreen courseScreen) {
-        this.courseScreen = courseScreen;
     }
 
     /**
