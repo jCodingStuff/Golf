@@ -151,7 +151,6 @@ public class CourseSelectorScreen implements Screen {
         design.addListener(new DesignListener(game, this));
 
 
-
         class BotListener extends ChangeListener{
             final Golf game;
             private Screen screen;
