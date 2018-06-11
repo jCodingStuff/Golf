@@ -170,16 +170,8 @@ public class CourseScreen implements Screen {
         this.music.setVolume(0.2f);
         this.music.setLooping(true);
 
-        // Setup engine and collision system
-        this.engine = new Physics(this.course, this.ball);
-        this.collision = new Collision(this.ball, this.course);
-
         // Setup Course
         this.setUpCourse();
-
-        this.engine.setOffsets(new double[]{this.xoffset,this.yoffset});
-        this.engine.setScales(new double[]{this.scaleX,this.scaleY});
-
 
         // Setup Goal
         this.goalSize = 20;
