@@ -53,8 +53,8 @@ public class ModeScreen implements Screen {
         ai.setPosition(600, 300);
 
         back.setSize(100, 60);
-        singlePlayer.setSize(150, 60);
-        ai.setSize(150, 60);
+        singlePlayer.setSize(200, 60);
+        ai.setSize(200, 60);
 
         stage.addActor(back);
         stage.addActor(singlePlayer);

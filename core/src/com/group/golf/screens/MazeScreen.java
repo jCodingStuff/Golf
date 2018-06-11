@@ -49,17 +49,17 @@ public class MazeScreen implements Screen {
             Gdx.input.setInputProcessor(stage);
             Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
             playAlone = new TextButton("Play", skin);
-            team = new TextButton("Import", skin);
+            team = new TextButton("Team Play", skin);
             back = new TextButton("Back", skin);
             bot = new TextButton("Bot", skin);
 
             playAlone.setPosition(300, 400);
-            team.setPosition(300, 300);
-            back.setPosition(600, 300);
+            team.setPosition(600, 400);
+            back.setPosition(100, 300);
             playAlone.setSize(200, 60);
             team.setSize(200, 60);
-            back.setSize(200, 60);
-            bot.setPosition(600, 400);
+            back.setSize(100, 60);
+            bot.setPosition(600, 300);
             bot.setSize(200, 60);
 
             stage.addActor(playAlone);
@@ -82,12 +82,14 @@ public class MazeScreen implements Screen {
             class PlayListener extends ChangeListener {
                 final Golf game;
                 private Screen screen;
-                public PlayListener(final Golf game, Screen screen){
+
+                public PlayListener(final Golf game, Screen screen) {
                     this.game = game;
                     this.screen = screen;
                 }
+
                 @Override
-                public void changed (ChangeEvent event, Actor actor) {
+                public void changed(ChangeEvent event, Actor actor) {
                     String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
                     double[] start = new double[]{4, 3};
                     double[] goal = new double[]{0, 1};
@@ -110,16 +112,50 @@ public class MazeScreen implements Screen {
             }
             playAlone.addListener(new PlayListener(game, this));
 
-
-            class BotListener extends ChangeListener{
+            class TeamListener extends ChangeListener {
                 final Golf game;
                 private Screen screen;
-                public BotListener(final Golf game, Screen screen){
+
+                public TeamListener(final Golf game, Screen screen) {
                     this.game = game;
                     this.screen = screen;
                 }
+
                 @Override
-                public void changed (ChangeEvent event, Actor actor) {
+                public void changed(ChangeEvent event, Actor actor) {
+                    String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
+                    double[] start = new double[]{4, 3};
+                    double[] goal = new double[]{0, 1};
+                    Function function = new Function(formula);
+                    Computable[][] functions = new Computable[1][1];
+                    functions[0][0] = function;
+                    Course course = new Course(functions, 9.81, 0.95, 80, start, goal, 0.5);
+                    back.setTouchable(Touchable.disabled);
+                    playAlone.setTouchable(Touchable.disabled);
+                    bot.setTouchable(Touchable.disabled);
+
+                    Ball ball = new Ball(40);
+
+                    this.game.setScreen(new CourseScreen(this.game, course, ball));
+
+                    this.screen.dispose();
+                }
+
+            }
+            team.addListener(new TeamListener(game, this));
+
+
+            class BotListener extends ChangeListener {
+                final Golf game;
+                private Screen screen;
+
+                public BotListener(final Golf game, Screen screen) {
+                    this.game = game;
+                    this.screen = screen;
+                }
+
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
 
                     String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
                     double[] start = new double[]{4, 3};
@@ -140,6 +176,27 @@ public class MazeScreen implements Screen {
 
             }
             bot.addListener(new BotListener(game, this));
+
+
+            // listener for back button
+            class BackListener extends ChangeListener {
+                final Golf game;
+                private Screen screen;
+
+                public BackListener(final Golf game, Screen screen) {
+                    this.game = game;
+                    this.screen = screen;
+                }
+
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+
+                    this.game.setScreen(new CourseSelectorScreen(this.game));
+                    this.screen.dispose();
+                }
+
+            }
+            back.addListener(new BackListener(game, this));
         }
 
         @Override
