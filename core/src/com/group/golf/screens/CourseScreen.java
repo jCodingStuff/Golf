@@ -86,13 +86,7 @@ public class CourseScreen implements Screen {
     public CourseScreen(final Golf game, Course course, Ball ball, String moves) {
         this.game = game;
         this.course = course;
-
-        // Setup Ball
         this.ball = ball;
-        this.ball.setCourseScreen(this);
-        this.ball.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
-        this.ball.setX(this.course.getStart()[0]);
-        this.ball.setY(this.course.getStart()[1]);
 
         this.setupCommon();
 
@@ -104,6 +98,8 @@ public class CourseScreen implements Screen {
             this.moves.add(in.nextLine());
         }
         in.close();
+
+        this.bot = null;
     }
 
     /**
@@ -115,13 +111,7 @@ public class CourseScreen implements Screen {
     public CourseScreen(final Golf game, Course course, Ball ball) {
         this.game = game;
         this.course = course;
-
-        // Setup Ball
         this.ball = ball;
-        this.ball.setCourseScreen(this);
-        this.ball.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
-        this.ball.setX(this.course.getStart()[0]);
-        this.ball.setY(this.course.getStart()[1]);
 
         this.setupCommon();
 
@@ -134,13 +124,7 @@ public class CourseScreen implements Screen {
     public CourseScreen(final Golf game, Course course, Ball ball, Bot bot) {
         this.game = game;
         this.course = course;
-
-        // Setup Ball
         this.ball = ball;
-        this.ball.setCourseScreen(this);
-        this.ball.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
-        this.ball.setX(this.course.getStart()[0]);
-        this.ball.setY(this.course.getStart()[1]);
 
         this.setupCommon();
 
@@ -155,6 +139,10 @@ public class CourseScreen implements Screen {
      * Setup common properties to all gamemodes
      */
     private void setupCommon() {
+        // Setup Ball
+        this.ball.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
+        this.ball.setX(this.course.getStart()[0]);
+        this.ball.setY(this.course.getStart()[1]);
 
         // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
@@ -355,7 +343,7 @@ public class CourseScreen implements Screen {
         this.computeBallPixels();
 
         // Render the ball
-        this.ball.render(this.ballX, this.ballY);
+        this.ball.render(this.game.batch, this.ballX, this.ballY);
     }
 
     /**
