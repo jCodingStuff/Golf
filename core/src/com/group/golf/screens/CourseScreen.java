@@ -458,6 +458,16 @@ public class CourseScreen implements Screen {
         this.game.shapeRenderer.ellipse(realX - this.goalSize/2, realY - this.goalSize/2,
                 this.goalSize, this.goalSize);
         this.game.shapeRenderer.end();
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        // new wall from here
+        float x = (float) 0.0;
+        float y = (float) 68;
+        float width = (float) 210;
+        float height = (float) 15;
+        this.game.shapeRenderer.setColor(Color.RED);
+        this.game.shapeRenderer.rect(realX + x, realY + y, width, height);
+        // new wall end here
+        this.game.shapeRenderer.end();
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         double tolerance = this.course.getTolerance();
         float toleranceX = (float) (tolerance * 1/(this.getScaleX()));
