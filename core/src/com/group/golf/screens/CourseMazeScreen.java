@@ -29,7 +29,7 @@ import java.util.StringTokenizer;
 /**
  * A class to draw the course
  */
-public class CourseScreen implements Screen {
+public class CourseMazeScreen implements Screen {
 
     final Golf game;
 
@@ -83,7 +83,7 @@ public class CourseScreen implements Screen {
      * @param ball the Ball instance
      * @param moves the moves to read
      */
-    public CourseScreen(final Golf game, Course course, Ball ball, String moves) {
+    public CourseMazeScreen(final Golf game, Course course, Ball ball, String moves) {
         this.game = game;
         this.course = course;
         this.ball = ball;
@@ -108,7 +108,7 @@ public class CourseScreen implements Screen {
      * @param course the Course instance
      * @param ball the Ball instance
      */
-    public CourseScreen(final Golf game, Course course, Ball ball) {
+    public CourseMazeScreen(final Golf game, Course course, Ball ball) {
         this.game = game;
         this.course = course;
         this.ball = ball;
@@ -121,7 +121,7 @@ public class CourseScreen implements Screen {
         this.bot = null;
     }
 
-    public CourseScreen(final Golf game, Course course, Ball ball, Bot bot) {
+    public CourseMazeScreen(final Golf game, Course course, Ball ball, Bot bot) {
         this.game = game;
         this.course = course;
         this.ball = ball;
@@ -458,6 +458,15 @@ public class CourseScreen implements Screen {
         this.game.shapeRenderer.ellipse(realX - this.goalSize/2, realY - this.goalSize/2,
                 this.goalSize, this.goalSize);
         this.game.shapeRenderer.end();
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        // new wall from here
+        float x = (float) 0.0;
+        float y = (float) 68;
+        float width = (float) 210;
+        float height = (float) 15;
+        this.game.shapeRenderer.setColor(Color.RED);
+        this.game.shapeRenderer.rect(realX + x, realY + y, width, height);
+        // new wall end here
         this.game.shapeRenderer.end();
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         double tolerance = this.course.getTolerance();

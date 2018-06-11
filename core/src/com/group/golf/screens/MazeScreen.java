@@ -104,7 +104,7 @@ public class MazeScreen implements Screen {
 
                     Ball ball = new Ball(40);
 
-                    this.game.setScreen(new CourseScreen(this.game, course, ball));
+                    this.game.setScreen(new CourseMazeScreen(this.game, course, ball));
 
                     this.screen.dispose();
                 }
