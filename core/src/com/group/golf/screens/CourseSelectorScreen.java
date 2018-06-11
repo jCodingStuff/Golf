@@ -158,7 +158,7 @@ public class CourseSelectorScreen implements Screen {
                 this.screen = screen;
             }
             public void changed (ChangeEvent event, Actor actor) {
-                this.game.setScreen(new DecisionScreen(this.game));
+                this.game.setScreen(new MazeScreen(this.game));
                 this.screen.dispose();
             }
         }
