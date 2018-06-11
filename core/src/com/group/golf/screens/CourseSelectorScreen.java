@@ -42,6 +42,7 @@ public class CourseSelectorScreen implements Screen {
     TextButton play;
     TextButton importbtn;
     TextButton design;
+    TextButton maze;
 
     Music menuMusic;
     OrthographicCamera cam;
@@ -59,17 +60,21 @@ public class CourseSelectorScreen implements Screen {
         play = new TextButton("Play", skin);
         importbtn = new TextButton("Import", skin);
         design = new TextButton("Design", skin);
+        maze = new TextButton("Maze", skin);
 
         play.setPosition(300, 400);
         importbtn.setPosition(300, 300);
         design.setPosition(600, 300);
+        maze.setPosition(600,400);
         play.setSize(200, 60);
         importbtn.setSize(200, 60);
         design.setSize(200, 60);
+        maze.setSize(200,60);
 
         stage.addActor(play);
         stage.addActor(importbtn);
         stage.addActor(design);
+        stage.addActor(maze);
 
         // Setup cam
         this.cam = new OrthographicCamera();
@@ -143,6 +148,22 @@ public class CourseSelectorScreen implements Screen {
             }
         }
         design.addListener(new DesignListener(game, this));
+
+        class MazeListener extends ChangeListener {
+            final Golf game;
+            private Screen screen;
+            public MazeListener(final Golf game, Screen screen){
+                this.game = game;
+                this.screen = screen;
+            }
+            public void changed (ChangeEvent event, Actor actor) {
+                this.game.setScreen(new DecisionScreen(this.game));
+                this.screen.dispose();
+            }
+        }
+        maze.addListener(new MazeListener(game, this));
+
+
     }
 
     @Override
