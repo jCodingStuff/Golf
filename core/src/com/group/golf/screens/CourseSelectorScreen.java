@@ -36,13 +36,12 @@ public class CourseSelectorScreen implements Screen {
 
     final Golf game;
     Stage stage;
-    Physics engine;
-    Ball ball;
 
     TextButton play;
     TextButton importbtn;
     TextButton design;
     TextButton maze;
+    TextButton scoreBoard;
 
     Music menuMusic;
     OrthographicCamera cam;
@@ -61,20 +60,25 @@ public class CourseSelectorScreen implements Screen {
         importbtn = new TextButton("Import", skin);
         design = new TextButton("Design", skin);
         maze = new TextButton("Maze", skin);
+        scoreBoard = new TextButton("Score board", skin);
 
         play.setPosition(300, 400);
         importbtn.setPosition(300, 300);
         design.setPosition(600, 300);
         maze.setPosition(600,400);
+        scoreBoard.setPosition(600, 200);
+
         play.setSize(200, 60);
         importbtn.setSize(200, 60);
         design.setSize(200, 60);
         maze.setSize(200,60);
+        scoreBoard.setSize(200, 60);
 
         stage.addActor(play);
         stage.addActor(importbtn);
         stage.addActor(design);
         stage.addActor(maze);
+        stage.addActor(scoreBoard);
 
         // Setup cam
         this.cam = new OrthographicCamera();
@@ -164,6 +168,19 @@ public class CourseSelectorScreen implements Screen {
         }
         maze.addListener(new MazeListener(game, this));
 
+        class ScoreBoardListener extends ChangeListener {
+            final Golf game;
+            private Screen screen;
+            public ScoreBoardListener(final Golf game, Screen screen){
+                this.game = game;
+                this.screen = screen;
+            }
+            public void changed (ChangeEvent event, Actor actor) {
+                this.game.setScreen(new ScoreScreen(this.game));
+                this.screen.dispose();
+            }
+        }
+        scoreBoard.addListener(new ScoreBoardListener(game, this));
 
     }
 
