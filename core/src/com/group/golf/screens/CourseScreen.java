@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.group.golf.Ball;
@@ -75,6 +77,11 @@ public class CourseScreen implements Screen {
     private Bot bot;
     private boolean landed = true;
 
+    //Score
+    int movesCounter;
+    FreeTypeFontGenerator subTitleGenerator;
+    FreeTypeFontGenerator.FreeTypeFontParameter subTitleParameter;
+    BitmapFont subTitleFont;
 
     /**
      * Create a new course screen
@@ -100,6 +107,8 @@ public class CourseScreen implements Screen {
         in.close();
 
         this.bot = null;
+        this.movesCounter = 0;
+
     }
 
     /**
@@ -119,6 +128,15 @@ public class CourseScreen implements Screen {
         this.moves = null;
         // Setup bot
         this.bot = null;
+        this.movesCounter = 0;
+
+        this.subTitleGenerator = new FreeTypeFontGenerator(Gdx.files.internal("MoonGetFont.otf"));
+        this.subTitleParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        this.subTitleParameter.size = 10;
+        this.subTitleParameter.shadowColor = Color.BLACK;
+        this.subTitleParameter.shadowOffsetX = 3;
+        this.subTitleParameter.shadowOffsetY = 3;
+        this.subTitleFont = this.subTitleGenerator.generateFont(this.subTitleParameter);
     }
 
     public CourseScreen(final Golf game, Course course, Ball ball, Bot bot) {
@@ -133,6 +151,14 @@ public class CourseScreen implements Screen {
 
         this.bot.setPhysics(this.engine);
         this.bot.setCollision(this.collision);
+        this.movesCounter = 0;
+        this.subTitleGenerator = new FreeTypeFontGenerator(Gdx.files.internal("MoonGetFont.otf"));
+        this.subTitleParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        this.subTitleParameter.size = 10;
+        this.subTitleParameter.shadowColor = Color.BLACK;
+        this.subTitleParameter.shadowOffsetX = 3;
+        this.subTitleParameter.shadowOffsetY = 3;
+        this.subTitleFont = this.subTitleGenerator.generateFont(this.subTitleParameter);
     }
 
     /**
@@ -288,6 +314,11 @@ public class CourseScreen implements Screen {
         this.computeBallPixels();
 
 
+        this.game.batch.begin();
+        //score
+        this.subTitleFont.draw(this.game.batch, "moves: "+movesCounter, 100, 100);
+        this.game.batch.end();
+
 
         // Check if the ball is stopped
         if (this.ball.getSize() == 0) {
@@ -314,15 +345,18 @@ public class CourseScreen implements Screen {
             if (this.bot != null && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
                 System.out.println("\nBot moving!");
                 this.bot.makeMove();
+                this.movesCounter++;
                 this.landed = true;
             }
             else if (this.moves != null && this.counter < this.moves.size() &&
                     Gdx.input.isKeyPressed(Input.Keys.SPACE)) { // Mode 2 is active
                 System.out.println("\nFile moves!");
                 this.fileMoves();
+                this.movesCounter++;
             }
             else { // Mode 1 is active
                 this.userMoves();
+
             }
         } else {
 
@@ -370,9 +404,11 @@ public class CourseScreen implements Screen {
                 this.firstX = Gdx.input.getX();
                 this.firstY = Gdx.input.getY();
                 this.touchFlag = true;
+                movesCounter++;
             }
             this.lastX = Gdx.input.getX();
             this.lastY = Gdx.input.getY();
+
         }
         else if (this.touchFlag) {
             if (this.firstX != this.lastX || this.lastY != this.firstY) {
