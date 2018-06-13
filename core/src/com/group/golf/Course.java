@@ -15,6 +15,10 @@ public class Course {
     private double vmax;
     private double[] start;
     private double[] goal;
+    
+    private double[] start2;
+    private double[] goal2;
+    
     private double tolerance;
     private Computable[][] functions;
 
@@ -37,8 +41,26 @@ public class Course {
         this.goal = goal;
         this.tolerance = tolerance;
         this.functions = functions;
+        
+        this.start2 = null;
+        this.goal2 = null;
     }
 
+    public Course(Computable[][] functions, double g, double mu, double vmax, double[] start, double[] start2, double[] goal, double[] goal2,
+            double tolerance) {
+  this.g = g;
+  this.mu = mu;
+  this.vmax = vmax;
+  this.start = start;
+  this.goal = goal;
+  
+  this.start2 = start2;
+  this.goal2 = goal2;
+  
+  
+  this.tolerance = tolerance;
+  this.functions = functions;
+}
     /**
      * Check if the course is a spline
      * @return true if it is spline, false otherwise
@@ -158,6 +180,34 @@ public class Course {
     public void setGoal(double[] goal) {
         this.goal = goal;
     }
+    
+    public double[] getStart2() {
+        return start2;
+    }
+
+    /**
+     * Set a new set of start coordinates
+     * @param start the new start coordinates
+     */
+    public void setStart2(double[] start2) {
+        this.start2 = start2;
+    }
+
+    /**
+     * Get access to the goal coordinates
+     * @return the goal coordinates
+     */
+    public double[] getGoal2() {
+        return goal2;
+    }
+
+    /**
+     * Set a new set of goal coordinates
+     * @param goal the new goal coordinates
+     */
+    public void setGoal2(double[] goal2) {
+        this.goal2 = goal2;
+    }
 
     /**
      * Get access to the goal tolerance
@@ -206,6 +256,11 @@ public class Course {
     public double getDistance() {
         double dist = Math.sqrt(Math.pow(this.goal[0] - this.start[0], 2) + Math.pow(this.goal[1] - this.start[1], 2));
         return Math.abs(dist);
+    }
+    
+    public double getDistance2() {
+        double dist2 = Math.sqrt(Math.pow(this.goal2[0] - this.start2[0], 2) + Math.pow(this.goal2[1] - this.start2[1], 2));
+        return Math.abs(dist2);
     }
 
     @Override

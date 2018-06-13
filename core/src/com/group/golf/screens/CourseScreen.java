@@ -49,6 +49,7 @@ public class CourseScreen implements Screen {
 
     Course course;
     Ball ball;
+    Ball ball2; // Multiplayer
     Texture flag;
     OrthographicCamera cam;
     Music music;
@@ -77,6 +78,8 @@ public class CourseScreen implements Screen {
 
     // Gaming stuff
     private boolean touchFlag;
+    private boolean touchFlag2; // MP
+    private boolean user1turn = true; // MP
     private int firstX;
     private int firstY;
     private int lastX;
@@ -89,6 +92,8 @@ public class CourseScreen implements Screen {
     private double yoffset;
     private double ballX;
     private double ballY;
+    private double ballX2; // MP
+    private double ballY2; // MP
 
     // Bot
     private Bot bot;
@@ -113,7 +118,7 @@ public class CourseScreen implements Screen {
         this.game = game;
         this.course = course;
         this.ball = ball;
-
+        this.ball2 = null;
         this.setupCommon();
 
         // Setup moves
@@ -130,6 +135,30 @@ public class CourseScreen implements Screen {
 
 
     }
+    
+    // For multiplayer
+    public CourseScreen(final Golf game, Course course, Ball ball, Ball ball2) {
+        this.game = game;
+        this.course = course;
+        this.ball = ball;
+        this.ball2 = ball2;
+
+        this.setupCommon();
+
+        // Setup moves
+        this.moves = null;
+        // Setup bot
+        this.bot = null;
+        this.movesCounter = 0;
+
+        this.subTitleGenerator = new FreeTypeFontGenerator(Gdx.files.internal("MoonGetFont.otf"));
+        this.subTitleParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        this.subTitleParameter.size = 10;
+        this.subTitleParameter.shadowColor = Color.BLACK;
+        this.subTitleParameter.shadowOffsetX = 3;
+        this.subTitleParameter.shadowOffsetY = 3;
+        this.subTitleFont = this.subTitleGenerator.generateFont(this.subTitleParameter);
+    }
 
     /**
      * Create a new CourseScreen instance
@@ -142,7 +171,7 @@ public class CourseScreen implements Screen {
         this.game = game;
         this.course = course;
         this.ball = ball;
-
+        this.ball2 = null;
         this.setupCommon();
 
         // Setup moves
@@ -164,7 +193,7 @@ public class CourseScreen implements Screen {
         this.game = game;
         this.course = course;
         this.ball = ball;
-
+        this.ball2 = null;
         this.setupCommon();
 
         this.bot = bot;
@@ -190,6 +219,13 @@ public class CourseScreen implements Screen {
         this.ball.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
         this.ball.setX(this.course.getStart()[0]);
         this.ball.setY(this.course.getStart()[1]);
+        
+        // Setup Ball2
+        if(ball2 != null) {
+        this.ball2.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
+        this.ball2.setX(this.course.getStart2()[0]);
+        this.ball2.setY(this.course.getStart2()[1]);
+        }
 
         // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
@@ -336,12 +372,18 @@ public class CourseScreen implements Screen {
 
         // Render the goal
         this.renderGoal();
+        if (this.ball2 != null) {
+        this.renderGoal2();
+        }
         
         // Render the maze walls
         this.renderMaze();
 
         // Update pixel position of ball
         this.computeBallPixels();
+        if (this.ball2 != null) {
+        this.computeBallPixels2();
+        }
 
 
         this.game.batch.begin();
@@ -542,6 +584,13 @@ public class CourseScreen implements Screen {
             this.ballX = ballPixels[0];
             this.ballY = ballPixels[1];
         }
+        
+        public void computeBallPixels2 () {
+            double[] ballPixels2 = MathLib.toPixel(new double[]{this.ball2.getX(), this.ball2.getY()},
+                    new double[]{this.xoffset, this.yoffset}, new double[]{this.scaleX, this.scaleY});
+            this.ballX2 = ballPixels2[0];
+            this.ballY2 = ballPixels2[1];
+        }
 
         /**
          * Compute the scale
@@ -582,6 +631,30 @@ public class CourseScreen implements Screen {
     private void renderGoal() {
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         double[] real = MathLib.toPixel(this.course.getGoal(), new double[]{this.getXoffset(), this.getYoffset()},
+                new double[]{this.getScaleX(), this.getScaleY()});
+        float realX = (float) real[0];
+        float realY = (float) real[1];
+        this.game.shapeRenderer.setColor(0, 0, 0, 1);
+        this.game.shapeRenderer.ellipse(realX - this.goalSize/2, realY - this.goalSize/2,
+                this.goalSize, this.goalSize);
+        this.game.shapeRenderer.end();
+        this.game.shapeRenderer.end();
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        double tolerance = this.course.getTolerance();
+        float toleranceX = (float) (tolerance * 1/(this.getScaleX()));
+        float toleranceY = (float) (tolerance * 1/(this.getScaleY()));
+        this.game.shapeRenderer.setColor(1, 0, 0, 1);
+        this.game.shapeRenderer.ellipse(realX - toleranceX, realY - toleranceY,
+                toleranceX*2, toleranceY*2);
+        this.game.shapeRenderer.end();
+        this.game.batch.begin();
+        this.game.batch.draw(this.flag, realX - 3, realY, 52, 62);
+        this.game.batch.end();
+    }
+    
+    private void renderGoal2() {
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        double[] real = MathLib.toPixel(this.course.getGoal2(), new double[]{this.getXoffset(), this.getYoffset()},
                 new double[]{this.getScaleX(), this.getScaleY()});
         float realX = (float) real[0];
         float realY = (float) real[1];
