@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.group.golf.Ball;
 import com.group.golf.Course;
@@ -37,6 +38,8 @@ import java.util.StringTokenizer;
 import java.util.logging.FileHandler;
 import java.util.regex.PatternSyntaxException;
 
+import javax.swing.plaf.ColorUIResource;
+
 /**
  * A class to draw the course
  */
@@ -52,6 +55,11 @@ public class CourseScreen implements Screen {
     Sound hitSound;
     Sound loseSound;
     Sound winSound;
+    
+    Texture wall;// Added by you
+    private int wallCount; // Added by you
+    
+    
 
     private Physics engine;
     private Collision collision;
@@ -209,6 +217,13 @@ public class CourseScreen implements Screen {
         this.collision = new Collision(this.ball, this.course);
         this.engine.setOffsets(new double[]{this.xoffset, this.yoffset});
         this.engine.setScales(new double[]{this.scaleX, this.scaleY});
+        
+     // Setup wall(s)
+        setWallCount(1);
+        for (int i = 0; i < getWallCount(); i++) {
+        	System.out.println("Wallcount:" + i);
+        wall = new Texture(Gdx.files.internal("woodwall4.png"));
+        }
 
     }
 
@@ -321,6 +336,9 @@ public class CourseScreen implements Screen {
 
         // Render the goal
         this.renderGoal();
+        
+        // Render the maze walls
+        this.renderMaze();
 
         // Update pixel position of ball
         this.computeBallPixels();
@@ -550,32 +568,87 @@ public class CourseScreen implements Screen {
             this.yoffset = (y1 + y2 - yUnits) / 2.0;
         }
 
-        /**
-         * Render the goal
-         */
-        private void renderGoal () {
-            this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            double[] real = MathLib.toPixel(this.course.getGoal(), new double[]{this.getXoffset(), this.getYoffset()},
-                    new double[]{this.getScaleX(), this.getScaleY()});
-            float realX = (float) real[0];
-            float realY = (float) real[1];
-            this.game.shapeRenderer.setColor(0, 0, 0, 1);
-            this.game.shapeRenderer.ellipse(realX - this.goalSize / 2, realY - this.goalSize / 2,
-                    this.goalSize, this.goalSize);
-            this.game.shapeRenderer.end();
-            this.game.shapeRenderer.end();
-            this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            double tolerance = this.course.getTolerance();
-            float toleranceX = (float) (tolerance * 1 / (this.getScaleX()));
-            float toleranceY = (float) (tolerance * 1 / (this.getScaleY()));
-            this.game.shapeRenderer.setColor(1, 0, 0, 1);
-            this.game.shapeRenderer.ellipse(realX - toleranceX, realY - toleranceY,
-                    toleranceX * 2, toleranceY * 2);
-            this.game.shapeRenderer.end();
-            this.game.batch.begin();
-            this.game.batch.draw(this.flag, realX - 3, realY, 52, 62);
-            this.game.batch.end();
+// <<<<<<< lilly
+//         /**
+//          * Render the goal
+//          */
+//         private void renderGoal () {
+//             this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//             double[] real = MathLib.toPixel(this.course.getGoal(), new double[]{this.getXoffset(), this.getYoffset()},
+//                     new double[]{this.getScaleX(), this.getScaleY()});
+//             float realX = (float) real[0];
+//             float realY = (float) real[1];
+//             this.game.shapeRenderer.setColor(0, 0, 0, 1);
+//             this.game.shapeRenderer.ellipse(realX - this.goalSize / 2, realY - this.goalSize / 2,
+//                     this.goalSize, this.goalSize);
+//             this.game.shapeRenderer.end();
+//             this.game.shapeRenderer.end();
+//             this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//             double tolerance = this.course.getTolerance();
+//             float toleranceX = (float) (tolerance * 1 / (this.getScaleX()));
+//             float toleranceY = (float) (tolerance * 1 / (this.getScaleY()));
+//             this.game.shapeRenderer.setColor(1, 0, 0, 1);
+//             this.game.shapeRenderer.ellipse(realX - toleranceX, realY - toleranceY,
+//                     toleranceX * 2, toleranceY * 2);
+//             this.game.shapeRenderer.end();
+//             this.game.batch.begin();
+//             this.game.batch.draw(this.flag, realX - 3, realY, 52, 62);
+//             this.game.batch.end();
+//         }
+// =======
+    /**
+     * Render the goal
+     */
+    private void renderGoal() {
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        double[] real = MathLib.toPixel(this.course.getGoal(), new double[]{this.getXoffset(), this.getYoffset()},
+                new double[]{this.getScaleX(), this.getScaleY()});
+        float realX = (float) real[0];
+        float realY = (float) real[1];
+        this.game.shapeRenderer.setColor(0, 0, 0, 1);
+        this.game.shapeRenderer.ellipse(realX - this.goalSize/2, realY - this.goalSize/2,
+                this.goalSize, this.goalSize);
+        this.game.shapeRenderer.end();
+        this.game.shapeRenderer.end();
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        double tolerance = this.course.getTolerance();
+        float toleranceX = (float) (tolerance * 1/(this.getScaleX()));
+        float toleranceY = (float) (tolerance * 1/(this.getScaleY()));
+        this.game.shapeRenderer.setColor(1, 0, 0, 1);
+        this.game.shapeRenderer.ellipse(realX - toleranceX, realY - toleranceY,
+                toleranceX*2, toleranceY*2);
+        this.game.shapeRenderer.end();
+        this.game.batch.begin();
+        this.game.batch.draw(this.flag, realX - 3, realY, 52, 62);
+        this.game.batch.end();
+    }
+    
+    /**
+     * Render the maze and create a rectangle around each maze wall for collision with the ball.
+     */
+    private void renderMaze() {
+    	Rectangle[] walls= new Rectangle[wallCount];
+    	double[] real = MathLib.toPixel(this.course.getGoal(), new double[]{this.getXoffset(), this.getYoffset()},
+                new double[]{this.getScaleX(), this.getScaleY()});
+    	float realX = (float) real[0];
+        float realY = (float) real[1];
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        this.game.shapeRenderer.setColor(Color.GRAY);
+        this.game.batch.begin();
+        for (int i = 0; i < wallCount; i++) {
+        	float x = (float) 0.0;
+            float y = (float) 60;
+            float width = (float) 122;
+            float height = (float) 22;
+            walls[i] = new Rectangle(realX + x,realY + y, width, height);
+           // this.game.shapeRenderer.rect(realX + x, realY + y, width, height);
+        	this.game.batch.draw(this.wall, realX + x, realY + y, width, height);
         }
+        engine.setWalls(walls);
+        this.game.batch.end();
+        this.game.shapeRenderer.end();
+    }
+
 
         /**
          * Render the terrain (course)
@@ -757,4 +830,18 @@ public class CourseScreen implements Screen {
             this.ballY = ballY;
         }
 
+// <<<<<<< lilly
+// =======
+//     public void setBallY(double ballY) {
+//         this.ballY = ballY;
+//     }
+    
+//     public int getWallCount() {
+//     	return wallCount;
+//     }
+    
+//     public void setWallCount(int number) {
+//     	wallCount = number;
+//     }
+// >>>>>>> master
 }

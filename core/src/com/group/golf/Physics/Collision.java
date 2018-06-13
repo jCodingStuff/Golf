@@ -1,5 +1,6 @@
 package com.group.golf.Physics;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
@@ -24,7 +25,7 @@ public class Collision {
 
 
     /**
-     * Create a new instace of Collision
+     * Create a new instance of Collision
      * @param ball the ball to evaluate
      * @param course the course in which the ball rolls
      */
@@ -69,7 +70,36 @@ public class Collision {
             this.ball.setVelocityY(-this.ball.getVelocityY());
         }
     }
-
+    
+    public void checkForGraphicWalls(Rectangle[] rects, double[] offsets, double[] scales) {
+    	float coordX = (float) this.ball.last()[0];
+    	float coordY = (float) this.ball.last()[1];
+    	double coordXd = this.ball.last()[0];
+    	double coordYd = this.ball.last()[1];
+    	double[] coords = new double[]{coordXd, coordYd};
+    	double[] real = MathLib.toPixel(coords, new double[]{offsets[0], offsets[1]},
+                new double[]{scales[0], scales[1]});
+    	float realFloatX = (float) real[0];
+    	float realFloatY = (float) real[1];
+    	
+    	for (int i = 0; i < rects.length; i++) {
+    		
+    		System.out.println("RectangleY: " + rects[i].getX() + " RectangleY: " + rects[i].getY() );
+        	System.out.println("BallX: " + realFloatX + " BallY: " + realFloatY);
+            
+        	if (rects[i].contains(realFloatX,realFloatY+this.ball.RADIUS) || rects[i].contains(realFloatX,realFloatY-this.ball.RADIUS)) {
+    			System.out.println("Contains");
+    			this.ball.setVelocityY(-this.ball.getVelocityY());
+    		}
+    		if (rects[i].contains(realFloatX+this.ball.RADIUS,realFloatY) || rects[i].contains(realFloatX-this.ball.RADIUS,realFloatY)) {
+    			System.out.println("Contains");
+    			this.ball.setVelocityX(-this.ball.getVelocityX());
+        	}
+    	}
+    	
+        
+    }
+   
     /**
      * Check if the ball has gone to water or is currently in water
      * @return true if it has gone or is in water, false otherwise
