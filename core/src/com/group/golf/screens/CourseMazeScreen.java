@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.group.golf.Ball;
 import com.group.golf.Course;
@@ -41,6 +42,8 @@ public class CourseMazeScreen implements Screen {
     Sound hitSound;
     Sound loseSound;
     Sound winSound;
+    
+    Texture wall; // Added by you
 
     private Physics engine;
     private Collision collision;
@@ -170,7 +173,9 @@ public class CourseMazeScreen implements Screen {
         this.collision = new Collision(this.ball, this.course);
         this.engine.setOffsets(new double[]{this.xoffset, this.yoffset});
         this.engine.setScales(new double[]{this.scaleX, this.scaleY});
-
+        
+        // Setup wall
+        this.wall = new Texture(Gdx.files.internal("woodwall4.png"));
     }
 
     /**
@@ -283,6 +288,9 @@ public class CourseMazeScreen implements Screen {
 
         // Render the goal
         this.renderGoal();
+        
+        // Render the maze walls
+        this.renderMaze();
 
         // Update pixel position of ball
         this.computeBallPixels();
@@ -338,6 +346,9 @@ public class CourseMazeScreen implements Screen {
             this.ball.setY(this.engine.getHitCoord()[1]);
             this.loseSound.play(0.2f);
         }
+        
+        // Check for collision between maze walls and ball
+      //  Rectangle rectangleWall = new Rectangle(getWall().get);
 
         // Compute pixel position of the ball
         this.computeBallPixels();
@@ -459,14 +470,6 @@ public class CourseMazeScreen implements Screen {
                 this.goalSize, this.goalSize);
         this.game.shapeRenderer.end();
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        // new wall from here
-        float x = (float) 0.0;
-        float y = (float) 68;
-        float width = (float) 210;
-        float height = (float) 15;
-        this.game.shapeRenderer.setColor(Color.RED);
-        this.game.shapeRenderer.rect(realX + x, realY + y, width, height);
-        // new wall end here
         this.game.shapeRenderer.end();
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         double tolerance = this.course.getTolerance();
@@ -478,6 +481,24 @@ public class CourseMazeScreen implements Screen {
         this.game.shapeRenderer.end();
         this.game.batch.begin();
         this.game.batch.draw(this.flag, realX - 3, realY, 52, 62);
+        this.game.batch.end();
+    }
+    
+    private void renderMaze() {
+    	/*
+        float x = (float) 0.0;
+        float y = (float) 68;
+        float width = (float) 210;
+        float height = (float) 15;
+        this.game.shapeRenderer.setColor(Color.RED);
+        this.game.shapeRenderer.rect(realX + x, realY + y, width, height);
+        */
+    	double[] real = MathLib.toPixel(this.course.getGoal(), new double[]{this.getXoffset(), this.getYoffset()},
+                new double[]{this.getScaleX(), this.getScaleY()});
+    	float realX = (float) real[0];
+        float realY = (float) real[1];
+        this.game.batch.begin();
+        this.game.batch.draw(this.wall, realX, realY + 60, 122, 22);
         this.game.batch.end();
     }
 
@@ -659,5 +680,9 @@ public class CourseMazeScreen implements Screen {
 
     public void setBallY(double ballY) {
         this.ballY = ballY;
+    }
+    
+    public Texture getWall() {
+    	return wall;	
     }
 }

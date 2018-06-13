@@ -1,6 +1,7 @@
 package com.group.golf.Physics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Rectangle;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
@@ -21,6 +22,7 @@ public class Physics {
     private double[] offsets;
     private double[] scales;
     private boolean water;
+    private Rectangle[] walls;
 
     public static double[] hitCoord;
 
@@ -89,7 +91,9 @@ public class Physics {
 
         double[] ballCoords = MathLib.toPixel(coord,offsets,scales);
         this.collision.checkForWalls(ballCoords[0], ballCoords[1]);
-
+        this.collision.checkForGraphicWalls(walls, offsets, scales);
+  
+        
         if (this.collision.ballInWater()) {
             ball.reset();
             water = true;
@@ -253,6 +257,10 @@ public class Physics {
 
     public void setWater(boolean water) {
         this.water = water;
+    }
+    
+    public void setWalls(Rectangle[] walls) {
+    	this.walls = walls;
     }
 
     public void setCollision(Collision collision) {
