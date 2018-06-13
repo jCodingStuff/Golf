@@ -379,7 +379,7 @@ public class CourseScreen implements Screen {
 
 //                    String str = String.valueOf(movesCounter);
 
-                    
+
                     for (int i = 0; i < values.length ; i ++) {
                         System.out.println("For loop");
                         if (Integer.parseInt(values[i]) > movesCounter) {
@@ -487,7 +487,9 @@ public class CourseScreen implements Screen {
         /**
          * Look for user moves
          */
-        private void userMoves () { 
+
+        private void userMoves () {
+
             if (Gdx.input.isTouched()) {
                 if (!this.touchFlag) {
                     this.firstX = Gdx.input.getX();
@@ -555,6 +557,7 @@ public class CourseScreen implements Screen {
             this.scaleY = scaleX;
         }
 
+
         /**
          * Compute the screen offsets
          */
@@ -570,6 +573,36 @@ public class CourseScreen implements Screen {
         }
 
 
+
+
+// <<<<<<< lilly
+//         /**
+//          * Render the goal
+//          */
+//         private void renderGoal () {
+//             this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//             double[] real = MathLib.toPixel(this.course.getGoal(), new double[]{this.getXoffset(), this.getYoffset()},
+//                     new double[]{this.getScaleX(), this.getScaleY()});
+//             float realX = (float) real[0];
+//             float realY = (float) real[1];
+//             this.game.shapeRenderer.setColor(0, 0, 0, 1);
+//             this.game.shapeRenderer.ellipse(realX - this.goalSize / 2, realY - this.goalSize / 2,
+//                     this.goalSize, this.goalSize);
+//             this.game.shapeRenderer.end();
+//             this.game.shapeRenderer.end();
+//             this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//             double tolerance = this.course.getTolerance();
+//             float toleranceX = (float) (tolerance * 1 / (this.getScaleX()));
+//             float toleranceY = (float) (tolerance * 1 / (this.getScaleY()));
+//             this.game.shapeRenderer.setColor(1, 0, 0, 1);
+//             this.game.shapeRenderer.ellipse(realX - toleranceX, realY - toleranceY,
+//                     toleranceX * 2, toleranceY * 2);
+//             this.game.shapeRenderer.end();
+//             this.game.batch.begin();
+//             this.game.batch.draw(this.flag, realX - 3, realY, 52, 62);
+//             this.game.batch.end();
+//         }
+// =======
     /**
      * Render the goal
      */
@@ -649,6 +682,7 @@ public class CourseScreen implements Screen {
 //            this.game.batch.draw(this.flag, realX - 3, realY, 52, 62);
 //            this.game.batch.end();
 //        }
+
 
         /**
          * Render the terrain (course)
@@ -822,6 +856,7 @@ public class CourseScreen implements Screen {
             this.ballX = ballX;
         }
 
+
         public double getBallY () {
             return ballY;
         }
@@ -831,13 +866,11 @@ public class CourseScreen implements Screen {
         }
 
 
-    
-    public int getWallCount() {
-    	return wallCount;
-    }
-    
+
+
     public void setWallCount(int number) {
     	wallCount = number;
     }
+
 
 }
