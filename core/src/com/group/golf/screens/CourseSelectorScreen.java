@@ -42,6 +42,7 @@ public class CourseSelectorScreen implements Screen {
     TextButton design;
     TextButton maze;
     TextButton scoreBoard;
+    TextButton multiplayerbtn;
 
     Music menuMusic;
     OrthographicCamera cam;
@@ -61,24 +62,28 @@ public class CourseSelectorScreen implements Screen {
         design = new TextButton("Design", skin);
         maze = new TextButton("Maze", skin);
         scoreBoard = new TextButton("Score board", skin);
+        multiplayerbtn = new TextButton("Multiplayer", skin);
 
         play.setPosition(300, 400);
         importbtn.setPosition(300, 300);
         design.setPosition(600, 300);
         maze.setPosition(600,400);
         scoreBoard.setPosition(600, 200);
+        multiplayerbtn.setPosition(300, 200);
 
         play.setSize(200, 60);
         importbtn.setSize(200, 60);
         design.setSize(200, 60);
         maze.setSize(200,60);
         scoreBoard.setSize(200, 60);
+        multiplayerbtn.setSize(200, 60);
 
         stage.addActor(play);
         stage.addActor(importbtn);
         stage.addActor(design);
         stage.addActor(maze);
         stage.addActor(scoreBoard);
+        stage.addActor(multiplayerbtn);
 
         // Setup cam
         this.cam = new OrthographicCamera();
@@ -181,6 +186,41 @@ public class CourseSelectorScreen implements Screen {
             }
         }
         scoreBoard.addListener(new ScoreBoardListener(game, this));
+        
+        class MultiListener extends ChangeListener{
+            final Golf game;
+            private Screen screen;
+            public MultiListener(final Golf game, Screen screen){
+                this.game = game;
+                this.screen = screen;
+            }
+            @Override
+            public void changed (ChangeEvent event, Actor actor) {
+                String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
+                double[] start = new double[]{-2, 3};
+                double[] goal = new double[]{0, 1};
+                
+                double[] start2 = new double[]{8, 10};
+                double[] goal2 = new double[]{0, 2};
+                
+                Function function = new Function(formula);
+                Computable[][] functions = new Computable[1][1];
+                functions[0][0] = function;
+                Course course = new Course(functions, 9.81, 0.95, 80, start, start2, goal, goal2, 0.5);
+                design.setTouchable(Touchable.disabled);
+                importbtn.setTouchable(Touchable.disabled);
+                play.setTouchable(Touchable.disabled);
+
+                Ball ball = new Ball(40);
+                Ball ball2 = new Ball(40);
+
+                this.game.setScreen(new CourseScreen(this.game, course, ball, ball2));
+
+                this.screen.dispose();
+            }
+
+        }
+        multiplayerbtn.addListener(new MultiListener(game, this));
 
     }
 
