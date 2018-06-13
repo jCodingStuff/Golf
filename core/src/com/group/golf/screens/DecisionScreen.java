@@ -70,14 +70,13 @@ public class DecisionScreen implements Screen {
         //function.addListener(new FunctionListener(this.game, this));
         //btnBack.addListener(new BackListener(this.game, this));
 
-        spline.setPosition(300, 400);
+        spline.setPosition(400, 400);
         spline.setSize(200, 60);
 
-        splineWithout.setPosition(300, 300);
+        splineWithout.setPosition(400, 300);
         splineWithout.setSize(200, 60);
 
-
-        function.setPosition(300, 200);
+        function.setPosition(400, 200);
         function.setSize(200, 60);
 
         btnBack.setPosition(100, 300);

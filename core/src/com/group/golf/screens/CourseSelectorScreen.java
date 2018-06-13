@@ -64,12 +64,12 @@ public class CourseSelectorScreen implements Screen {
         scoreBoard = new TextButton("Score board", skin);
         multiplayerbtn = new TextButton("Multiplayer", skin);
 
-        play.setPosition(300, 400);
-        importbtn.setPosition(300, 300);
-        design.setPosition(600, 300);
-        maze.setPosition(600,400);
-        scoreBoard.setPosition(600, 200);
-        multiplayerbtn.setPosition(300, 200);
+        play.setPosition(275, 400);
+        importbtn.setPosition(275, 300);
+        design.setPosition(525, 300);
+        maze.setPosition(525,400);
+        scoreBoard.setPosition(525, 200);
+        multiplayerbtn.setPosition(275, 200);
 
         play.setSize(200, 60);
         importbtn.setSize(200, 60);
