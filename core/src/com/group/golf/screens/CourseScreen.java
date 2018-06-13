@@ -379,6 +379,7 @@ public class CourseScreen implements Screen {
 
 //                    String str = String.valueOf(movesCounter);
 
+                    
                     for (int i = 0; i < values.length ; i ++) {
                         System.out.println("For loop");
                         if (Integer.parseInt(values[i]) > movesCounter) {
