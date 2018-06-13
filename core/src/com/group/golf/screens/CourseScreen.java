@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -24,10 +25,18 @@ import com.group.golf.math.BicubicInterpolator;
 import com.group.golf.math.MathLib;
 import com.group.golf.math.Point3D;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+import java.util.logging.FileHandler;
+import java.util.regex.PatternSyntaxException;
 
 import javax.swing.plaf.ColorUIResource;
 
@@ -91,12 +100,14 @@ public class CourseScreen implements Screen {
     FreeTypeFontGenerator.FreeTypeFontParameter subTitleParameter;
     BitmapFont subTitleFont;
 
+
     /**
      * Create a new course screen
-     * @param game the Golf instance
+     *
+     * @param game   the Golf instance
      * @param course the Course instance
-     * @param ball the Ball instance
-     * @param moves the moves to read
+     * @param ball   the Ball instance
+     * @param moves  the moves to read
      */
     public CourseScreen(final Golf game, Course course, Ball ball, String moves) {
         this.game = game;
@@ -117,13 +128,15 @@ public class CourseScreen implements Screen {
         this.bot = null;
         this.movesCounter = 0;
 
+
     }
 
     /**
      * Create a new CourseScreen instance
-     * @param game the Golf instace
+     *
+     * @param game   the Golf instace
      * @param course the Course instance
-     * @param ball the Ball instance
+     * @param ball   the Ball instance
      */
     public CourseScreen(final Golf game, Course course, Ball ball) {
         this.game = game;
@@ -241,8 +254,8 @@ public class CourseScreen implements Screen {
         this.minimum = Double.MAX_VALUE;
         for (int x = 0; x < this.heights.length; x++) {
             for (int y = 0; y < this.heights[x].length; y++) {
-                double value = this.course.getHeight(this.getXoffset() + x*this.getScaleX(),
-                        this.getYoffset() + y*this.getScaleY());
+                double value = this.course.getHeight(this.getXoffset() + x * this.getScaleX(),
+                        this.getYoffset() + y * this.getScaleY());
                 if (value > this.maximum) this.maximum = value;
                 else if (value < this.minimum) this.minimum = value;
                 this.heights[x][y] = value;
@@ -266,8 +279,7 @@ public class CourseScreen implements Screen {
                     float blue = maxWater + minWater - (float) MathLib.map(Math.abs(this.heights[x][y]), 0,
                             Math.abs(this.minimum), minWater, maxWater);
                     this.colors[x][y] = new Color(0, 0, blue, 1);
-                }
-                else { // Grass
+                } else { // Grass
                     // Higher, darker
                     float green = maxTerrain + minTerrain - (float) MathLib.map(this.heights[x][y], 0,
                             this.maximum, minTerrain, maxTerrain);
@@ -334,7 +346,7 @@ public class CourseScreen implements Screen {
 
         this.game.batch.begin();
         //score
-        this.subTitleFont.draw(this.game.batch, "moves: "+movesCounter, 100, 100);
+        this.subTitleFont.draw(this.game.batch, "moves: " + movesCounter, 100, 100);
         this.game.batch.end();
 
 
@@ -349,155 +361,213 @@ public class CourseScreen implements Screen {
             // Check if the goal is achieved
             if (this.collision.isGoalAchieved()) {
                 this.winSound.play();
-                try { Thread.sleep(3000); }
-                catch (Exception e) {}
-                this.game.setScreen(new CourseSelectorScreen(this.game));
-                this.dispose();
-                return;
+
+                try {
+                    FileHandle f = Gdx.files.local("scores.txt");
+
+                    String line = f.readString();
+                    String[] values = line.split("\\s+");
+
+
+
+//                    String[] s = line.split(" ");
+//                   for(String aScore: s){
+//                       if(movesCounter< Integer.parseInt(aScore)){
+//                           aScore = String.valueOf(movesCounter);
+//                       }
+//                   }
+
+//                    String str = String.valueOf(movesCounter);
+
+                    for (int i = 0; i < values.length ; i ++) {
+                        System.out.println("For loop");
+                        if (Integer.parseInt(values[i]) > movesCounter) {
+                            System.out.println("If statement");
+                            String[] spare = new String[values.length-i];
+                            System.arraycopy(values,i,spare,0,spare.length);
+                            values[i] = Integer.toString(movesCounter);
+                            String[] updatedValues = new String[values.length + 1];
+                            for (int j = 0; j < i+1; j++) {
+                                updatedValues[j] = values[j];
+                            }
+                            for (int j = i+1; j < updatedValues.length; j++) {
+                                updatedValues[j] = spare[j-i];
+                            }
+
+
+                            for (int j = 0; j < updatedValues.length; j++)
+                                System.out.print(updatedValues[j] + "   ");
+//                            System.out.println(Arrays.toString(updatedValues));
+                            break;
+                        }
+
+                        if (i == values.length-1) {
+                            String[] updatedValues = new String[values.length + 1];
+                            for (int j = 0; j < values.length; j++) {
+                                updatedValues[j] = values[j];
+                            }
+                            updatedValues[values.length] = Integer.toString(movesCounter);
+                        }
+                    }
+
+                    BufferedWriter writer = new BufferedWriter(new FileWriter("scores.txt", true));
+                    writer.append(' ');
+                    writer.append(Integer.toString(movesCounter));
+
+                    writer.close();
+                }
+                catch(Exception e)
+                {}
+
+                try {
+                        Thread.sleep(3000);
+                    } catch (Exception e) {
+                    }
+                    this.game.setScreen(new CourseSelectorScreen(this.game));
+                    this.dispose();
+                    return;
+                }
+
+
+                // Make a move
+                if (this.bot != null && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                    System.out.println("\nBot moving!");
+                    this.bot.makeMove();
+                    this.movesCounter++;
+                    this.landed = true;
+                } else if (this.moves != null && this.counter < this.moves.size() &&
+                        Gdx.input.isKeyPressed(Input.Keys.SPACE)) { // Mode 2 is active
+                    System.out.println("\nFile moves!");
+                    this.fileMoves();
+                    this.movesCounter++;
+                } else { // Mode 1 is active
+                    this.userMoves();
+
+                }
+            } else {
+
+                this.ball.dequeue();
             }
 
+            this.computeBallPixels();
 
-
-
-            // Make a move
-            if (this.bot != null && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                System.out.println("\nBot moving!");
-                this.bot.makeMove();
-                this.movesCounter++;
-                this.landed = true;
+            // Check for water
+            if (this.engine.isWater() && this.ball.getSize() == 0) {
+                this.ball.clear();
+                this.ball.setX(this.engine.getHitCoord()[0]);
+                this.ball.setY(this.engine.getHitCoord()[1]);
+                this.loseSound.play(0.2f);
             }
-            else if (this.moves != null && this.counter < this.moves.size() &&
-                    Gdx.input.isKeyPressed(Input.Keys.SPACE)) { // Mode 2 is active
-                System.out.println("\nFile moves!");
-                this.fileMoves();
-                this.movesCounter++;
-            }
-            else { // Mode 1 is active
-                this.userMoves();
 
-            }
-        } else {
+            // Compute pixel position of the ball
+            this.computeBallPixels();
 
-            this.ball.dequeue();
+            // Render the ball
+            this.ball.render(this.game.batch, this.ballX, this.ballY);
+
+    }
+
+
+        /**
+         * Perfom a file move
+         */
+        private void fileMoves () {
+            StringTokenizer tokenizer = new StringTokenizer(this.moves.get(this.counter));
+            double force = Double.parseDouble(tokenizer.nextToken());
+            double angle = Double.parseDouble(tokenizer.nextToken());
+            double forceX = force * Math.cos(angle);
+            double forceY = force * Math.sin(angle);
+            this.engine.hit(forceX, forceY);
+            this.landed = true;
+            this.counter++;
+            this.hitSound.play();
         }
 
-        this.computeBallPixels();
+        /**
+         * Look for user moves
+         */
+        private void userMoves () { 
+            if (Gdx.input.isTouched()) {
+                if (!this.touchFlag) {
+                    this.firstX = Gdx.input.getX();
+                    this.firstY = Gdx.input.getY();
+                    this.touchFlag = true;
+                    movesCounter++;
+                }
+                this.lastX = Gdx.input.getX();
+                this.lastY = Gdx.input.getY();
 
-        // Check for water
-        if (this.engine.isWater() && this.ball.getSize() == 0) {
-            this.ball.clear();
-            this.ball.setX(this.engine.getHitCoord()[0]);
-            this.ball.setY(this.engine.getHitCoord()[1]);
-            this.loseSound.play(0.2f);
-        }
+            } else if (this.touchFlag) {
+                if (this.firstX != this.lastX || this.lastY != this.firstY) {
+                    Vector3 firstV = new Vector3(this.firstX, this.firstY, 0);
+                    this.cam.unproject(firstV);
+                    Vector3 secondV = new Vector3(this.lastX, this.lastY, 0);
+                    this.cam.unproject(secondV);
 
-        // Compute pixel position of the ball
-        this.computeBallPixels();
 
-        // Render the ball
-        this.ball.render(this.game.batch, this.ballX, this.ballY);
-    }
+                    double xLength = Math.abs(lastX - firstX);
+                    double yLength = Math.abs(lastY - firstY);
 
-    /**
-     * Perfom a file move
-     */
-    private void fileMoves() {
-        StringTokenizer tokenizer = new StringTokenizer(this.moves.get(this.counter));
-        double force = Double.parseDouble(tokenizer.nextToken());
-        double angle = Double.parseDouble(tokenizer.nextToken());
-        double forceX = force * Math.cos(angle);
-        double forceY = force * Math.sin(angle);
-        this.engine.hit(forceX, forceY);
-        this.landed = true;
-        this.counter++;
-        this.hitSound.play();
-    }
+                    if (lastX < firstX)
+                        xLength *= -1;
+                    if (lastY > firstY)
+                        yLength *= -1;
 
-    /**
-     * Look for user moves
-     */
-    private void userMoves() {
-        if (Gdx.input.isTouched()) {
-            if (!this.touchFlag) {
-                this.firstX = Gdx.input.getX();
-                this.firstY = Gdx.input.getY();
-                this.touchFlag = true;
-                movesCounter++;
+                    double modulus = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
+                    // we don't need this !!
+                    double force = MathLib.map(modulus, 0, 300, 0, 600);
+
+                    xLength *= this.scaleX * SCALE_MULTIPLIER;
+                    yLength *= this.scaleY * SCALE_MULTIPLIER;
+
+                    this.engine.hit(xLength, yLength);
+                    this.landed = true;
+
+                    this.hitSound.play();
+                }
+                this.touchFlag = false;
             }
-            this.lastX = Gdx.input.getX();
-            this.lastY = Gdx.input.getY();
-
         }
-        else if (this.touchFlag) {
-            if (this.firstX != this.lastX || this.lastY != this.firstY) {
-                Vector3 firstV = new Vector3(this.firstX, this.firstY,0);
-                this.cam.unproject(firstV);
-                Vector3 secondV = new Vector3(this.lastX, this.lastY,0);
-                this.cam.unproject(secondV);
 
 
-                double xLength = Math.abs(lastX - firstX);
-                double yLength = Math.abs(lastY - firstY);
+        /**
+         * Compute the pixel coordinates of the ball
+         */
+        public void computeBallPixels () {
+            double[] ballPixels = MathLib.toPixel(new double[]{this.ball.getX(), this.ball.getY()},
+                    new double[]{this.xoffset, this.yoffset}, new double[]{this.scaleX, this.scaleY});
+            this.ballX = ballPixels[0];
+            this.ballY = ballPixels[1];
+        }
 
-                if (lastX < firstX )
-                    xLength *= -1;
-                if (lastY > firstY)
-                    yLength *= -1;
-
-                double modulus = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
-                // we don't need this !!
-                double force = MathLib.map(modulus, 0, 300, 0, 600);
-
-                xLength *= this.scaleX * SCALE_MULTIPLIER;
-                yLength *= this.scaleY * SCALE_MULTIPLIER;
-
-                this.engine.hit(xLength, yLength);
-                this.landed = true;
-
-                this.hitSound.play();
+        /**
+         * Compute the scale
+         */
+        public void calcScale () {
+            double dist = this.course.getDistance();
+            double limitDist = 0.40625;
+            this.scaleX = 0.000625;
+            while (dist > limitDist) {
+                this.scaleX *= 2;
+                limitDist *= 2;
             }
-            this.touchFlag = false;
+            this.scaleY = scaleX;
         }
-    }
 
-
-    /**
-     * Compute the pixel coordinates of the ball
-     */
-    public void computeBallPixels() {
-        double[] ballPixels = MathLib.toPixel(new double[]{this.ball.getX(), this.ball.getY()},
-                new double[]{this.xoffset, this.yoffset}, new double[]{this.scaleX, this.scaleY});
-        this.ballX = ballPixels[0];
-        this.ballY = ballPixels[1];
-    }
-
-    /**
-     * Compute the scale
-     */
-    public void calcScale() {
-        double dist = this.course.getDistance();
-        double limitDist = 0.40625;
-        this.scaleX = 0.000625;
-        while (dist > limitDist) {
-            this.scaleX *= 2;
-            limitDist *= 2;
+        /**
+         * Compute the screen offsets
+         */
+        public void calcOffsets () {
+            double x1 = this.course.getStart()[0];
+            double x2 = this.course.getGoal()[0];
+            double xUnits = Golf.VIRTUAL_WIDTH / (1 / this.scaleX);
+            this.xoffset = (x1 + x2 - xUnits) / 2.0;
+            double y1 = this.course.getStart()[1];
+            double y2 = this.course.getGoal()[1];
+            double yUnits = Golf.VIRTUAL_HEIGHT / (1 / this.scaleY);
+            this.yoffset = (y1 + y2 - yUnits) / 2.0;
         }
-        this.scaleY = scaleX;
-    }
 
-    /**
-     * Compute the screen offsets
-     */
-    public void calcOffsets() {
-        double x1 = this.course.getStart()[0];
-        double x2 = this.course.getGoal()[0];
-        double xUnits = Golf.VIRTUAL_WIDTH / (1/this.scaleX);
-        this.xoffset = (x1 + x2 - xUnits) / 2.0;
-        double y1 = this.course.getStart()[1];
-        double y2 = this.course.getGoal()[1];
-        double yUnits = Golf.VIRTUAL_HEIGHT / (1/this.scaleY);
-        this.yoffset = (y1 + y2 - yUnits) / 2.0;
-    }
 
     /**
      * Render the goal
@@ -552,185 +622,214 @@ public class CourseScreen implements Screen {
         this.game.shapeRenderer.end();
     }
 
-    /**
-     * Render the terrain (course)
-     */
-    private void renderTerrain() {
-        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        for (int x = 0; x < this.colors.length; x++) {
-            for (int y = 0; y < this.colors[x].length; y++) {
-                this.game.shapeRenderer.setColor(this.colors[x][y]);
-                this.game.shapeRenderer.rect(x, y, 1, 1); // Draw 1 pixel squares
+        /**
+         * Render the goal
+         */
+//        private void renderGoal () {
+//            this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//            double[] real = MathLib.toPixel(this.course.getGoal(), new double[]{this.getXoffset(), this.getYoffset()},
+//                    new double[]{this.getScaleX(), this.getScaleY()});
+//            float realX = (float) real[0];
+//            float realY = (float) real[1];
+//            this.game.shapeRenderer.setColor(0, 0, 0, 1);
+//            this.game.shapeRenderer.ellipse(realX - this.goalSize / 2, realY - this.goalSize / 2,
+//                    this.goalSize, this.goalSize);
+//            this.game.shapeRenderer.end();
+//            this.game.shapeRenderer.end();
+//            this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//            double tolerance = this.course.getTolerance();
+//            float toleranceX = (float) (tolerance * 1 / (this.getScaleX()));
+//            float toleranceY = (float) (tolerance * 1 / (this.getScaleY()));
+//            this.game.shapeRenderer.setColor(1, 0, 0, 1);
+//            this.game.shapeRenderer.ellipse(realX - toleranceX, realY - toleranceY,
+//                    toleranceX * 2, toleranceY * 2);
+//            this.game.shapeRenderer.end();
+//            this.game.batch.begin();
+//            this.game.batch.draw(this.flag, realX - 3, realY, 52, 62);
+//            this.game.batch.end();
+//        }
+
+        /**
+         * Render the terrain (course)
+         */
+        private void renderTerrain () {
+            this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            for (int x = 0; x < this.colors.length; x++) {
+                for (int y = 0; y < this.colors[x].length; y++) {
+                    this.game.shapeRenderer.setColor(this.colors[x][y]);
+                    this.game.shapeRenderer.rect(x, y, 1, 1); // Draw 1 pixel squares
+                }
             }
+            this.game.shapeRenderer.end();
         }
-        this.game.shapeRenderer.end();
-    }
 
-    @Override
-    public void resize(int width, int height) {
+        @Override
+        public void resize ( int width, int height){
 
-    }
+        }
 
-    @Override
-    public void pause() {
+        @Override
+        public void pause () {
 
-    }
+        }
 
-    @Override
-    public void resume() {
+        @Override
+        public void resume () {
 
-    }
+        }
 
-    @Override
-    public void hide() {
-        this.music.stop();
-    }
+        @Override
+        public void hide () {
+            this.music.stop();
+        }
 
-    @Override
-    public void dispose() {
-        this.music.dispose();
-        this.flag.dispose();
-        this.hitSound.dispose();
-        this.loseSound.dispose();
-        this.winSound.dispose();
-    }
+        @Override
+        public void dispose () {
+            this.music.dispose();
+            this.flag.dispose();
+            this.hitSound.dispose();
+            this.loseSound.dispose();
+            this.winSound.dispose();
+        }
 
-    public Golf getGame() {
-        return game;
-    }
+        public Golf getGame () {
+            return game;
+        }
 
-    public Course getCourse() {
-        return course;
-    }
+        public Course getCourse () {
+            return course;
+        }
 
-    public void setCourse(Course course) {
-        this.course = course;
-    }
+        public void setCourse (Course course){
+            this.course = course;
+        }
 
-    public Ball getBall() {
-        return ball;
-    }
+        public Ball getBall () {
+            return ball;
+        }
 
-    public void setBall(Ball ball) {
-        this.ball = ball;
-    }
+        public void setBall (Ball ball){
+            this.ball = ball;
+        }
 
-    public Texture getFlag() {
-        return flag;
-    }
+        public Texture getFlag () {
+            return flag;
+        }
 
-    public void setFlag(Texture flag) {
-        this.flag = flag;
-    }
+        public void setFlag (Texture flag){
+            this.flag = flag;
+        }
 
-    public OrthographicCamera getCam() {
-        return cam;
-    }
+        public OrthographicCamera getCam () {
+            return cam;
+        }
 
-    public void setCam(OrthographicCamera cam) {
-        this.cam = cam;
-    }
+        public void setCam (OrthographicCamera cam){
+            this.cam = cam;
+        }
 
-    public Music getMusic() {
-        return music;
-    }
+        public Music getMusic () {
+            return music;
+        }
 
-    public void setMusic(Music music) {
-        this.music = music;
-    }
+        public void setMusic (Music music){
+            this.music = music;
+        }
 
-    public int getGoalSize() {
-        return goalSize;
-    }
+        public int getGoalSize () {
+            return goalSize;
+        }
 
-    public void setGoalSize(int goalSize) {
-        this.goalSize = goalSize;
-    }
+        public void setGoalSize ( int goalSize){
+            this.goalSize = goalSize;
+        }
 
 
-    public double[][] getHeights() {
-        return heights;
-    }
+        public double[][] getHeights () {
+            return heights;
+        }
 
-    public void setHeights(double[][] heights) {
-        this.heights = heights;
-    }
+        public void setHeights ( double[][] heights){
+            this.heights = heights;
+        }
 
-    public double getMaximum() {
-        return maximum;
-    }
+        public double getMaximum () {
+            return maximum;
+        }
 
-    public void setMaximum(double maximum) {
-        this.maximum = maximum;
-    }
+        public void setMaximum ( double maximum){
+            this.maximum = maximum;
+        }
 
-    public double getMinimum() {
-        return minimum;
-    }
+        public double getMinimum () {
+            return minimum;
+        }
 
-    public void setMinimum(double minimum) {
-        this.minimum = minimum;
-    }
+        public void setMinimum ( double minimum){
+            this.minimum = minimum;
+        }
 
-    public Color[][] getColors() {
-        return colors;
-    }
+        public Color[][] getColors () {
+            return colors;
+        }
 
-    public void setColors(Color[][] colors) {
-        this.colors = colors;
-    }
+        public void setColors (Color[][]colors){
+            this.colors = colors;
+        }
 
-    public Physics getEngine() {
-        return engine;
-    }
+        public Physics getEngine () {
+            return engine;
+        }
 
-    public double getScaleX() {
-        return scaleX;
-    }
+        public double getScaleX () {
+            return scaleX;
+        }
 
-    public void setScaleX(double scaleX) {
-        this.scaleX = scaleX;
-    }
+        public void setScaleX ( double scaleX){
+            this.scaleX = scaleX;
+        }
 
-    public double getScaleY() {
-        return scaleY;
-    }
+        public double getScaleY () {
+            return scaleY;
+        }
 
-    public void setScaleY(double scaleY) {
-        this.scaleY = scaleY;
-    }
+        public void setScaleY ( double scaleY){
+            this.scaleY = scaleY;
+        }
 
-    public double getXoffset() {
-        return xoffset;
-    }
+        public double getXoffset () {
+            return xoffset;
+        }
 
-    public void setXoffset(double xoffset) {
-        this.xoffset = xoffset;
-    }
+        public void setXoffset ( double xoffset){
+            this.xoffset = xoffset;
+        }
 
-    public double getYoffset() {
-        return yoffset;
-    }
+        public double getYoffset () {
+            return yoffset;
+        }
 
-    public void setYoffset(double yoffset) {
-        this.yoffset = yoffset;
-    }
+        public void setYoffset ( double yoffset){
+            this.yoffset = yoffset;
+        }
 
-    public double getBallX() {
-        return ballX;
-    }
+        public double getBallX () {
+            return ballX;
+        }
 
-    public void setBallX(double ballX) {
-        this.ballX = ballX;
-    }
+        public void setBallX ( double ballX){
+            this.ballX = ballX;
+        }
 
-    public double getBallY() {
-        return ballY;
-    }
+        public double getBallY () {
+            return ballY;
+        }
 
-    public void setBallY(double ballY) {
-        this.ballY = ballY;
-    }
+        public void setBallY ( double ballY){
+            this.ballY = ballY;
+        }
+
+
     
     public int getWallCount() {
     	return wallCount;
@@ -739,4 +838,5 @@ public class CourseScreen implements Screen {
     public void setWallCount(int number) {
     	wallCount = number;
     }
+
 }
