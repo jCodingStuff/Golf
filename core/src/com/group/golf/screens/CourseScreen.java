@@ -218,8 +218,8 @@ public class CourseScreen implements Screen {
         this.engine.setOffsets(new double[]{this.xoffset, this.yoffset});
         this.engine.setScales(new double[]{this.scaleX, this.scaleY});
         
-     // Setup wall(s)
-        setWallCount(1);
+     // Setup wall(s), in this case the wall count is set to 0 as this is the normal game-mode without walls.
+        setWallCount(0);
         for (int i = 0; i < getWallCount(); i++) {
         	System.out.println("Wallcount:" + i);
         wall = new Texture(Gdx.files.internal("woodwall4.png"));
@@ -575,34 +575,7 @@ public class CourseScreen implements Screen {
 
 
 
-// <<<<<<< lilly
-//         /**
-//          * Render the goal
-//          */
-//         private void renderGoal () {
-//             this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//             double[] real = MathLib.toPixel(this.course.getGoal(), new double[]{this.getXoffset(), this.getYoffset()},
-//                     new double[]{this.getScaleX(), this.getScaleY()});
-//             float realX = (float) real[0];
-//             float realY = (float) real[1];
-//             this.game.shapeRenderer.setColor(0, 0, 0, 1);
-//             this.game.shapeRenderer.ellipse(realX - this.goalSize / 2, realY - this.goalSize / 2,
-//                     this.goalSize, this.goalSize);
-//             this.game.shapeRenderer.end();
-//             this.game.shapeRenderer.end();
-//             this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-//             double tolerance = this.course.getTolerance();
-//             float toleranceX = (float) (tolerance * 1 / (this.getScaleX()));
-//             float toleranceY = (float) (tolerance * 1 / (this.getScaleY()));
-//             this.game.shapeRenderer.setColor(1, 0, 0, 1);
-//             this.game.shapeRenderer.ellipse(realX - toleranceX, realY - toleranceY,
-//                     toleranceX * 2, toleranceY * 2);
-//             this.game.shapeRenderer.end();
-//             this.game.batch.begin();
-//             this.game.batch.draw(this.flag, realX - 3, realY, 52, 62);
-//             this.game.batch.end();
-//         }
-// =======
+
     /**
      * Render the goal
      */
@@ -656,35 +629,7 @@ public class CourseScreen implements Screen {
         this.game.shapeRenderer.end();
     }
 
-        /**
-         * Render the goal
-         */
-//        private void renderGoal () {
-//            this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//            double[] real = MathLib.toPixel(this.course.getGoal(), new double[]{this.getXoffset(), this.getYoffset()},
-//                    new double[]{this.getScaleX(), this.getScaleY()});
-//            float realX = (float) real[0];
-//            float realY = (float) real[1];
-//            this.game.shapeRenderer.setColor(0, 0, 0, 1);
-//            this.game.shapeRenderer.ellipse(realX - this.goalSize / 2, realY - this.goalSize / 2,
-//                    this.goalSize, this.goalSize);
-//            this.game.shapeRenderer.end();
-//            this.game.shapeRenderer.end();
-//            this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-//            double tolerance = this.course.getTolerance();
-//            float toleranceX = (float) (tolerance * 1 / (this.getScaleX()));
-//            float toleranceY = (float) (tolerance * 1 / (this.getScaleY()));
-//            this.game.shapeRenderer.setColor(1, 0, 0, 1);
-//            this.game.shapeRenderer.ellipse(realX - toleranceX, realY - toleranceY,
-//                    toleranceX * 2, toleranceY * 2);
-//            this.game.shapeRenderer.end();
-//            this.game.batch.begin();
-//            this.game.batch.draw(this.flag, realX - 3, realY, 52, 62);
-//            this.game.batch.end();
-//        }
-
-
-        /**
+         /**
          * Render the terrain (course)
          */
         private void renderTerrain () {
@@ -865,10 +810,11 @@ public class CourseScreen implements Screen {
             this.ballY = ballY;
         }
 
+        public int getWallCount() {
+        	return wallCount;
+        }
 
-
-
-    public void setWallCount(int number) {
+        public void setWallCount(int number) {
     	wallCount = number;
     }
 

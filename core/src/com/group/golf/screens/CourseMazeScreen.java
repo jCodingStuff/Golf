@@ -44,6 +44,7 @@ public class CourseMazeScreen implements Screen {
     Sound winSound;
     
     Texture wall; // Added by you
+    private int wallCount;
 
     private Physics engine;
     private Collision collision;
@@ -173,9 +174,13 @@ public class CourseMazeScreen implements Screen {
         this.collision = new Collision(this.ball, this.course);
         this.engine.setOffsets(new double[]{this.xoffset, this.yoffset});
         this.engine.setScales(new double[]{this.scaleX, this.scaleY});
-        
-        // Setup wall
-        this.wall = new Texture(Gdx.files.internal("woodwall4.png"));
+  
+     // Setup wall(s)
+        setWallCount(1);
+        for (int i = 0; i < getWallCount(); i++) {
+        	System.out.println("Wallcount:" + i);
+        wall = new Texture(Gdx.files.internal("woodwall4.png"));
+        }
     }
 
     /**
@@ -346,9 +351,6 @@ public class CourseMazeScreen implements Screen {
             this.ball.setY(this.engine.getHitCoord()[1]);
             this.loseSound.play(0.2f);
         }
-        
-        // Check for collision between maze walls and ball
-      //  Rectangle rectangleWall = new Rectangle(getWall().get);
 
         // Compute pixel position of the ball
         this.computeBallPixels();
@@ -484,22 +486,30 @@ public class CourseMazeScreen implements Screen {
         this.game.batch.end();
     }
     
+    /**
+     * Render the maze and create a rectangle around each maze wall for collision with the ball.
+     */
     private void renderMaze() {
-    	/*
-        float x = (float) 0.0;
-        float y = (float) 68;
-        float width = (float) 210;
-        float height = (float) 15;
-        this.game.shapeRenderer.setColor(Color.RED);
-        this.game.shapeRenderer.rect(realX + x, realY + y, width, height);
-        */
+    	Rectangle[] walls= new Rectangle[wallCount];
     	double[] real = MathLib.toPixel(this.course.getGoal(), new double[]{this.getXoffset(), this.getYoffset()},
                 new double[]{this.getScaleX(), this.getScaleY()});
     	float realX = (float) real[0];
         float realY = (float) real[1];
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        this.game.shapeRenderer.setColor(Color.GRAY);
         this.game.batch.begin();
-        this.game.batch.draw(this.wall, realX, realY + 60, 122, 22);
+        for (int i = 0; i < wallCount; i++) {
+        	float x = (float) 0.0;
+            float y = (float) 60;
+            float width = (float) 122;
+            float height = (float) 22;
+            walls[i] = new Rectangle(realX + x,realY + y, width, height);
+           // this.game.shapeRenderer.rect(realX + x, realY + y, width, height);
+        	this.game.batch.draw(this.wall, realX + x, realY + y, width, height);
+        }
+        engine.setWalls(walls);
         this.game.batch.end();
+        this.game.shapeRenderer.end();
     }
 
     /**
@@ -684,5 +694,13 @@ public class CourseMazeScreen implements Screen {
     
     public Texture getWall() {
     	return wall;	
+    }
+    
+    public int getWallCount() {
+    	return wallCount;
+    }
+    
+    public void setWallCount(int number) {
+    	wallCount = number;
     }
 }
