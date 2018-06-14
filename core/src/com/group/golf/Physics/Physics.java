@@ -91,7 +91,7 @@ public class Physics {
 
         double[] ballCoords = MathLib.toPixel(coord,offsets,scales);
         this.collision.checkForWalls(ballCoords[0], ballCoords[1]);
-        this.collision.checkForGraphicWalls(walls, offsets, scales);
+       // this.collision.checkForGraphicWalls(walls, offsets, scales);
   
         
         if (this.collision.ballInWater()) {

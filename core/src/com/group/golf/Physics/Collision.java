@@ -17,13 +17,10 @@ public class Collision {
     private static final double STEP = 0.001;
 
     private Ball ball;
-    private Ball ball2;
     private final Course course;
 
     private double lastX;
     private double lastY;
-    private double lastX2;
-    private double lastY2;
 
 
 
@@ -37,16 +34,6 @@ public class Collision {
         this.course = course;
         this.lastX = this.course.getStart()[0];
         this.lastX = this.course.getStart()[1];
-    }
-    
-    public Collision(Ball ball, Ball ball2, Course course) {
-        this.ball = ball;
-        this.ball2 = ball2;
-        this.course = course;
-        this.lastX = this.course.getStart()[0];
-        this.lastX = this.course.getStart()[1];
-        this.lastX2 = this.course.getStart2()[0];
-        this.lastX2 = this.course.getStart2()[1];
     }
 
     public Collision(Collision other) {
@@ -66,13 +53,6 @@ public class Collision {
         double distToGoal = Math.sqrt(xToGoal * xToGoal + yToGoal * yToGoal);
         return distToGoal <= this.course.getTolerance();
     }
-    
-    public boolean isGoalAchieved2() {
-        double xToGoal2 = this.course.getGoal2()[0] - this.ball2.getX();
-        double yToGoal2 = this.course.getGoal2()[1] - this.ball2.getY();
-        double distToGoal2 = Math.sqrt(xToGoal2 * xToGoal2 + yToGoal2 * yToGoal2);
-        return distToGoal2 <= this.course.getTolerance();
-    }
 
     /**
      * React when the ball hits a wall
@@ -88,18 +68,6 @@ public class Collision {
         }
         if ((ballY < Ball.RADIUS && vy < 0) || (ballY > Golf.VIRTUAL_HEIGHT - Ball.RADIUS && vy > 0)) {
             this.ball.setVelocityY(-this.ball.getVelocityY());
-        }
-    }
-    
-    public void checkForWalls2(double ballX, double ballY) {
-        double vx = this.ball2.getVelocityX();
-        double vy = this.ball2.getVelocityY();
-        if ((ballX < Ball.RADIUS && vx < 0) || (ballX > Golf.VIRTUAL_WIDTH - Ball.RADIUS && vx > 0)) {
-            this.ball2.setVelocityX(-this.ball2.getVelocityX());
-
-        }
-        if ((ballY < Ball.RADIUS && vy < 0) || (ballY > Golf.VIRTUAL_HEIGHT - Ball.RADIUS && vy > 0)) {
-            this.ball2.setVelocityY(-this.ball2.getVelocityY());
         }
     }
     
@@ -166,41 +134,6 @@ public class Collision {
         } else {
             this.lastX = ballX;
             this.lastY = ballY;
-        }
-
-        return water;
-    }
-    
-    public boolean ballInWater2() {
-        boolean water = false;
-
-        double ballX = this.ball2.last()[0];
-        double ballY = this.ball2.last()[1];
-        Line2D path = new Line2D(this.lastX2, this.lastY2, ballX, ballY);
-
-        // Evaluate the line
-        if (ballX >= this.lastX2) { // Ball is moving to the right
-            for (double x = this.lastX2; x <= ballX && !water; x += STEP) {
-                if (this.course.getHeight(x, path.getY(x)) < 0) { // Ball in water
-                    water = true;
-                }
-            }
-        } else { // Ball is moving to the left
-            for (double x = ballX; x <= this.lastX2 && !water; x += STEP) {
-                if (this.course.getHeight(x, path.getY(x)) < 0) { // Ball in water
-                    water = true;
-                }
-            }
-        }
-
-
-        if (water) {
-            // Make the current position of the ball the last
-            this.lastX2 = Physics.hitCoord[0];
-            this.lastY2 = Physics.hitCoord[1];
-        } else {
-            this.lastX2 = ballX;
-            this.lastY2 = ballY;
         }
 
         return water;
