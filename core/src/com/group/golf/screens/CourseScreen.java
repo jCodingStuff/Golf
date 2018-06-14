@@ -66,6 +66,7 @@ public class CourseScreen implements Screen {
     private Collision collision;
     private Physics engine2; // MP
     private Collision collision2; // MP
+    private boolean multiplayerActive = false; // MP 
 
     // Reading moves stuff
     private List<String> moves;
@@ -141,7 +142,9 @@ public class CourseScreen implements Screen {
     
     // For multiplayer
     public CourseScreen(final Golf game, Course course, Ball ball, Ball ball2) {
-        this.game = game;
+        multiplayerActive = true;
+    	
+    	this.game = game;
         this.course = course;
         this.ball = ball;
         this.ball2 = ball2;
@@ -517,6 +520,7 @@ public class CourseScreen implements Screen {
             this.ball.render(this.game.batch, this.ballX, this.ballY);
             
          // Check if the ball2 is stopped
+            if (multiplayerActive == true)  {
             if (this.ball2.getSize() == 0) {
                 // If landed print
                 if (this.landed2) {
@@ -631,6 +635,7 @@ public class CourseScreen implements Screen {
 
                 // Render the ball
                 this.ball2.render(this.game.batch, this.ballX2, this.ballY2);
+            }
 
     }
 
@@ -689,6 +694,7 @@ public class CourseScreen implements Screen {
                     xLength *= this.scaleX * SCALE_MULTIPLIER;
                     yLength *= this.scaleY * SCALE_MULTIPLIER;
                     
+                    if (this.multiplayerActive == true) {
                     if (this.user1turn == true) {
                     this.engine.hit(xLength, yLength);
                     this.landed = true;
@@ -702,6 +708,13 @@ public class CourseScreen implements Screen {
 
                         this.hitSound.play();
                         user1turn = true;
+                    }
+                    }
+                    else {
+                    	this.engine.hit(xLength, yLength);
+                        this.landed = true;
+
+                        this.hitSound.play();
                     }
                 }
                 this.touchFlag = false;
@@ -832,6 +845,9 @@ public class CourseScreen implements Screen {
         	this.game.batch.draw(this.wall, realX + x, realY + y, width, height);
         }
         engine.setWalls(walls);
+        if (multiplayerActive == true) {
+        	engine2.setWalls(walls);
+        }
         this.game.batch.end();
         this.game.shapeRenderer.end();
     }
