@@ -7,6 +7,7 @@ import com.group.golf.Golf;
 import com.group.golf.math.Line2D;
 import com.group.golf.math.MathLib;
 import com.group.golf.math.Point3D;
+import java.io.*;
 
 /**
  * @author Julian Marrades
@@ -72,6 +73,7 @@ public class Collision {
     }
     
     public void checkForGraphicWalls(Rectangle[] rects, double[] offsets, double[] scales) {
+    	try {
     	float coordX = (float) this.ball.last()[0];
     	float coordY = (float) this.ball.last()[1];
     	double coordXd = this.ball.last()[0];
@@ -95,6 +97,9 @@ public class Collision {
     			System.out.println("Contains");
     			this.ball.setVelocityX(-this.ball.getVelocityX());
         	}
+    	}
+    	} catch (NullPointerException e) {
+    		System.out.println("Ignored graphic wall check.");
     	}
     	
         
