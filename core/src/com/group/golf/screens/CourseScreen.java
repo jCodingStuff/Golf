@@ -49,16 +49,17 @@ public class CourseScreen implements Screen {
 
     Course course;
     Ball ball;
-    Ball ball2; // Multiplayer
+    Ball ball2; // MP
     Texture flag;
+    Texture flag2;
     OrthographicCamera cam;
     Music music;
     Sound hitSound;
     Sound loseSound;
     Sound winSound;
     
-    Texture wall;// Added by you
-    private int wallCount; // Added by you
+    Texture wall;
+    private int wallCount;
     
     
 
@@ -83,6 +84,8 @@ public class CourseScreen implements Screen {
     private boolean touchFlag;
     private boolean touchFlag2; // MP
     private boolean user1turn = true; // MP
+    private boolean user1goal = false; // MP
+    private boolean user2goal = false; // MP
     private int firstX;
     private int firstY;
     private int lastX;
@@ -228,7 +231,7 @@ public class CourseScreen implements Screen {
         
         // Setup Ball2
         if(ball2 != null) {
-        this.ball2.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
+        this.ball2.setTexture(new Texture(Gdx.files.internal("ball_soccer3.png")));
         this.ball2.setX(this.course.getStart2()[0]);
         this.ball2.setY(this.course.getStart2()[1]);
         }
@@ -253,6 +256,7 @@ public class CourseScreen implements Screen {
         // Setup Goal
         this.goalSize = 20;
         this.flag = new Texture(Gdx.files.internal("golf_flag.png"));
+        this.flag2 = new Texture(Gdx.files.internal("golf_flag2.png"));
 
         // Setup engine and collision system
         this.engine = new Physics(this.course, this.ball);
@@ -413,7 +417,9 @@ public class CourseScreen implements Screen {
 
             // Check if the goal is achieved
             if (this.collision.isGoalAchieved()) {
-                this.winSound.play();
+                user1goal = true;
+                if (((user1goal == true) && (user2goal == true)) || ((multiplayerActive == false) && (user1goal == true))) {
+            	this.winSound.play();
 
                 try {
                     FileHandle f = Gdx.files.local("scores.txt");
@@ -481,7 +487,11 @@ public class CourseScreen implements Screen {
                     this.dispose();
                     return;
                 }
-
+            }
+            
+            else {
+            	user1goal = false;
+            }
 
                 // Make a move
                 if (this.bot != null && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
@@ -530,7 +540,9 @@ public class CourseScreen implements Screen {
 
                 // Check if the goal is achieved
                 if (this.collision2.isGoalAchieved2()) {
-                    this.winSound.play();
+                	user2goal = true;
+                	if ((user1goal == true) && (user2goal == true)) {
+                	this.winSound.play();
 
                     try {
                         FileHandle f = Gdx.files.local("scores.txt");
@@ -598,7 +610,10 @@ public class CourseScreen implements Screen {
                         this.dispose();
                         return;
                     }
-
+            }
+                else {
+                	user2goal = false;
+                }
 
                     // Make a move
                     if (this.bot != null && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
@@ -819,7 +834,7 @@ public class CourseScreen implements Screen {
                 toleranceX*2, toleranceY*2);
         this.game.shapeRenderer.end();
         this.game.batch.begin();
-        this.game.batch.draw(this.flag, realX - 3, realY, 52, 62);
+        this.game.batch.draw(this.flag2, realX - 3, realY, 52, 62);
         this.game.batch.end();
     }
     
