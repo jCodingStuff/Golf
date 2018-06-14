@@ -200,7 +200,7 @@ public class CourseSelectorScreen implements Screen {
                 double[] start = new double[]{-2, 3};
                 double[] goal = new double[]{0, 1};
                 
-                double[] start2 = new double[]{8, 10};
+                double[] start2 = new double[]{-1, 3};
                 double[] goal2 = new double[]{0, 2};
                 
                 Function function = new Function(formula);

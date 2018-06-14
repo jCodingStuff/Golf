@@ -64,6 +64,9 @@ public class CourseScreen implements Screen {
 
     private Physics engine;
     private Collision collision;
+    private Physics engine2; // MP
+    private Collision collision2; // MP
+    private boolean multiplayerActive = false; // MP 
 
     // Reading moves stuff
     private List<String> moves;
@@ -98,6 +101,7 @@ public class CourseScreen implements Screen {
     // Bot
     private Bot bot;
     private boolean landed = true;
+    private boolean landed2 = true;
 
     //Score
     int movesCounter;
@@ -138,7 +142,9 @@ public class CourseScreen implements Screen {
     
     // For multiplayer
     public CourseScreen(final Golf game, Course course, Ball ball, Ball ball2) {
-        this.game = game;
+        multiplayerActive = true;
+    	
+    	this.game = game;
         this.course = course;
         this.ball = ball;
         this.ball2 = ball2;
@@ -253,6 +259,11 @@ public class CourseScreen implements Screen {
         this.collision = new Collision(this.ball, this.course);
         this.engine.setOffsets(new double[]{this.xoffset, this.yoffset});
         this.engine.setScales(new double[]{this.scaleX, this.scaleY});
+        
+        this.engine2 = new Physics(this.course, this.ball2);
+        this.collision2 = new Collision(this.ball2, this.course);
+        this.engine2.setOffsets(new double[]{this.xoffset, this.yoffset});
+        this.engine2.setScales(new double[]{this.scaleX, this.scaleY});
         
      // Setup wall(s), in this case the wall count is set to 0 as this is the normal game-mode without walls.
         setWallCount(0);
@@ -507,6 +518,124 @@ public class CourseScreen implements Screen {
 
             // Render the ball
             this.ball.render(this.game.batch, this.ballX, this.ballY);
+            
+         // Check if the ball2 is stopped
+            if (multiplayerActive == true)  {
+            if (this.ball2.getSize() == 0) {
+                // If landed print
+                if (this.landed2) {
+                    System.out.println("Ball landed: " + this.ball2.getX() + " " + this.ball2.getY());
+                    this.landed2 = false;
+                }
+
+                // Check if the goal is achieved
+                if (this.collision2.isGoalAchieved()) {
+                    this.winSound.play();
+
+                    try {
+                        FileHandle f = Gdx.files.local("scores.txt");
+
+                        String line = f.readString();
+                        String[] values = line.split("\\s+");
+
+
+
+//                        String[] s = line.split(" ");
+//                       for(String aScore: s){
+//                           if(movesCounter< Integer.parseInt(aScore)){
+//                               aScore = String.valueOf(movesCounter);
+//                           }
+//                       }
+
+//                        String str = String.valueOf(movesCounter);
+
+
+                        for (int i = 0; i < values.length ; i ++) {
+                            System.out.println("For loop");
+                            if (Integer.parseInt(values[i]) > movesCounter) {
+                                System.out.println("If statement");
+                                String[] spare = new String[values.length-i];
+                                System.arraycopy(values,i,spare,0,spare.length);
+                                values[i] = Integer.toString(movesCounter);
+                                String[] updatedValues = new String[values.length + 1];
+                                for (int j = 0; j < i+1; j++) {
+                                    updatedValues[j] = values[j];
+                                }
+                                for (int j = i+1; j < updatedValues.length; j++) {
+                                    updatedValues[j] = spare[j-i];
+                                }
+
+
+                                for (int j = 0; j < updatedValues.length; j++)
+                                    System.out.print(updatedValues[j] + "   ");
+//                                System.out.println(Arrays.toString(updatedValues));
+                                break;
+                            }
+
+                            if (i == values.length-1) {
+                                String[] updatedValues = new String[values.length + 1];
+                                for (int j = 0; j < values.length; j++) {
+                                    updatedValues[j] = values[j];
+                                }
+                                updatedValues[values.length] = Integer.toString(movesCounter);
+                            }
+                        }
+
+                        BufferedWriter writer = new BufferedWriter(new FileWriter("scores.txt", true));
+                        writer.append(' ');
+                        writer.append(Integer.toString(movesCounter));
+
+                        writer.close();
+                    }
+                    catch(Exception e)
+                    {}
+
+                    try {
+                            Thread.sleep(3000);
+                        } catch (Exception e) {
+                        }
+                        this.game.setScreen(new CourseSelectorScreen(this.game));
+                        this.dispose();
+                        return;
+                    }
+
+
+                    // Make a move
+                    if (this.bot != null && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                        System.out.println("\nBot moving!");
+                        this.bot.makeMove();
+                        this.movesCounter++;
+                        this.landed = true;
+                    } else if (this.moves != null && this.counter < this.moves.size() &&
+                            Gdx.input.isKeyPressed(Input.Keys.SPACE)) { // Mode 2 is active
+                        System.out.println("\nFile moves!");
+                        this.fileMoves();
+                        this.movesCounter++;
+                    } else { // Mode 1 is active
+                        this.userMoves();
+
+                    }
+                } else {
+
+                    this.ball2.dequeue();
+                }
+
+                this.computeBallPixels2();
+
+                // Check for water
+                if (this.engine2.isWater() && this.ball2.getSize() == 0) {
+                    this.ball2.clear();
+                    this.ball2.setX(this.engine2.getHitCoord()[0]);
+                    this.ball2.setY(this.engine2.getHitCoord()[1]);
+                    this.loseSound.play(0.2f);
+                }
+
+                // Compute pixel position of the ball
+                this.computeBallPixels2();
+
+                // Render the ball
+                this.ball2.render(this.game.batch, this.ballX2, this.ballY2);
+            }
 
     }
 
@@ -564,11 +693,29 @@ public class CourseScreen implements Screen {
 
                     xLength *= this.scaleX * SCALE_MULTIPLIER;
                     yLength *= this.scaleY * SCALE_MULTIPLIER;
-
+                    
+                    if (this.multiplayerActive == true) {
+                    if (this.user1turn == true) {
                     this.engine.hit(xLength, yLength);
                     this.landed = true;
 
                     this.hitSound.play();
+                    user1turn = false;
+                    }
+                    else {
+                    	this.engine2.hit(xLength, yLength);
+                        this.landed2 = true;
+
+                        this.hitSound.play();
+                        user1turn = true;
+                    }
+                    }
+                    else {
+                    	this.engine.hit(xLength, yLength);
+                        this.landed = true;
+
+                        this.hitSound.play();
+                    }
                 }
                 this.touchFlag = false;
             }
@@ -698,6 +845,9 @@ public class CourseScreen implements Screen {
         	this.game.batch.draw(this.wall, realX + x, realY + y, width, height);
         }
         engine.setWalls(walls);
+        if (multiplayerActive == true) {
+        	engine2.setWalls(walls);
+        }
         this.game.batch.end();
         this.game.shapeRenderer.end();
     }
@@ -890,6 +1040,12 @@ public class CourseScreen implements Screen {
         public void setWallCount(int number) {
     	wallCount = number;
     }
+        
+        public boolean getuser1Turn() {
+        	return user1turn;
+        }
+        
+       
 
 
 }
