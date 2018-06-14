@@ -32,9 +32,11 @@ public class GeneticBot implements Bot {
 
     private static final int GENERATION_LIMIT = 5;
     private static final double MUTATION_RATE = 0.01;
+    private static double error;
 
     private Individual[] population;
     private Individual winner;
+
 
     // Algorithms
     private CrossOver crossOver;
@@ -235,7 +237,10 @@ public class GeneticBot implements Bot {
      * Simulate a shot
      */
     private void simulateShot(JVector2 force) {
-        this.virtualEngine.hit(force.getX(), force.getY());
+
+        this.error = 1.0;  // =  Math.random()*10;  ball stops moving after 2 shots! Maybe the error is too big? 
+
+        this.virtualEngine.hit(force.getX()*error, force.getY()*error);
         while (this.virtualBall.getSize() != 0) {
             this.virtualBall.dequeue();
             if (this.virtualEngine.isWater() && this.virtualBall.getSize() == 0) {
