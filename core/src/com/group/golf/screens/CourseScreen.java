@@ -529,7 +529,7 @@ public class CourseScreen implements Screen {
                 }
 
                 // Check if the goal is achieved
-                if (this.collision2.isGoalAchieved()) {
+                if (this.collision2.isGoalAchieved2()) {
                     this.winSound.play();
 
                     try {

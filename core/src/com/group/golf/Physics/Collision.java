@@ -54,6 +54,14 @@ public class Collision {
         double distToGoal = Math.sqrt(xToGoal * xToGoal + yToGoal * yToGoal);
         return distToGoal <= this.course.getTolerance();
     }
+    
+    // For multiplayer
+    public boolean isGoalAchieved2() {
+        double xToGoal = this.course.getGoal2()[0] - this.ball.getX();
+        double yToGoal = this.course.getGoal2()[1] - this.ball.getY();
+        double distToGoal = Math.sqrt(xToGoal * xToGoal + yToGoal * yToGoal);
+        return distToGoal <= this.course.getTolerance();
+    }
 
     /**
      * React when the ball hits a wall
