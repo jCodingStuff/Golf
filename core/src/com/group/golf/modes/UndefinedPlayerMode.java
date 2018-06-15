@@ -196,6 +196,11 @@ public class UndefinedPlayerMode implements GameMode {
     }
 
     @Override
+    public void extraChecks() {
+
+    }
+
+    @Override
     public void setOffsets(double[] offsets) {
         this.offsets = offsets;
         for (Physics engine : this.engines) engine.setOffsets(offsets);

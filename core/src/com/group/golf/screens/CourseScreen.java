@@ -209,6 +209,8 @@ public class CourseScreen implements Screen {
 
         this.gameMode.water();
 
+        this.gameMode.extraChecks();
+
         this.gameMode.render(this.game.batch);
     }
 

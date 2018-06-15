@@ -136,6 +136,11 @@ public class FileMode implements GameMode {
     }
 
     @Override
+    public void extraChecks() {
+
+    }
+
+    @Override
     public void setOffsets(double[] offsets) {
         this.offsets = offsets;
         this.engine.setOffsets(this.offsets);
