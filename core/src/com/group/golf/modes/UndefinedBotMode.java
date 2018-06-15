@@ -152,6 +152,10 @@ public class UndefinedBotMode implements GameMode {
 
     private void botMove() {
         this.bots[this.counter].makeMove();
+        int botNum = this.counter + 1;
+        String name = this.bots[this.counter].getClass().getName();
+        System.out.println(name + " (index " + this.counter + ") moved!");
+        this.landed = true;
         this.hitSound.play();
         this.incrementCounter();
     }

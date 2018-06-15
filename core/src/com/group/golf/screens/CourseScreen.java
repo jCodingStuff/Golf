@@ -55,7 +55,7 @@ public class CourseScreen implements Screen {
     private double xoffset;
     private double yoffset;
 
-    public CourseScreen(final Golf game, Course Course, GameMode gameMode) {
+    public CourseScreen(final Golf game, Course course, GameMode gameMode) {
         this.game = game;
         this.course = course;
         this.gameMode = gameMode;
