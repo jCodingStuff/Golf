@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.group.golf.Ball;
 import com.group.golf.Course;
@@ -199,19 +200,31 @@ public class CourseScreen implements Screen {
         // Render the course
         this.renderTerrain();
 
+        // Render walls
+        this.renderWalls();
+
         // Render the goal
         this.renderGoal(this.course.getGoal(), this.flag);
         double[] goal2 = this.course.getGoal2();
         if (goal2 != null) this.renderGoal(goal2, this.flag2);
 
         boolean moved = this.gameMode.move(this.cam);
-        if (!moved) this.dispose();
+        if (!moved) this.dispose(); // Goal reached
 
         this.gameMode.water();
 
         this.gameMode.extraChecks();
 
         this.gameMode.render(this.game.batch);
+    }
+
+    private void renderWalls() {
+        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        for (Rectangle wall : this.course.getWalls()) {
+            this.game.shapeRenderer.setColor(0.545f, 0.271f, 0.075f, 1);
+            this.game.shapeRenderer.rect(wall.getX(), wall.getY(), wall.width, wall.height);
+        }
+        this.game.shapeRenderer.end();
     }
 
     /**

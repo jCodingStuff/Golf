@@ -1,5 +1,6 @@
 package com.group.golf.math;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.group.golf.Golf;
 
 /**
@@ -144,6 +145,18 @@ public class MathLib {
      */
     public static double randomDouble(double low, double high) {
         return Math.random()*(high - low) + low;
+    }
+
+    /**
+     * Generate a rectangle from user mouse drag
+     * @param firstX x-coordinate of mouse press
+     * @param firstY y-coordinate of mouse press
+     * @param lastX x-coordinate of mouse release
+     * @param lastY y-coordinate of mouse release
+     * @return the rectangle formed by (firstX, firstY) and (lastX, lastY) as opposite corners
+     */
+    public Rectangle createRectangle(int firstX, int firstY, int lastX, int lastY) {
+        
     }
 
 }
