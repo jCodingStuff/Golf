@@ -11,6 +11,8 @@ public interface GameMode {
 
     void water();
 
+    void extraChecks();
+
     void setOffsets(double[] offsets);
 
     void setScales(double[] scales);

@@ -55,14 +55,18 @@ public class FileMode implements GameMode {
 
         this.setUpMoves(moves);
 
-        this.ball.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
-        this.ball.setX(this.course.getStart()[0]);
-        this.ball.setY(this.course.getStart()[1]);
+        this.setUpBall();
 
         // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
         this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
         this.winSound = Gdx.audio.newSound(Gdx.files.internal("success_2.wav"));
+    }
+
+    private void setUpBall() {
+        this.ball.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
+        this.ball.setX(this.course.getStart()[0]);
+        this.ball.setY(this.course.getStart()[1]);
     }
 
     private void setUpMoves(String moves) {
@@ -133,6 +137,11 @@ public class FileMode implements GameMode {
         this.landed = true;
         this.counter++;
         this.hitSound.play();
+    }
+
+    @Override
+    public void extraChecks() {
+
     }
 
     @Override

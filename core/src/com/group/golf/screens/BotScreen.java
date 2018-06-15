@@ -21,6 +21,7 @@ import com.group.golf.math.Computable;
 import com.group.golf.math.Function;
 import com.group.golf.modes.GameMode;
 import com.group.golf.modes.UndefinedBotMode;
+import com.group.golf.modes.WallCreationMode;
 
 /**
  * Created by lilly on 5/22/18.
@@ -109,8 +110,10 @@ public class BotScreen implements Screen {
                     back.setTouchable(Touchable.disabled);
                     Bot genBot = new GeneticBot(course, ball);
                     Bot[] bots = new Bot[]{genBot};
-                    GameMode gameMode = new UndefinedBotMode(this.game, bots, course, new Ball[]{this.ball});
-                    this.game.setScreen(new CourseScreen(this.game, this.course, gameMode));
+                    Ball[] balls = new Ball[]{this.ball};
+                    GameMode gameMode = new UndefinedBotMode(this.game, bots, course, balls);
+                    GameMode wallMode = new WallCreationMode(this.game, course, balls);
+                    this.game.setScreen(new CourseScreen(this.game, this.course, gameMode, wallMode));
                     this.screen.dispose();
                 }
 
@@ -139,8 +142,10 @@ public class BotScreen implements Screen {
                     back.setTouchable(Touchable.disabled);
                     Bot ranBot = new RandomBot(course, ball);
                     Bot[] bots = new Bot[]{ranBot};
-                    GameMode gameMode = new UndefinedBotMode(this.game, bots, course, new Ball[]{this.ball});
-                    this.game.setScreen(new CourseScreen(this.game, this.course, gameMode));
+                    Ball[] balls = new Ball[]{this.ball};
+                    GameMode gameMode = new UndefinedBotMode(this.game, bots, course, balls);
+                    GameMode wallMode = new WallCreationMode(this.game, course, balls);
+                    this.game.setScreen(new CourseScreen(this.game, this.course, gameMode, wallMode));
                     this.screen.dispose();
                 }
 
@@ -169,8 +174,10 @@ public class BotScreen implements Screen {
                     back.setTouchable(Touchable.disabled);
                     Bot martBot = new botMartijn(course, ball);
                     Bot[] bots = new Bot[]{martBot};
-                    GameMode gameMode = new UndefinedBotMode(this.game, bots, course, new Ball[]{this.ball});
-                    this.game.setScreen(new CourseScreen(this.game, this.course, gameMode));
+                    Ball[] balls = new Ball[]{this.ball};
+                    GameMode gameMode = new UndefinedBotMode(this.game, bots, course, balls);
+                    GameMode wallMode = new WallCreationMode(this.game, course, balls);
+                    this.game.setScreen(new CourseScreen(this.game, this.course, gameMode, wallMode));
                     this.screen.dispose();
                 }
 
@@ -198,8 +205,10 @@ public class BotScreen implements Screen {
                     back.setTouchable(Touchable.disabled);
                     Bot dumBot = new DumBot(course, ball);
                     Bot[] bots = new Bot[]{dumBot};
-                    GameMode gameMode = new UndefinedBotMode(this.game, bots, course, new Ball[]{this.ball});
-                    this.game.setScreen(new CourseScreen(this.game, this.course, gameMode));
+                    Ball[] balls = new Ball[]{this.ball};
+                    GameMode gameMode = new UndefinedBotMode(this.game, bots, course, balls);
+                    GameMode wallMode = new WallCreationMode(this.game, course, balls);
+                    this.game.setScreen(new CourseScreen(this.game, this.course, gameMode, wallMode));
                     this.screen.dispose();
                 }
 

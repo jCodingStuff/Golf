@@ -18,6 +18,7 @@ import com.group.golf.Golf;
 import com.group.golf.modes.GameMode;
 import com.group.golf.modes.UndefinedBotMode;
 import com.group.golf.modes.UndefinedPlayerMode;
+import com.group.golf.modes.WallCreationMode;
 
 public class ModeScreen implements Screen {
 
@@ -132,7 +133,8 @@ public class ModeScreen implements Screen {
                 back.setTouchable(Touchable.disabled);
                 Ball[] balls = new Ball[]{ball};
                 GameMode gameMode = new UndefinedPlayerMode(this.game, course, balls);
-                this.game.setScreen(new CourseScreen(this.game, course, gameMode));
+                GameMode wallMode = new WallCreationMode(this.game, course, balls);
+                this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
                 this.screen.dispose();
             }
         }

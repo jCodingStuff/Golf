@@ -1,9 +1,13 @@
 package com.group.golf;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.group.golf.math.BicubicInterpolator;
 import com.group.golf.math.Computable;
 import com.group.golf.math.Point3D;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents a course for the Golf Game
@@ -18,6 +22,8 @@ public class Course {
     
     private double[] start2;
     private double[] goal2;
+
+    private List<Rectangle> walls; // Pixel coordinates, CAREFUL!
     
     private double tolerance;
     private Computable[][] functions;
@@ -41,26 +47,33 @@ public class Course {
         this.goal = goal;
         this.tolerance = tolerance;
         this.functions = functions;
-        
+
         this.start2 = null;
         this.goal2 = null;
+
+        // Setup walls
+        this.walls = new ArrayList<Rectangle>();
     }
 
     public Course(Computable[][] functions, double g, double mu, double vmax, double[] start, double[] start2, double[] goal, double[] goal2,
             double tolerance) {
-  this.g = g;
-  this.mu = mu;
-  this.vmax = vmax;
-  this.start = start;
-  this.goal = goal;
+        this.g = g;
+        this.mu = mu;
+        this.vmax = vmax;
+        this.start = start;
+        this.goal = goal;
   
-  this.start2 = start2;
-  this.goal2 = goal2;
+        this.start2 = start2;
+        this.goal2 = goal2;
   
   
-  this.tolerance = tolerance;
-  this.functions = functions;
-}
+        this.tolerance = tolerance;
+        this.functions = functions;
+
+        // Setup walls
+        this.walls = new ArrayList<Rectangle>();
+    }
+
     /**
      * Check if the course is a spline
      * @return true if it is spline, false otherwise
@@ -187,7 +200,7 @@ public class Course {
 
     /**
      * Set a new set of start coordinates
-     * @param start the new start coordinates
+     * @param start2 the new start coordinates
      */
     public void setStart2(double[] start2) {
         this.start2 = start2;
@@ -203,7 +216,7 @@ public class Course {
 
     /**
      * Set a new set of goal coordinates
-     * @param goal the new goal coordinates
+     * @param goal2 the new goal coordinates
      */
     public void setGoal2(double[] goal2) {
         this.goal2 = goal2;
@@ -261,6 +274,22 @@ public class Course {
     public double getDistance2() {
         double dist2 = Math.sqrt(Math.pow(this.goal2[0] - this.start2[0], 2) + Math.pow(this.goal2[1] - this.start2[1], 2));
         return Math.abs(dist2);
+    }
+
+    public Rectangle getWall(int i) {
+        return this.walls.get(i);
+    }
+
+    public void addWall(Rectangle newWall) {
+        this.walls.add(newWall);
+    }
+
+    public List<Rectangle> getWalls() {
+        return walls;
+    }
+
+    public void setWalls(List<Rectangle> walls) {
+        this.walls = walls;
     }
 
     @Override

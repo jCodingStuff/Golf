@@ -27,6 +27,7 @@ import com.group.golf.math.Computable;
 import com.group.golf.math.Function;
 import com.group.golf.modes.GameMode;
 import com.group.golf.modes.TwoGoalsMode;
+import com.group.golf.modes.WallCreationMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -221,7 +222,8 @@ public class CourseSelectorScreen implements Screen {
                 Ball[] balls = new Ball[]{ball, ball2};
 
                 GameMode gameMode = new TwoGoalsMode(this.game, course, balls);
-                this.game.setScreen(new CourseScreen(this.game, course, gameMode));
+                GameMode wallMode = new WallCreationMode(this.game, course, balls);
+                this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
 
                 this.screen.dispose();
             }
