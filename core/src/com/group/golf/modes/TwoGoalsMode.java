@@ -130,6 +130,7 @@ public class TwoGoalsMode implements GameMode {
             if (this.landed) {
                 System.out.println("Ball landed: " + currentBall.getX() + " " + currentBall.getY());
                 this.landed = false;
+                this.incrementCounter();
             }
 
             // Check if the goal is achieved
@@ -194,7 +195,6 @@ public class TwoGoalsMode implements GameMode {
 
                 int playerNum = this.counter + 1;
                 System.out.println("Player " + playerNum + " moved!");
-                this.incrementCounter();
             }
             this.touchFlag = false;
         }

@@ -131,6 +131,7 @@ public class UndefinedBotMode implements GameMode {
             if (this.landed) {
                 System.out.println("Ball landed: " + currentBall.getX() + " " + currentBall.getY());
                 this.landed = false;
+                this.incrementCounter();
             }
 
             // Check if the goal is achieved
@@ -171,7 +172,6 @@ public class UndefinedBotMode implements GameMode {
         this.informMove();
         this.landed = true;
         this.hitSound.play();
-        this.incrementCounter();
     }
 
     private void informMove() {
