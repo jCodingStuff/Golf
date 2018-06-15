@@ -23,6 +23,7 @@ import com.group.golf.math.MathLib;
 import com.group.golf.math.Point3D;
 import com.group.golf.modes.GameMode;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -35,6 +36,8 @@ public class CourseScreen implements Screen {
 
     final Golf game;
 
+    private static final Color WALL_COLOR = new Color(0.545f, 0.553f, 0.478f, 1);
+
     Course course;
     Texture flag;
     Texture flag2;
@@ -43,6 +46,7 @@ public class CourseScreen implements Screen {
 
     // Gamemode
     private GameMode gameMode;
+    private GameMode activeMode; // Initially WallCreationMode
 
     // Graphing things
     private int goalSize;
@@ -57,21 +61,25 @@ public class CourseScreen implements Screen {
     private double xoffset;
     private double yoffset;
 
-    public CourseScreen(final Golf game, Course course, GameMode gameMode) {
+    private boolean started;
+
+    public CourseScreen(final Golf game, Course course, GameMode gameMode, GameMode wallMode) {
         this.game = game;
         this.course = course;
         this.gameMode = gameMode;
+        this.activeMode = wallMode;
 
         this.setupCommon();
 
-        this.gameMode.setOffsets(new double[]{this.xoffset, this.yoffset});
-        this.gameMode.setScales(new double[]{this.scaleX, this.scaleY});
+        this.activeMode.setOffsets(new double[]{this.xoffset, this.yoffset});
+        this.activeMode.setScales(new double[]{this.scaleX, this.scaleY});
     }
 
     /**
      * Setup common properties to all gamemodes
      */
     private void setupCommon() {
+        this.started = false;
 
         // Setup Cam
         this.cam = new OrthographicCamera();
@@ -192,6 +200,9 @@ public class CourseScreen implements Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Look for start
+        this.checkForStart();
+
         // Cam and projection matrices
         this.cam.update();
         this.game.batch.setProjectionMatrix(this.cam.combined);
@@ -208,20 +219,30 @@ public class CourseScreen implements Screen {
         double[] goal2 = this.course.getGoal2();
         if (goal2 != null) this.renderGoal(goal2, this.flag2);
 
-        boolean moved = this.gameMode.move(this.cam);
+        boolean moved = this.activeMode.move(this.cam);
         if (!moved) this.dispose(); // Goal reached
 
-        this.gameMode.water();
+        this.activeMode.water();
 
-        this.gameMode.extraChecks();
+        this.activeMode.extraChecks();
 
-        this.gameMode.render(this.game.batch);
+        this.activeMode.render(this.game.batch);
+    }
+
+    private void checkForStart() {
+        if (!this.started && Gdx.input.isKeyPressed(Input.Keys.S)) {
+            this.activeMode = this.gameMode; // Start real GameMode
+            this.activeMode.setOffsets(new double[]{this.xoffset, this.yoffset});
+            this.activeMode.setScales(new double[]{this.scaleX, this.scaleY});
+            this.started = true;
+            System.out.println("GAME STARTS NOW! FIGHT!");
+        }
     }
 
     private void renderWalls() {
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        this.game.shapeRenderer.setColor(WALL_COLOR);
         for (Rectangle wall : this.course.getWalls()) {
-            this.game.shapeRenderer.setColor(0.545f, 0.271f, 0.075f, 1);
             this.game.shapeRenderer.rect(wall.getX(), wall.getY(), wall.width, wall.height);
         }
         this.game.shapeRenderer.end();

@@ -155,8 +155,12 @@ public class MathLib {
      * @param lastY y-coordinate of mouse release
      * @return the rectangle formed by (firstX, firstY) and (lastX, lastY) as opposite corners
      */
-    public Rectangle createRectangle(int firstX, int firstY, int lastX, int lastY) {
-        
+    public static Rectangle createRectangle(int firstX, int firstY, int lastX, int lastY) {
+        float width = Math.abs(firstX - lastX);
+        float height = Math.abs(firstY - lastY);
+        float left = Math.min(firstX, lastX);
+        float bot = Golf.VIRTUAL_HEIGHT - Math.max(firstY, lastY);
+        return new Rectangle(left, bot, width, height);
     }
 
 }

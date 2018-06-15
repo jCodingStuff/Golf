@@ -1,5 +1,6 @@
 package com.group.golf.listeners;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
@@ -12,6 +13,7 @@ import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.modes.FileMode;
 import com.group.golf.modes.GameMode;
+import com.group.golf.modes.WallCreationMode;
 import com.group.golf.screens.CourseScreen;
 
 /**
@@ -50,7 +52,8 @@ public class MovesPlayListener extends ChangeListener {
             FileHandle file = Gdx.files.local(path);
             String moves = file.readString();
             GameMode gameMode = new FileMode(this.game, this.course, this.ball, moves);
-            this.game.setScreen(new CourseScreen(this.game, this.course, gameMode));
+            GameMode wallMode = new WallCreationMode(this.game, this.course, new Ball[]{this.ball});
+            this.game.setScreen(new CourseScreen(this.game, this.course, gameMode, wallMode));
             this.screen.dispose();
         }
     }

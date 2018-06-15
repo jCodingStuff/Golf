@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.group.golf.Ball;
 import com.group.golf.Course;
@@ -37,7 +38,23 @@ public class WallCreationMode implements GameMode {
         this.course = course;
         this.balls = balls;
         this.initPixels();
-        this.setUpBalls();
+        if (this.course.getGoal2() == null) { // Normal mode
+            this.setUpBalls();
+        } else { // 2 Goal mode
+            this.setUpTwoGoalMode();
+        }
+    }
+
+    private void setUpTwoGoalMode() {
+        // Ball1
+        this.balls[0].setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
+        this.balls[0].setX(this.course.getStart()[0]);
+        this.balls[0].setY(this.course.getStart()[1]);
+
+        // Ball2
+        this.balls[1].setTexture(new Texture(Gdx.files.internal("ball_soccer3.png")));
+        this.balls[1].setX(this.course.getStart2()[0]);
+        this.balls[1].setY(this.course.getStart2()[1]);
     }
 
     private void setUpBalls() {
@@ -93,7 +110,10 @@ public class WallCreationMode implements GameMode {
                 cam.unproject(secondV);
 
                 // Generate rectangle and add it to the course
-
+                System.out.println("FirstX = " + this.firstX + ", FirstY = " + this.firstY);
+                System.out.println("LastX = " + this.lastX + ", LastY = " + this.lastY);
+                Rectangle newWall = MathLib.createRectangle(firstX, firstY, lastX, lastY);
+                this.course.addWall(newWall);
             }
             this.touchFlag = false;
         }
@@ -106,10 +126,14 @@ public class WallCreationMode implements GameMode {
     }
 
     @Override
-    public void setOffsets(double[] offsets) {}
+    public void setOffsets(double[] offsets) {
+        this.offsets = offsets;
+    }
 
     @Override
-    public void setScales(double[] scales) {}
+    public void setScales(double[] scales) {
+        this.scales = scales;
+    }
 
     @Override
     public void dispose() {}
