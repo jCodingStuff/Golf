@@ -130,6 +130,7 @@ public class UndefinedPlayerMode implements GameMode {
 
             // Check if the goal is achieved
             if (this.collisions[this.counter].isGoalAchieved()) {
+                this.informWinner();
                 this.winSound.play();
                 try { Thread.sleep(3000); }
                 catch (Exception e) {}
@@ -143,6 +144,11 @@ public class UndefinedPlayerMode implements GameMode {
             currentBall.dequeue();
             return true;
         }
+    }
+
+    private void informWinner() {
+        int playerNum = this.counter + 1;
+        System.out.println("Player " + playerNum + " WINS!");
     }
 
     private void userInput(OrthographicCamera cam) {

@@ -347,7 +347,6 @@ public class CourseScreen implements Screen {
         this.goalSize = goalSize;
     }
 
-
     public double[][] getHeights() {
         return heights;
     }

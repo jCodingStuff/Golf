@@ -135,6 +135,7 @@ public class UndefinedBotMode implements GameMode {
 
             // Check if the goal is achieved
             if (this.collisions[this.counter].isGoalAchieved()) {
+                this.informWinner();
                 this.winSound.play();
                 try { Thread.sleep(3000); }
                 catch (Exception e) {}
@@ -150,14 +151,42 @@ public class UndefinedBotMode implements GameMode {
         }
     }
 
-    private void botMove() {
-        this.bots[this.counter].makeMove();
+    private void informWinner() {
         int botNum = this.counter + 1;
         String name = this.bots[this.counter].getClass().getName();
-        System.out.println(name + " (index " + this.counter + ") moved!");
+        boolean found = false;
+        int index = 0;
+        for (int i = name.length() - 1; i >=0 && !found; i--) {
+            if (name.charAt(i) == '.') {
+                found = true;
+                index = i;
+            }
+        }
+        name = name.substring(index + 1);
+        System.out.println(name + " (index " + this.counter + ") WINS!");
+    }
+
+    private void botMove() {
+        this.bots[this.counter].makeMove();
+        this.informMove();
         this.landed = true;
         this.hitSound.play();
         this.incrementCounter();
+    }
+
+    private void informMove() {
+        int botNum = this.counter + 1;
+        String name = this.bots[this.counter].getClass().getName();
+        boolean found = false;
+        int index = 0;
+        for (int i = name.length() - 1; i >=0 && !found; i--) {
+            if (name.charAt(i) == '.') {
+                found = true;
+                index = i;
+            }
+        }
+        name = name.substring(index + 1);
+        System.out.println(name + " (index " + this.counter + ") moved!");
     }
 
     @Override
