@@ -212,6 +212,9 @@ public class CourseSelectorScreen implements Screen {
                 design.setTouchable(Touchable.disabled);
                 importbtn.setTouchable(Touchable.disabled);
                 play.setTouchable(Touchable.disabled);
+                maze.setTouchable(Touchable.disabled);
+                scoreBoard.setTouchable(Touchable.disabled);
+                multiplayerbtn.setTouchable(Touchable.disabled);
 
                 Ball ball = new Ball(40);
                 Ball ball2 = new Ball(40);
