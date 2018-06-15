@@ -214,7 +214,7 @@ public class CourseSelectorScreen implements Screen {
                 Ball ball = new Ball(40);
                 Ball ball2 = new Ball(40);
 
-                this.game.setScreen(new CourseScreen(this.game, course, ball, ball2));
+                //this.game.setScreen(new CourseScreen(this.game, course, ball, ball2));
 
                 this.screen.dispose();
             }
