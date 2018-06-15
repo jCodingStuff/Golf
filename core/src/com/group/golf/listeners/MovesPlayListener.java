@@ -10,6 +10,8 @@ import com.badlogic.gdx.utils.Json;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
+import com.group.golf.modes.FileMode;
+import com.group.golf.modes.GameMode;
 import com.group.golf.screens.CourseScreen;
 
 /**
@@ -47,7 +49,8 @@ public class MovesPlayListener extends ChangeListener {
                 && Gdx.files.local(path).exists()) {
             FileHandle file = Gdx.files.local(path);
             String moves = file.readString();
-            this.game.setScreen(new CourseScreen(this.game, this.course, this.ball, moves));
+            GameMode gameMode = new FileMode(this.game, this.course, this.ball, moves);
+            this.game.setScreen(new CourseScreen(this.game, this.course, gameMode));
             this.screen.dispose();
         }
     }

@@ -10,6 +10,7 @@ import com.group.golf.Golf;
 import com.group.golf.math.Computable;
 
 import com.group.golf.screens.CourseScreen;
+import com.group.golf.screens.ModeScreen;
 
 
 import java.util.StringTokenizer;
@@ -78,7 +79,7 @@ public class SplineMode1Listener extends ChangeListener {
         Ball ball = new Ball(Double.parseDouble(this.txtBallMass.getText()));
 
         Course course = new Course(functions, g, mu, vmax, start, goal, tolerance);
-        this.game.setScreen(new CourseScreen(this.game, course, ball));
+        this.game.setScreen(new ModeScreen(this.game, course, ball));
         this.screen.dispose();
     }
 }

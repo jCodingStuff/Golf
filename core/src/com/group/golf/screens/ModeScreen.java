@@ -15,6 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
+import com.group.golf.modes.GameMode;
+import com.group.golf.modes.UndefinedBotMode;
+import com.group.golf.modes.UndefinedPlayerMode;
 
 public class ModeScreen implements Screen {
 
@@ -127,7 +130,9 @@ public class ModeScreen implements Screen {
                 aiVSai.setTouchable(Touchable.disabled);
                 playerVSai.setTouchable(Touchable.disabled);
                 back.setTouchable(Touchable.disabled);
-                this.game.setScreen(new CourseScreen(this.game, course, ball));
+                Ball[] balls = new Ball[]{ball};
+                GameMode gameMode = new UndefinedPlayerMode(this.game, course, balls);
+                this.game.setScreen(new CourseScreen(this.game, course, gameMode));
                 this.screen.dispose();
             }
         }

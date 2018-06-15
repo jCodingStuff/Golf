@@ -85,6 +85,10 @@ public class JVector2 {
         this.y = tmp;
     }
 
+    public void setPosition(double x, double y) {
+        this.x = x; this.y = y;
+    }
+
     public static JVector2 opposite(JVector2 vector) {
         double invX = vector.y;
         double invY = vector.x;
