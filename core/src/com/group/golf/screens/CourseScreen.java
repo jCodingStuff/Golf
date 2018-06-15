@@ -36,6 +36,7 @@ public class CourseScreen implements Screen {
 
     Course course;
     Texture flag;
+    Texture flag2;
     OrthographicCamera cam;
     Music music;
 
@@ -86,6 +87,7 @@ public class CourseScreen implements Screen {
         // Setup Goal
         this.goalSize = 20;
         this.flag = new Texture(Gdx.files.internal("golf_flag.png"));
+        this.flag2 = new Texture(Gdx.files.internal("golf_flag2.png"));
 
     }
 
@@ -198,7 +200,9 @@ public class CourseScreen implements Screen {
         this.renderTerrain();
 
         // Render the goal
-        this.renderGoal();
+        this.renderGoal(this.course.getGoal(), this.flag);
+        double[] goal2 = this.course.getGoal2();
+        if (goal2 != null) this.renderGoal(goal2, this.flag2);
 
         boolean moved = this.gameMode.move(this.cam);
         if (!moved) this.dispose();
@@ -239,9 +243,9 @@ public class CourseScreen implements Screen {
     /**
      * Render the goal
      */
-    private void renderGoal() {
+    private void renderGoal(double[] goal, Texture texture) {
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        double[] real = MathLib.toPixel(this.course.getGoal(), new double[]{this.getXoffset(), this.getYoffset()},
+        double[] real = MathLib.toPixel(goal, new double[]{this.getXoffset(), this.getYoffset()},
                 new double[]{this.getScaleX(), this.getScaleY()});
         float realX = (float) real[0];
         float realY = (float) real[1];
@@ -258,7 +262,7 @@ public class CourseScreen implements Screen {
                 toleranceX*2, toleranceY*2);
         this.game.shapeRenderer.end();
         this.game.batch.begin();
-        this.game.batch.draw(this.flag, realX - 3, realY, 52, 62);
+        this.game.batch.draw(texture, realX - 3, realY, 52, 62);
         this.game.batch.end();
     }
 

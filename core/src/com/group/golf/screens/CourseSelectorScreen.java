@@ -25,6 +25,8 @@ import com.group.golf.ai.DumBot;
 
 import com.group.golf.math.Computable;
 import com.group.golf.math.Function;
+import com.group.golf.modes.GameMode;
+import com.group.golf.modes.TwoGoalsMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -213,8 +215,10 @@ public class CourseSelectorScreen implements Screen {
 
                 Ball ball = new Ball(40);
                 Ball ball2 = new Ball(40);
+                Ball[] balls = new Ball[]{ball, ball2};
 
-                //this.game.setScreen(new CourseScreen(this.game, course, ball, ball2));
+                GameMode gameMode = new TwoGoalsMode(this.game, course, balls);
+                this.game.setScreen(new CourseScreen(this.game, course, gameMode));
 
                 this.screen.dispose();
             }
