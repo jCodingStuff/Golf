@@ -4,8 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.*;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
@@ -23,6 +22,7 @@ public class WallCreationMode implements GameMode {
     private Course course;
     private Ball[] balls;
     private JVector2[] ballsPixels;
+    private Circle[] ballsCollision;
 
     private double[] scales;
     private double[] offsets;
@@ -82,7 +82,7 @@ public class WallCreationMode implements GameMode {
 
     @Override
     public void render(Batch batch) {
-        this.computePixels();
+//        this.computePixels(); No need, balls don't move!
         for (int i = 0; i < this.balls.length; i++) {
             this.balls[i].render(batch, this.ballsPixels[i].getX(), this.ballsPixels[i].getY());
         }
@@ -110,14 +110,40 @@ public class WallCreationMode implements GameMode {
                 cam.unproject(secondV);
 
                 // Generate rectangle and add it to the course
-                System.out.println("FirstX = " + this.firstX + ", FirstY = " + this.firstY);
-                System.out.println("LastX = " + this.lastX + ", LastY = " + this.lastY);
+//                System.out.println("FirstX = " + this.firstX + ", FirstY = " + this.firstY);
+//                System.out.println("LastX = " + this.lastX + ", LastY = " + this.lastY);
                 Rectangle newWall = MathLib.createRectangle(firstX, firstY, lastX, lastY);
-                this.course.addWall(newWall);
+                if (this.isWallAllowed(newWall)) {
+                    this.course.addWall(newWall);
+                    System.out.println("Created: " + newWall);
+                } else {
+                    System.out.println("Wall not valid!");
+                }
             }
             this.touchFlag = false;
         }
         return true;
+    }
+
+    private boolean isWallAllowed(Rectangle wall) {
+        return !this.wallOverlapsBalls(wall);
+    }
+
+    private boolean wallOverlapsBalls(Rectangle wall) {
+        boolean overlap = false;
+        for (int i = 0; i < this.balls.length && !overlap; i++) {
+            if (Intersector.overlaps(this.ballsCollision[i], wall)) overlap = true;
+        }
+        return overlap;
+    }
+
+    private void setUpCollision() {
+        // Setup balls collision
+        this.ballsCollision = new Circle[this.balls.length];
+        for (int i = 0; i < this.ballsCollision.length; i++) {
+            this.ballsCollision[i] = new Circle((float) this.ballsPixels[i].getX(), (float) this.ballsPixels[i].getY(),
+                    Ball.RADIUS);
+        }
     }
 
     @Override
@@ -133,6 +159,8 @@ public class WallCreationMode implements GameMode {
     @Override
     public void setScales(double[] scales) {
         this.scales = scales;
+        this.computePixels();
+        this.setUpCollision();
     }
 
     @Override

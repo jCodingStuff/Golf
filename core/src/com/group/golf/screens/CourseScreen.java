@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -41,6 +42,8 @@ public class CourseScreen implements Screen {
     Course course;
     Texture flag;
     Texture flag2;
+    private Texture wallTexture;
+    private List<TextureRegion> wallsRegions;
     OrthographicCamera cam;
     Music music;
 
@@ -97,6 +100,10 @@ public class CourseScreen implements Screen {
         this.goalSize = 20;
         this.flag = new Texture(Gdx.files.internal("golf_flag.png"));
         this.flag2 = new Texture(Gdx.files.internal("golf_flag2.png"));
+
+        // Setup Wall texture
+        this.wallTexture = new Texture(Gdx.files.internal("walltexture.jpg"));
+        this.wallsRegions = new ArrayList<TextureRegion>();
 
     }
 
@@ -212,6 +219,7 @@ public class CourseScreen implements Screen {
         this.renderTerrain();
 
         // Render walls
+        this.updateWallRegions();
         this.renderWalls();
 
         // Render the goal
@@ -229,6 +237,17 @@ public class CourseScreen implements Screen {
         this.activeMode.render(this.game.batch);
     }
 
+    private void updateWallRegions() {
+        List<Rectangle> walls = this.course.getWalls();
+        int wallNum = walls.size();
+        if (wallNum != this.wallsRegions.size()) {
+            int rndX = (int) (Math.random() * 100);
+            int rndY = (int) (Math.random() * 100);
+            this.wallsRegions.add(new TextureRegion(this.wallTexture, rndX, rndY, (int) walls.get(wallNum - 1).width,
+                    (int) walls.get(wallNum - 1).height));
+        }
+    }
+
     private void checkForStart() {
         if (!this.started && Gdx.input.isKeyPressed(Input.Keys.S)) {
             this.activeMode = this.gameMode; // Start real GameMode
@@ -240,12 +259,14 @@ public class CourseScreen implements Screen {
     }
 
     private void renderWalls() {
-        this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        this.game.shapeRenderer.setColor(WALL_COLOR);
-        for (Rectangle wall : this.course.getWalls()) {
-            this.game.shapeRenderer.rect(wall.getX(), wall.getY(), wall.width, wall.height);
+        this.game.batch.begin();
+        List<Rectangle> walls = this.course.getWalls();
+        for (int i = 0; i < walls.size(); i++) {
+            Rectangle current = walls.get(i);
+            this.game.batch.draw(this.wallsRegions.get(i), current.getX(), current.getY(), current.getWidth(),
+                    current.getHeight());
         }
-        this.game.shapeRenderer.end();
+        this.game.batch.end();
     }
 
     /**

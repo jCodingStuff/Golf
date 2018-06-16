@@ -255,4 +255,8 @@ public class Ball extends Queue<double[]>{
     public double getAccelerationY() {
         return accelerationY;
     }
+
+    public Circle getCollisionCircle() {
+        return collisionCircle;
+    }
 }
