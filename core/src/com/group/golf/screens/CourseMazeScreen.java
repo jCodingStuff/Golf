@@ -510,7 +510,7 @@ public class CourseMazeScreen implements Screen {
            // this.game.shapeRenderer.rect(realX + x, realY + y, width, height);
         	this.game.batch.draw(this.wall, realX + x, realY + y, width, height);
         }
-        engine.setWalls(walls);
+//        engine.setWalls(walls);
         this.game.batch.end();
         this.game.shapeRenderer.end();
     }
