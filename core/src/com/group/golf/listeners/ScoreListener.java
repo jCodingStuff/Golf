@@ -8,8 +8,8 @@ public class ScoreListener {
 
     public ScoreListener() {
     scoreFile =
-          //  Gdx.files.internal("scores.txt");
-        new FileHandle("scores.txt");
+            Gdx.files.internal("scores.txt");
+//        new FileHandle("scores.txt");
     }
 
     public void addScore(String name, int score) {
