@@ -3,6 +3,7 @@ package com.group.golf.listeners;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -47,6 +48,7 @@ public class ImportListener extends ChangeListener {
     public void changed(ChangeEvent event, Actor actor) {
         String name = this.txtField.getText();
         String path = "courses/" + name + ".txt";
+        List<Rectangle> walls = new ArrayList<Rectangle>();
         if (!name.equals("") && !name.equalsIgnoreCase("Enter a file name")
                 && Gdx.files.local(path).exists()) {
             FileHandle file = Gdx.files.local(path);
@@ -75,12 +77,23 @@ public class ImportListener extends ChangeListener {
             double vmax = Double.parseDouble(in.nextLine());
             double mass = Double.parseDouble(in.nextLine());
 
+            while (in.hasNextLine()) {
+                String newRectangleData = in.nextLine();
+                StringTokenizer tokWall = new StringTokenizer(newRectangleData);
+                float rectX = Float.parseFloat(tokWall.nextToken());
+                float rectY = Float.parseFloat(tokWall.nextToken());
+                float width = Float.parseFloat(tokWall.nextToken());
+                float height = Float.parseFloat(tokWall.nextToken());
+                walls.add(new Rectangle(rectX, rectY, width, height));
+            }
+
             in.close();
 
             Ball ball = new Ball(mass);
             Computable[][] functions = new Computable[1][1];
             functions[0][0] = function;
             Course course = new Course(functions, g, mu, vmax, start, goal, tolerance);
+            if (!walls.isEmpty()) course.setWalls(walls);
 
             this.game.setScreen(new ModeScreen(this.game, course, ball));
             this.screen.dispose();
