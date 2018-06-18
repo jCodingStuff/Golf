@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.group.golf.Ball;
 import com.group.golf.Course;
@@ -210,7 +211,6 @@ public class CourseScreen implements Screen {
 
         // Look for start
         this.checkForStart();
-        this.checkWallDelete();
 
         // Cam and projection matrices
         this.cam.update();
@@ -222,6 +222,7 @@ public class CourseScreen implements Screen {
 
         // Render walls
         this.updateWallRegions();
+        this.checkWallDelete();
         this.renderWalls();
 
         // Render the goal
@@ -242,9 +243,19 @@ public class CourseScreen implements Screen {
     private void checkWallDelete() {
         if (!this.started && Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             List<Rectangle> walls = this.course.getWalls();
-            walls.remove(walls.size()-1);
-            this.wallsRegions.remove(this.wallsRegions.size()-1);
-            System.out.println("Wall Removed");
+            float x = Gdx.input.getX();
+            float y = Gdx.input.getY();
+            Vector3 mouse3D = new Vector3(x, y, 0);
+            this.cam.unproject(mouse3D);
+            boolean deleted = false;
+            for (int i = walls.size() - 1; i >= 0 && !deleted; i--) {
+                if (walls.get(i).contains(new Vector2(mouse3D.x, mouse3D.y))) {
+                    walls.remove(i);
+                    this.wallsRegions.remove(i);
+                    deleted = true;
+                    System.out.println("Wall Removed");
+                }
+            }
         }
     }
 
