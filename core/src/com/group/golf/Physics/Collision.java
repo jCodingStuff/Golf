@@ -1,5 +1,7 @@
 package com.group.golf.Physics;
 
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.group.golf.Ball;
 import com.group.golf.Course;
@@ -81,43 +83,54 @@ public class Collision {
         }
     }
     
-    public void checkForGraphicWalls(List<Rectangle> rects, double[] offsets, double[] scales) {
-    	try {
-    	float extraPower = (float) 0.8;
-    	float coordX = (float) this.ball.last()[0];
-    	float coordY = (float) this.ball.last()[1];
-    	double coordXd = this.ball.last()[0];
-    	double coordYd = this.ball.last()[1];
-    	double[] coords = new double[]{coordXd, coordYd};
-    	double[] real = MathLib.toPixel(coords, new double[]{offsets[0], offsets[1]},
-                new double[]{scales[0], scales[1]});
-    	float realFloatX = (float) real[0];
-    	float realFloatY = (float) real[1];
-    	 double vx = this.ball.getVelocityX();
-    	 double vy = this.ball.getVelocityY();
-    	for (int i = 0; i < rects.size(); i++) {
-    		
-    		System.out.println("RectangleY: " + rects.get(i).getX() + " RectangleY: " + rects.get(i).getY() );
-        	System.out.println("BallX: " + realFloatX + " BallY: " + realFloatY);
-            
-        	if (rects.get(i).contains(realFloatX,realFloatY+this.ball.RADIUS+(this.ball.RADIUS * extraPower)) || rects.get(i).contains(realFloatX,realFloatY-this.ball.RADIUS-(this.ball.RADIUS * extraPower))) {
-        	    if(vx>-1.0 || vx<1.0)
-        	        this.ball.setVelocityX(0);
-    			System.out.println("Contains");
-    			this.ball.setVelocityY(-this.ball.getVelocityY());
-    		}
-    		if (rects.get(i).contains(realFloatX+this.ball.RADIUS+(this.ball.RADIUS * extraPower),realFloatY) || rects.get(i).contains(realFloatX-this.ball.RADIUS-(this.ball.RADIUS * extraPower),realFloatY)) {
-                if(vy>-1.0 || vy<1.0)
-                    this.ball.setVelocityY(0);
-    			System.out.println("Contains");
-    			this.ball.setVelocityX(-this.ball.getVelocityX());
-        	}
-    	}
-    	} catch (NullPointerException e) {
-    		System.out.println("Ignored graphic wall check.");
-    	}
-    	
-        
+    public void checkForGraphicWalls(double ballX, double ballY, List<Rectangle> rects) {
+        for (Rectangle wall : rects) {
+            if (this.hittingWallRight(ballX, ballY, wall)) { // Hitting by the right
+                System.out.println("Hitting by the right!");
+                this.ball.invertVelocityX();
+            } else if (this.hittingWallLeft(ballX, ballY, wall)) { // Hitting by the left
+                this.ball.invertVelocityX();
+                System.out.println("Hitting by the left!");
+            } else if (this.hittingWallTop(ballX, ballY, wall)) { // Hitting from the top
+                this.ball.invertVelocityY();
+                System.out.println("Hitting by the top!");
+            } else if (this.hittingWallBottom(ballX, ballY, wall)) { // Hitting from the bottom
+                this.ball.invertVelocityY();
+                System.out.println("Hitting by the bottom!");
+            }
+        }
+    }
+
+    private boolean hittingWallRight(double ballX, double ballY, Rectangle wall) {
+        return (ballY - Ball.RADIUS/2 <= wall.y + wall.height &&
+                ballY + Ball.RADIUS/2 >= wall.y &&
+                ballX - (wall.x + wall.width) >= -Ball.RADIUS &&
+                ballX - (wall.x + wall.width) <= Ball.RADIUS &&
+                this.ball.getVelocityX() < 0);
+    }
+
+    private boolean hittingWallLeft(double ballX, double ballY, Rectangle wall) {
+        return (ballY - Ball.RADIUS/2 <= wall.y + wall.height &&
+                ballY + Ball.RADIUS/2 >= wall.y &&
+                ballX - wall.x <= Ball.RADIUS &&
+                ballX - wall.x >= -Ball.RADIUS &&
+                this.ball.getVelocityX() > 0);
+    }
+
+    private boolean hittingWallTop(double ballX, double ballY, Rectangle wall) {
+        return (ballX - Ball.RADIUS/2 >= wall.x &&
+                ballX - Ball.RADIUS/2 <= wall.x + wall.width &&
+                ballY - (wall.y + wall.height) <= Ball.RADIUS &&
+                ballY - (wall.y + wall.height) >= -Ball.RADIUS &&
+                this.ball.getVelocityY() < 0);
+    }
+
+    private boolean hittingWallBottom(double ballX, double ballY, Rectangle wall) {
+        return (ballX - Ball.RADIUS/2 >= wall.x &&
+                ballX - Ball.RADIUS/2 <= wall.x + wall.width &&
+                ballY - wall.y <= Ball.RADIUS &&
+                ballY - wall.y >= -Ball.RADIUS &&
+                this.ball.getVelocityY() > 0);
     }
    
     /**

@@ -109,6 +109,14 @@ public class Ball extends Queue<double[]>{
         batch.end();
     }
 
+    public void invertVelocityX() {
+        this.velocityX = -this.velocityX;
+    }
+
+    public void invertVelocityY() {
+        this.velocityY = -this.velocityY;
+    }
+
     /**
      * Update the collsionCircle
      */

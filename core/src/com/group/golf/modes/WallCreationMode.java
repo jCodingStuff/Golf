@@ -94,25 +94,18 @@ public class WallCreationMode implements GameMode {
 
     @Override
     public boolean move(OrthographicCamera cam) {
+        Vector2 mousePos = CourseScreen.mousePosition(cam);
         if (Gdx.input.isTouched()) {
             if (!this.touchFlag) {
-                this.firstX = Gdx.input.getX();
-                this.firstY = Gdx.input.getY();
+                this.firstX = (int)mousePos.x;
+                this.firstY = (int)mousePos.y;
                 this.touchFlag = true;
             }
-            this.lastX = Gdx.input.getX();
-            this.lastY = Gdx.input.getY();
+            this.lastX = (int)mousePos.x;
+            this.lastY = (int)mousePos.y;
         }
         else if (this.touchFlag) {
-            if (this.firstX != this.lastX || this.lastY != this.firstY) {
-                Vector3 firstV = new Vector3(this.firstX, this.firstY,0);
-                cam.unproject(firstV);
-                Vector3 secondV = new Vector3(this.lastX, this.lastY,0);
-                cam.unproject(secondV);
-
-                // Generate rectangle and add it to the course
-//                System.out.println("FirstX = " + this.firstX + ", FirstY = " + this.firstY);
-//                System.out.println("LastX = " + this.lastX + ", LastY = " + this.lastY);
+            if (this.firstX != this.lastX && this.lastY != this.firstY) {
                 Rectangle newWall = MathLib.createRectangle(firstX, firstY, lastX, lastY);
                 if (this.isWallAllowed(newWall)) {
                     this.course.addWall(newWall);
@@ -127,7 +120,7 @@ public class WallCreationMode implements GameMode {
     }
 
     private boolean isWallAllowed(Rectangle wall) {
-        return !this.wallOverlapsBalls(wall);
+        return !this.wallOverlapsBalls(wall) && wall.width >= 5*Ball.RADIUS && wall.height >= 5*Ball.RADIUS;
     }
 
     private boolean wallOverlapsBalls(Rectangle wall) {

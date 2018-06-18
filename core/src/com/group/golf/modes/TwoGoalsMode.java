@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.group.golf.Ball;
 import com.group.golf.Course;
@@ -172,29 +173,23 @@ public class TwoGoalsMode implements GameMode {
     }
 
     private void userInput(OrthographicCamera cam) {
+        Vector2 mousePos = CourseScreen.mousePosition(cam);
         if (Gdx.input.isTouched()) {
             if (!this.touchFlag) {
-                this.firstX = Gdx.input.getX();
-                this.firstY = Gdx.input.getY();
+                this.firstX = (int)mousePos.x;
+                this.firstY = (int)mousePos.y;
                 this.touchFlag = true;
             }
-            this.lastX = Gdx.input.getX();
-            this.lastY = Gdx.input.getY();
+            this.lastX = (int)mousePos.x;
+            this.lastY = (int)mousePos.y;
         }
         else if (this.touchFlag) {
             if (this.firstX != this.lastX || this.lastY != this.firstY) {
-                Vector3 firstV = new Vector3(this.firstX, this.firstY,0);
-                cam.unproject(firstV);
-                Vector3 secondV = new Vector3(this.lastX, this.lastY,0);
-                cam.unproject(secondV);
-
-
                 double xLength = Math.abs(lastX - firstX);
                 double yLength = Math.abs(lastY - firstY);
-
                 if (lastX < firstX)
                     xLength *= -1;
-                if (lastY > firstY)
+                if (lastY < firstY)
                     yLength *= -1;
 
                 double modulus = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
