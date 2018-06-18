@@ -98,11 +98,11 @@ public class Collision {
     		System.out.println("RectangleY: " + rects.get(i).getX() + " RectangleY: " + rects.get(i).getY() );
         	System.out.println("BallX: " + realFloatX + " BallY: " + realFloatY);
             
-        	if (rects.get(i).contains(realFloatX,realFloatY+this.ball.RADIUS) || rects.get(i).contains(realFloatX,realFloatY-this.ball.RADIUS)) {
+        	if (rects.get(i).contains(realFloatX,realFloatY+this.ball.RADIUS+(this.ball.RADIUS / 4)) || rects.get(i).contains(realFloatX,realFloatY-this.ball.RADIUS-(this.ball.RADIUS / 4))) {
     			System.out.println("Contains");
     			this.ball.setVelocityY(-this.ball.getVelocityY());
     		}
-    		if (rects.get(i).contains(realFloatX+this.ball.RADIUS,realFloatY) || rects.get(i).contains(realFloatX-this.ball.RADIUS,realFloatY)) {
+    		if (rects.get(i).contains(realFloatX+this.ball.RADIUS+(this.ball.RADIUS / 4),realFloatY) || rects.get(i).contains(realFloatX-this.ball.RADIUS-(this.ball.RADIUS / 4),realFloatY)) {
     			System.out.println("Contains");
     			this.ball.setVelocityX(-this.ball.getVelocityX());
         	}
