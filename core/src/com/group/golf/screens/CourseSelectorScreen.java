@@ -43,7 +43,6 @@ public class CourseSelectorScreen implements Screen {
     TextButton play;
     TextButton importbtn;
     TextButton design;
-    TextButton maze;
     TextButton scoreBoard;
     TextButton multiplayerbtn;
 
@@ -63,28 +62,24 @@ public class CourseSelectorScreen implements Screen {
         play = new TextButton("Play", skin);
         importbtn = new TextButton("Import", skin);
         design = new TextButton("Design", skin);
-        maze = new TextButton("Maze", skin);
         scoreBoard = new TextButton("Score board", skin);
         multiplayerbtn = new TextButton("Multiplayer", skin);
 
         play.setPosition(275, 400);
         importbtn.setPosition(275, 300);
         design.setPosition(525, 300);
-        maze.setPosition(525,400);
         scoreBoard.setPosition(525, 200);
         multiplayerbtn.setPosition(275, 200);
 
         play.setSize(200, 60);
         importbtn.setSize(200, 60);
         design.setSize(200, 60);
-        maze.setSize(200,60);
         scoreBoard.setSize(200, 60);
         multiplayerbtn.setSize(200, 60);
 
         stage.addActor(play);
         stage.addActor(importbtn);
         stage.addActor(design);
-        //stage.addActor(maze);
         stage.addActor(scoreBoard);
         stage.addActor(multiplayerbtn);
 
@@ -161,21 +156,6 @@ public class CourseSelectorScreen implements Screen {
         }
         design.addListener(new DesignListener(game, this));
 
-      
-        class MazeListener extends ChangeListener {
-            final Golf game;
-            private Screen screen;
-            public MazeListener(final Golf game, Screen screen){
-                this.game = game;
-                this.screen = screen;
-            }
-            public void changed (ChangeEvent event, Actor actor) {
-                this.game.setScreen(new MazeScreen(this.game));
-                this.screen.dispose();
-            }
-        }
-        maze.addListener(new MazeListener(game, this));
-
         class ScoreBoardListener extends ChangeListener {
             final Golf game;
             private Screen screen;
@@ -213,7 +193,6 @@ public class CourseSelectorScreen implements Screen {
                 design.setTouchable(Touchable.disabled);
                 importbtn.setTouchable(Touchable.disabled);
                 play.setTouchable(Touchable.disabled);
-                maze.setTouchable(Touchable.disabled);
                 scoreBoard.setTouchable(Touchable.disabled);
                 multiplayerbtn.setTouchable(Touchable.disabled);
 
