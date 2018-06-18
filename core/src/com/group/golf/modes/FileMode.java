@@ -103,12 +103,6 @@ public class FileMode implements GameMode {
     @Override
     public boolean move(OrthographicCamera cam) {
         if (this.ball.getSize() == 0) {
-            // If landed print
-            if (this.landed) {
-                System.out.println("Ball landed: " + this.ball.getX() + " " + this.ball.getY());
-                this.landed = false;
-            }
-
             // Check if the goal is achieved
             if (this.collision.isGoalAchieved()) {
                 this.winSound.play();
@@ -116,6 +110,10 @@ public class FileMode implements GameMode {
                 catch (Exception e) {}
                 this.game.setScreen(new CourseSelectorScreen(this.game));
                 return false;
+            }
+            if (this.landed) {
+                System.out.println("Ball landed: " + this.ball.getX() + " " + this.ball.getY());
+                this.landed = false;
             }
             // Make a move
             if (this.counter < this.moves.size() && Gdx.input.isKeyPressed(Input.Keys.SPACE)) this.readMove();

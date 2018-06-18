@@ -122,12 +122,6 @@ public class UndefinedPlayerMode implements GameMode {
     public boolean move(OrthographicCamera cam) {
         Ball currentBall = this.balls[this.counter];
         if (currentBall.getSize() == 0) {
-            // If landed print
-            if (this.landed) {
-                System.out.println("Ball landed: " + currentBall.getX() + " " + currentBall.getY());
-                this.landed = false;
-                this.incrementCounter();
-            }
 
             // Check if the goal is achieved
             if (this.collisions[this.counter].isGoalAchieved()) {
@@ -137,6 +131,12 @@ public class UndefinedPlayerMode implements GameMode {
                 catch (Exception e) {}
                 this.game.setScreen(new CourseSelectorScreen(this.game));
                 return false;
+            }
+            // If landed print
+            if (this.landed) {
+                System.out.println("Ball landed: " + currentBall.getX() + " " + currentBall.getY());
+                this.landed = false;
+                this.incrementCounter();
             }
             // Make a move
             this.userInput(cam);
