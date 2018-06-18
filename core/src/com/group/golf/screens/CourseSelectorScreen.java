@@ -84,7 +84,7 @@ public class CourseSelectorScreen implements Screen {
         stage.addActor(play);
         stage.addActor(importbtn);
         stage.addActor(design);
-        stage.addActor(maze);
+        //stage.addActor(maze);
         stage.addActor(scoreBoard);
         stage.addActor(multiplayerbtn);
 
