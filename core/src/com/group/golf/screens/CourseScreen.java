@@ -195,7 +195,7 @@ public class CourseScreen implements Screen {
         // scaleY
         BicubicInterpolator topLeftInterp = (BicubicInterpolator) this.course.getFunctions()[0][yLength - 1];
         Point3D[][] topLeftPoints = topLeftInterp.getPoints();
-        double topY = botRightPoints[0][1].getY();
+        double topY = topLeftPoints[0][1].getY();
         this.setScaleY((topY - this.getYoffset()) / Golf.VIRTUAL_HEIGHT);
     }
 
@@ -243,13 +243,10 @@ public class CourseScreen implements Screen {
     private void checkWallDelete() {
         if (!this.started && Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             List<Rectangle> walls = this.course.getWalls();
-            float x = Gdx.input.getX();
-            float y = Gdx.input.getY();
-            Vector3 mouse3D = new Vector3(x, y, 0);
-            this.cam.unproject(mouse3D);
+            Vector2 mousePos = mousePosition(this.cam);
             boolean deleted = false;
             for (int i = walls.size() - 1; i >= 0 && !deleted; i--) {
-                if (walls.get(i).contains(new Vector2(mouse3D.x, mouse3D.y))) {
+                if (walls.get(i).contains(new Vector2(mousePos.x, mousePos.y))) {
                     walls.remove(i);
                     this.wallsRegions.remove(i);
                     deleted = true;
@@ -492,5 +489,11 @@ public class CourseScreen implements Screen {
 
     public void setYoffset(double yoffset) {
         this.yoffset = yoffset;
+    }
+
+    public static Vector2 mousePosition(OrthographicCamera cam) {
+        Vector3 mouse3D = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        cam.unproject(mouse3D);
+        return new Vector2(mouse3D.x, mouse3D.y);
     }
 }

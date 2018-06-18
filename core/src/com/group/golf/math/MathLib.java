@@ -159,7 +159,7 @@ public class MathLib {
         float width = Math.abs(firstX - lastX);
         float height = Math.abs(firstY - lastY);
         float left = Math.min(firstX, lastX);
-        float bot = Golf.VIRTUAL_HEIGHT - Math.max(firstY, lastY);
+        float bot = Math.min(firstY, lastY);
         return new Rectangle(left, bot, width, height);
     }
 
