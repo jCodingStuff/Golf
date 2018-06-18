@@ -102,51 +102,35 @@ public class Collision {
     }
 
     private boolean hittingWallRight(double ballX, double ballY, Rectangle wall) {
-        if (ballY - Ball.RADIUS/2 <= wall.y + wall.height &&
+        return (ballY - Ball.RADIUS/2 <= wall.y + wall.height &&
                 ballY + Ball.RADIUS/2 >= wall.y &&
-                ballX - (wall.x + wall.width) > 0 &&
+                ballX - (wall.x + wall.width) >= -Ball.RADIUS &&
                 ballX - (wall.x + wall.width) <= Ball.RADIUS &&
-                this.ball.getVelocityX() < 0) {
-            return true;
-        } else {
-            return false;
-        }
+                this.ball.getVelocityX() < 0);
     }
 
     private boolean hittingWallLeft(double ballX, double ballY, Rectangle wall) {
-        if (ballY - Ball.RADIUS/2 <= wall.y + wall.height &&
+        return (ballY - Ball.RADIUS/2 <= wall.y + wall.height &&
                 ballY + Ball.RADIUS/2 >= wall.y &&
-                ballX - wall.x < 0 &&
+                ballX - wall.x <= Ball.RADIUS &&
                 ballX - wall.x >= -Ball.RADIUS &&
-                this.ball.getVelocityX() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+                this.ball.getVelocityX() > 0);
     }
 
     private boolean hittingWallTop(double ballX, double ballY, Rectangle wall) {
-        if (ballX - Ball.RADIUS/2 >= wall.x &&
+        return (ballX - Ball.RADIUS/2 >= wall.x &&
                 ballX - Ball.RADIUS/2 <= wall.x + wall.width &&
                 ballY - (wall.y + wall.height) <= Ball.RADIUS &&
-                ballY - (wall.y + wall.height) > 0 &&
-                this.ball.getVelocityY() < 0) {
-            return true;
-        } else {
-            return false;
-        }
+                ballY - (wall.y + wall.height) >= -Ball.RADIUS &&
+                this.ball.getVelocityY() < 0);
     }
 
     private boolean hittingWallBottom(double ballX, double ballY, Rectangle wall) {
-        if (ballX - Ball.RADIUS/2 >= wall.x &&
+        return (ballX - Ball.RADIUS/2 >= wall.x &&
                 ballX - Ball.RADIUS/2 <= wall.x + wall.width &&
-                ballY - wall.y < 0 &&
+                ballY - wall.y <= Ball.RADIUS &&
                 ballY - wall.y >= -Ball.RADIUS &&
-                this.ball.getVelocityY() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+                this.ball.getVelocityY() > 0);
     }
    
     /**

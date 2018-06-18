@@ -120,7 +120,7 @@ public class WallCreationMode implements GameMode {
     }
 
     private boolean isWallAllowed(Rectangle wall) {
-        return !this.wallOverlapsBalls(wall);
+        return !this.wallOverlapsBalls(wall) && wall.width >= 5*Ball.RADIUS && wall.height >= 5*Ball.RADIUS;
     }
 
     private boolean wallOverlapsBalls(Rectangle wall) {
