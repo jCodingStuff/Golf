@@ -93,17 +93,22 @@ public class Collision {
                 new double[]{scales[0], scales[1]});
     	float realFloatX = (float) real[0];
     	float realFloatY = (float) real[1];
-    	
+    	 double vx = this.ball.getVelocityX();
+    	 double vy = this.ball.getVelocityY();
     	for (int i = 0; i < rects.size(); i++) {
     		
     		System.out.println("RectangleY: " + rects.get(i).getX() + " RectangleY: " + rects.get(i).getY() );
         	System.out.println("BallX: " + realFloatX + " BallY: " + realFloatY);
             
         	if (rects.get(i).contains(realFloatX,realFloatY+this.ball.RADIUS+(this.ball.RADIUS * extraPower)) || rects.get(i).contains(realFloatX,realFloatY-this.ball.RADIUS-(this.ball.RADIUS * extraPower))) {
+        	    if(vx>-1.0 || vx<1.0)
+        	        this.ball.setVelocityX(0);
     			System.out.println("Contains");
     			this.ball.setVelocityY(-this.ball.getVelocityY());
     		}
     		if (rects.get(i).contains(realFloatX+this.ball.RADIUS+(this.ball.RADIUS * extraPower),realFloatY) || rects.get(i).contains(realFloatX-this.ball.RADIUS-(this.ball.RADIUS * extraPower),realFloatY)) {
+                if(vy>-1.0 || vy<1.0)
+                    this.ball.setVelocityY(0);
     			System.out.println("Contains");
     			this.ball.setVelocityX(-this.ball.getVelocityX());
         	}
