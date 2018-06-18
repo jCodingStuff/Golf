@@ -161,6 +161,7 @@ public class PlayerVSBotMode implements GameMode {
         this.bot.makeMove();
         this.landed = true;
         System.out.println("Bot moves!");
+        this.hitSound.play();
     }
 
     private void informWinner() {
