@@ -38,8 +38,7 @@ public class TwoGoalsMode implements GameMode {
 
     private boolean landed;
     private int counter;
-    private double distanceLimit = 3.5;
-
+    private double distanceLimit = 1.5;
     private boolean touchFlag;
     private int firstX;
     private int firstY;
@@ -134,7 +133,8 @@ public class TwoGoalsMode implements GameMode {
     	Point3D point2 = new Point3D(x2, y2);
     	double distance = MathLib.distanceSquared(point1, point2);
     	if (distance > distanceLimit) {
-    		System.out.println("Distance limit exceeded!");
+            setUpBalls();
+            System.out.println("Distance limit exceeded!");
     	}
     }
 
