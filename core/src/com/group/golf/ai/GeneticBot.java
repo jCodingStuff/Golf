@@ -93,6 +93,7 @@ public class GeneticBot implements Bot {
      * Generate the path using genetic algorithm
      */
     private void startEvolution() {
+        System.out.println("Evolution starting!");
         boolean reached = false;
         this.initPopulation();
         int gCounter = 0;

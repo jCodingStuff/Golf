@@ -12,12 +12,13 @@ import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
+import com.group.golf.ai.Bot;
 import com.group.golf.math.JVector2;
 import com.group.golf.math.MathLib;
 import com.group.golf.screens.CourseScreen;
 import com.group.golf.screens.CourseSelectorScreen;
 
-public class UndefinedPlayerMode implements GameMode {
+public class PlayerVSBotMode implements GameMode {
 
     private final Golf game;
 
@@ -25,6 +26,9 @@ public class UndefinedPlayerMode implements GameMode {
     private Sound loseSound;
     private Sound winSound;
 
+    private Bot bot;
+
+    // All arrays have 2 items: player and bot
     private Physics[] engines;
     private Collision[] collisions;
     private Course course;
@@ -44,8 +48,9 @@ public class UndefinedPlayerMode implements GameMode {
     private int lastX;
     private int lastY;
 
-    public UndefinedPlayerMode(Golf game, Course course, Ball[] balls) {
+    public PlayerVSBotMode(Golf game, Bot bot, Course course, Ball[] balls) {
         this.game = game;
+        this.bot = bot;
         this.course = course;
         this.balls = balls;
         this.initPixels();
@@ -132,14 +137,21 @@ public class UndefinedPlayerMode implements GameMode {
                 this.game.setScreen(new CourseSelectorScreen(this.game));
                 return false;
             }
+
             // If landed print
             if (this.landed) {
                 System.out.println("Ball landed: " + currentBall.getX() + " " + currentBall.getY());
                 this.landed = false;
                 this.incrementCounter();
             }
+
             // Make a move
-            this.userInput(cam);
+            if (this.counter == 0) {
+                this.userInput(cam);
+            }
+            else if (this.counter == 1 && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                this.botMove();
+            }
             return true;
         } else {
             currentBall.dequeue();
@@ -147,9 +159,19 @@ public class UndefinedPlayerMode implements GameMode {
         }
     }
 
+    private void botMove() {
+        this.bot.makeMove();
+        this.landed = true;
+        System.out.println("Bot moves!");
+        this.hitSound.play();
+    }
+
     private void informWinner() {
-        int playerNum = this.counter + 1;
-        System.out.println("Player " + playerNum + " WINS!");
+        if (this.counter == 0) {
+            System.out.println("HUMAN WINS!");
+        } else {
+            System.out.println("BOT WINS! (YOU ARE GARBAGE LOL)");
+        }
     }
 
     private void userInput(OrthographicCamera cam) {
@@ -189,7 +211,7 @@ public class UndefinedPlayerMode implements GameMode {
                 this.hitSound.play();
 
                 int playerNum = this.counter + 1;
-                System.out.println("Player " + playerNum + " moved!");
+                System.out.println("Human moved!");
             }
             this.touchFlag = false;
         }
@@ -210,6 +232,12 @@ public class UndefinedPlayerMode implements GameMode {
     public void setScales(double[] scales) {
         this.scales = scales;
         for (Physics engine : this.engines) engine.setScales(scales);
+        this.setUpBot();
+    }
+
+    private void setUpBot() {
+        this.bot.setPhysics(this.engines[1]);
+        this.bot.setCollision(this.collisions[1]);
     }
 
     @Override
@@ -218,4 +246,5 @@ public class UndefinedPlayerMode implements GameMode {
         this.winSound.dispose();
         this.loseSound.dispose();
     }
+
 }
