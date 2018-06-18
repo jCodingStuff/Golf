@@ -8,6 +8,7 @@ import com.group.golf.Golf;
 import com.group.golf.math.MathLib;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by alex_ on 21-Mar-18.
@@ -22,7 +23,7 @@ public class Physics {
     private double[] offsets;
     private double[] scales;
     private boolean water;
-    private Rectangle[] walls;
+    private List<Rectangle> walls;
 
     public static double[] hitCoord;
 
@@ -37,6 +38,7 @@ public class Physics {
         this.ball = ball;
         this.hitCoord = new double[2];
         this.collision = new Collision(this.ball, this.course);
+        this.walls = course.getWalls();
 
     }
 
@@ -91,7 +93,7 @@ public class Physics {
 
         double[] ballCoords = MathLib.toPixel(coord,offsets,scales);
         this.collision.checkForWalls(ballCoords[0], ballCoords[1]);
-        //this.collision.checkForGraphicWalls(walls, offsets, scales);
+        this.collision.checkForGraphicWalls(walls, offsets, scales);
   
         
         if (this.collision.ballInWater()) {
@@ -259,7 +261,7 @@ public class Physics {
         this.water = water;
     }
     
-    public void setWalls(Rectangle[] walls) {
+    public void setWalls(List<Rectangle> walls) {
     	this.walls = walls;
     }
 

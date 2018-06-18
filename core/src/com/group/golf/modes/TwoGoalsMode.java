@@ -14,6 +14,7 @@ import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
 import com.group.golf.math.JVector2;
 import com.group.golf.math.MathLib;
+import com.group.golf.math.Point3D;
 import com.group.golf.screens.CourseScreen;
 import com.group.golf.screens.CourseSelectorScreen;
 
@@ -37,7 +38,7 @@ public class TwoGoalsMode implements GameMode {
 
     private boolean landed;
     private int counter;
-
+    private double distanceLimit = 1.5;
     private boolean touchFlag;
     private int firstX;
     private int firstY;
@@ -103,6 +104,7 @@ public class TwoGoalsMode implements GameMode {
         for (int i = 0; i < this.balls.length; i++) {
             this.balls[i].render(batch, this.ballsPixels[i].getX(), this.ballsPixels[i].getY());
         }
+        this.distanceCheck(balls[0], balls[1]);
     }
 
     @Override
@@ -120,6 +122,20 @@ public class TwoGoalsMode implements GameMode {
     private void incrementCounter() {
         this.counter++;
         if (this.counter >= this.balls.length) this.counter = 0;
+    }
+    
+    public void distanceCheck(Ball a, Ball b) {
+    	double x1 = a.getX();
+    	double y1 = a.getY();
+    	double x2 = b.getX();
+    	double y2 = b.getY();
+    	Point3D point1 = new Point3D(x1, y1);
+    	Point3D point2 = new Point3D(x2, y2);
+    	double distance = MathLib.distanceSquared(point1, point2);
+    	if (distance > distanceLimit) {
+            setUpBalls();
+            System.out.println("Distance limit exceeded!");
+    	}
     }
 
     @Override

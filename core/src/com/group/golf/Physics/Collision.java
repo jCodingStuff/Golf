@@ -8,6 +8,7 @@ import com.group.golf.math.Line2D;
 import com.group.golf.math.MathLib;
 import com.group.golf.math.Point3D;
 import java.io.*;
+import java.util.List;
 
 /**
  * @author Julian Marrades
@@ -80,7 +81,7 @@ public class Collision {
         }
     }
     
-    public void checkForGraphicWalls(Rectangle[] rects, double[] offsets, double[] scales) {
+    public void checkForGraphicWalls(List<Rectangle> rects, double[] offsets, double[] scales) {
     	try {
     	float coordX = (float) this.ball.last()[0];
     	float coordY = (float) this.ball.last()[1];
@@ -92,16 +93,16 @@ public class Collision {
     	float realFloatX = (float) real[0];
     	float realFloatY = (float) real[1];
     	
-    	for (int i = 0; i < rects.length; i++) {
+    	for (int i = 0; i < rects.size(); i++) {
     		
-    		System.out.println("RectangleY: " + rects[i].getX() + " RectangleY: " + rects[i].getY() );
+    		System.out.println("RectangleY: " + rects.get(i).getX() + " RectangleY: " + rects.get(i).getY() );
         	System.out.println("BallX: " + realFloatX + " BallY: " + realFloatY);
             
-        	if (rects[i].contains(realFloatX,realFloatY+this.ball.RADIUS) || rects[i].contains(realFloatX,realFloatY-this.ball.RADIUS)) {
+        	if (rects.get(i).contains(realFloatX,realFloatY+this.ball.RADIUS+(this.ball.RADIUS / 4)) || rects.get(i).contains(realFloatX,realFloatY-this.ball.RADIUS-(this.ball.RADIUS / 4))) {
     			System.out.println("Contains");
     			this.ball.setVelocityY(-this.ball.getVelocityY());
     		}
-    		if (rects[i].contains(realFloatX+this.ball.RADIUS,realFloatY) || rects[i].contains(realFloatX-this.ball.RADIUS,realFloatY)) {
+    		if (rects.get(i).contains(realFloatX+this.ball.RADIUS+(this.ball.RADIUS / 4),realFloatY) || rects.get(i).contains(realFloatX-this.ball.RADIUS-(this.ball.RADIUS / 4),realFloatY)) {
     			System.out.println("Contains");
     			this.ball.setVelocityX(-this.ball.getVelocityX());
         	}
