@@ -83,7 +83,7 @@ public class Collision {
     
     public void checkForGraphicWalls(List<Rectangle> rects, double[] offsets, double[] scales) {
     	try {
-    	float extraPower = (float) 0.8;
+    	float extraDistance = (float) 0.389;
     	float coordX = (float) this.ball.last()[0];
     	float coordY = (float) this.ball.last()[1];
     	double coordXd = this.ball.last()[0];
@@ -100,13 +100,13 @@ public class Collision {
     		System.out.println("RectangleY: " + rects.get(i).getX() + " RectangleY: " + rects.get(i).getY() );
         	System.out.println("BallX: " + realFloatX + " BallY: " + realFloatY);
             
-        	if (rects.get(i).contains(realFloatX,realFloatY+this.ball.RADIUS+(this.ball.RADIUS * extraPower)) || rects.get(i).contains(realFloatX,realFloatY-this.ball.RADIUS-(this.ball.RADIUS * extraPower))) {
+        	if (rects.get(i).contains(realFloatX,realFloatY+this.ball.RADIUS+(this.ball.RADIUS * extraDistance)) || rects.get(i).contains(realFloatX,realFloatY-this.ball.RADIUS-(this.ball.RADIUS * extraDistance))) {
         	    if(vx>-1.0 || vx<1.0)
         	        this.ball.setVelocityX(0);
     			System.out.println("Contains");
     			this.ball.setVelocityY(-this.ball.getVelocityY());
     		}
-    		if (rects.get(i).contains(realFloatX+this.ball.RADIUS+(this.ball.RADIUS * extraPower),realFloatY) || rects.get(i).contains(realFloatX-this.ball.RADIUS-(this.ball.RADIUS * extraPower),realFloatY)) {
+    		if (rects.get(i).contains(realFloatX+this.ball.RADIUS+(this.ball.RADIUS * extraDistance),realFloatY) || rects.get(i).contains(realFloatX-this.ball.RADIUS-(this.ball.RADIUS * extraDistance),realFloatY)) {
                 if(vy>-1.0 || vy<1.0)
                     this.ball.setVelocityY(0);
     			System.out.println("Contains");
