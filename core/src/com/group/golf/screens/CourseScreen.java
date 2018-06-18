@@ -210,6 +210,7 @@ public class CourseScreen implements Screen {
 
         // Look for start
         this.checkForStart();
+        this.checkWallDelete();
 
         // Cam and projection matrices
         this.cam.update();
@@ -238,10 +239,19 @@ public class CourseScreen implements Screen {
         this.activeMode.render(this.game.batch);
     }
 
+    private void checkWallDelete() {
+        if (!this.started && Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            List<Rectangle> walls = this.course.getWalls();
+            walls.remove(walls.size()-1);
+            this.wallsRegions.remove(this.wallsRegions.size()-1);
+            System.out.println("Wall Removed");
+        }
+    }
+
     private void updateWallRegions() {
         List<Rectangle> walls = this.course.getWalls();
         int wallNum = walls.size();
-        while (wallNum != this.wallsRegions.size()) {
+        while (wallNum > this.wallsRegions.size()) {
             int rndX = (int) (Math.random() * 100);
             int rndY = (int) (Math.random() * 100);
             this.wallsRegions.add(new TextureRegion(this.wallTexture, rndX, rndY, (int) walls.get(wallNum - 1).width,
