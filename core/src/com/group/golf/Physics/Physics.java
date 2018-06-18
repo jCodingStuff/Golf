@@ -49,6 +49,7 @@ public class Physics {
         this.offsets = other.offsets;
         this.scales = other.scales;
         this.water = other.water;
+        this.walls = course.getWalls();
     }
 
 
