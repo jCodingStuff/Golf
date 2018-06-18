@@ -104,6 +104,7 @@ public class CourseScreen implements Screen {
         // Setup Wall texture
         this.wallTexture = new Texture(Gdx.files.internal("walltexture.jpg"));
         this.wallsRegions = new ArrayList<TextureRegion>();
+        this.updateWallRegions();
 
     }
 
@@ -240,7 +241,7 @@ public class CourseScreen implements Screen {
     private void updateWallRegions() {
         List<Rectangle> walls = this.course.getWalls();
         int wallNum = walls.size();
-        if (wallNum != this.wallsRegions.size()) {
+        while (wallNum != this.wallsRegions.size()) {
             int rndX = (int) (Math.random() * 100);
             int rndY = (int) (Math.random() * 100);
             this.wallsRegions.add(new TextureRegion(this.wallTexture, rndX, rndY, (int) walls.get(wallNum - 1).width,

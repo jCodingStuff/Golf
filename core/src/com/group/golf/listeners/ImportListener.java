@@ -93,7 +93,11 @@ public class ImportListener extends ChangeListener {
             Computable[][] functions = new Computable[1][1];
             functions[0][0] = function;
             Course course = new Course(functions, g, mu, vmax, start, goal, tolerance);
-            if (!walls.isEmpty()) course.setWalls(walls);
+            if (!walls.isEmpty()) {
+                course.setWalls(walls);
+                System.out.println("Adding walls:");
+                for (Rectangle wall : walls) System.out.println(wall);
+            }
 
             this.game.setScreen(new ModeScreen(this.game, course, ball));
             this.screen.dispose();
