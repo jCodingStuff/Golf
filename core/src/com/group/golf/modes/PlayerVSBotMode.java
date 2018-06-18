@@ -147,7 +147,7 @@ public class PlayerVSBotMode implements GameMode {
             if (this.counter == 0) {
                 this.userInput(cam);
             }
-            else if (this.counter != 1 && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            else if (this.counter == 1 && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
                 this.botMove();
             }
             return true;

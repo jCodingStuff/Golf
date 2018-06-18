@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
+import com.group.golf.ai.Bot;
 import com.group.golf.ai.GeneticBot;
 import com.group.golf.modes.*;
 
@@ -159,7 +160,8 @@ public class ModeScreen implements Screen {
                 playerVSai.setTouchable(Touchable.disabled);
                 back.setTouchable(Touchable.disabled);
                 Ball[] balls = new Ball[]{ball, new Ball(ball)};
-                GameMode gameMode = new PlayerVSBotMode(this.game, new GeneticBot(course, balls[1]), course, balls);
+                Bot bot = new GeneticBot(course, balls[1]);
+                GameMode gameMode = new PlayerVSBotMode(this.game, bot, course, balls);
                 GameMode wallMode = new WallCreationMode(this.game, course, balls);
                 this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
                 this.screen.dispose();
