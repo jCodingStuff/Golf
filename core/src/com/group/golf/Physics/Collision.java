@@ -83,7 +83,7 @@ public class Collision {
     
     public void checkForGraphicWalls(List<Rectangle> rects, double[] offsets, double[] scales) {
     	try {
-    	float extraPower = (float) 1.25;
+    	float extraPower = (float) 0.8;
     	float coordX = (float) this.ball.last()[0];
     	float coordY = (float) this.ball.last()[1];
     	double coordXd = this.ball.last()[0];
