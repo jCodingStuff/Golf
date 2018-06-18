@@ -1,3 +1,6 @@
+
+// NOT NEEDED ANYMORE
+
 package com.group.golf.screens;
 
 import com.badlogic.gdx.Gdx;

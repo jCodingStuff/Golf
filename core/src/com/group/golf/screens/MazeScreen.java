@@ -23,6 +23,7 @@ import com.group.golf.math.Function;
  * Created by kim on 11.06.2018.
  */
 
+// NOT NEEDED ANYMORE
 public class MazeScreen implements Screen {
 
         final Golf game;
