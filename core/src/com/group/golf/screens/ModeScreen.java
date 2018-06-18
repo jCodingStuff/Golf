@@ -15,10 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
-import com.group.golf.modes.GameMode;
-import com.group.golf.modes.UndefinedBotMode;
-import com.group.golf.modes.UndefinedPlayerMode;
-import com.group.golf.modes.WallCreationMode;
+import com.group.golf.ai.GeneticBot;
+import com.group.golf.modes.*;
 
 public class ModeScreen implements Screen {
 
@@ -55,16 +53,19 @@ public class ModeScreen implements Screen {
         back.setPosition(100, 300);
         singlePlayer.setPosition(300, 300);
         ai.setPosition(600, 300);
+        playerVSai.setPosition(300, 400);
 
         back.setSize(100, 60);
         singlePlayer.setSize(200, 60);
         ai.setSize(200, 60);
+        playerVSai.setSize(200, 60);
+
 
         stage.addActor(back);
         stage.addActor(singlePlayer);
         //stage.addActor(playerVSPlayer);
         stage.addActor(ai);
-        //stage.addActor(playerVSai);
+        stage.addActor(playerVSai);
         //stage.addActor(aiVSai);
 
         // Setup button listeners
@@ -139,6 +140,32 @@ public class ModeScreen implements Screen {
             }
         }
         singlePlayer.addListener(new SingleListener(this.game, this));
+
+        class PVAIListener extends ChangeListener {
+            final Golf game;
+            private Screen screen;
+
+            public PVAIListener(final Golf game, Screen screen) {
+                this.game = game;
+                this.screen = screen;
+            }
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                singlePlayer.setTouchable(Touchable.disabled);
+                playerVSai.setTouchable(Touchable.disabled);
+                ai.setTouchable(Touchable.disabled);
+                aiVSai.setTouchable(Touchable.disabled);
+                playerVSai.setTouchable(Touchable.disabled);
+                back.setTouchable(Touchable.disabled);
+                Ball[] balls = new Ball[]{ball, new Ball(ball)};
+                GameMode gameMode = new PlayerVSBotMode(this.game, new GeneticBot(course, balls[1]), course, balls);
+                GameMode wallMode = new WallCreationMode(this.game, course, balls);
+                this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
+                this.screen.dispose();
+            }
+        }
+        playerVSai.addListener(new SingleListener(this.game, this));
 
         // Setup cam
         this.cam = new OrthographicCamera();
