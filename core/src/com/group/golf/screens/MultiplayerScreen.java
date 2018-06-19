@@ -112,7 +112,7 @@ public class MultiplayerScreen implements Screen{
                 aiVSai.setTouchable(Touchable.disabled);
                 playerVSai.setTouchable(Touchable.disabled);
                 back.setTouchable(Touchable.disabled);
-                this.game.setScreen(new BotScreen(this.game, course, ball));
+                this.game.setScreen(new BotScreen(this.game, course, ball, false));
                 this.screen.dispose();
             }
         }
