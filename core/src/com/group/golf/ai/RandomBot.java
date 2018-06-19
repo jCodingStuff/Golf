@@ -23,10 +23,10 @@ public class RandomBot implements Bot{
     private Collision collision;
     private final Course course;
     private Random rand;
-    double MAXFORCE = 100.0;
+    float MAXFORCE = 100.0f;
     int numGuesses = 2;
-    double forceX = 0;
-    double forceY = 0;
+    float forceX = 0;
+    float forceY = 0;
     int counter = 0;
 
 /**
@@ -56,11 +56,11 @@ public class RandomBot implements Bot{
      * @param goal the Best choice sofar
      */
 
-    private double GetBestRandomChoice(double goal) {
-        double closest = Double.POSITIVE_INFINITY;
-        double choice;
+    private float GetBestRandomChoice(float goal) {
+        float closest = Float.POSITIVE_INFINITY;
+        float choice;
         for (int i = 0; i < numGuesses; i++){
-            choice = this.rand.nextDouble() * MAXFORCE;
+            choice = this.rand.nextFloat() * MAXFORCE;
 
             // choice closer than goal
             if (Math.abs(choice - goal) < Math.abs(closest - goal))
@@ -74,7 +74,7 @@ public class RandomBot implements Bot{
     @Override
     public void makeMove() {
 
-        double[] goal = this.course.getGoal();
+        float[] goal = this.course.getGoal();
         System.out.println(Arrays.toString(goal));
         forceX = GetBestRandomChoice(goal[0]);
         forceY = GetBestRandomChoice(goal[1]);
@@ -83,14 +83,14 @@ public class RandomBot implements Bot{
             //System.out.println(forceX);
             forceY = GetBestRandomChoice(goal[1]);
         }
-        this.engine.hit(forceX, -forceY);
+        this.engine.hit(ball,forceX, -forceY);
         counter += 1;
         System.out.print(counter);
     }
 
     private boolean checkPath(){
         for(double c = 0.1; c <= 1.0; c += 0.1){
-            if(this.engine.getCourse().getHeight(forceX*Math.pow(c, 2), forceY*Math.pow(c, 2)) < 0)
+            if(this.engine.getCourse().getHeight(forceX*(float)Math.pow(c, 2), forceY*(float)Math.pow(c, 2)) < 0)
                 return false;
         }
         return true;

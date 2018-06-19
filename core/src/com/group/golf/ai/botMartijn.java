@@ -35,8 +35,8 @@ public class botMartijn implements Bot {
         private Physics virtualEngine;
         private Collision virtualCollision;
 
-        private double bestAngle;
-        private double bestForce;
+        private float bestAngle;
+        private float bestForce;
         private Point3D ballCor;
         private double maxForce; // open for adjustment
         private boolean hit = false;
@@ -70,7 +70,7 @@ public class botMartijn implements Bot {
         @Override
         public void makeMove() {
             System.out.print("BOT");
-            double bestScore = Double.NEGATIVE_INFINITY;
+            double bestScore = Float.NEGATIVE_INFINITY;
             double currentScore = 0.0;
 
             for(double angle = 0; angle <= 360; angle++) {
@@ -93,8 +93,8 @@ public class botMartijn implements Bot {
                 //update the bestScore.
                 if (currentScore > bestScore) {
                     bestScore = currentScore;
-                    bestAngle = angle;
-                    bestForce = force;
+                    bestAngle = (float)angle;
+                    bestForce = (float)force;
                     this.prevScore.add(currentScore);
                     System.out.println(currentScore); //showing the score change.
                     }
@@ -103,9 +103,9 @@ public class botMartijn implements Bot {
 
 
             //make move with the correct angle and force.
-            double forceX = this.bestForce * Math.cos(Math.toRadians(this.bestAngle));
-            double forceY = this.bestForce * Math.sin(Math.toRadians(this.bestAngle));
-            this.engine.hit(forceX,forceY);
+            float forceX = this.bestForce * (float)Math.cos(Math.toRadians(this.bestAngle));
+            float forceY = this.bestForce * (float)Math.sin(Math.toRadians(this.bestAngle));
+            this.engine.hit(ball,forceX,forceY);
         }
 
         //needs adjusting
@@ -123,7 +123,7 @@ public class botMartijn implements Bot {
         }
 
         private double distanceScore(Point3D endBallpoint){
-           double[] goal = course.getGoal();
+           float[] goal = course.getGoal();
            double[] end  = {endBallpoint.getX(),endBallpoint.getY()};
            double distance  = Math.sqrt(Math.pow(goal[0] - end[0], 2) + Math.pow(goal[1] - end[1],2));
            return distance;
@@ -145,11 +145,11 @@ public class botMartijn implements Bot {
         }
 
         private void simulateShot(JVector2 force) {
-            this.virtualEngine.hit(force.getX(), force.getY());
-            while (this.virtualBall.getSize() != 0) {
-                this.virtualBall.dequeue();
-                if (this.virtualEngine.isWater() && this.virtualBall.getSize() == 0) {
-                    this.virtualBall.clear();
+            this.virtualEngine.hit(virtualBall,(float)force.getX(), (float)force.getY());
+            while (this.virtualBall.isMoving()) {
+                virtualEngine.movement(virtualBall,0.04f);
+                if (this.virtualEngine.isWater()) {
+
                     this.virtualBall.setX(this.engine.getHitCoord()[0]);
                     this.virtualBall.setY(this.engine.getHitCoord()[1]);
                 }

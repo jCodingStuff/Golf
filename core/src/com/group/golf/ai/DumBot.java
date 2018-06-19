@@ -15,9 +15,9 @@ import com.group.golf.math.Point3D;
 
 public class DumBot implements Bot {
 
-    private static final double A_SCALAR = 15; 
-    private static final double F_SCALAR = 2; 
-    private static final double BIG_SCALAR = 30; 
+    private static final float A_SCALAR = 15;
+    private static final float F_SCALAR = 2;
+    private static final float BIG_SCALAR = 30;
 
 	private final Course course;
     private final Ball ball;
@@ -48,8 +48,8 @@ public class DumBot implements Bot {
     public void makeMove() {
     	double extraPower = 6.5; 
     	double distanceLimit = 0.75; 
-    	double[] goalCoords = this.course.getGoal();
-    	double[] distances = new double[] {goalCoords[0]-this.ball.getX(), goalCoords[1]-this.ball.getY()};
+    	float[] goalCoords = this.course.getGoal();
+    	float[] distances = new float[] {goalCoords[0]-this.ball.getX(), goalCoords[1]-this.ball.getY()};
     	/*
     	for (int i = 0; i < distances.length; i++) {
     		if (Math.abs(distances[i]) < Math.abs(distanceLimit)) {
@@ -74,18 +74,18 @@ public class DumBot implements Bot {
     	distances[0] *= BIG_SCALAR;
     	distances[1] *= BIG_SCALAR; 
         this.scale(distances);
-    	this.engine.hit(distances[0], distances[1]);
+    	this.engine.hit(ball,distances[0], distances[1]);
     }
 
-    private void scale(double[] forces) {
-        double[] derivatives = this.engine.calculateSlope(new double[]{this.ball.getX(), this.ball.getY()});
+    private void scale(float[] forces) {
+        float[] derivatives = this.engine.calculateSlope(new float[]{this.ball.getX(), this.ball.getY()});
         for (int i = 0; i < forces.length; i++) {
             forces[i] = this.scaleForce(forces[i], derivatives[i]);
         }
     }
 
-    private double scaleForce(double force, double d) {
-    	double scaledForce;
+    private float scaleForce(float force, float d) {
+    	float scaledForce;
     	if (force > 0 && d > 0) {
     		scaledForce = force * Math.abs(d) * A_SCALAR;
     	}

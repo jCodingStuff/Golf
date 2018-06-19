@@ -19,6 +19,7 @@ public class GeneticBot implements Bot {
     private final Course course;
     private Physics engine;
     private Collision collision;
+    private Ball realBall;
 
     private Ball virtualBall;
     private Physics virtualEngine;
@@ -51,6 +52,7 @@ public class GeneticBot implements Bot {
     public GeneticBot(Course course, Ball ball) {
         this.course = course;
 
+        this.realBall = ball;
         this.virtualBall = new Ball(ball);
         this.virtualBall.setPosition(this.course.getStart()[0], this.course.getStart()[1]);
 
@@ -68,7 +70,7 @@ public class GeneticBot implements Bot {
             }
             JVector2 currentShot = this.winner.getGenes()[this.counter];
             System.out.println("Hitting force: " + currentShot.getX() + " " + currentShot.getY());
-            this.engine.hit(currentShot.getX(), currentShot.getY());
+            this.engine.hit(realBall,(float)currentShot.getX(), (float)currentShot.getY());
             this.counter++;
         }
     }
@@ -194,7 +196,7 @@ public class GeneticBot implements Bot {
     private boolean goalReached() {
         boolean reached = false;
         double recordDistance = Double.MAX_VALUE;
-        double[] goal = this.course.getGoal();
+        float[] goal = this.course.getGoal();
         for (int i = 0; i < this.population.length && !reached; i++) {
 
             // Get closest position to the goal for a given individual
@@ -209,7 +211,7 @@ public class GeneticBot implements Bot {
             }
 
             // Check if goal has been reached
-            this.virtualBall.setPosition(lastSpot.getX(), lastSpot.getY());
+            this.virtualBall.setPosition((float)lastSpot.getX(), (float)lastSpot.getY());
             if (this.virtualCollision.isGoalAchieved()) {
                 System.out.println("Ending position: " + lastSpot.getX() + " " + lastSpot.getY());
                 System.out.println("Goal: " + goal[0] + " " + goal[1]);
@@ -227,7 +229,7 @@ public class GeneticBot implements Bot {
      */
     public void fillLandings(JVector2[] forces, JVector2[] landings) {
         this.virtualBall.reset();
-        this.virtualBall.setPosition(landings[0].getX(), landings[0].getY());
+        this.virtualBall.setPosition((float)landings[0].getX(), (float)landings[0].getY());
         for (int i = 1; i < landings.length; i++) {
             // small random error for the force applied to the ball
             double min = 0.999;
@@ -248,11 +250,10 @@ public class GeneticBot implements Bot {
         double max= 1.001;
         error = min+ Math.random() * (max-min);
         force.multiply(error);
-        this.virtualEngine.hit(force.getX(), force.getY());
-        while (this.virtualBall.getSize() != 0) {
-            this.virtualBall.dequeue();
-            if (this.virtualEngine.isWater() && this.virtualBall.getSize() == 0) {
-                this.virtualBall.clear();
+        this.virtualEngine.hit(virtualBall,(float)force.getX(), (float)force.getY());
+        while (this.virtualBall.isMoving()) {
+            this.virtualEngine.movement(virtualBall,0.04f);
+            if (this.virtualEngine.isWater()) {
                 this.virtualBall.setX(this.engine.getHitCoord()[0]);
                 this.virtualBall.setY(this.engine.getHitCoord()[1]);
             }
