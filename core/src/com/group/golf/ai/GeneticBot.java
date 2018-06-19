@@ -211,8 +211,8 @@ public class GeneticBot implements Bot {
             }
 
             // Check if goal has been reached
-            this.virtualBall.setPosition((float)lastSpot.getX(), (float)lastSpot.getY());
-            if (this.engine.getCollision().isGoalAchieved()) {
+            this.virtualBall.setPosition(lastSpot.getX(), lastSpot.getY());
+            if (this.engine.isGoalAchieved(virtualBall)) {
                 System.out.println("Ending position: " + lastSpot.getX() + " " + lastSpot.getY());
                 System.out.println("Goal: " + goal[0] + " " + goal[1]);
                 reached = true;

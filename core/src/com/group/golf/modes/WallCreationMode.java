@@ -16,17 +16,14 @@ import com.group.golf.math.MathLib;
 import com.group.golf.screens.CourseScreen;
 import com.group.golf.screens.CourseSelectorScreen;
 
-public class WallCreationMode implements GameMode {
+public class WallCreationMode extends GameMode {
 
     private final Golf game;
 
-    private Course course;
+
     private Ball[] balls;
     private JVector2[] ballsPixels;
     private Circle[] ballsCollision;
-
-    private float[] scales;
-    private float[] offsets;
 
     private boolean touchFlag;
     private int firstX;

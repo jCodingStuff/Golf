@@ -336,6 +336,14 @@ public class Course {
         this.scales = scales;
     }
 
+    public float[] getOffsets() {
+        return offsets;
+    }
+
+    public float[] getScales() {
+        return scales;
+    }
+
     @Override
     public String toString() {
 

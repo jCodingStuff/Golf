@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-public class FileMode implements GameMode {
+public class FileMode extends GameMode {
 
     private final Golf game;
 
@@ -32,7 +32,6 @@ public class FileMode implements GameMode {
     private Sound winSound;
 
     private Physics engine;
-    private Collision collision;
     private Course course;
 
     private Ball ball;
@@ -103,7 +102,7 @@ public class FileMode implements GameMode {
     public boolean move(OrthographicCamera cam) {
         if (!this.ball.isMoving()) {
             // Check if the goal is achieved
-            if (this.collision.isGoalAchieved()) {
+            if (this.engine.isGoalAchieved(ball)) {
                 this.winSound.play();
                 try { Thread.sleep(3000); }
                 catch (Exception e) {}
@@ -141,17 +140,6 @@ public class FileMode implements GameMode {
 
     }
 
-    @Override
-    public void setOffsets(float[] offsets) {
-        this.offsets = offsets;
-        this.engine.setOffsets(this.offsets);
-    }
-
-    @Override
-    public void setScales(float[] scales) {
-        this.scales = scales;
-        this.engine.setScales(this.scales);
-    }
 
     @Override
     public void dispose() {

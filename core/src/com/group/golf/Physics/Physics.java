@@ -6,6 +6,7 @@ import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.math.MathLib;
+import com.group.golf.math.Point3D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +20,6 @@ public class Physics {
 
     private Course course;
     private Collision collision;
-    private float[] offsets;
-    private float[] scales;
     private boolean water;
     private boolean wall_stop;
     private List<Rectangle> walls;
@@ -43,8 +42,6 @@ public class Physics {
     public Physics(Physics other) {
         this.course = other.course;
         this.collision = other.collision;
-        this.offsets = other.offsets;
-        this.scales = other.scales;
         this.water = other.water;
         this.walls = course.getWalls();
     }
@@ -63,14 +60,18 @@ public class Physics {
 
         ball.setVelocityX(xLength);
         ball.setVelocityY(yLength);
+
+        ball.limit(this.course.getVmax());
+
     }
 
     public void movement(Ball ball, float delta) {
+        System.out.println("No differential equation created");
     }
 
     public void checkCollision(Ball ball) {
         this.collision.setBall(ball);
-        float[] ballPixels = MathLib.toPixel(new float[]{ball.getX(),ball.getY()},offsets,scales);
+        float[] ballPixels = MathLib.toPixel(new float[]{ball.getX(),ball.getY()},this.course.getOffsets(),this.course.getScales());
         this.collision.checkForWalls(ballPixels[0], ballPixels[1]);
         if (!this.collision.checkForGraphicWalls(ballPixels[0], ballPixels[1], walls)) this.wall_stop = true;
 
@@ -94,7 +95,7 @@ public class Physics {
      * @return a Vector2 instace containig the friction force
      */
     public float[] frictionForce(float velocityX, float velocityY) {
-        float multiplier = - (float)(this.course.getMu() * this.course.getG())
+        float multiplier = - (this.course.getMu() * this.course.getG())
                 / (float) normalLength(velocityX,velocityY);
 //        System.out.println(multiplier * velocityX);
         return new float[]{(multiplier * velocityX) ,(multiplier * velocityY)};
@@ -131,8 +132,8 @@ public class Physics {
 
         float step = 0.001f;
 
-        slope[0] = (float)((this.course.getHeight(coord[0]+step,coord[1]) - this.course.getHeight(coord[0]-step,coord[1]))/(2*step));
-        slope[1] = (float)((this.course.getHeight(coord[0],coord[1]+step) - this.course.getHeight(coord[0],coord[1]-step))/(2*step));
+        slope[0] = ((this.course.getHeight(coord[0]+step,coord[1]) - this.course.getHeight(coord[0]-step,coord[1]))/(2*step));
+        slope[1] = ((this.course.getHeight(coord[0],coord[1]+step) - this.course.getHeight(coord[0],coord[1]-step))/(2*step));
 
         return slope;
     }
@@ -153,29 +154,17 @@ public class Physics {
         this.course = course;
     }
 
-//   THIS BLOCKS BOTMARTIHN AND GENETIC BOT
-//    /**
-//     * Get access to the Ball instance
-//     * @return the Ball instance
-//     */
-//    public Ball getBall() {
-//        return ball;
-//    }
-//
-//    /**
-//     * Set a new value for the Ball instance
-//     * @param ball the new Ball instance
-//     */
-//    public void setBall(Ball ball) {
-//        this.ball = ball;
-//    }
-
     /**
      * Get access to the Vector2 instance
      * @return the Vector2 instance
      */
     public float[] getHitCoord() {
         return hitCoord;
+    }
+
+    public boolean isGoalAchieved(Ball ball) {
+        collision.setBall(ball);
+        return collision.isGoalAchieved();
     }
 
     /**
@@ -188,15 +177,19 @@ public class Physics {
 
 
     public void setOffsets(float[] offsets) {
-        this.offsets = offsets;
+        this.course.setOffsets(offsets);
     }
 
     public void setScales(float[] scales) {
-        this.scales = scales;
+        this.course.setScales(scales);
     }
 
     public boolean isWater() {
-        return water;
+        if (water)  {
+            water = false;
+            return true;
+        }
+        return false;
     }
 
     public void setWater(boolean water) {
@@ -207,9 +200,6 @@ public class Physics {
     	this.walls = walls;
     }
 
-    public Collision getCollision() {
-        return collision;
-    }
 
     public void setCollision(Collision collision) {
         this.collision = collision;

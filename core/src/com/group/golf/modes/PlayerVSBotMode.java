@@ -13,13 +13,14 @@ import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
+import com.group.golf.Physics.RK4;
 import com.group.golf.ai.Bot;
 import com.group.golf.math.JVector2;
 import com.group.golf.math.MathLib;
 import com.group.golf.screens.CourseScreen;
 import com.group.golf.screens.CourseSelectorScreen;
 
-public class PlayerVSBotMode implements GameMode {
+public class PlayerVSBotMode extends GameMode {
 
     private final Golf game;
 
@@ -29,16 +30,9 @@ public class PlayerVSBotMode implements GameMode {
 
     private Bot bot;
 
-    // All arrays have 2 items: player and bot
-    private Physics[] engines;
-    private Collision[] collisions;
-    private Course course;
-
     private Ball[] balls;
     private JVector2[] ballsPixels;
 
-    private float[] scales;
-    private float[] offsets;
 
     private boolean landed;
     private int counter;
@@ -59,7 +53,7 @@ public class PlayerVSBotMode implements GameMode {
         this.landed = false;
 
         this.setUpBalls();
-        this.setUpPhysics();
+        this.setUpPhysics("RK4");
 
         // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
@@ -67,14 +61,6 @@ public class PlayerVSBotMode implements GameMode {
         this.winSound = Gdx.audio.newSound(Gdx.files.internal("success_2.wav"));
     }
 
-    private void setUpPhysics() {
-        this.engines = new Physics[this.balls.length];
-        this.collisions = new Collision[this.balls.length];
-        for (int i = 0; i < this.engines.length; i++) {
-            this.engines[i] = new Physics(this.course, this.balls[i]);
-            this.collisions[i] = new Collision(this.balls[i], this.course);
-        }
-    }
 
     private void setUpBalls() {
         for (Ball ball : this.balls) {
@@ -110,7 +96,6 @@ public class PlayerVSBotMode implements GameMode {
     @Override
     public void water() {
         Ball ball = this.balls[this.counter];
-        Physics engine = this.engines[this.counter];
         if (engine.isWater()) {
             ball.setX(engine.getHitCoord()[0]);
             ball.setY(engine.getHitCoord()[1]);
@@ -129,7 +114,7 @@ public class PlayerVSBotMode implements GameMode {
         if (currentBall.isMoving()) {
 
             // Check if the goal is achieved
-            if (this.collisions[this.counter].isGoalAchieved()) {
+            if (this.engine.isGoalAchieved(currentBall)) {
                 this.informWinner();
                 this.winSound.play();
                 try { Thread.sleep(3000); }
@@ -154,7 +139,7 @@ public class PlayerVSBotMode implements GameMode {
             }
             return true;
         } else {
-            this.engines[0].movement(currentBall,Gdx.graphics.getDeltaTime());
+            this.engine.movement(currentBall,Gdx.graphics.getDeltaTime());
             return true;
         }
     }
@@ -200,7 +185,7 @@ public class PlayerVSBotMode implements GameMode {
                 xLength *= this.scales[0] * CourseScreen.SCALE_MULTIPLIER;
                 yLength *= this.scales[1] * CourseScreen.SCALE_MULTIPLIER;
 
-                this.engines[this.counter].hit(balls[this.counter],xLength, yLength);
+                this.engine.hit(balls[this.counter],xLength, yLength);
                 this.landed = true;
 
                 this.hitSound.play();
@@ -217,22 +202,16 @@ public class PlayerVSBotMode implements GameMode {
 
     }
 
-    @Override
-    public void setOffsets(float[] offsets) {
-        this.offsets = offsets;
-        for (Physics engine : this.engines) engine.setOffsets(offsets);
-    }
 
     @Override
     public void setScales(float[] scales) {
         this.scales = scales;
-        for (Physics engine : this.engines) engine.setScales(scales);
+        this.engine.setScales(scales);
         this.setUpBot();
     }
 
     private void setUpBot() {
-        this.bot.setPhysics(this.engines[1]);
-        this.bot.setCollision(this.collisions[1]);
+        this.bot.setPhysics(this.engine);
     }
 
     @Override

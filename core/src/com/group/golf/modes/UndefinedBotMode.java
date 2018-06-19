@@ -18,7 +18,7 @@ import com.group.golf.math.MathLib;
 import com.group.golf.screens.CourseScreen;
 import com.group.golf.screens.CourseSelectorScreen;
 
-public class UndefinedBotMode implements GameMode {
+public class UndefinedBotMode extends GameMode {
 
     private final Golf game;
 
@@ -28,15 +28,8 @@ public class UndefinedBotMode implements GameMode {
     private Sound loseSound;
     private Sound winSound;
 
-    private Physics[] engines;
-    private Collision[] collisions;
-    private Course course;
-
     private Ball[] balls;
     private JVector2[] ballsPixels;
-
-    private float[] scales;
-    private float[] offsets;
 
     private boolean landed;
     private int counter;
@@ -51,7 +44,7 @@ public class UndefinedBotMode implements GameMode {
         this.landed = false;
 
         this.setUpBalls();
-        this.setUpPhysics();
+        this.setUpPhysics("RK4");
 
         // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
@@ -61,19 +54,10 @@ public class UndefinedBotMode implements GameMode {
 
     private void setUpBots() {
         for (int i = 0; i < this.bots.length; i++) {
-            this.bots[i].setPhysics(this.engines[i]);
-            this.bots[i].setCollision(this.collisions[i]);
+            this.bots[i].setPhysics(this.engine);
         }
     }
 
-    private void setUpPhysics() {
-        this.engines = new Physics[this.balls.length];
-        this.collisions = new Collision[this.balls.length];
-        for (int i = 0; i < this.engines.length; i++) {
-            this.engines[i] = new Physics(this.course, this.balls[i]);
-            this.collisions[i] = new Collision(this.balls[i], this.course);
-        }
-    }
 
     private void setUpBalls() {
         for (Ball ball : this.balls) {
@@ -109,7 +93,6 @@ public class UndefinedBotMode implements GameMode {
     @Override
     public void water() {
         Ball ball = this.balls[this.counter];
-        Physics engine = this.engines[this.counter];
         if (engine.isWater()) {
             ball.setX(engine.getHitCoord()[0]);
             ball.setY(engine.getHitCoord()[1]);
@@ -127,7 +110,7 @@ public class UndefinedBotMode implements GameMode {
         Ball currentBall = this.balls[this.counter];
         if (!currentBall.isMoving()) {
             // Check if the goal is achieved
-            if (this.collisions[this.counter].isGoalAchieved()) {
+            if (this.engine.isGoalAchieved(currentBall)) {
                 this.informWinner();
                 this.winSound.play();
                 try { Thread.sleep(3000); }
@@ -145,7 +128,7 @@ public class UndefinedBotMode implements GameMode {
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) this.botMove();
             return true;
         } else {
-            this.engines[0].movement(currentBall,Gdx.graphics.getDeltaTime());
+            this.engine.movement(currentBall,Gdx.graphics.getDeltaTime());
             return true;
         }
     }
@@ -192,16 +175,11 @@ public class UndefinedBotMode implements GameMode {
 
     }
 
-    @Override
-    public void setOffsets(float[] offsets) {
-        this.offsets = offsets;
-        for (Physics engine : this.engines) engine.setOffsets(offsets);
-    }
 
     @Override
     public void setScales(float[] scales) {
         this.scales = scales;
-        for (Physics engine : this.engines) engine.setScales(scales);
+        this.engine.setScales(scales);
         this.setUpBots();
     }
 
