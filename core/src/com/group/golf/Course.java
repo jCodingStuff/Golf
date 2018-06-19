@@ -335,6 +335,14 @@ public class Course {
     public void setScales(double[] scales) {
         this.scales = scales;
     }
+    
+    public double[] getOffsets() {
+    	return offsets;
+    }
+    
+    public double[] getScales() {
+    	return scales;
+    }
 
     @Override
     public String toString() {
