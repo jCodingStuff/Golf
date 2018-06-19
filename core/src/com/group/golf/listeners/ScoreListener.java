@@ -8,7 +8,7 @@ public class ScoreListener {
 
     public ScoreListener() {
     scoreFile =
-            Gdx.files.internal("scores.txt");
+            (Gdx.files.internal("uiskin.json"));
 //        new FileHandle("scores.txt");
     }
 

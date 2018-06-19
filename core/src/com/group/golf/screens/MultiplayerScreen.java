@@ -17,18 +17,19 @@ import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.ai.Bot;
 import com.group.golf.ai.DumBot;
-import com.group.golf.ai.GeneticBot;
-import com.group.golf.modes.*;
+import com.group.golf.modes.GameMode;
+import com.group.golf.modes.PlayerVSBotMode;
+import com.group.golf.modes.UndefinedPlayerMode;
+import com.group.golf.modes.WallCreationMode;
 
-public class ModeScreen implements Screen {
-
+public class MultiplayerScreen implements Screen{
     private final Golf game;
     private Stage stage;
 
     private final Course course;
     private final Ball ball;
 
-    private TextButton singlePlayer;
+    private TextButton mode3;
     private TextButton playerVSPlayer;
     private TextButton ai;
     private TextButton playerVSai;
@@ -38,7 +39,7 @@ public class ModeScreen implements Screen {
     private OrthographicCamera cam;
     private Texture background;
 
-    public ModeScreen(final Golf game, final Course course, final Ball ball) {
+    public MultiplayerScreen(final Golf game, final Course course, final Ball ball) {
         this.game = game;
         this.course = course;
         this.ball = ball;
@@ -46,29 +47,29 @@ public class ModeScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         back = new TextButton("Back", skin);
-        singlePlayer = new TextButton("SinglePlayer", skin);
+        mode3 = new TextButton("Mode3", skin);
         playerVSPlayer = new TextButton("Player vs Player", skin);
         ai = new TextButton("Bot", skin);
         playerVSai = new TextButton("Player vs Bot", skin);
         aiVSai = new TextButton("Bot vs Bot", skin);
 
         back.setPosition(100, 300);
-        singlePlayer.setPosition(300, 300);
+        mode3.setPosition(300, 300);
         ai.setPosition(600, 300);
         playerVSai.setPosition(300, 400);
 
         back.setSize(100, 60);
-        singlePlayer.setSize(200, 60);
+        mode3.setSize(200, 60);
         ai.setSize(200, 60);
         playerVSai.setSize(200, 60);
 
 
         stage.addActor(back);
-        stage.addActor(singlePlayer);
+        stage.addActor(mode3);
         //stage.addActor(playerVSPlayer);
         stage.addActor(ai);
         stage.addActor(playerVSai);
-        //stage.addActor(aiVSai);
+        
 
         // Setup button listeners
         class BackListener extends ChangeListener {
@@ -82,7 +83,7 @@ public class ModeScreen implements Screen {
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                singlePlayer.setTouchable(Touchable.disabled);
+                mode3.setTouchable(Touchable.disabled);
                 playerVSai.setTouchable(Touchable.disabled);
                 ai.setTouchable(Touchable.disabled);
                 aiVSai.setTouchable(Touchable.disabled);
@@ -92,7 +93,7 @@ public class ModeScreen implements Screen {
                 this.screen.dispose();
             }
         }
-        back.addListener(new BackListener(game, this));
+//        back.addListener(new BackListener(game, this));
 
         class BotListener extends ChangeListener {
             final Golf game;
@@ -105,7 +106,7 @@ public class ModeScreen implements Screen {
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                singlePlayer.setTouchable(Touchable.disabled);
+                mode3.setTouchable(Touchable.disabled);
                 playerVSai.setTouchable(Touchable.disabled);
                 ai.setTouchable(Touchable.disabled);
                 aiVSai.setTouchable(Touchable.disabled);
@@ -115,7 +116,7 @@ public class ModeScreen implements Screen {
                 this.screen.dispose();
             }
         }
-        ai.addListener(new BotListener(game, this));
+//        ai.addListener(new BotListener(game, this));
 
         class SingleListener extends ChangeListener {
             final Golf game;
@@ -128,7 +129,7 @@ public class ModeScreen implements Screen {
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                singlePlayer.setTouchable(Touchable.disabled);
+                mode3.setTouchable(Touchable.disabled);
                 playerVSai.setTouchable(Touchable.disabled);
                 ai.setTouchable(Touchable.disabled);
                 aiVSai.setTouchable(Touchable.disabled);
@@ -141,7 +142,7 @@ public class ModeScreen implements Screen {
                 this.screen.dispose();
             }
         }
-        singlePlayer.addListener(new SingleListener(this.game, this));
+//        mode3.addListener(new SingleListener(this.game, this));
 
         class PVAIListener extends ChangeListener {
             final Golf game;
@@ -154,17 +155,21 @@ public class ModeScreen implements Screen {
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                singlePlayer.setTouchable(Touchable.disabled);
+                mode3.setTouchable(Touchable.disabled);
                 playerVSai.setTouchable(Touchable.disabled);
                 ai.setTouchable(Touchable.disabled);
                 aiVSai.setTouchable(Touchable.disabled);
                 playerVSai.setTouchable(Touchable.disabled);
                 back.setTouchable(Touchable.disabled);
-                this.game.setScreen(new BotScreen(this.game, course, ball, true));
+                Ball[] balls = new Ball[]{ball, new Ball(ball)};
+                Bot bot = new DumBot(course, balls[1]);
+                GameMode gameMode = new PlayerVSBotMode(this.game, bot, course, balls);
+                GameMode wallMode = new WallCreationMode(this.game, course, balls);
+                this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
                 this.screen.dispose();
             }
         }
-        playerVSai.addListener(new PVAIListener(this.game, this));
+//        playerVSai.addListener(new PVAIListener(this.game, this));
 
         // Setup cam
         this.cam = new OrthographicCamera();
