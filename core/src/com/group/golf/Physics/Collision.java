@@ -19,7 +19,7 @@ import java.util.List;
 public class Collision {
 
     private static final double STEP = 0.001;
-    private static final double STOP_CONDITION = 0.25;
+    private static final double STOP_CONDITION = 0.17;
 
     private Ball ball;
     private final Course course;
