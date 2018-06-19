@@ -111,8 +111,7 @@ public class PlayerVSBotMode implements GameMode {
     public void water() {
         Ball ball = this.balls[this.counter];
         Physics engine = this.engines[this.counter];
-        if (engine.isWater() && ball.getSize() == 0) {
-            ball.clear();
+        if (engine.isWater()) {
             ball.setX(engine.getHitCoord()[0]);
             ball.setY(engine.getHitCoord()[1]);
             this.loseSound.play(0.2f);
@@ -127,7 +126,7 @@ public class PlayerVSBotMode implements GameMode {
     @Override
     public boolean move(OrthographicCamera cam) {
         Ball currentBall = this.balls[this.counter];
-        if (currentBall.getSize() == 0) {
+        if (currentBall.isMoving()) {
 
             // Check if the goal is achieved
             if (this.collisions[this.counter].isGoalAchieved()) {
@@ -155,7 +154,7 @@ public class PlayerVSBotMode implements GameMode {
             }
             return true;
         } else {
-            currentBall.dequeue();
+            this.engines[0].movement(currentBall,Gdx.graphics.getDeltaTime());
             return true;
         }
     }
@@ -188,8 +187,8 @@ public class PlayerVSBotMode implements GameMode {
         }
         else if (this.touchFlag) {
             if (this.firstX != this.lastX || this.lastY != this.firstY) {
-                double xLength = Math.abs(lastX - firstX);
-                double yLength = Math.abs(lastY - firstY);
+                float xLength = Math.abs(lastX - firstX);
+                float yLength = Math.abs(lastY - firstY);
 
                 if (lastX < firstX)
                     xLength *= -1;
@@ -201,7 +200,7 @@ public class PlayerVSBotMode implements GameMode {
                 xLength *= this.scales[0] * CourseScreen.SCALE_MULTIPLIER;
                 yLength *= this.scales[1] * CourseScreen.SCALE_MULTIPLIER;
 
-                this.engines[this.counter].hit(xLength, yLength);
+                this.engines[this.counter].hit(balls[this.counter],xLength, yLength);
                 this.landed = true;
 
                 this.hitSound.play();

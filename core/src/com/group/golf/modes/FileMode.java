@@ -92,8 +92,7 @@ public class FileMode implements GameMode {
 
     @Override
     public void water() {
-        if (this.engine.isWater() && this.ball.getSize() == 0) {
-            this.ball.clear();
+        if (this.engine.isWater()) {
             this.ball.setX(engine.getHitCoord()[0]);
             this.ball.setY(engine.getHitCoord()[1]);
             this.loseSound.play(0.2f);
@@ -102,7 +101,7 @@ public class FileMode implements GameMode {
 
     @Override
     public boolean move(OrthographicCamera cam) {
-        if (this.ball.getSize() == 0) {
+        if (!this.ball.isMoving()) {
             // Check if the goal is achieved
             if (this.collision.isGoalAchieved()) {
                 this.winSound.play();
@@ -119,19 +118,19 @@ public class FileMode implements GameMode {
             if (this.counter < this.moves.size() && Gdx.input.isKeyPressed(Input.Keys.SPACE)) this.readMove();
             return true;
         } else {
-            this.ball.dequeue();
+            this.engine.movement(ball,Gdx.graphics.getDeltaTime());
             return true;
         }
     }
 
     private void readMove() {
         StringTokenizer tokenizer = new StringTokenizer(this.moves.get(this.counter));
-        double force = Double.parseDouble(tokenizer.nextToken());
-        double angle = Double.parseDouble(tokenizer.nextToken());
+        float force = Float.parseFloat(tokenizer.nextToken());
+        float angle = Float.parseFloat(tokenizer.nextToken());
         double forceX = force * Math.cos(angle);
         double forceY = force * Math.sin(angle);
-        this.engine.hit(forceX * this.scales[0] * CourseScreen.SCALE_MULTIPLIER,
-                forceY * this.scales[1] * CourseScreen.SCALE_MULTIPLIER);
+        this.engine.hit(ball,(float)(forceX * this.scales[0] * CourseScreen.SCALE_MULTIPLIER),
+                (float)(forceY * this.scales[1] * CourseScreen.SCALE_MULTIPLIER));
         this.landed = true;
         this.counter++;
         this.hitSound.play();

@@ -110,8 +110,7 @@ public class UndefinedBotMode implements GameMode {
     public void water() {
         Ball ball = this.balls[this.counter];
         Physics engine = this.engines[this.counter];
-        if (engine.isWater() && ball.getSize() == 0) {
-            ball.clear();
+        if (engine.isWater()) {
             ball.setX(engine.getHitCoord()[0]);
             ball.setY(engine.getHitCoord()[1]);
             this.loseSound.play(0.2f);
@@ -126,7 +125,7 @@ public class UndefinedBotMode implements GameMode {
     @Override
     public boolean move(OrthographicCamera cam) {
         Ball currentBall = this.balls[this.counter];
-        if (currentBall.getSize() == 0) {
+        if (!currentBall.isMoving()) {
             // Check if the goal is achieved
             if (this.collisions[this.counter].isGoalAchieved()) {
                 this.informWinner();
@@ -146,7 +145,7 @@ public class UndefinedBotMode implements GameMode {
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) this.botMove();
             return true;
         } else {
-            currentBall.dequeue();
+            this.engines[0].movement(currentBall,Gdx.graphics.getDeltaTime());
             return true;
         }
     }
