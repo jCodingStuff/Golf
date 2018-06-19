@@ -17,8 +17,11 @@ import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.ai.Bot;
 import com.group.golf.ai.DumBot;
+import com.group.golf.math.Computable;
+import com.group.golf.math.Function;
 import com.group.golf.modes.GameMode;
 import com.group.golf.modes.PlayerVSBotMode;
+import com.group.golf.modes.TwoGoalsMode;
 import com.group.golf.modes.UndefinedPlayerMode;
 import com.group.golf.modes.WallCreationMode;
 
@@ -26,49 +29,48 @@ public class MultiplayerScreen implements Screen{
     private final Golf game;
     private Stage stage;
 
-    private final Course course;
-    private final Ball ball;
+//    private final Course course;
+//    private final Ball ball;
 
     private TextButton mode3;
-    private TextButton playerVSPlayer;
-    private TextButton ai;
-    private TextButton playerVSai;
-    private TextButton aiVSai;
+    private TextButton mode4;
+    private TextButton mode2;
+    private TextButton mode1;
+
     private TextButton back;
     private Music menuMusic;
     private OrthographicCamera cam;
     private Texture background;
 
-    public MultiplayerScreen(final Golf game, final Course course, final Ball ball) {
+    public MultiplayerScreen(final Golf game) {
         this.game = game;
-        this.course = course;
-        this.ball = ball;
+//        this.course = course;
+//        this.ball = ball;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         back = new TextButton("Back", skin);
-        mode3 = new TextButton("Mode3", skin);
-        playerVSPlayer = new TextButton("Player vs Player", skin);
-        ai = new TextButton("Bot", skin);
-        playerVSai = new TextButton("Player vs Bot", skin);
-        aiVSai = new TextButton("Bot vs Bot", skin);
+        mode3 = new TextButton("Mode 3", skin);
+        mode4 = new TextButton("Mode 4", skin);
+        mode2 = new TextButton("Mode 2", skin);
+        mode1 = new TextButton("Mode 1", skin);
 
         back.setPosition(100, 300);
         mode3.setPosition(300, 300);
-        ai.setPosition(600, 300);
-        playerVSai.setPosition(300, 400);
+        mode2.setPosition(600, 400);
+        mode1.setPosition(300, 400);
 
         back.setSize(100, 60);
         mode3.setSize(200, 60);
-        ai.setSize(200, 60);
-        playerVSai.setSize(200, 60);
+        mode2.setSize(200, 60);
+        mode1.setSize(200, 60);
 
 
         stage.addActor(back);
         stage.addActor(mode3);
-        //stage.addActor(playerVSPlayer);
-        stage.addActor(ai);
-        stage.addActor(playerVSai);
+        stage.addActor(mode4);
+        stage.addActor(mode2);
+        stage.addActor(mode1);
         
 
         // Setup button listeners
@@ -84,92 +86,142 @@ public class MultiplayerScreen implements Screen{
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 mode3.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
-                ai.setTouchable(Touchable.disabled);
-                aiVSai.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
+                mode1.setTouchable(Touchable.disabled);
+                mode2.setTouchable(Touchable.disabled);
+
+                mode1.setTouchable(Touchable.disabled);
                 back.setTouchable(Touchable.disabled);
                 this.game.setScreen(new CourseSelectorScreen(this.game));
                 this.screen.dispose();
             }
         }
-//        back.addListener(new BackListener(game, this));
+       back.addListener(new BackListener(game, this));
 
-        class BotListener extends ChangeListener {
+        class Mode1Listener extends ChangeListener {
             final Golf game;
             private Screen screen;
-
-            public BotListener(final Golf game, Screen screen) {
+            public Mode1Listener(final Golf game, Screen screen){
                 this.game = game;
                 this.screen = screen;
             }
-
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void changed (ChangeEvent event, Actor actor) {
+                String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
+                double[] start = new double[]{-2, 3};
+                double[] goal = new double[]{0, 1};
+
+                double[] start2 = new double[]{-1, 3};
+                double[] goal2 = new double[]{0, 2};
+
+                Function function = new Function(formula);
+                Computable[][] functions = new Computable[1][1];
+                functions[0][0] = function;
+                Course course = new Course(functions, 9.81, 0.95, 80, start, start2, goal, goal2, 0.5);
                 mode3.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
-                ai.setTouchable(Touchable.disabled);
-                aiVSai.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
+                mode1.setTouchable(Touchable.disabled);
+                mode2.setTouchable(Touchable.disabled);
+
+             
                 back.setTouchable(Touchable.disabled);
-                this.game.setScreen(new BotScreen(this.game, course, ball, false));
-                this.screen.dispose();
-            }
-        }
-//        ai.addListener(new BotListener(game, this));
 
-        class SingleListener extends ChangeListener {
-            final Golf game;
-            private Screen screen;
 
-            public SingleListener(final Golf game, Screen screen) {
-                this.game = game;
-                this.screen = screen;
-            }
+                Ball ball = new Ball(40);
+                Ball ball2 = new Ball(40);
+                Ball[] balls = new Ball[]{ball, ball2};
 
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                mode3.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
-                ai.setTouchable(Touchable.disabled);
-                aiVSai.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
-                back.setTouchable(Touchable.disabled);
-                Ball[] balls = new Ball[]{ball};
-                GameMode gameMode = new UndefinedPlayerMode(this.game, course, balls);
+                GameMode gameMode = new TwoGoalsMode(this.game, course, balls);
                 GameMode wallMode = new WallCreationMode(this.game, course, balls);
                 this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
+
+
                 this.screen.dispose();
             }
         }
-//        mode3.addListener(new SingleListener(this.game, this));
+        mode1.addListener(new Mode1Listener(this.game, this));
 
-        class PVAIListener extends ChangeListener {
+        class Mode2Listener extends ChangeListener {
             final Golf game;
             private Screen screen;
 
-            public PVAIListener(final Golf game, Screen screen) {
+            public Mode2Listener(final Golf game, Screen screen) {
                 this.game = game;
                 this.screen = screen;
             }
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
+                double[] start = new double[]{-2, 3};
+                double[] goal = new double[]{0, 1};
+
+                double[] start2 = new double[]{-1, 3};
+                double[] goal2 = new double[]{0, 2};
+
+                Function function = new Function(formula);
+                Computable[][] functions = new Computable[1][1];
+                functions[0][0] = function;
+                Course course = new Course(functions, 9.81, 0.95, 80, start, start2, goal, goal2, 0.5);
                 mode3.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
-                ai.setTouchable(Touchable.disabled);
-                aiVSai.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
+                mode1.setTouchable(Touchable.disabled);
+                mode2.setTouchable(Touchable.disabled);
+
+                mode1.setTouchable(Touchable.disabled);
                 back.setTouchable(Touchable.disabled);
-                Ball[] balls = new Ball[]{ball, new Ball(ball)};
-                Bot bot = new DumBot(course, balls[1]);
-                GameMode gameMode = new PlayerVSBotMode(this.game, bot, course, balls);
+
+                Ball ball = new Ball(40);
+                Ball ball2 = new Ball(40);
+                Ball[] balls = new Ball[]{ball, ball2};
+
+                GameMode gameMode = new TwoGoalsMode(this.game, course, balls);
                 GameMode wallMode = new WallCreationMode(this.game, course, balls);
                 this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
+
                 this.screen.dispose();
             }
         }
-//        playerVSai.addListener(new PVAIListener(this.game, this));
+        mode2.addListener(new Mode2Listener(game, this));
+
+        class Mode3Listener extends ChangeListener {
+            final Golf game;
+            private Screen screen;
+            public Mode3Listener(final Golf game, Screen screen){
+                this.game = game;
+                this.screen = screen;
+            }
+            @Override
+            public void changed (ChangeEvent event, Actor actor) {
+                String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
+                double[] start = new double[]{-2, 3};
+                double[] goal = new double[]{0, 1};
+
+                double[] start2 = new double[]{-1, 3};
+                double[] goal2 = new double[]{0, 2};
+
+                Function function = new Function(formula);
+                Computable[][] functions = new Computable[1][1];
+                functions[0][0] = function;
+                Course course = new Course(functions, 9.81, 0.95, 80, start, start2, goal, goal2, 0.5);
+                mode3.setTouchable(Touchable.disabled);
+                mode1.setTouchable(Touchable.disabled);
+                mode2.setTouchable(Touchable.disabled);
+
+                mode1.setTouchable(Touchable.disabled);
+                back.setTouchable(Touchable.disabled);
+
+                Ball ball = new Ball(40);
+                Ball ball2 = new Ball(40);
+                Ball[] balls = new Ball[]{ball, ball2};
+
+                GameMode gameMode = new TwoGoalsMode(this.game, course, balls);
+                GameMode wallMode = new WallCreationMode(this.game, course, balls);
+                this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
+
+                this.screen.dispose();
+            }
+        }
+      mode3.addListener(new Mode3Listener(this.game, this));
+
+
 
         // Setup cam
         this.cam = new OrthographicCamera();
