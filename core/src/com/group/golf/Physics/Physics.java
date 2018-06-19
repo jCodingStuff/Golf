@@ -23,6 +23,7 @@ public class Physics {
     private double[] offsets;
     private double[] scales;
     private boolean water;
+    private boolean wall_stop;
     private List<Rectangle> walls;
 
     public static double[] hitCoord;
@@ -94,7 +95,7 @@ public class Physics {
 
         double[] ballCoords = MathLib.toPixel(coord,offsets,scales);
         this.collision.checkForWalls(ballCoords[0], ballCoords[1]);
-        this.collision.checkForGraphicWalls(ballCoords[0], ballCoords[1], walls);
+        if (!this.collision.checkForGraphicWalls(ballCoords[0], ballCoords[1], walls)) this.wall_stop = true;
   
         
         if (this.collision.ballInWater()) {
@@ -126,6 +127,7 @@ public class Physics {
      */
     public void hit(double xLength, double yLength) {
         water = false;
+        wall_stop = false;
 
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
@@ -141,7 +143,7 @@ public class Physics {
         ball.setAccelerationY(yLength/ball.getMass());
 
         RK4(frameRate);
-        while (this.ball.isMoving() && !water) {
+        while (this.ball.isMoving() && !water && !wall_stop) {
             RK4(frameRate);
         }
 
