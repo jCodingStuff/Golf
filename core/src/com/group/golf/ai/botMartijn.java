@@ -55,17 +55,17 @@ public class botMartijn implements Bot {
         @Override
         public void setPhysics(Physics physics) {
             this.engine = physics;
-            this.virtualEngine = new Physics(physics);
-            this.virtualEngine.setBall(this.virtualBall);
+//            this.virtualEngine = new Physics(physics);
+//            this.virtualEngine.setBall(this.virtualBall);
         }
 
-        @Override
-        public void setCollision(Collision collision) {
-            this.collision = collision;
-            this.virtualCollision = new Collision(collision);
-            this.virtualCollision.setBall(this.virtualEngine.getBall());
-            this.virtualEngine.setCollision(this.virtualCollision);
-        }
+//        @Override
+//        public void setCollision(Collision collision) {
+//            this.collision = collision;
+//            this.virtualCollision = new Collision(collision);
+//            this.virtualCollision.setBall(this.virtualEngine.getBall());
+//            this.virtualEngine.setCollision(this.virtualCollision);
+//        }
 
         @Override
         public void makeMove() {

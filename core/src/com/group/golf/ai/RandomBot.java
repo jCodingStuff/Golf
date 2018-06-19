@@ -20,7 +20,6 @@ public class RandomBot implements Bot{
 
     private Ball ball;
     private Physics engine;
-    private Collision collision;
     private final Course course;
     private Random rand;
     float MAXFORCE = 100.0f;
@@ -39,10 +38,8 @@ public class RandomBot implements Bot{
         this.rand = new Random();
         this.course = course;
     }
-    @Override
-    public void setCollision(Collision collision){
-        this.collision = collision;
-    }
+
+
     @Override
     public void setPhysics(Physics physics){
             this.engine = physics;

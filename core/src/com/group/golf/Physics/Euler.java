@@ -5,8 +5,8 @@ import com.group.golf.Course;
 
 public class Euler extends Physics {
 
-    public Euler(Course course, Ball ball) {
-        super(course,ball);
+    public Euler(Course course) {
+        super(course);
     }
 
     public void movement(Ball ball, float delta) {
@@ -26,6 +26,7 @@ public class Euler extends Physics {
 
         ball.setVelocities(newVelocities);
 
+        super.checkCollision(ball);
 
         System.out.println("Euler Velocity x:     " + newVelocities[0] + "   Velocity y:     " + newVelocities[1]);
 

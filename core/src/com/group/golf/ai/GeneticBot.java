@@ -18,12 +18,12 @@ public class GeneticBot implements Bot {
 
     private final Course course;
     private Physics engine;
-    private Collision collision;
+
     private Ball realBall;
 
     private Ball virtualBall;
-    private Physics virtualEngine;
-    private Collision virtualCollision;
+
+
 
     private int counter = 0;
 
@@ -78,18 +78,18 @@ public class GeneticBot implements Bot {
     @Override
     public void setPhysics(Physics physics) {
         this.engine = physics;
-        this.virtualEngine = new Physics(physics);
-        this.virtualEngine.setBall(this.virtualBall);
+//        this.virtualEngine = new Physics(physics);
+//        this.virtualEngine.setBall(this.virtualBall);
     }
 
-    @Override
-    public void setCollision(Collision collision) {
-        this.collision = collision;
-        this.virtualCollision = new Collision(collision);
-        this.virtualCollision.setBall(this.virtualEngine.getBall());
-        this.virtualEngine.setCollision(this.virtualCollision);
-        this.startEvolution();
-    }
+//    @Override
+//    public void setCollision(Collision collision) {
+//        this.collision = collision;
+//        this.virtualCollision = new Collision(collision);
+//        this.virtualCollision.setBall(this.virtualEngine.getBall());
+//        this.virtualEngine.setCollision(this.virtualCollision);
+//        this.startEvolution();
+//    }
 
     /**
      * Generate the path using genetic algorithm
@@ -212,7 +212,7 @@ public class GeneticBot implements Bot {
 
             // Check if goal has been reached
             this.virtualBall.setPosition((float)lastSpot.getX(), (float)lastSpot.getY());
-            if (this.virtualCollision.isGoalAchieved()) {
+            if (this.engine.getCollision().isGoalAchieved()) {
                 System.out.println("Ending position: " + lastSpot.getX() + " " + lastSpot.getY());
                 System.out.println("Goal: " + goal[0] + " " + goal[1]);
                 reached = true;
@@ -250,10 +250,10 @@ public class GeneticBot implements Bot {
         double max= 1.001;
         error = (float)(min+ Math.random() * (max-min));
         force.multiply(error);
-        this.virtualEngine.hit(virtualBall,force.getX(), force.getY());
+        this.engine.hit(virtualBall,force.getX(), force.getY());
         while (this.virtualBall.isMoving()) {
-            this.virtualEngine.movement(virtualBall,0.04f);
-            if (this.virtualEngine.isWater()) {
+            this.engine.movement(virtualBall,0.04f);
+            if (this.engine.isWater()) {
                 this.virtualBall.setX(this.engine.getHitCoord()[0]);
                 this.virtualBall.setY(this.engine.getHitCoord()[1]);
             }

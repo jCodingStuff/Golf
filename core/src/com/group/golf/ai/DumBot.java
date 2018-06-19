@@ -22,7 +22,7 @@ public class DumBot implements Bot {
 	private final Course course;
     private final Ball ball;
     private Physics engine;
-    private Collision collision;
+
 
     /**
      * Create a new instance of DumBot
@@ -39,10 +39,6 @@ public class DumBot implements Bot {
         this.engine = physics;
     }
 
-    @Override
-    public void setCollision(Collision collision) {
-        this.collision = collision;
-    }
 
     @Override
     public void makeMove() {

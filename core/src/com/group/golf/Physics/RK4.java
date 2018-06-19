@@ -8,8 +8,8 @@ import com.group.golf.Course;
 
 public class RK4 extends Physics {
 
-    public RK4(Course course, Ball ball) {
-        super(course,ball);
+    public RK4(Course course) {
+        super(course);
     }
 
     //method to be overwritten by each subclass
@@ -34,7 +34,8 @@ public class RK4 extends Physics {
 
         ball.setCoords(newCoordinates);
 
-//        checkCollision(ball);
+        super.checkCollision(ball);
+        ball.limit(super.getCourse().getVmax());
 
         System.out.println("RK4 Velocity x:     " + newVelocities[0] + "   Velocity y:     " + newVelocities[1]);
 

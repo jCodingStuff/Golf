@@ -18,7 +18,6 @@ import java.util.List;
 public class Physics {
 
     private Course course;
-    private Ball ball;
     private Collision collision;
     private float[] offsets;
     private float[] scales;
@@ -32,20 +31,17 @@ public class Physics {
      * Construct a Physics engine
      *
      * @param course the course to analyze
-     * @param ball   the ball that will roll on the course
      */
-    public Physics(Course course, Ball ball) {
+    public Physics(Course course) {
         this.course = course;
-        this.ball = ball;
         this.hitCoord = new float[2];
-        this.collision = new Collision(this.ball, this.course);
+        this.collision = new Collision(this.course);
         this.walls = course.getWalls();
 
     }
 
     public Physics(Physics other) {
         this.course = other.course;
-        this.ball = other.ball;
         this.collision = other.collision;
         this.offsets = other.offsets;
         this.scales = other.scales;
@@ -60,6 +56,8 @@ public class Physics {
      * @param yLength the length that the mouse was dragged vertically
      */
     public void hit(Ball ball, float xLength, float yLength) {
+        water = false;
+
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
 
@@ -72,6 +70,14 @@ public class Physics {
 
     public void checkCollision(Ball ball) {
         this.collision.setBall(ball);
+        float[] ballPixels = MathLib.toPixel(new float[]{ball.getX(),ball.getY()},offsets,scales);
+        this.collision.checkForWalls(ballPixels[0], ballPixels[1]);
+        if (!this.collision.checkForGraphicWalls(ballPixels[0], ballPixels[1], walls)) this.wall_stop = true;
+
+        if (this.collision.ballInWater()) {
+            ball.reset();
+            water = true;
+        }
     }
 
     public float[] acceleration(float[] coord, float[] velocities) {
@@ -147,21 +153,22 @@ public class Physics {
         this.course = course;
     }
 
-    /**
-     * Get access to the Ball instance
-     * @return the Ball instance
-     */
-    public Ball getBall() {
-        return ball;
-    }
-
-    /**
-     * Set a new value for the Ball instance
-     * @param ball the new Ball instance
-     */
-    public void setBall(Ball ball) {
-        this.ball = ball;
-    }
+//   THIS BLOCKS BOTMARTIHN AND GENETIC BOT
+//    /**
+//     * Get access to the Ball instance
+//     * @return the Ball instance
+//     */
+//    public Ball getBall() {
+//        return ball;
+//    }
+//
+//    /**
+//     * Set a new value for the Ball instance
+//     * @param ball the new Ball instance
+//     */
+//    public void setBall(Ball ball) {
+//        this.ball = ball;
+//    }
 
     /**
      * Get access to the Vector2 instance
@@ -198,6 +205,10 @@ public class Physics {
     
     public void setWalls(List<Rectangle> walls) {
     	this.walls = walls;
+    }
+
+    public Collision getCollision() {
+        return collision;
     }
 
     public void setCollision(Collision collision) {

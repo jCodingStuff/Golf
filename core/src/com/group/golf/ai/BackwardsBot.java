@@ -17,7 +17,6 @@ public class BackwardsBot implements Bot {
     private final Course course;
     private final Ball ball;
     private Physics engine;
-    private Collision collision;
 
     private Stack<Point3D> path;
     private Point3D ballPoint;
@@ -41,10 +40,6 @@ public class BackwardsBot implements Bot {
         this.engine = physics;
     }
 
-    @Override
-    public void setCollision(Collision collision) {
-        this.collision = collision;
-    }
 
     /**
      * Fill the path that the bot will follow to solve the game
@@ -58,7 +53,7 @@ public class BackwardsBot implements Bot {
             range = this.getRange(tmpGoal);
             this.path.push(tmpGoal);
         }
-        if (this.collision.isWaterBetween(this.ballPoint, tmpGoal)) {
+        if (this.engine.getCollision().isWaterBetween(this.ballPoint, tmpGoal)) {
             // Solve the water conflict
         }
     }
@@ -143,7 +138,7 @@ public class BackwardsBot implements Bot {
 
         for (int i = 0; i < points.size(); i++) {
             double distance = MathLib.distanceSquared(point, points.get(i));
-            if ((starter > distance) && (!this.collision.isWaterBetween(point, points.get(i)))) {
+            if ((starter > distance) && (!this.engine.getCollision().isWaterBetween(point, points.get(i)))) {
                 starter = distance;
                 point = points.get(i);
             }
@@ -180,14 +175,6 @@ public class BackwardsBot implements Bot {
      */
     public Physics getEngine() {
         return engine;
-    }
-
-    /**
-     * Get the collision system
-     * @return the collision system
-     */
-    public Collision getCollision() {
-        return collision;
     }
 
 }

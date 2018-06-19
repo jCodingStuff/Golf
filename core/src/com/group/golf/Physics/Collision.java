@@ -31,11 +31,9 @@ public class Collision {
 
     /**
      * Create a new instance of Collision
-     * @param ball the ball to evaluate
      * @param course the course in which the ball rolls
      */
-    public Collision(Ball ball, Course course) {
-        this.ball = ball;
+    public Collision(Course course) {
         this.course = course;
         this.lastX = this.course.getStart()[0];
         this.lastX = this.course.getStart()[1];
@@ -43,7 +41,6 @@ public class Collision {
 
     public Collision(Collision other) {
         this.course = other.course;
-        this.ball = other.ball;
         this.lastX = other.lastX;
         this.lastY = other.lastY;
     }
