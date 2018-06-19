@@ -51,7 +51,7 @@ public class ModeScreen implements Screen {
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         back = new TextButton("Back", skin);
         singlePlayer = new TextButton("SinglePlayer", skin);
-        multiplayer = new TextButton("Player vs Player", skin);
+        multiplayer = new TextButton("Multiplayer", skin);
         ai = new TextButton("Bot", skin);
         playerVSai = new TextButton("Player vs Bot", skin);
         aiVSai = new TextButton("Bot vs Bot", skin);
