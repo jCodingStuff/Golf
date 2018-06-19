@@ -183,9 +183,6 @@ public class PledgeBot implements Bot {
     		j = j + 1;
     		float coordX = (float) this.ball.last()[0];
         	float coordY = (float) this.ball.last()[1];
-        	double coordXd = this.ball.last()[0];
-        	double coordYd = this.ball.last()[1];
-        	double[] coords = new double[]{coordXd, coordYd};
         	double[] real = MathLib.toPixel(coords, new double[]{offsets[0], offsets[1]},
                     new double[]{scales[0], scales[1]});
         	float realFloatX = (float) real[0];
