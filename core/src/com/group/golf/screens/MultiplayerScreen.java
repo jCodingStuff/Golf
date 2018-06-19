@@ -124,6 +124,7 @@ public class MultiplayerScreen implements Screen{
              
                 back.setTouchable(Touchable.disabled);
 
+
                 Ball ball = new Ball(40);
                 Ball ball2 = new Ball(40);
                 Ball[] balls = new Ball[]{ball, ball2};
@@ -131,6 +132,7 @@ public class MultiplayerScreen implements Screen{
                 GameMode gameMode = new TwoGoalsMode(this.game, course, balls);
                 GameMode wallMode = new WallCreationMode(this.game, course, balls);
                 this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
+
 
                 this.screen.dispose();
             }
