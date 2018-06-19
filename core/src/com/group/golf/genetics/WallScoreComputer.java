@@ -24,6 +24,7 @@ public class WallScoreComputer implements ScoreComputer {
             JVector2 closestSpot = landings[closestIndex];
             Point3D closestPoint = new Point3D(closestSpot.getX(), closestSpot.getY(), 0);
             double wallNum = course.getWallNum(closestPoint);
+//            System.out.println("WALLS: " + wallNum);
 
             population[i].setLastMove(closestIndex - 1);
             double score;

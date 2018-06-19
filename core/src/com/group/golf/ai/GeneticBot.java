@@ -56,7 +56,7 @@ public class GeneticBot implements Bot {
 
         this.crossOver = new AverageCrossOver(this);
         this.mutation = new AlterMutation();
-        this.computer = new InverseScoreComputer();
+        this.computer = new WallScoreComputer();
     }
 
     @Override

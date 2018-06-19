@@ -2,9 +2,7 @@ package com.group.golf;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.group.golf.math.BicubicInterpolator;
-import com.group.golf.math.Computable;
-import com.group.golf.math.Point3D;
+import com.group.golf.math.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +12,8 @@ import java.util.List;
  */
 public class Course {
 
+    private static final double STEP = 0.001;
+
     private double g;
     private double mu;
     private double vmax;
@@ -22,6 +22,9 @@ public class Course {
     
     private double[] start2;
     private double[] goal2;
+
+    private double[] offsets;
+    private double[] scales;
 
     private List<Rectangle> walls; // Pixel coordinates, CAREFUL!
     
@@ -115,8 +118,36 @@ public class Course {
     }
 
     public double getWallNum(Point3D closest) {
-        double wallNum = 0;
-        return wallNum;
+        // Create a clone of the walls
+        List<Rectangle> cloneWalls = new ArrayList<Rectangle>();
+        for (Rectangle wall : this.walls) cloneWalls.add(new Rectangle(wall));
+
+        Point3D goalPoint = new Point3D(this.goal[0], this.goal[1], 0);
+        Line2D line = new Line2D(goalPoint, closest);
+
+        if (goalPoint.getX() <= closest.getX()) {
+            for (double x = goalPoint.getX(); x <= closest.getX(); x += STEP) {
+                this.helpWallNum(x, line, cloneWalls);
+            }
+        } else {
+            for (double x = closest.getX(); x <= goalPoint.getX(); x += STEP) {
+                this.helpWallNum(x, line, cloneWalls);
+            }
+        }
+
+        return this.walls.size() - cloneWalls.size();
+    }
+
+    private void helpWallNum(double x, Line2D line, List<Rectangle> cloneWalls) {
+        double y = line.getY(x);
+        double[] coord = MathLib.toPixel(new double[]{x, y}, this.offsets, this.scales);
+        float realX = (float) coord[0];
+        float realY = (float) coord[1];
+        for (int i = cloneWalls.size() - 1; i >= 0; i--) {
+            if (cloneWalls.get(i).contains(realX, realY)) {
+                cloneWalls.remove(i);
+            }
+        }
     }
 
     /**
@@ -295,6 +326,14 @@ public class Course {
 
     public void setWalls(List<Rectangle> walls) {
         this.walls = walls;
+    }
+
+    public void setOffsets(double[] offsets) {
+        this.offsets = offsets;
+    }
+
+    public void setScales(double[] scales) {
+        this.scales = scales;
     }
 
     @Override
