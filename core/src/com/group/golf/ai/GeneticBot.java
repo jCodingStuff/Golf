@@ -26,7 +26,7 @@ public class GeneticBot implements Bot {
 
     private int counter = 0;
 
-    private static final int POPULATION_SIZE = 50;
+    private static final int POPULATION_SIZE = 100;
     private static final int DNA_LENGTH = 10;
     private static final double MAX_FORCE = 400;
 
@@ -229,8 +229,12 @@ public class GeneticBot implements Bot {
         this.virtualBall.reset();
         this.virtualBall.setPosition(landings[0].getX(), landings[0].getY());
         for (int i = 1; i < landings.length; i++) {
+            // small random error for the force applied to the ball
+            double min = 0.999;
+            double max= 1.001;
+            error = min+ Math.random() * (max-min);
             this.simulateShot(forces[i-1]);
-            landings[i] = new JVector2(this.virtualBall.getX(), this.virtualBall.getY());
+            landings[i] = new JVector2(this.virtualBall.getX()*error, this.virtualBall.getY()*error);
         }
     }
 
@@ -239,9 +243,12 @@ public class GeneticBot implements Bot {
      */
     private void simulateShot(JVector2 force) {
 
-        this.error = 1.0;  // =  Math.random()*10;  ball stops moving after 2 shots! Maybe the error is too big? 
-
-        this.virtualEngine.hit(force.getX()*error, force.getY()*error);
+        // small random error for the force applied to the ball
+        double min = 0.999;
+        double max= 1.001;
+        error = min+ Math.random() * (max-min);
+        force.multiply(error);
+        this.virtualEngine.hit(force.getX(), force.getY());
         while (this.virtualBall.getSize() != 0) {
             this.virtualBall.dequeue();
             if (this.virtualEngine.isWater() && this.virtualBall.getSize() == 0) {
