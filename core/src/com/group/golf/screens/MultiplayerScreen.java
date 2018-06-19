@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -107,23 +108,24 @@ public class MultiplayerScreen implements Screen{
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                double[] start = new double[]{-2, 3};
-                double[] goal = new double[]{0, 1};
+                double[] start = new double[]{-3, 5};
+                double[] goal = new double[]{0, 2};
 
-                double[] start2 = new double[]{-1, 3};
-                double[] goal2 = new double[]{0, 2};
+                double[] start2 = new double[]{-3, 4};
+                double[] goal2 = new double[]{0, 5};
 
                 Function function = new Function(formula);
                 Computable[][] functions = new Computable[1][1];
                 functions[0][0] = function;
                 Course course = new Course(functions, 9.81, 0.95, 80, start, start2, goal, goal2, 0.5);
+                course.addWall(new Rectangle(491,221,69,280));
+                course.addWall(new Rectangle(550,317,444,76));
+                course.addWall(new Rectangle(365,6,60,442));
+
                 mode3.setTouchable(Touchable.disabled);
                 mode1.setTouchable(Touchable.disabled);
                 mode2.setTouchable(Touchable.disabled);
-
-             
                 back.setTouchable(Touchable.disabled);
-
 
                 Ball ball = new Ball(40);
                 Ball ball2 = new Ball(40);
@@ -150,7 +152,7 @@ public class MultiplayerScreen implements Screen{
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
+                String formula = "1 + 0.3 * x + 0.4 * x ^ 2";
                 double[] start = new double[]{-2, 3};
                 double[] goal = new double[]{0, 1};
 
@@ -160,7 +162,12 @@ public class MultiplayerScreen implements Screen{
                 Function function = new Function(formula);
                 Computable[][] functions = new Computable[1][1];
                 functions[0][0] = function;
-                Course course = new Course(functions, 9.81, 0.95, 80, start, start2, goal, goal2, 0.5);
+                Course course = new Course(functions, 9.81, 0.95, 2, start, start2, goal, goal2, 0.5);
+                course.addWall(new Rectangle(120,221,80,280));
+                course.addWall(new Rectangle(0,700,100,76));
+                course.addWall(new Rectangle(365,6,60,442));
+
+
                 mode3.setTouchable(Touchable.disabled);
                 mode1.setTouchable(Touchable.disabled);
                 mode2.setTouchable(Touchable.disabled);

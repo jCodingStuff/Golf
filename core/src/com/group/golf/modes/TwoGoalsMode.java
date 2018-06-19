@@ -39,7 +39,7 @@ public class TwoGoalsMode implements GameMode {
 
     private boolean landed;
     private int counter;
-    private double distanceLimit = 1.5;
+    private double distanceLimit = 2.5;
     private boolean touchFlag;
     private int firstX;
     private int firstY;
