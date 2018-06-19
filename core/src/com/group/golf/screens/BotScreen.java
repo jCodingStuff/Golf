@@ -20,6 +20,7 @@ import com.group.golf.ai.*;
 import com.group.golf.math.Computable;
 import com.group.golf.math.Function;
 import com.group.golf.modes.GameMode;
+import com.group.golf.modes.PlayerVSBotMode;
 import com.group.golf.modes.UndefinedBotMode;
 import com.group.golf.modes.WallCreationMode;
 
@@ -32,8 +33,10 @@ public class BotScreen implements Screen {
 
     Stage stage;
 
-    private Course course;
-    private Ball ball;
+    private final Course course;
+    private final Ball ball;
+
+    private final boolean pvb; // Player vs bot
 
     TextButton genetic;
     TextButton random;
@@ -44,7 +47,8 @@ public class BotScreen implements Screen {
     OrthographicCamera cam;
     Texture background;
 
-        public BotScreen(final Golf game, Course course, Ball ball) {
+        public BotScreen(final Golf game, Course course, Ball ball, final boolean pvb) {
+            this.pvb = pvb;
             this.game = game;
             this.course = course;
             this.ball = ball;
@@ -108,11 +112,20 @@ public class BotScreen implements Screen {
                     martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
-                    Bot genBot = new GeneticBot(course, ball);
-                    Bot[] bots = new Bot[]{genBot};
-                    Ball[] balls = new Ball[]{this.ball};
-                    GameMode gameMode = new UndefinedBotMode(this.game, bots, course, balls);
-                    GameMode wallMode = new WallCreationMode(this.game, course, balls);
+                    GameMode gameMode;
+                    GameMode wallMode;
+                    if (pvb) {
+                        Ball[] balls = new Ball[]{this.ball, new Ball(this.ball)};
+                        Bot bot = new GeneticBot(course, balls[1]);
+                        gameMode = new PlayerVSBotMode(this.game, bot, this.course, balls);
+                        wallMode = new WallCreationMode(this.game, this.course, balls);
+                    } else {
+                        Bot bot = new GeneticBot(this.course, this.ball);
+                        Bot[] bots = new Bot[]{bot};
+                        Ball[] balls = new Ball[]{this.ball};
+                        gameMode = new UndefinedBotMode(this.game, bots, this.course, balls);
+                        wallMode = new WallCreationMode(this.game, this.course, balls);
+                    }
                     this.game.setScreen(new CourseScreen(this.game, this.course, gameMode, wallMode));
                     this.screen.dispose();
                 }
@@ -140,11 +153,20 @@ public class BotScreen implements Screen {
                     martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
-                    Bot ranBot = new RandomBot(course, ball);
-                    Bot[] bots = new Bot[]{ranBot};
-                    Ball[] balls = new Ball[]{this.ball};
-                    GameMode gameMode = new UndefinedBotMode(this.game, bots, course, balls);
-                    GameMode wallMode = new WallCreationMode(this.game, course, balls);
+                    GameMode gameMode;
+                    GameMode wallMode;
+                    if (pvb) {
+                        Ball[] balls = new Ball[]{this.ball, new Ball(this.ball)};
+                        Bot bot = new RandomBot(course, balls[1]);
+                        gameMode = new PlayerVSBotMode(this.game, bot, this.course, balls);
+                        wallMode = new WallCreationMode(this.game, this.course, balls);
+                    } else {
+                        Bot bot = new RandomBot(this.course, this.ball);
+                        Bot[] bots = new Bot[]{bot};
+                        Ball[] balls = new Ball[]{this.ball};
+                        gameMode = new UndefinedBotMode(this.game, bots, this.course, balls);
+                        wallMode = new WallCreationMode(this.game, this.course, balls);
+                    }
                     this.game.setScreen(new CourseScreen(this.game, this.course, gameMode, wallMode));
                     this.screen.dispose();
                 }
@@ -172,11 +194,20 @@ public class BotScreen implements Screen {
                     martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
-                    Bot martBot = new botMartijn(course, ball);
-                    Bot[] bots = new Bot[]{martBot};
-                    Ball[] balls = new Ball[]{this.ball};
-                    GameMode gameMode = new UndefinedBotMode(this.game, bots, course, balls);
-                    GameMode wallMode = new WallCreationMode(this.game, course, balls);
+                    GameMode gameMode;
+                    GameMode wallMode;
+                    if (pvb) {
+                        Ball[] balls = new Ball[]{this.ball, new Ball(this.ball)};
+                        Bot bot = new botMartijn(course, balls[1]);
+                        gameMode = new PlayerVSBotMode(this.game, bot, this.course, balls);
+                        wallMode = new WallCreationMode(this.game, this.course, balls);
+                    } else {
+                        Bot bot = new botMartijn(this.course, this.ball);
+                        Bot[] bots = new Bot[]{bot};
+                        Ball[] balls = new Ball[]{this.ball};
+                        gameMode = new UndefinedBotMode(this.game, bots, this.course, balls);
+                        wallMode = new WallCreationMode(this.game, this.course, balls);
+                    }
                     this.game.setScreen(new CourseScreen(this.game, this.course, gameMode, wallMode));
                     this.screen.dispose();
                 }
@@ -203,11 +234,20 @@ public class BotScreen implements Screen {
                     martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
-                    Bot dumBot = new DumBot(course, ball);
-                    Bot[] bots = new Bot[]{dumBot};
-                    Ball[] balls = new Ball[]{this.ball};
-                    GameMode gameMode = new UndefinedBotMode(this.game, bots, course, balls);
-                    GameMode wallMode = new WallCreationMode(this.game, course, balls);
+                    GameMode gameMode;
+                    GameMode wallMode;
+                    if (pvb) {
+                        Ball[] balls = new Ball[]{this.ball, new Ball(this.ball)};
+                        Bot bot = new DumBot(course, balls[1]);
+                        gameMode = new PlayerVSBotMode(this.game, bot, this.course, balls);
+                        wallMode = new WallCreationMode(this.game, this.course, balls);
+                    } else {
+                        Bot bot = new DumBot(this.course, this.ball);
+                        Bot[] bots = new Bot[]{bot};
+                        Ball[] balls = new Ball[]{this.ball};
+                        gameMode = new UndefinedBotMode(this.game, bots, this.course, balls);
+                        wallMode = new WallCreationMode(this.game, this.course, balls);
+                    }
                     this.game.setScreen(new CourseScreen(this.game, this.course, gameMode, wallMode));
                     this.screen.dispose();
                 }

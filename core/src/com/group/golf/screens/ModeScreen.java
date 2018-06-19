@@ -111,7 +111,7 @@ public class ModeScreen implements Screen {
                 aiVSai.setTouchable(Touchable.disabled);
                 playerVSai.setTouchable(Touchable.disabled);
                 back.setTouchable(Touchable.disabled);
-                this.game.setScreen(new BotScreen(this.game, course, ball));
+                this.game.setScreen(new BotScreen(this.game, course, ball, false));
                 this.screen.dispose();
             }
         }
@@ -160,11 +160,7 @@ public class ModeScreen implements Screen {
                 aiVSai.setTouchable(Touchable.disabled);
                 playerVSai.setTouchable(Touchable.disabled);
                 back.setTouchable(Touchable.disabled);
-                Ball[] balls = new Ball[]{ball, new Ball(ball)};
-                Bot bot = new DumBot(course, balls[1]);
-                GameMode gameMode = new PlayerVSBotMode(this.game, bot, course, balls);
-                GameMode wallMode = new WallCreationMode(this.game, course, balls);
-                this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
+                this.game.setScreen(new BotScreen(this.game, course, ball, true));
                 this.screen.dispose();
             }
         }
