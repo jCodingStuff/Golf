@@ -20,16 +20,19 @@ import com.group.golf.ai.DumBot;
 import com.group.golf.ai.GeneticBot;
 import com.group.golf.modes.*;
 
+import java.util.Scanner;
+
 public class ModeScreen implements Screen {
 
     private final Golf game;
     private Stage stage;
+    private final Scanner in;
 
     private final Course course;
     private final Ball ball;
 
     private TextButton singlePlayer;
-    private TextButton playerVSPlayer;
+    private TextButton multiplayer;
     private TextButton ai;
     private TextButton playerVSai;
     private TextButton aiVSai;
@@ -39,6 +42,7 @@ public class ModeScreen implements Screen {
     private Texture background;
 
     public ModeScreen(final Golf game, final Course course, final Ball ball) {
+        this.in = new Scanner(System.in);
         this.game = game;
         this.course = course;
         this.ball = ball;
@@ -47,7 +51,7 @@ public class ModeScreen implements Screen {
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         back = new TextButton("Back", skin);
         singlePlayer = new TextButton("SinglePlayer", skin);
-        playerVSPlayer = new TextButton("Player vs Player", skin);
+        multiplayer = new TextButton("Player vs Player", skin);
         ai = new TextButton("Bot", skin);
         playerVSai = new TextButton("Player vs Bot", skin);
         aiVSai = new TextButton("Bot vs Bot", skin);
@@ -56,16 +60,18 @@ public class ModeScreen implements Screen {
         singlePlayer.setPosition(300, 300);
         ai.setPosition(600, 300);
         playerVSai.setPosition(300, 400);
+        multiplayer.setPosition(600, 400);
 
         back.setSize(100, 60);
         singlePlayer.setSize(200, 60);
         ai.setSize(200, 60);
         playerVSai.setSize(200, 60);
+        multiplayer.setSize(200, 60);
 
 
         stage.addActor(back);
         stage.addActor(singlePlayer);
-        //stage.addActor(playerVSPlayer);
+        stage.addActor(multiplayer);
         stage.addActor(ai);
         stage.addActor(playerVSai);
         //stage.addActor(aiVSai);
@@ -82,12 +88,7 @@ public class ModeScreen implements Screen {
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                singlePlayer.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
-                ai.setTouchable(Touchable.disabled);
-                aiVSai.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
-                back.setTouchable(Touchable.disabled);
+                ((ModeScreen) this.screen).disableButtons();
                 this.game.setScreen(new CourseSelectorScreen(this.game));
                 this.screen.dispose();
             }
@@ -105,12 +106,7 @@ public class ModeScreen implements Screen {
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                singlePlayer.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
-                ai.setTouchable(Touchable.disabled);
-                aiVSai.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
-                back.setTouchable(Touchable.disabled);
+                ((ModeScreen) this.screen).disableButtons();
                 this.game.setScreen(new BotScreen(this.game, course, ball, false));
                 this.screen.dispose();
             }
@@ -128,12 +124,7 @@ public class ModeScreen implements Screen {
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                singlePlayer.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
-                ai.setTouchable(Touchable.disabled);
-                aiVSai.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
-                back.setTouchable(Touchable.disabled);
+                ((ModeScreen) this.screen).disableButtons();
                 Ball[] balls = new Ball[]{ball};
                 GameMode gameMode = new UndefinedPlayerMode(this.game, course, balls);
                 GameMode wallMode = new WallCreationMode(this.game, course, balls);
@@ -154,17 +145,44 @@ public class ModeScreen implements Screen {
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                singlePlayer.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
-                ai.setTouchable(Touchable.disabled);
-                aiVSai.setTouchable(Touchable.disabled);
-                playerVSai.setTouchable(Touchable.disabled);
-                back.setTouchable(Touchable.disabled);
+                ((ModeScreen) this.screen).disableButtons();
                 this.game.setScreen(new BotScreen(this.game, course, ball, true));
                 this.screen.dispose();
             }
         }
         playerVSai.addListener(new PVAIListener(this.game, this));
+
+        class MultiplayerListener extends ChangeListener {
+            final Golf game;
+            private Screen screen;
+
+            public MultiplayerListener(final Golf game, Screen screen) {
+                this.game = game;
+                this.screen = screen;
+            }
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.print("Number of players: ");
+                int numberOfPlayers = in.nextInt();
+                if (numberOfPlayers > 1) {
+                    Ball[] balls = new Ball[numberOfPlayers];
+                    balls[0] = ball;
+                    if (numberOfPlayers > 1) {
+                        for (int i = 1; i < balls.length; i++) {
+                            balls[i] = new Ball(ball);
+                        }
+                        GameMode gameMode = new UndefinedPlayerMode(this.game, course, balls);
+                        GameMode wallMode = new WallCreationMode(this.game, course, balls);this.screen.dispose();
+                        ((ModeScreen) this.screen).disableButtons();
+                        this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
+                    }
+                } else {
+                    System.out.println("PLAY SINGLEPLAYER MODE!");
+                }
+            }
+        }
+        multiplayer.addListener(new MultiplayerListener(this.game, this));
 
         // Setup cam
         this.cam = new OrthographicCamera();
@@ -177,6 +195,16 @@ public class ModeScreen implements Screen {
 
         // Setup background image
         this.background = new Texture(Gdx.files.internal("minigolf_background.jpg"));
+    }
+
+    private void disableButtons() {
+        singlePlayer.setTouchable(Touchable.disabled);
+        playerVSai.setTouchable(Touchable.disabled);
+        ai.setTouchable(Touchable.disabled);
+        aiVSai.setTouchable(Touchable.disabled);
+        playerVSai.setTouchable(Touchable.disabled);
+        back.setTouchable(Touchable.disabled);
+        multiplayer.setTouchable(Touchable.disabled);
     }
 
     @Override
@@ -224,6 +252,7 @@ public class ModeScreen implements Screen {
     public void dispose() {
         this.menuMusic.dispose();
         this.background.dispose();
+        this.in.close();
     }
 
 }
