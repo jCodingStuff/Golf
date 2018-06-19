@@ -105,12 +105,12 @@ public class CourseSelectorScreen implements Screen {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                double[] start = new double[]{4, 3};
-                double[] goal = new double[]{0, 1};
+                float[] start = new float[]{4, 3};
+                float[] goal = new float[]{0, 1};
                 Function function = new Function(formula);
                 Computable[][] functions = new Computable[1][1];
                 functions[0][0] = function;
-                Course course = new Course(functions, 9.81, 0.95, 80, start, goal, 0.5);
+                Course course = new Course(functions, 9.81f, 0.95f, 80f, start, goal, 0.5f);
                 design.setTouchable(Touchable.disabled);
                 importbtn.setTouchable(Touchable.disabled);
                 play.setTouchable(Touchable.disabled);
@@ -180,16 +180,16 @@ public class CourseSelectorScreen implements Screen {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                double[] start = new double[]{-2, 3};
-                double[] goal = new double[]{0, 1};
-                
-                double[] start2 = new double[]{-1, 3};
-                double[] goal2 = new double[]{0, 2};
+                float[] start = new float[]{-2, 3};
+                float[] goal = new float[]{0, 1};
+
+                float[] start2 = new float[]{-1, 3};
+                float[] goal2 = new float[]{0, 2};
                 
                 Function function = new Function(formula);
                 Computable[][] functions = new Computable[1][1];
                 functions[0][0] = function;
-                Course course = new Course(functions, 9.81, 0.95, 80, start, start2, goal, goal2, 0.5);
+                Course course = new Course(functions, 9.81f, 0.95f, 80f, start, start2, goal, goal2, 0.5f);
                 design.setTouchable(Touchable.disabled);
                 importbtn.setTouchable(Touchable.disabled);
                 play.setTouchable(Touchable.disabled);

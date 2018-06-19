@@ -71,7 +71,7 @@ public class MathLib {
      * @param scales the scales
      * @return the pixel value
      */
-    public static double[] toPixel(double[] from, double[] offsets, double[] scales) {
+    public static double[] toPixel(float[] from, double[] offsets, double[] scales) {
         double realX = (from[0] - offsets[0]) * (1 / scales[0]);
         double realY = (from[1] - offsets[1]) * (1 / scales[1]);
         return new double[]{realX, realY};

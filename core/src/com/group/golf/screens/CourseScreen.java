@@ -59,11 +59,11 @@ public class CourseScreen implements Screen {
     private double minimum;
     private Color[][] colors;
 
-    private double scaleX;
-    private double scaleY;
+    private float scaleX;
+    private float scaleY;
     public static final double SCALE_MULTIPLIER = 75;
-    private double xoffset;
-    private double yoffset;
+    private float xoffset;
+    private float yoffset;
 
     private boolean started;
 
@@ -181,8 +181,8 @@ public class CourseScreen implements Screen {
         // Setup Offsets
         BicubicInterpolator botLeftInterp = (BicubicInterpolator) this.course.getFunctions()[0][0];
         Point3D[][] points = botLeftInterp.getPoints();
-        this.setXoffset(points[0][0].getX());
-        this.setYoffset(points[0][0].getY());
+        this.setXoffset((float)points[0][0].getX());
+        this.setYoffset((float)points[0][0].getY());
 
         // Setup scales
         int xLength = this.course.getFunctions().length;
@@ -192,13 +192,13 @@ public class CourseScreen implements Screen {
         BicubicInterpolator botRightInterp = (BicubicInterpolator) this.course.getFunctions()[xLength - 1][0];
         Point3D[][] botRightPoints = botRightInterp.getPoints();
         double rightX = botRightPoints[1][0].getX();
-        this.setScaleX((rightX - this.getXoffset()) / Golf.VIRTUAL_WIDTH);
+        this.setScaleX((float)(rightX - this.getXoffset()) / Golf.VIRTUAL_WIDTH);
 
         // scaleY
         BicubicInterpolator topLeftInterp = (BicubicInterpolator) this.course.getFunctions()[0][yLength - 1];
         Point3D[][] topLeftPoints = topLeftInterp.getPoints();
         double topY = topLeftPoints[0][1].getY();
-        this.setScaleY((topY - this.getYoffset()) / Golf.VIRTUAL_HEIGHT);
+        this.setScaleY((float)(topY - this.getYoffset()) / Golf.VIRTUAL_HEIGHT);
     }
 
     @Override
@@ -229,7 +229,7 @@ public class CourseScreen implements Screen {
 
         // Render the goal
         this.renderGoal(this.course.getGoal(), this.flag);
-        double[] goal2 = this.course.getGoal2();
+        float[] goal2 = this.course.getGoal2();
         if (goal2 != null) this.renderGoal(goal2, this.flag2);
 
         boolean moved = this.activeMode.move(this.cam);
@@ -296,7 +296,7 @@ public class CourseScreen implements Screen {
     public void calcScale() {
         double dist = this.course.getDistance();
         double limitDist = 0.40625;
-        this.scaleX = 0.000625;
+        this.scaleX = 0.000625f;
         while (dist > limitDist) {
             this.scaleX *= 2;
             limitDist *= 2;
@@ -308,20 +308,20 @@ public class CourseScreen implements Screen {
      * Compute the screen offsets
      */
     public void calcOffsets() {
-        double x1 = this.course.getStart()[0];
-        double x2 = this.course.getGoal()[0];
-        double xUnits = Golf.VIRTUAL_WIDTH / (1/this.scaleX);
-        this.xoffset = (x1 + x2 - xUnits) / 2.0;
-        double y1 = this.course.getStart()[1];
-        double y2 = this.course.getGoal()[1];
-        double yUnits = Golf.VIRTUAL_HEIGHT / (1/this.scaleY);
-        this.yoffset = (y1 + y2 - yUnits) / 2.0;
+        float x1 = this.course.getStart()[0];
+        float x2 = this.course.getGoal()[0];
+        float xUnits = Golf.VIRTUAL_WIDTH / (1/this.scaleX);
+        this.xoffset = (x1 + x2 - xUnits) / 2.0f;
+        float y1 = this.course.getStart()[1];
+        float y2 = this.course.getGoal()[1];
+        float yUnits = Golf.VIRTUAL_HEIGHT / (1/this.scaleY);
+        this.yoffset = (y1 + y2 - yUnits) / 2.0f;
     }
 
     /**
      * Render the goal
      */
-    private void renderGoal(double[] goal, Texture texture) {
+    private void renderGoal(float[] goal, Texture texture) {
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         double[] real = MathLib.toPixel(goal, new double[]{this.getXoffset(), this.getYoffset()},
                 new double[]{this.getScaleX(), this.getScaleY()});
@@ -461,35 +461,35 @@ public class CourseScreen implements Screen {
         this.colors = colors;
     }
 
-    public double getScaleX() {
+    public float getScaleX() {
         return scaleX;
     }
 
-    public void setScaleX(double scaleX) {
+    public void setScaleX(float scaleX) {
         this.scaleX = scaleX;
     }
 
-    public double getScaleY() {
+    public float getScaleY() {
         return scaleY;
     }
 
-    public void setScaleY(double scaleY) {
+    public void setScaleY(float scaleY) {
         this.scaleY = scaleY;
     }
 
-    public double getXoffset() {
+    public float getXoffset() {
         return xoffset;
     }
 
-    public void setXoffset(double xoffset) {
+    public void setXoffset(float xoffset) {
         this.xoffset = xoffset;
     }
 
-    public double getYoffset() {
+    public float getYoffset() {
         return yoffset;
     }
 
-    public void setYoffset(double yoffset) {
+    public void setYoffset(float yoffset) {
         this.yoffset = yoffset;
     }
 

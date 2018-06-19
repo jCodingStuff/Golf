@@ -79,7 +79,7 @@ public class FileMode implements GameMode {
     }
 
     private void computePixels() {
-        double[] ballPixels = MathLib.toPixel(new double[]{this.ball.getX(), this.ball.getY()},
+        double[] ballPixels = MathLib.toPixel(new float[]{this.ball.getX(), this.ball.getY()},
                     this.offsets, this.scales);
         this.ballPixels.setPosition(ballPixels[0], ballPixels[1]);
     }

@@ -75,7 +75,7 @@ public class WallCreationMode implements GameMode {
 
     private void computePixels() {
         for (int i = 0; i < this.ballsPixels.length; i++) {
-            double[] ballPixels = MathLib.toPixel(new double[]{this.balls[i].getX(), this.balls[i].getY()},
+            double[] ballPixels = MathLib.toPixel(new float[]{this.balls[i].getX(), this.balls[i].getY()},
                     this.offsets, this.scales);
             this.ballsPixels[i].setPosition(ballPixels[0], ballPixels[1]);
         }

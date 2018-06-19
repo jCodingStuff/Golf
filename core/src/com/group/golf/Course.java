@@ -140,7 +140,7 @@ public class Course {
 
     private void helpWallNum(double x, Line2D line, List<Rectangle> cloneWalls) {
         double y = line.getY(x);
-        double[] coord = MathLib.toPixel(new double[]{x, y}, this.offsets, this.scales);
+        double[] coord = MathLib.toPixel(new float[]{(float)x, (float)y}, this.offsets, this.scales);
         float realX = (float) coord[0];
         float realY = (float) coord[1];
         for (int i = cloneWalls.size() - 1; i >= 0; i--) {
