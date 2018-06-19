@@ -8,7 +8,7 @@ public class WallScoreComputer implements ScoreComputer {
 
     @Override
     public void compute(Course course, Individual[] population) {
-        double[] goal = course.getGoal();
+        float[] goal = course.getGoal();
         for (int i = 0; i < population.length; i++) {
             JVector2[] landings = population[i].getLandings();
             double closestDist = Double.MAX_VALUE;
