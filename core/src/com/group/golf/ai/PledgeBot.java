@@ -33,8 +33,8 @@ public class PledgeBot implements Bot {
     private Line2D right;
     private Line2D forward;
     private Line2D left;
-    private double lineLength = 15;
-    private int currentDir;
+    private double lineLength = 150;
+    private int currentDir = 0;
 
     /**
      * Create a new instance of PledgeBot
@@ -64,72 +64,74 @@ public class PledgeBot implements Bot {
     	double[] goalCoords = this.course.getGoal();
     	//double[] distances = new double[] {goalCoords[0]-this.ball.getX(), goalCoords[1]-this.ball.getY()};
     	
-    	// 0 = forward, 1 = left, 2 = bot, 3 = right
-    	currentDir = 0;
+    	// 0 = forward, 1 = left, 2 = bot, 3 = right     the 'way' the ball is 'facing'.
     	setLines();
-    	while (!this.collision.isGoalAchieved()) {
     	 if (goalBallDistance() < 0.35) {
     		 double[] distances = new double[] {goalCoords[0]-this.ball.getX(), goalCoords[1]-this.ball.getY()};
-    		 this.engine.hit(distances[0] * 10, distances[1] * 10);
+    		 this.engine.hit(75, 75);
     	 }
     	 else	if (currentDir == 0) {
+    		 System.out.println("At 0");
     	if (rightClear()) {
-    		this.engine.hit(10, 0);
+    		this.engine.hit(200, 0);
     		currentDir = 3;
     	}
     	else if (forwardClear()) {
-    		this.engine.hit(0, 10);
+    		this.engine.hit(0, 200);
     		currentDir = 0;
     	}
     	else if (leftClear()) {
-    		this.engine.hit(-10, 0);
+    		this.engine.hit(-200, 0);
     		currentDir = 1;
     	}
     	else currentDir = 1;
     	}
     	else if (currentDir == 1) {
+    		System.out.println("At 1");
     		if (forwardClear()) {
-        		this.engine.hit(0, 10);
+        		this.engine.hit(0, 200);
         		currentDir = 0;
         	}
     		else	if (leftClear()) {
-        		this.engine.hit(-10, 0);
+        		this.engine.hit(-200, 0);
         		currentDir = 1;
         	}
     		else if (bottomClear()) {
-        		this.engine.hit(0, -10);
+        		this.engine.hit(0, -200);
         		currentDir = 2;
         	}
     		else currentDir = 2;
     	}
     	
     	else if (currentDir == 2) {
+    		System.out.println("At 2");
     		if (leftClear()) {
-        		this.engine.hit(-10, 0);
+        		this.engine.hit(-200, 0);
         		currentDir = 1;
         	}
     		else if (bottomClear()) {
-        		this.engine.hit(0, -10);
+        		this.engine.hit(0, -200);
         		currentDir = 2;
         	}
     		else if (rightClear()) {
-        		this.engine.hit(10, 0);
+        		this.engine.hit(200, 0);
         		currentDir = 3;
         	}
     		else currentDir = 3;
     	}
     	
     	else if (currentDir == 3) {
+    		System.out.println("At 3");
     		if (bottomClear()) {
-        		this.engine.hit(0, -10);
+        		this.engine.hit(0, -200);
         		currentDir = 2;
         	}
     		else if (rightClear()) {
-        		this.engine.hit(10, 0);
+        		this.engine.hit(200, 0);
         		currentDir = 3;
         	}
     		else if (forwardClear()) {
-        		this.engine.hit(0, 10);
+        		this.engine.hit(0, 200);
         		currentDir = 0;
         	}
     		else currentDir = 0;
@@ -154,7 +156,7 @@ public class PledgeBot implements Bot {
             forces[i] = this.scaleForce(forces[i], derivatives[i]);
         }
         */
-    }
+    
     
     // Initialize arrows
     private void setLines() {
@@ -174,68 +176,121 @@ public class PledgeBot implements Bot {
     
     // Check if right side of ball is clear
     private boolean rightClear() {
-    	boolean result = false;
+    	boolean result = true;
     	int i = 0;
-    	while (result == false) {
-    		float a = (float) this.ball.getX() + (float) lineLength;
-    		float b = (float) this.ball.getY();
-    		if (walls.get(i).contains(a, b)) {
-    			result = false;
-    		}
-    		else {
-    			result = true;
-    		}
+    	int j = 0;
+    	while ((result == true) && (i < walls.size())) {
+    		j = j + 1;
+    		float coordX = (float) this.ball.last()[0];
+        	float coordY = (float) this.ball.last()[1];
+        	double coordXd = this.ball.last()[0];
+        	double coordYd = this.ball.last()[1];
+        	double[] coords = new double[]{coordXd, coordYd};
+        	double[] real = MathLib.toPixel(coords, new double[]{offsets[0], offsets[1]},
+                    new double[]{scales[0], scales[1]});
+        	float realFloatX = (float) real[0];
+        	float realFloatY = (float) real[1];
+    		    /*
+    			float a = (float) this.ball.getX() + (float) j;
+        		float b = (float) this.ball.getY();
+        		System.out.println(a);
+        		System.out.println(b);
+        		*/
+        		if (walls.get(i).contains(a, b) == true) {
+        			System.out.println("rightClear became false");
+        			result = false;
+        		}
+        		else {
+        			result = true;
+        		}
+        		if (j == lineLength) {
+            		i++;
+            		j = 0;
+            		}
+    	}
+    	if (result == false) {
+    		System.out.println("Right not clear");
     	}
     	return result;
     }
     
  // Check if ahead of ball is clear
     private boolean forwardClear() {
-    	boolean result = false;
+    	boolean result = true;
     	int i = 0;
-    	while (result == false) {
+    	int j = 0;
+    	while ((result == true) && (i < walls.size())) {
+    		j = j + 1;
     		float a = (float) this.ball.getX();
-    		float b = (float) this.ball.getY() + (float) lineLength;
-    		if (walls.get(i).contains(a, b)) {
+    		float b = (float) this.ball.getY() + (float) j;
+    		if (walls.get(i).contains(a, b) == true) {
+    			System.out.println("forwardClear became false");
     			result = false;
     		}
     		else {
     			result = true;
     		}
+    		if (j == lineLength) {
+    		i++;
+    		j = 0;
+    		}
+    	}
+    	if (result == false) {
+    		System.out.println("Forward not clear");
     	}
     	return result;
     }
     
  // Check if left side of ball is clear
     private boolean leftClear() {
-    	boolean result = false;
+    	boolean result = true;
     	int i = 0;
-    	while (result == false) {
-    		float a = (float) this.ball.getX() - (float) lineLength;
+    	int j = 0;
+    	while ((result == true) && (i < walls.size())) {
+    		j = j + 1;
+    		float a = (float) this.ball.getX() - (float) j;
     		float b = (float) this.ball.getY();
-    		if (walls.get(i).contains(a, b)) {
+    		if (walls.get(i).contains(a, b) == true) {
+    			System.out.println("leftClear became false");
     			result = false;
     		}
     		else {
     			result = true;
     		}
+    		if (j == lineLength) {
+        		i++;
+        		j = 0;
+        		}
+    	}
+    	if (result == false) {
+    		System.out.println("Left not clear");
     	}
     	return result;
     }
     
  // Check if leftt side of ball is clear
     private boolean bottomClear() {
-    	boolean result = false;
+    	boolean result = true;
     	int i = 0;
-    	while (result == false) {
+    	int j = 0;
+    	while ((result == true) && (i < walls.size())) {
+    		j = j + 1;
     		float a = (float) this.ball.getX();
-    		float b = (float) this.ball.getY() - (float) lineLength;
-    		if (walls.get(i).contains(a, b)) {
+    		float b = (float) this.ball.getY() - (float) j;
+    		if (walls.get(i).contains(a, b) == true) {
+    			System.out.println("bottomClear became false");
     			result = false;
     		}
     		else {
     			result = true;
     		}
+    		if (j == lineLength) {
+        		i++;
+        		j = 0;
+        		}
+    	}
+    	if (result == false) {
+    		System.out.println("Bottom not clear");
     	}
     	return result;
     }
