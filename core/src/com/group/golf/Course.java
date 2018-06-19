@@ -114,6 +114,11 @@ public class Course {
         }
     }
 
+    public double getWallNum(Point3D closest) {
+        double wallNum = 0;
+        return wallNum;
+    }
+
     /**
      * Get access to the gravity
      * @return the gravity
