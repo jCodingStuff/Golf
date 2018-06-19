@@ -75,8 +75,8 @@ public class botMartijn implements Bot {
 
             for(double angle = 0; angle <= 360; angle++) {
                 for (double force = 0; force < maxForce; force += 3) {// try which number works best
-                    double forceX = force * Math.cos(Math.toRadians(angle));
-                    double forceY = force * Math.sin(Math.toRadians(angle));
+                    float forceX = (float)(force * Math.cos(Math.toRadians(angle)));
+                    float forceY = (float)(force * Math.sin(Math.toRadians(angle)));
                     JVector2 forceVec = new JVector2(forceX,forceY);
                     this.simulateShot(forceVec);
 

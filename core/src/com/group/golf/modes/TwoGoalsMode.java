@@ -34,8 +34,8 @@ public class TwoGoalsMode implements GameMode {
     private Ball[] balls;
     private JVector2[] ballsPixels;
 
-    private double[] scales;
-    private double[] offsets;
+    private float[] scales;
+    private float[] offsets;
 
     private boolean landed;
     private int counter;
@@ -93,7 +93,7 @@ public class TwoGoalsMode implements GameMode {
 
     private void computePixels() {
         for (int i = 0; i < this.ballsPixels.length; i++) {
-            double[] ballPixels = MathLib.toPixel(new float[]{this.balls[i].getX(), this.balls[i].getY()},
+            float[] ballPixels = MathLib.toPixel(new float[]{this.balls[i].getX(), this.balls[i].getY()},
                     this.offsets, this.scales);
             this.ballsPixels[i].setPosition(ballPixels[0], ballPixels[1]);
         }
@@ -125,10 +125,10 @@ public class TwoGoalsMode implements GameMode {
     }
     
     public void distanceCheck(Ball a, Ball b) {
-    	double x1 = a.getX();
-    	double y1 = a.getY();
-    	double x2 = b.getX();
-    	double y2 = b.getY();
+    	float x1 = a.getX();
+    	float y1 = a.getY();
+    	float x2 = b.getX();
+    	float y2 = b.getY();
     	Point3D point1 = new Point3D(x1, y1);
     	Point3D point2 = new Point3D(x2, y2);
     	double distance = MathLib.distanceSquared(point1, point2);
@@ -216,13 +216,13 @@ public class TwoGoalsMode implements GameMode {
     }
 
     @Override
-    public void setOffsets(double[] offsets) {
+    public void setOffsets(float[] offsets) {
         this.offsets = offsets;
         for (Physics engine : this.engines) engine.setOffsets(offsets);
     }
 
     @Override
-    public void setScales(double[] scales) {
+    public void setScales(float[] scales) {
         this.scales = scales;
         for (Physics engine : this.engines) engine.setScales(scales);
     }

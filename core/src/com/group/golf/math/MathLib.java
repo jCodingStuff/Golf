@@ -14,7 +14,7 @@ public class MathLib {
      * @param b another number
      * @return the average of a and b
      */
-    public static double average(double a, double b) {
+    public static float average(float a, float b) {
         return (a+b)/2;
     }
 
@@ -27,8 +27,8 @@ public class MathLib {
      * @param max2 the right extreme of the final interval (inclusive)
      * @return the result value which belongs to [min2, max2]
      */
-    public static double map(double value, double min1, double max1, double min2, double max2) {
-        double result = 0;
+    public static float map(float value, float min1, float max1, float min2, float max2) {
+        float result = 0;
         if (value <= min1) result = min2;
         else if (value >= max1) result = max2;
         else {
@@ -39,12 +39,12 @@ public class MathLib {
     }
 
     /**
-     * Create a copy of a double array
+     * Create a copy of a float array
      * @param arr the array to copy
      * @return the copy of the array
      */
-    public static double[] copyDoubleArr(double[] arr) {
-        double[] result = new double[arr.length];
+    public static float[] copyfloatArr(float[] arr) {
+        float[] result = new float[arr.length];
         for (int i = 0; i < arr.length; i++) {
             result[i] = arr[i];
         }
@@ -71,10 +71,10 @@ public class MathLib {
      * @param scales the scales
      * @return the pixel value
      */
-    public static double[] toPixel(float[] from, double[] offsets, double[] scales) {
-        double realX = (from[0] - offsets[0]) * (1 / scales[0]);
-        double realY = (from[1] - offsets[1]) * (1 / scales[1]);
-        return new double[]{realX, realY};
+    public static float[] toPixel(float[] from, float[] offsets, float[] scales) {
+        float realX = (from[0] - offsets[0]) * (1 / scales[0]);
+        float realY = (from[1] - offsets[1]) * (1 / scales[1]);
+        return new float[]{realX, realY};
     }
 
     /**
@@ -83,8 +83,8 @@ public class MathLib {
      * @param b the second matrix
      * @return the matrix resulting of the multiplication of a and b
      */
- 	public static double[][] multiply(double[][] a, double[][] b) {
- 		double[][] result = new double[a.length][b[0].length];
+ 	public static float[][] multiply(float[][] a, float[][] b) {
+ 		float[][] result = new float[a.length][b[0].length];
  		for (int i = 0; i < result.length; i++) {
  		    for (int j = 0; j < result[i].length; j++) {
  		        result[i][j] = rowByColumn(a, b, i, j);
@@ -101,8 +101,8 @@ public class MathLib {
      * @param column the column of the second matrix
      * @return the dot-product of row and column
      */
- 	public static double rowByColumn(double[][] matrix1, double[][] matrix2, int row, int column) {
- 	    double result = 0;
+ 	public static float rowByColumn(float[][] matrix1, float[][] matrix2, int row, int column) {
+ 	    float result = 0;
  	    for (int j = 0; j < matrix1[row].length; j++) {
  	        result += matrix1[row][j] * matrix2[j][column];
         }
@@ -110,12 +110,12 @@ public class MathLib {
     }
 
     /**
-     * Check if two double arrays match
+     * Check if two float arrays match
      * @param arr1 one array
      * @param arr2 another array
      * @return true if they match, false otherwise
      */
-    public static boolean arrayMatch(double[] arr1, double[] arr2) {
+    public static boolean arrayMatch(float[] arr1, float[] arr2) {
         if (arr1 == null && arr2 != null) return false;
         else if (arr1 != null && arr2 == null) return false;
         else if (arr1.length != arr2.length) return false;
@@ -131,20 +131,20 @@ public class MathLib {
      * @param b another distance
      * @return squared distance between a and b
      */
-    public static double distanceSquared(Point3D a, Point3D b) {
-        double x = b.getX() - a.getX();
-        double y = b.getY() - a.getY();
-        return Math.pow(x, 2) + Math.pow(y, 2);
+    public static float distanceSquared(Point3D a, Point3D b) {
+        float x = b.getX() - a.getX();
+        float y = b.getY() - a.getY();
+        return (float)(Math.pow(x, 2) + Math.pow(y, 2));
     }
 
     /**
-     * Get a random double value within a range
+     * Get a random float value within a range
      * @param low lower bound of the range
      * @param high upper bound of the range
-     * @return a random double x such that low <= x < high
+     * @return a random float x such that low <= x < high
      */
-    public static double randomDouble(double low, double high) {
-        return Math.random()*(high - low) + low;
+    public static float randomFloat(float low, float high) {
+        return (float)(Math.random()*(high - low) + low);
     }
 
     /**

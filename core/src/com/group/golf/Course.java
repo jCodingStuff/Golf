@@ -23,8 +23,8 @@ public class Course {
     private float[] start2;
     private float[] goal2;
 
-    private double[] offsets;
-    private double[] scales;
+    private float[] offsets;
+    private float[] scales;
 
     private List<Rectangle> walls; // Pixel coordinates, CAREFUL!
     
@@ -109,7 +109,7 @@ public class Course {
      * @param y the y-coordinate
      * @return the height at (x, y)
      */
-    public double getHeight(float x, float y) {
+    public float getHeight(float x, float y) {
         if (this.isSpline()) {
             return this.getFunctionFor(x, y).getZ(x, y);
         } else {
@@ -126,11 +126,11 @@ public class Course {
         Line2D line = new Line2D(goalPoint, closest);
 
         if (goalPoint.getX() <= closest.getX()) {
-            for (double x = goalPoint.getX(); x <= closest.getX(); x += STEP) {
+            for (float x = goalPoint.getX(); x <= closest.getX(); x += STEP) {
                 this.helpWallNum(x, line, cloneWalls);
             }
         } else {
-            for (double x = closest.getX(); x <= goalPoint.getX(); x += STEP) {
+            for (float x = closest.getX(); x <= goalPoint.getX(); x += STEP) {
                 this.helpWallNum(x, line, cloneWalls);
             }
         }
@@ -138,11 +138,11 @@ public class Course {
         return this.walls.size() - cloneWalls.size();
     }
 
-    private void helpWallNum(double x, Line2D line, List<Rectangle> cloneWalls) {
-        double y = line.getY(x);
-        double[] coord = MathLib.toPixel(new float[]{(float)x, (float)y}, this.offsets, this.scales);
-        float realX = (float) coord[0];
-        float realY = (float) coord[1];
+    private void helpWallNum(float x, Line2D line, List<Rectangle> cloneWalls) {
+        float y = line.getY(x);
+        float[] coord = MathLib.toPixel(new float[]{x, y}, this.offsets, this.scales);
+        float realX = coord[0];
+        float realY = coord[1];
         for (int i = cloneWalls.size() - 1; i >= 0; i--) {
             if (cloneWalls.get(i).contains(realX, realY)) {
                 cloneWalls.remove(i);
@@ -328,11 +328,11 @@ public class Course {
         this.walls = walls;
     }
 
-    public void setOffsets(double[] offsets) {
+    public void setOffsets(float[] offsets) {
         this.offsets = offsets;
     }
 
-    public void setScales(double[] scales) {
+    public void setScales(float[] scales) {
         this.scales = scales;
     }
 

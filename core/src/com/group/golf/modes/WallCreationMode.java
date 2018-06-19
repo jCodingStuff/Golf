@@ -25,8 +25,8 @@ public class WallCreationMode implements GameMode {
     private JVector2[] ballsPixels;
     private Circle[] ballsCollision;
 
-    private double[] scales;
-    private double[] offsets;
+    private float[] scales;
+    private float[] offsets;
 
     private boolean touchFlag;
     private int firstX;
@@ -75,7 +75,7 @@ public class WallCreationMode implements GameMode {
 
     private void computePixels() {
         for (int i = 0; i < this.ballsPixels.length; i++) {
-            double[] ballPixels = MathLib.toPixel(new float[]{this.balls[i].getX(), this.balls[i].getY()},
+            float[] ballPixels = MathLib.toPixel(new float[]{this.balls[i].getX(), this.balls[i].getY()},
                     this.offsets, this.scales);
             this.ballsPixels[i].setPosition(ballPixels[0], ballPixels[1]);
         }
@@ -146,12 +146,12 @@ public class WallCreationMode implements GameMode {
     }
 
     @Override
-    public void setOffsets(double[] offsets) {
+    public void setOffsets(float[] offsets) {
         this.offsets = offsets;
     }
 
     @Override
-    public void setScales(double[] scales) {
+    public void setScales(float[] scales) {
         this.scales = scales;
         this.computePixels();
         this.setUpCollision();

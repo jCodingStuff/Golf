@@ -38,8 +38,8 @@ public class FileMode implements GameMode {
     private Ball ball;
     private JVector2 ballPixels;
 
-    private double[] scales;
-    private double[] offsets;
+    private float[] scales;
+    private float[] offsets;
 
     private boolean landed;
     private int counter;
@@ -79,7 +79,7 @@ public class FileMode implements GameMode {
     }
 
     private void computePixels() {
-        double[] ballPixels = MathLib.toPixel(new float[]{this.ball.getX(), this.ball.getY()},
+        float[] ballPixels = MathLib.toPixel(new float[]{this.ball.getX(), this.ball.getY()},
                     this.offsets, this.scales);
         this.ballPixels.setPosition(ballPixels[0], ballPixels[1]);
     }
@@ -142,13 +142,13 @@ public class FileMode implements GameMode {
     }
 
     @Override
-    public void setOffsets(double[] offsets) {
+    public void setOffsets(float[] offsets) {
         this.offsets = offsets;
         this.engine.setOffsets(this.offsets);
     }
 
     @Override
-    public void setScales(double[] scales) {
+    public void setScales(float[] scales) {
         this.scales = scales;
         this.engine.setScales(this.scales);
     }

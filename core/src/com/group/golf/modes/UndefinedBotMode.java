@@ -35,8 +35,8 @@ public class UndefinedBotMode implements GameMode {
     private Ball[] balls;
     private JVector2[] ballsPixels;
 
-    private double[] scales;
-    private double[] offsets;
+    private float[] scales;
+    private float[] offsets;
 
     private boolean landed;
     private int counter;
@@ -92,7 +92,7 @@ public class UndefinedBotMode implements GameMode {
 
     private void computePixels() {
         for (int i = 0; i < this.ballsPixels.length; i++) {
-            double[] ballPixels = MathLib.toPixel(new float[]{this.balls[i].getX(), this.balls[i].getY()},
+            float[] ballPixels = MathLib.toPixel(new float[]{this.balls[i].getX(), this.balls[i].getY()},
                     this.offsets, this.scales);
             this.ballsPixels[i].setPosition(ballPixels[0], ballPixels[1]);
         }
@@ -193,13 +193,13 @@ public class UndefinedBotMode implements GameMode {
     }
 
     @Override
-    public void setOffsets(double[] offsets) {
+    public void setOffsets(float[] offsets) {
         this.offsets = offsets;
         for (Physics engine : this.engines) engine.setOffsets(offsets);
     }
 
     @Override
-    public void setScales(double[] scales) {
+    public void setScales(float[] scales) {
         this.scales = scales;
         for (Physics engine : this.engines) engine.setScales(scales);
         this.setUpBots();

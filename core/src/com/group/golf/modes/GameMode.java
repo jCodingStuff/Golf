@@ -13,9 +13,9 @@ public interface GameMode {
 
     void extraChecks();
 
-    void setOffsets(double[] offsets);
+    void setOffsets(float[] offsets);
 
-    void setScales(double[] scales);
+    void setScales(float[] scales);
 
     void dispose();
 

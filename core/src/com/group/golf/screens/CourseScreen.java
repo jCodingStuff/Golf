@@ -55,8 +55,8 @@ public class CourseScreen implements Screen {
     // Graphing things
     private int goalSize;
     private double[][] heights;
-    private double maximum;
-    private double minimum;
+    private float maximum;
+    private float minimum;
     private Color[][] colors;
 
     private float scaleX;
@@ -75,10 +75,10 @@ public class CourseScreen implements Screen {
 
         this.setupCommon();
 
-        this.course.setOffsets(new double[]{this.xoffset, this.yoffset});
-        this.course.setScales(new double[]{this.scaleX, this.scaleY});
-        this.activeMode.setOffsets(new double[]{this.xoffset, this.yoffset});
-        this.activeMode.setScales(new double[]{this.scaleX, this.scaleY});
+        this.course.setOffsets(new float[]{this.xoffset, this.yoffset});
+        this.course.setScales(new float[]{this.scaleX, this.scaleY});
+        this.activeMode.setOffsets(new float[]{this.xoffset, this.yoffset});
+        this.activeMode.setScales(new float[]{this.scaleX, this.scaleY});
     }
 
     /**
@@ -134,11 +134,11 @@ public class CourseScreen implements Screen {
      */
     private void calcHeightsMatrix() {
         this.heights = new double[Golf.VIRTUAL_WIDTH][Golf.VIRTUAL_HEIGHT];
-        this.maximum = Double.MIN_VALUE;
-        this.minimum = Double.MAX_VALUE;
+        this.maximum = Float.MIN_VALUE;
+        this.minimum = Float.MAX_VALUE;
         for (int x = 0; x < this.heights.length; x++) {
             for (int y = 0; y < this.heights[x].length; y++) {
-                double value = this.course.getHeight(this.getXoffset() + x*this.getScaleX(),
+                float value = this.course.getHeight(this.getXoffset() + x*this.getScaleX(),
                         this.getYoffset() + y*this.getScaleY());
                 if (value > this.maximum) this.maximum = value;
                 else if (value < this.minimum) this.minimum = value;
@@ -160,14 +160,14 @@ public class CourseScreen implements Screen {
             for (int y = 0; y < this.colors[x].length; y++) {
                 if (this.heights[x][y] < 0) { // Water
                     // More negative, darker
-                    float blue = maxWater + minWater - (float) MathLib.map(Math.abs(this.heights[x][y]), 0,
-                            Math.abs(this.minimum), minWater, maxWater);
+                    float blue = maxWater + minWater - MathLib.map((float)Math.abs(this.heights[x][y]), 0,
+                            (float)Math.abs(this.minimum), minWater, maxWater);
                     this.colors[x][y] = new Color(0, 0, blue, 1);
                 }
                 else { // Grass
                     // Higher, darker
-                    float green = maxTerrain + minTerrain - (float) MathLib.map(this.heights[x][y], 0,
-                            this.maximum, minTerrain, maxTerrain);
+                    float green = maxTerrain + minTerrain - (float) MathLib.map((float)this.heights[x][y], 0,
+                            (float)this.maximum, minTerrain, maxTerrain);
                     this.colors[x][y] = new Color(0, green, 0, 1);
                 }
             }
@@ -272,8 +272,8 @@ public class CourseScreen implements Screen {
     private void checkForStart() {
         if (!this.started && Gdx.input.isKeyPressed(Input.Keys.S)) {
             this.activeMode = this.gameMode; // Start real GameMode
-            this.activeMode.setOffsets(new double[]{this.xoffset, this.yoffset});
-            this.activeMode.setScales(new double[]{this.scaleX, this.scaleY});
+            this.activeMode.setOffsets(new float[]{this.xoffset, this.yoffset});
+            this.activeMode.setScales(new float[]{this.scaleX, this.scaleY});
             this.started = true;
             System.out.println("GAME STARTS NOW! FIGHT!");
         }
@@ -323,10 +323,10 @@ public class CourseScreen implements Screen {
      */
     private void renderGoal(float[] goal, Texture texture) {
         this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        double[] real = MathLib.toPixel(goal, new double[]{this.getXoffset(), this.getYoffset()},
-                new double[]{this.getScaleX(), this.getScaleY()});
-        float realX = (float) real[0];
-        float realY = (float) real[1];
+        float[] real = MathLib.toPixel(goal, new float[]{this.getXoffset(), this.getYoffset()},
+                new float[]{this.getScaleX(), this.getScaleY()});
+        float realX = real[0];
+        float realY = real[1];
         this.game.shapeRenderer.setColor(0, 0, 0, 1);
         this.game.shapeRenderer.ellipse(realX - this.goalSize/2, realY - this.goalSize/2,
                 this.goalSize, this.goalSize);
@@ -437,19 +437,19 @@ public class CourseScreen implements Screen {
         this.heights = heights;
     }
 
-    public double getMaximum() {
+    public float getMaximum() {
         return maximum;
     }
 
-    public void setMaximum(double maximum) {
+    public void setMaximum(float maximum) {
         this.maximum = maximum;
     }
 
-    public double getMinimum() {
+    public float getMinimum() {
         return minimum;
     }
 
-    public void setMinimum(double minimum) {
+    public void setMinimum(float minimum) {
         this.minimum = minimum;
     }
 

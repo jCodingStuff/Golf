@@ -29,11 +29,11 @@ public class GeneticBot implements Bot {
 
     private static final int POPULATION_SIZE = 100;
     private static final int DNA_LENGTH = 10;
-    private static final double MAX_FORCE = 400;
+    private static final float MAX_FORCE = 400;
 
     private static final int GENERATION_LIMIT = 5;
     private static final double MUTATION_RATE = 0.01;
-    private static double error;
+    private static float error;
 
     private Individual[] population;
     private Individual winner;
@@ -169,8 +169,8 @@ public class GeneticBot implements Bot {
         JVector2[] landings = new JVector2[DNA_LENGTH + 1];
         landings[0] = new JVector2(this.course.getStart()[0], this.course.getStart()[1]);
         for (int i = 0; i < DNA_LENGTH; i++) {
-            double forceX = MathLib.randomDouble(-MAX_FORCE, MAX_FORCE);
-            double forceY = MathLib.randomDouble(-MAX_FORCE, MAX_FORCE);
+            float forceX = MathLib.randomFloat(-MAX_FORCE, MAX_FORCE);
+            float forceY = MathLib.randomFloat(-MAX_FORCE, MAX_FORCE);
             genes[i] = new JVector2(forceX, forceY);
         }
         this.fillLandings(genes, landings);
@@ -234,7 +234,7 @@ public class GeneticBot implements Bot {
             // small random error for the force applied to the ball
             double min = 0.999;
             double max= 1.001;
-            error = min+ Math.random() * (max-min);
+            error = (float)(min+ Math.random() * (max-min));
             this.simulateShot(forces[i-1]);
             landings[i] = new JVector2(this.virtualBall.getX()*error, this.virtualBall.getY()*error);
         }
@@ -248,9 +248,9 @@ public class GeneticBot implements Bot {
         // small random error for the force applied to the ball
         double min = 0.999;
         double max= 1.001;
-        error = min+ Math.random() * (max-min);
+        error = (float)(min+ Math.random() * (max-min));
         force.multiply(error);
-        this.virtualEngine.hit(virtualBall,(float)force.getX(), (float)force.getY());
+        this.virtualEngine.hit(virtualBall,force.getX(), force.getY());
         while (this.virtualBall.isMoving()) {
             this.virtualEngine.movement(virtualBall,0.04f);
             if (this.virtualEngine.isWater()) {

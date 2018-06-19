@@ -45,9 +45,9 @@ public class SplineWithoutSubmitListener extends ChangeListener {
 
 
         StringTokenizer tokenizerStart = new StringTokenizer(this.xyz.getText());
-        double x = Double.parseDouble(tokenizerStart.nextToken());
-        double y = Double.parseDouble(tokenizerStart.nextToken());
-        double z = Double.parseDouble(tokenizerStart.nextToken());
+        float x = Float.parseFloat(tokenizerStart.nextToken());
+        float y = Float.parseFloat(tokenizerStart.nextToken());
+        float z = Float.parseFloat(tokenizerStart.nextToken());
         xyzMatrix[xCounter][yCounter] = new Point3D(x,y,z);
 
         System.out.println("Coordinates: " + x + ", " + y + ", " + z);

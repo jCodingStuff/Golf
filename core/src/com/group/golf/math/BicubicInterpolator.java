@@ -5,15 +5,15 @@ package com.group.golf.math;
  */
 public class BicubicInterpolator implements Computable {
 
-    private static final double[][] A = new double[][]{{1, 0, 0, 0},
+    private static final float[][] A = new float[][]{{1, 0, 0, 0},
                                                        {0, 0, 1, 0},
                                                        {-3, 3, -2, -1},
                                                        {2, -2, 1, 1}};
-    private static final double[][] B = new double[][]{{1, 0, -3, 2},
+    private static final float[][] B = new float[][]{{1, 0, -3, 2},
                                                        {0, 0, 3, -2},
                                                        {0, 1, -2, 1},
                                                        {0, 0, -1, 1}};
-    private double[][] coefficients;
+    private float[][] coefficients;
 
     private Point3D[][] points;
     private double x0;
@@ -26,7 +26,7 @@ public class BicubicInterpolator implements Computable {
 	 * @param dy the 2D-array of dy
 	 * @param dxy the 2D-array of dxy
 	 */
-    public BicubicInterpolator(Point3D[][] points, double[][] dx, double[][] dy, double[][] dxy) {
+    public BicubicInterpolator(Point3D[][] points, float[][] dx, float[][] dy, float[][] dxy) {
     	this.points = points;
     	this.x0 = this.points[0][0].getX();
     	this.y0 = this.points[0][0].getY();
@@ -74,8 +74,8 @@ public class BicubicInterpolator implements Computable {
 	 * @param dy the 2D-array of dy
 	 * @param dxy the 2D-array of dxy
 	 */
-    private void fitter(double[][] dx, double[][] dy, double[][] dxy) {
-    	double[][] values = new double[4][4];
+    private void fitter(float[][] dx, float[][] dy, float[][] dxy) {
+    	float[][] values = new float[4][4];
 
     	// First row
     	values[0][0] = this.points[0][0].getZ();
@@ -101,13 +101,13 @@ public class BicubicInterpolator implements Computable {
 		values[3][2] = dxy[1][0];
 		values[3][3] = dxy[1][1];
 
-    	double[][] res1 = MathLib.multiply(values, A);
+    	float[][] res1 = MathLib.multiply(values, A);
     	this.coefficients = MathLib.multiply(res1, B);
     }
 
 	@Override
-	public double getZ(double x, double y) {
-		double result = 0;
+	public float getZ(float x, float y) {
+		float result = 0;
 
 		x -= this.x0;
 		y -= this.y0;

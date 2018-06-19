@@ -20,8 +20,8 @@ public class Physics {
     private Course course;
     private Ball ball;
     private Collision collision;
-    private double[] offsets;
-    private double[] scales;
+    private float[] offsets;
+    private float[] scales;
     private boolean water;
     private boolean wall_stop;
     private List<Rectangle> walls;
@@ -68,7 +68,10 @@ public class Physics {
     }
 
     public void movement(Ball ball, float delta) {
+    }
 
+    public void checkCollision(Ball ball) {
+        this.collision.setBall(ball);
     }
 
     public float[] acceleration(float[] coord, float[] velocities) {
@@ -177,11 +180,11 @@ public class Physics {
     }
 
 
-    public void setOffsets(double[] offsets) {
+    public void setOffsets(float[] offsets) {
         this.offsets = offsets;
     }
 
-    public void setScales(double[] scales) {
+    public void setScales(float[] scales) {
         this.scales = scales;
     }
 
