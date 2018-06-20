@@ -24,6 +24,7 @@ import com.group.golf.math.BicubicInterpolator;
 import com.group.golf.math.MathLib;
 import com.group.golf.math.Point3D;
 import com.group.golf.modes.GameMode;
+import org.w3c.dom.css.Rect;
 
 import java.security.Key;
 import java.util.ArrayList;
@@ -224,6 +225,7 @@ public class CourseScreen implements Screen {
 
         // Render walls
         this.updateWallRegions();
+        this.checkWallPrint();
         this.checkWallDelete();
         this.renderWalls();
 
@@ -242,6 +244,20 @@ public class CourseScreen implements Screen {
         this.activeMode.render(this.game.batch);
     }
 
+    private void checkWallPrint() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            List<Rectangle> walls = this.course.getWalls();
+            if (!walls.isEmpty()) {
+                System.out.println("Current Walls: ");
+                for (Rectangle wall: this.course.getWalls()) {
+                    System.out.println(wall);
+                }
+            } else {
+                System.out.println("There are no walls...");
+            }
+        }
+    }
+
     private void checkWallDelete() {
         if (!this.started && Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             List<Rectangle> walls = this.course.getWalls();
@@ -249,10 +265,11 @@ public class CourseScreen implements Screen {
             boolean deleted = false;
             for (int i = walls.size() - 1; i >= 0 && !deleted; i--) {
                 if (walls.get(i).contains(new Vector2(mousePos.x, mousePos.y))) {
+                    Rectangle deletedWall = walls.get(i);
                     walls.remove(i);
                     this.wallsRegions.remove(i);
                     deleted = true;
-                    System.out.println("Wall Removed");
+                    System.out.println("Wall Removed: " + deletedWall);
                 }
             }
         }
