@@ -88,8 +88,6 @@ public class MultiplayerScreen implements Screen{
                 mode3.setTouchable(Touchable.disabled);
                 mode1.setTouchable(Touchable.disabled);
                 mode2.setTouchable(Touchable.disabled);
-
-                mode1.setTouchable(Touchable.disabled);
                 back.setTouchable(Touchable.disabled);
                 this.game.setScreen(new CourseSelectorScreen(this.game));
                 this.screen.dispose();
@@ -120,10 +118,7 @@ public class MultiplayerScreen implements Screen{
                 mode3.setTouchable(Touchable.disabled);
                 mode1.setTouchable(Touchable.disabled);
                 mode2.setTouchable(Touchable.disabled);
-
-             
                 back.setTouchable(Touchable.disabled);
-
 
                 Ball ball = new Ball(40);
                 Ball ball2 = new Ball(40);
@@ -164,8 +159,6 @@ public class MultiplayerScreen implements Screen{
                 mode3.setTouchable(Touchable.disabled);
                 mode1.setTouchable(Touchable.disabled);
                 mode2.setTouchable(Touchable.disabled);
-
-                mode1.setTouchable(Touchable.disabled);
                 back.setTouchable(Touchable.disabled);
 
                 Ball ball = new Ball(40);
@@ -204,8 +197,6 @@ public class MultiplayerScreen implements Screen{
                 mode3.setTouchable(Touchable.disabled);
                 mode1.setTouchable(Touchable.disabled);
                 mode2.setTouchable(Touchable.disabled);
-
-                mode1.setTouchable(Touchable.disabled);
                 back.setTouchable(Touchable.disabled);
 
                 Ball ball = new Ball(40);
