@@ -43,6 +43,7 @@ public class BotScreen implements Screen {
     TextButton martijn;
     TextButton dum;
     TextButton back;
+    TextButton pledge;
     Music menuMusic;
     OrthographicCamera cam;
     Texture background;
@@ -60,24 +61,28 @@ public class BotScreen implements Screen {
             martijn = new TextButton("Bot Martijn", skin);
             dum = new TextButton("Dumb Bot", skin);
             back = new TextButton("Back", skin);
+            pledge = new TextButton("Pledge", skin);
 
             genetic.setPosition(300, 400);
             random.setPosition(300, 300);
             martijn.setPosition(600, 400);
             dum.setPosition(600, 300);
             back.setPosition(100, 300);
+            pledge.setPosition(600, 400);
 
             genetic.setSize(200, 60);
             random.setSize(200, 60);
             martijn.setSize(200, 60);
             dum.setSize(200, 60);
             back.setSize(100, 60);
+            pledge.setSize(200, 60);
 
             stage.addActor(genetic);
             stage.addActor(random);
             //stage.addActor(martijn);
             stage.addActor(dum);
             stage.addActor(back);
+            stage.addActor(pledge);
 
             // Setup cam
             this.cam = new OrthographicCamera();
@@ -214,6 +219,50 @@ public class BotScreen implements Screen {
 
             }
             martijn.addListener(new MartijnListener(game, this, this.course, this.ball));
+            
+            class pledgeListener extends ChangeListener {
+                final Golf game;
+                private Screen screen;
+                private Course course;
+                private Ball ball;
+
+                public pledgeListener(final Golf game, Screen screen, Course course, Ball ball) {
+                    this.game = game;
+                    this.screen = screen;
+                    this.course = course;
+                    this.ball = ball;
+                }
+
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    genetic.setTouchable(Touchable.disabled);
+                    random.setTouchable(Touchable.disabled);
+                    martijn.setTouchable(Touchable.disabled);
+                    dum.setTouchable(Touchable.disabled);
+                    back.setTouchable(Touchable.disabled);
+                    GameMode gameMode;
+                    GameMode wallMode;
+                    if (pvb) {
+                        Ball[] balls = new Ball[]{this.ball, new Ball(this.ball)};
+                        Bot bot = new PledgeBot(course, balls[1]);
+                        gameMode = new PlayerVSBotMode(this.game, bot, this.course, balls);
+                        wallMode = new WallCreationMode(this.game, this.course, balls);
+                    } else {
+                        Bot bot = new PledgeBot(this.course, this.ball);
+                        Bot[] bots = new Bot[]{bot};
+                        Ball[] balls = new Ball[]{this.ball};
+                        gameMode = new UndefinedBotMode(this.game, bots, this.course, balls);
+                        wallMode = new WallCreationMode(this.game, this.course, balls);
+                    }
+                    this.game.setScreen(new CourseScreen(this.game, this.course, gameMode, wallMode));
+                    this.screen.dispose();
+                }
+
+            }
+            pledge.addListener(new pledgeListener(game, this, this.course, this.ball));
+            
+            
+            
             class DumBotListener extends ChangeListener {
                 final Golf game;
                 private Screen screen;

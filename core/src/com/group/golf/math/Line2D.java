@@ -2,7 +2,7 @@ package com.group.golf.math;
 
 /**
  * @author Julian Marrades
- * @version 0.1, 13-04-218
+ * @version 0.1, 13-04-2018
  * A class to represent a line in the XY plane
  */
 public class Line2D {

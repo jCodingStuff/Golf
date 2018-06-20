@@ -63,7 +63,7 @@ public class CourseSelectorScreen implements Screen {
         importbtn = new TextButton("Import", skin);
         design = new TextButton("Design", skin);
         scoreBoard = new TextButton("Score board", skin);
-        multiplayerbtn = new TextButton("Multiplayer", skin);
+        multiplayerbtn = new TextButton("Cooperative", skin);
 
         play.setPosition(275, 400);
         importbtn.setPosition(275, 300);
@@ -169,7 +169,7 @@ public class CourseSelectorScreen implements Screen {
             }
         }
         scoreBoard.addListener(new ScoreBoardListener(game, this));
-        
+
         class MultiListener extends ChangeListener{
             final Golf game;
             private Screen screen;
@@ -177,33 +177,8 @@ public class CourseSelectorScreen implements Screen {
                 this.game = game;
                 this.screen = screen;
             }
-            @Override
             public void changed (ChangeEvent event, Actor actor) {
-                String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                float[] start = new float[]{-2, 3};
-                float[] goal = new float[]{0, 1};
-
-                float[] start2 = new float[]{-1, 3};
-                float[] goal2 = new float[]{0, 2};
-                
-                Function function = new Function(formula);
-                Computable[][] functions = new Computable[1][1];
-                functions[0][0] = function;
-                Course course = new Course(functions, 9.81f, 0.95f, 80f, start, start2, goal, goal2, 0.5f);
-                design.setTouchable(Touchable.disabled);
-                importbtn.setTouchable(Touchable.disabled);
-                play.setTouchable(Touchable.disabled);
-                scoreBoard.setTouchable(Touchable.disabled);
-                multiplayerbtn.setTouchable(Touchable.disabled);
-
-                Ball ball = new Ball(40);
-                Ball ball2 = new Ball(40);
-                Ball[] balls = new Ball[]{ball, ball2};
-
-                GameMode gameMode = new TwoGoalsMode(this.game, course, balls);
-                GameMode wallMode = new WallCreationMode(this.game, course, balls);
-                this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
-
+                this.game.setScreen(new MultiplayerScreen(this.game));
                 this.screen.dispose();
             }
 

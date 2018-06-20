@@ -25,13 +25,13 @@ public class GeneticBot implements Bot {
 
 
 
-    private int counter = 0;
+    private int counter;
 
     private static final int POPULATION_SIZE = 100;
     private static final int DNA_LENGTH = 10;
     private static final float MAX_FORCE = 400;
 
-    private static final int GENERATION_LIMIT = 5;
+    private static final int GENERATION_LIMIT = 700;
     private static final double MUTATION_RATE = 0.01;
     private static float error;
 
@@ -43,6 +43,7 @@ public class GeneticBot implements Bot {
     private CrossOver crossOver;
     private Mutation mutation;
     private ScoreComputer computer;
+    private GoalChecker checker;
 
     /**
      * Create a new instance of GeneticBot
@@ -50,6 +51,7 @@ public class GeneticBot implements Bot {
      * @param ball the original ball
      */
     public GeneticBot(Course course, Ball ball) {
+        this.counter = 0;
         this.course = course;
 
         this.realBall = ball;
@@ -59,11 +61,12 @@ public class GeneticBot implements Bot {
         this.crossOver = new AverageCrossOver(this);
         this.mutation = new AlterMutation();
         this.computer = new WallScoreComputer();
+        this.checker = new MazeChecker(this);
     }
 
     @Override
     public void makeMove() {
-        if (this.counter <= this.winner.getLastMove()) {
+        if (this.counter < this.winner.getGenes().length) {
             while (this.counter < this.winner.getLandings().length &&
                     this.winner.getLandings()[this.counter+1].equals(this.winner.getLandings()[this.counter])) {
                 this.counter++;
@@ -103,10 +106,13 @@ public class GeneticBot implements Bot {
             int generations = gCounter + 1;
             System.out.println("Generations: " + generations);
             this.computer.compute(this.course, this.population);
-            if (this.goalReached()) {
+            if (this.checker.goalReached(this.course.getGoal(), this.population, this.virtualBall,
+                    this.virtualCollision)) {
+//                System.out.println("Generations: " + generations);
                 reached = true;
                 break;
             } else if (gCounter >= GENERATION_LIMIT) {
+//                System.out.println("Generations: " + generations);
                 break;
             }
             this.normalizeScore();
@@ -190,39 +196,6 @@ public class GeneticBot implements Bot {
     }
 
     /**
-     * Check if some individual has reached the goal without going through water
-     * @return
-     */
-    private boolean goalReached() {
-        boolean reached = false;
-        double recordDistance = Double.MAX_VALUE;
-        float[] goal = this.course.getGoal();
-        for (int i = 0; i < this.population.length && !reached; i++) {
-
-            // Get closest position to the goal for a given individual
-            int index = this.population[i].getLastMove() + 1;
-            JVector2 lastSpot = this.population[i].getLandings()[index];
-
-            // Compute distance to goal and register it
-            double dist = JVector2.dist(goal[0], goal[1], lastSpot.getX(), lastSpot.getY());
-            if (dist < recordDistance) {
-                this.winner = this.population[i];
-                recordDistance = dist;
-            }
-
-            // Check if goal has been reached
-            this.virtualBall.setPosition(lastSpot.getX(), lastSpot.getY());
-            if (this.engine.isGoalAchieved(virtualBall)) {
-                System.out.println("Ending position: " + lastSpot.getX() + " " + lastSpot.getY());
-                System.out.println("Goal: " + goal[0] + " " + goal[1]);
-                reached = true;
-            }
-
-        }
-        return reached;
-    }
-
-    /**
      * Fill landing spots
      * @param forces the array of forces to apply
      * @param landings the array to fill using the landing spots
@@ -234,7 +207,8 @@ public class GeneticBot implements Bot {
             // small random error for the force applied to the ball
             double min = 0.999;
             double max= 1.001;
-            error = (float)(min+ Math.random() * (max-min));
+            //error = MathLib.randomDouble(min, max);
+            error = 1;
             this.simulateShot(forces[i-1]);
             landings[i] = new JVector2(this.virtualBall.getX()*error, this.virtualBall.getY()*error);
         }
@@ -248,7 +222,8 @@ public class GeneticBot implements Bot {
         // small random error for the force applied to the ball
         double min = 0.999;
         double max= 1.001;
-        error = (float)(min+ Math.random() * (max-min));
+        //error = MathLib.randomDouble(min, max);
+        error = 1;
         force.multiply(error);
         this.engine.hit(virtualBall,force.getX(), force.getY());
         while (this.virtualBall.isMoving()) {
@@ -264,5 +239,13 @@ public class GeneticBot implements Bot {
     // GETTER AND SETTER AREA
     public Course getCourse() {
         return course;
+    }
+
+    public Individual getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Individual winner) {
+        this.winner = winner;
     }
 }

@@ -145,7 +145,7 @@ public class Collision {
         if (Math.abs(this.ball.getVelocityX()) <= STOP_CONDITION &&
                 Math.abs(this.ball.getVelocityY()) <= STOP_CONDITION) {
             this.ball.reset();
-            System.out.println("Ball stopping because of the wall!");
+            //System.out.println("Ball stopping because of the wall!");
             return true;
         } else {
             return false;
