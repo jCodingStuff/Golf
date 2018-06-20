@@ -1,5 +1,6 @@
 package com.group.golf.listeners;
 
+
 public class HighScoreTester {
     ScoreListener score = new ScoreListener();
     public static void main(String[] args){
