@@ -27,10 +27,10 @@ public class GeneticBot implements Bot {
     private int counter = 0;
 
     private static final int POPULATION_SIZE = 100;
-    private static final int DNA_LENGTH = 10;
+    private static final int DNA_LENGTH = 20;
     private static final double MAX_FORCE = 400;
 
-    private static final int GENERATION_LIMIT = 5;
+    private static final int GENERATION_LIMIT = 500;
     private static final double MUTATION_RATE = 0.01;
     private static double error;
 
@@ -56,12 +56,12 @@ public class GeneticBot implements Bot {
 
         this.crossOver = new AverageCrossOver(this);
         this.mutation = new AlterMutation();
-        this.computer = new WallScoreComputer();
+        this.computer = new InverseScoreComputer();
     }
 
     @Override
     public void makeMove() {
-        if (this.counter <= this.winner.getLastMove()) {
+        if (this.counter <= this.winner.getGenes().length) {
             while (this.counter < this.winner.getLandings().length &&
                     this.winner.getLandings()[this.counter+1].equals(this.winner.getLandings()[this.counter])) {
                 this.counter++;
@@ -99,12 +99,14 @@ public class GeneticBot implements Bot {
         int gCounter = 0;
         while (true) {
             int generations = gCounter + 1;
-            System.out.println("Generations: " + generations);
+            //System.out.println("Generations: " + generations);
             this.computer.compute(this.course, this.population);
             if (this.goalReached()) {
+                System.out.println("Generations: " + generations);
                 reached = true;
                 break;
             } else if (gCounter >= GENERATION_LIMIT) {
+                System.out.println("Generations: " + generations);
                 break;
             }
             this.normalizeScore();
