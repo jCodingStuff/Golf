@@ -115,6 +115,7 @@ public class PlayerVSBotMode extends GameMode {
 
             // Check if the goal is achieved
             if (this.engine.isGoalAchieved(currentBall)) {
+                System.out.println("Ball landed: " + currentBall.getX() + " " + currentBall.getY());
                 this.informWinner();
                 this.winSound.play();
                 try { Thread.sleep(3000); }
@@ -139,7 +140,7 @@ public class PlayerVSBotMode extends GameMode {
             }
             return true;
         } else {
-            this.engine.movement(currentBall,Gdx.graphics.getDeltaTime());
+            this.engine.movement(currentBall, Golf.DELTA);
             return true;
         }
     }

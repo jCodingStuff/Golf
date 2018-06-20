@@ -111,6 +111,7 @@ public class UndefinedPlayerMode extends GameMode {
 
             // Check if the goal is achieved
             if (this.engine.isGoalAchieved(currentBall)) {
+                System.out.println("Ball landed: " + currentBall.getX() + " " + currentBall.getY());
                 this.informWinner();
                 this.winSound.play();
                 try { Thread.sleep(3000); }
@@ -128,7 +129,7 @@ public class UndefinedPlayerMode extends GameMode {
             this.userInput(cam);
             return true;
         } else {
-            this.engine.movement(currentBall,Gdx.graphics.getDeltaTime());
+            this.engine.movement(currentBall, Golf.DELTA);
             return true;
         }
     }

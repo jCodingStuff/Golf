@@ -26,6 +26,7 @@ public class MazeChecker implements GoalChecker {
                 // Compute distance to goal and register it
                 double dist = JVector2.dist(goal[0], goal[1], spot.getX(), spot.getY());
                 if (dist < recordDistance) {
+                    population[i].setLastMove(j-1);
                     this.bot.setWinner(population[i]);
                     recordDistance = dist;
                 }

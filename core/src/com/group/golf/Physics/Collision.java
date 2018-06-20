@@ -74,14 +74,14 @@ public class Collision {
         double vy = this.ball.getVelocityY();
         if ((ballX < Ball.RADIUS && vx < 0) || (ballX > Golf.VIRTUAL_WIDTH - Ball.RADIUS && vx > 0)) {
             this.ball.invertVelocityX();
-            System.out.println("Hitting side wall");
-            System.out.println("BallX: " + ballX + ", BallY" + ballY);
+//            System.out.println("Hitting side wall");
+//            System.out.println("BallX: " + ballX + ", BallY" + ballY);
 
         }
         if ((ballY < Ball.RADIUS && vy < 0) || (ballY > Golf.VIRTUAL_HEIGHT - Ball.RADIUS && vy > 0)) {
             this.ball.invertVelocityY();
-            System.out.println("Hitting up wall");
-            System.out.println("BallX: " + ballX + ", BallY" + ballY);
+//            System.out.println("Hitting up wall");
+//            System.out.println("BallX: " + ballX + ", BallY" + ballY);
 
         }
     }
@@ -89,19 +89,19 @@ public class Collision {
     public boolean checkForGraphicWalls(double ballX, double ballY, List<Rectangle> rects) {
         for (Rectangle wall : rects) {
             if (this.hittingWallRight(ballX, ballY, wall)) { // Hitting by the right
-                System.out.println("Hitting by the right!");
+//                System.out.println("Hitting by the right!");
                 if (this.stopConditions()) return false;
                 this.ball.invertVelocityX();
             } else if (this.hittingWallLeft(ballX, ballY, wall)) { // Hitting by the left
-                System.out.println("Hitting by the left!");
+//                System.out.println("Hitting by the left!");
                 if (this.stopConditions()) return false;
                 this.ball.invertVelocityX();
             } else if (this.hittingWallTop(ballX, ballY, wall)) { // Hitting from the top
-                System.out.println("Hitting by the top!");
+//                System.out.println("Hitting by the top!");
                 if (this.stopConditions()) return false;
                 this.ball.invertVelocityY();
             } else if (this.hittingWallBottom(ballX, ballY, wall)) { // Hitting from the bottom
-                System.out.println("Hitting by the bottom!");
+//                System.out.println("Hitting by the bottom!");
                 if (this.stopConditions()) return false;
                 this.ball.invertVelocityY();
             }

@@ -3,6 +3,7 @@ package com.group.golf.ai;
 import com.badlogic.gdx.Gdx;
 import com.group.golf.Ball;
 import com.group.golf.Course;
+import com.group.golf.Golf;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
 import com.group.golf.genetics.*;
@@ -27,9 +28,8 @@ public class GeneticBot implements Bot {
 
     private int counter;
 
-    private static final int POPULATION_SIZE = 100;
-    private static final int DNA_LENGTH = 10;
-    private static final float MAX_FORCE = 400;
+    private static final int POPULATION_SIZE = 200;
+    private static final int DNA_LENGTH = 20;
 
     private static final int GENERATION_LIMIT = 700;
     private static final double MUTATION_RATE = 0.01;
@@ -37,6 +37,7 @@ public class GeneticBot implements Bot {
 
     private Individual[] population;
     private Individual winner;
+    private float vMax;
 
 
     // Algorithms
@@ -53,6 +54,7 @@ public class GeneticBot implements Bot {
     public GeneticBot(Course course, Ball ball) {
         this.counter = 0;
         this.course = course;
+        this.vMax = this.course.getVmax();
 
         this.realBall = ball;
         this.virtualBall = new Ball(ball);
@@ -81,6 +83,7 @@ public class GeneticBot implements Bot {
     @Override
     public void setPhysics(Physics physics) {
         this.engine = physics;
+        this.startEvolution();
 //        this.virtualEngine = new Physics(physics);
 //        this.virtualEngine.setBall(this.virtualBall);
     }
@@ -175,8 +178,8 @@ public class GeneticBot implements Bot {
         JVector2[] landings = new JVector2[DNA_LENGTH + 1];
         landings[0] = new JVector2(this.course.getStart()[0], this.course.getStart()[1]);
         for (int i = 0; i < DNA_LENGTH; i++) {
-            float forceX = MathLib.randomFloat(-MAX_FORCE, MAX_FORCE);
-            float forceY = MathLib.randomFloat(-MAX_FORCE, MAX_FORCE);
+            float forceX = MathLib.randomFloat(-this.vMax, this.vMax);
+            float forceY = MathLib.randomFloat(-this.vMax, this.vMax);
             genes[i] = new JVector2(forceX, forceY);
         }
         this.fillLandings(genes, landings);
@@ -227,7 +230,7 @@ public class GeneticBot implements Bot {
         force.multiply(error);
         this.engine.hit(virtualBall,force.getX(), force.getY());
         while (this.virtualBall.isMoving()) {
-            this.engine.movement(virtualBall,0.04f);
+            this.engine.movement(virtualBall, Golf.DELTA);
             if (this.engine.isWater()) {
                 this.virtualBall.setX(this.engine.getHitCoord()[0]);
                 this.virtualBall.setY(this.engine.getHitCoord()[1]);

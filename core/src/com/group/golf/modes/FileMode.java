@@ -103,6 +103,7 @@ public class FileMode extends GameMode {
         if (!this.ball.isMoving()) {
             // Check if the goal is achieved
             if (this.engine.isGoalAchieved(ball)) {
+                System.out.println("Ball landed: " + ball.getX() + " " + ball.getY());
                 this.winSound.play();
                 try { Thread.sleep(3000); }
                 catch (Exception e) {}
@@ -117,7 +118,7 @@ public class FileMode extends GameMode {
             if (this.counter < this.moves.size() && Gdx.input.isKeyPressed(Input.Keys.SPACE)) this.readMove();
             return true;
         } else {
-            this.engine.movement(ball,Gdx.graphics.getDeltaTime());
+            this.engine.movement(ball, Golf.DELTA);
             return true;
         }
     }

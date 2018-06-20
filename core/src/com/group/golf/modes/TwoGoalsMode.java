@@ -60,11 +60,13 @@ public class TwoGoalsMode extends GameMode {
 
     private void setUpBalls() {
     	// Ball1
+        this.balls[0].reset();
     	this.balls[0].setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
     	this.balls[0].setX(this.course.getStart()[0]);
     	this.balls[0].setY(this.course.getStart()[1]);
     	
     	// Ball2
+        this.balls[1].reset();
     	this.balls[1].setTexture(new Texture(Gdx.files.internal("ball_soccer3.png")));
     	this.balls[1].setX(this.course.getStart2()[0]);
     	this.balls[1].setY(this.course.getStart2()[1]);
@@ -91,7 +93,6 @@ public class TwoGoalsMode extends GameMode {
         for (int i = 0; i < this.balls.length; i++) {
             this.balls[i].render(batch, this.ballsPixels[i].getX(), this.ballsPixels[i].getY());
         }
-        this.distanceCheck(balls[0], balls[1]);
     }
 
     @Override
@@ -109,7 +110,7 @@ public class TwoGoalsMode extends GameMode {
         if (this.counter >= this.balls.length) this.counter = 0;
     }
     
-    public void distanceCheck(Ball a, Ball b) {
+    public boolean distanceCheck(Ball a, Ball b) {
     	float x1 = a.getX();
     	float y1 = a.getY();
     	float x2 = b.getX();
@@ -120,7 +121,10 @@ public class TwoGoalsMode extends GameMode {
     	if (distance > distanceLimit) {
             setUpBalls();
             System.out.println("Distance limit exceeded!");
-    	}
+            return true;
+    	} else {
+    	    return false;
+        }
     }
 
     @Override
@@ -130,6 +134,7 @@ public class TwoGoalsMode extends GameMode {
 
             // Check if the goal is achieved
             if (this.engine.isGoalAchieved(balls[0]) && this.engine.isGoalAchieved2(balls[1])) {
+                System.out.println("Ball landed: " + currentBall.getX() + " " + currentBall.getY());
                 this.informWinner();
                 this.winSound.play();
                 try { Thread.sleep(3000); }
@@ -140,14 +145,15 @@ public class TwoGoalsMode extends GameMode {
             // If landed print
             if (this.landed) {
                 System.out.println("Ball landed: " + currentBall.getX() + " " + currentBall.getY());
+                boolean goBack = this.distanceCheck(balls[0], balls[1]);
                 this.landed = false;
-                this.incrementCounter();
+                if (!goBack) this.incrementCounter();
             }
             // Make a move
             this.userInput(cam);
             return true;
         } else {
-            this.engine.movement(currentBall,Gdx.graphics.getDeltaTime());
+            this.engine.movement(currentBall, Golf.DELTA);
             return true;
         }
     }

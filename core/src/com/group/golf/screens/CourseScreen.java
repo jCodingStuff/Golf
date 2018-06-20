@@ -77,8 +77,8 @@ public class CourseScreen implements Screen {
         this.setupCommon();
 
 
-        System.out.println("Offsets x: " + xoffset + "  y: " + yoffset);
-        System.out.println("Scales  x: " + scaleX + "   y: " + scaleY);
+        System.out.println("Offsets: [" + xoffset + ", " + yoffset + "]");
+        System.out.println("Scales: [" + scaleX + ", " + scaleY + "]");
         this.course.setOffsets(new float[]{this.xoffset, this.yoffset});
         this.course.setScales(new float[]{this.scaleX, this.scaleY});
         this.activeMode.setOffsets(new float[]{this.xoffset, this.yoffset});
