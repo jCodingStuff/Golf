@@ -69,7 +69,7 @@ public class MultiplayerScreen implements Screen{
         stage.addActor(mode3);
         stage.addActor(mode2);
         stage.addActor(mode1);
-        
+
 
         // Setup button listeners
         class BackListener extends ChangeListener {
@@ -103,16 +103,19 @@ public class MultiplayerScreen implements Screen{
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                double[] start = new double[]{-2, 3};
-                double[] goal = new double[]{0, 1};
+                double[] start = new double[]{-3, 5};
+                double[] goal = new double[]{0, 2};
 
-                double[] start2 = new double[]{-1, 3};
-                double[] goal2 = new double[]{0, 2};
+                double[] start2 = new double[]{-3, 4};
+                double[] goal2 = new double[]{0, 5};
 
                 Function function = new Function(formula);
                 Computable[][] functions = new Computable[1][1];
                 functions[0][0] = function;
                 Course course = new Course(functions, 9.81, 0.95, 80, start, start2, goal, goal2, 0.5);
+                course.addWall(new Rectangle(491,221,69,280));
+                course.addWall(new Rectangle(550,317,444,76));
+                course.addWall(new Rectangle(365,6,60,442));
 
                 mode3.setTouchable(Touchable.disabled);
                 mode1.setTouchable(Touchable.disabled);
@@ -123,7 +126,7 @@ public class MultiplayerScreen implements Screen{
                 Ball ball2 = new Ball(40);
                 Ball[] balls = new Ball[]{ball, ball2};
 
-                GameMode gameMode = new TwoGoalsMode(this.game, course, balls);
+                GameMode gameMode = new TwoGoalsMode(this.game, course, balls, 2.5);
                 GameMode wallMode = new WallCreationMode(this.game, course, balls);
                 this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
 
@@ -184,7 +187,7 @@ public class MultiplayerScreen implements Screen{
                 Ball ball2 = new Ball(40);
                 Ball[] balls = new Ball[]{ball, ball2};
 
-                GameMode gameMode = new TwoGoalsMode(this.game, course, balls);
+                GameMode gameMode = new TwoGoalsMode(this.game, course, balls, 2.5);
                 GameMode wallMode = new WallCreationMode(this.game, course, balls);
                 this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
 
@@ -222,7 +225,7 @@ public class MultiplayerScreen implements Screen{
                 Ball ball2 = new Ball(40);
                 Ball[] balls = new Ball[]{ball, ball2};
 
-                GameMode gameMode = new TwoGoalsMode(this.game, course, balls);
+                GameMode gameMode = new TwoGoalsMode(this.game, course, balls, 2.5);
                 GameMode wallMode = new WallCreationMode(this.game, course, balls);
                 this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
 
