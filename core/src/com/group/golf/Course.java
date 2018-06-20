@@ -335,14 +335,6 @@ public class Course {
     public void setScales(float[] scales) {
         this.scales = scales;
     }
-    
-    public double[] getOffsets() {
-    	return offsets;
-    }
-    
-    public double[] getScales() {
-    	return scales;
-    }
 
     public float[] getOffsets() {
         return offsets;

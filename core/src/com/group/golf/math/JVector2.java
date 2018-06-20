@@ -135,10 +135,13 @@ public class JVector2 {
 
     public static float dotProduct(JVector2 vector1, JVector2 vector2) {
         float result = vector1.getX() * vector2.getX() + vector1.getY() * vector2.getY();
-    public static double dist2(double x1, double y1, double x2, double y2) {
-        double intervalX = x2 - x1;
-        double intervalY = y2 - y1;
-        double distance = Math.pow(intervalX, 2) + Math.pow(intervalY, 2);
+        return result;
+    }
+
+    public static float dist2(float x1, float y1, float x2, float y2) {
+        float intervalX = x2 - x1;
+        float intervalY = y2 - y1;
+        float distance = (float)(Math.pow(intervalX, 2) + Math.pow(intervalY, 2));
         return distance;
     }
 

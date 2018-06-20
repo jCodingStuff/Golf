@@ -107,7 +107,7 @@ public class GeneticBot implements Bot {
             System.out.println("Generations: " + generations);
             this.computer.compute(this.course, this.population);
             if (this.checker.goalReached(this.course.getGoal(), this.population, this.virtualBall,
-                    this.virtualCollision)) {
+                    this.engine.getCollision())) {
 //                System.out.println("Generations: " + generations);
                 reached = true;
                 break;

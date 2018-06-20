@@ -14,7 +14,7 @@ public class SimpleChecker implements GoalChecker {
     }
 
     @Override
-    public boolean goalReached(double[] goal, Individual[] population, Ball virtualBall, Collision virtualCollision) {
+    public boolean goalReached(float[] goal, Individual[] population, Ball virtualBall, Collision virtualCollision) {
         boolean reached = false;
         double recordDistance = Double.MAX_VALUE;
         Individual winner = population[0];

@@ -167,6 +167,11 @@ public class Physics {
         return collision.isGoalAchieved();
     }
 
+    public boolean isGoalAchieved2(Ball ball) {
+        collision.setBall(ball);
+        return collision.isGoalAchieved2();
+    }
+
     /**
      * Set a new value for the Vector2 instance
      * @param hitCoord the new Vector2 instance
@@ -192,6 +197,9 @@ public class Physics {
     	this.walls = walls;
     }
 
+    public Collision getCollision() {
+        return collision;
+    }
 
     public void setCollision(Collision collision) {
         this.collision = collision;

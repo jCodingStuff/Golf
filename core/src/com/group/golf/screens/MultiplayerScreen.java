@@ -103,16 +103,16 @@ public class MultiplayerScreen implements Screen{
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                double[] start = new double[]{-3, 5};
-                double[] goal = new double[]{0, 2};
+                float[] start = new float[]{-3, 5};
+                float[] goal = new float[]{0, 2};
 
-                double[] start2 = new double[]{-3, 4};
-                double[] goal2 = new double[]{0, 5};
+                float[] start2 = new float[]{-3, 4};
+                float[] goal2 = new float[]{0, 5};
 
                 Function function = new Function(formula);
                 Computable[][] functions = new Computable[1][1];
                 functions[0][0] = function;
-                Course course = new Course(functions, 9.81, 0.95, 80, start, start2, goal, goal2, 0.5);
+                Course course = new Course(functions, 9.81f, 0.95f, 80f, start, start2, goal, goal2, 0.5f);
                 course.addWall(new Rectangle(491,221,69,280));
                 course.addWall(new Rectangle(550,317,444,76));
                 course.addWall(new Rectangle(365,6,60,442));
@@ -148,16 +148,16 @@ public class MultiplayerScreen implements Screen{
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 String formula = " x + 10 + x ^ 2 * 0.4";
-                double[] start = new double[]{-0.3, 2};
-                double[] goal = new double[]{5, 5};
+                float[] start = new float[]{-0.3f, 2};
+                float[] goal = new float[]{5, 5};
 
-                double[] start2 = new double[]{-0.3, 3};
-                double[] goal2 = new double[]{2, 4};
+                float[] start2 = new float[]{-0.3f, 3};
+                float[] goal2 = new float[]{2, 4};
 
                 Function function = new Function(formula);
                 Computable[][] functions = new Computable[1][1];
                 functions[0][0] = function;
-                Course course = new Course(functions, 4.11, 0.95, 80, start, start2, goal, goal2, 0.5);
+                Course course = new Course(functions, 4.11f, 0.95f, 80f, start, start2, goal, goal2, 0.5f);
                 course.addWall(new Rectangle(144,-6,54,364));
                 course.addWall(new Rectangle(6,581,33,112));
                 course.addWall(new Rectangle(146,607,48,60));
@@ -206,16 +206,16 @@ public class MultiplayerScreen implements Screen{
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                double[] start = new double[]{-2, 3};
-                double[] goal = new double[]{0, 1};
+                float[] start = new float[]{-2, 3};
+                float[] goal = new float[]{0, 1};
 
-                double[] start2 = new double[]{-1, 3};
-                double[] goal2 = new double[]{0, 3};
+                float[] start2 = new float[]{-1, 3};
+                float[] goal2 = new float[]{0, 3};
 
                 Function function = new Function(formula);
                 Computable[][] functions = new Computable[1][1];
                 functions[0][0] = function;
-                Course course = new Course(functions, 9.81, 0.95, 80, start, start2, goal, goal2, 0.5);
+                Course course = new Course(functions, 9.81f, 0.95f, 80f, start, start2, goal, goal2, 0.5f);
                 course.addWall(new Rectangle(523, 384, 49, 246));
                 course.addWall(new Rectangle(220, 616, 294, 35));
                 course.addWall(new Rectangle(222, 414, 56, 202));
