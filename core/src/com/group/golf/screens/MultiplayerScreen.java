@@ -34,7 +34,6 @@ public class MultiplayerScreen implements Screen{
 //    private final Ball ball;
 
     private TextButton mode3;
-    private TextButton mode4;
     private TextButton mode2;
     private TextButton mode1;
 
@@ -52,14 +51,13 @@ public class MultiplayerScreen implements Screen{
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         back = new TextButton("Back", skin);
         mode3 = new TextButton("Mode 3", skin);
-        mode4 = new TextButton("Mode 4", skin);
         mode2 = new TextButton("Mode 2", skin);
         mode1 = new TextButton("Mode 1", skin);
 
         back.setPosition(100, 300);
-        mode3.setPosition(300, 300);
-        mode2.setPosition(600, 400);
-        mode1.setPosition(300, 400);
+        mode3.setPosition(400, 200);
+        mode2.setPosition(400, 300);
+        mode1.setPosition(400, 400);
 
         back.setSize(100, 60);
         mode3.setSize(200, 60);
@@ -69,10 +67,9 @@ public class MultiplayerScreen implements Screen{
 
         stage.addActor(back);
         stage.addActor(mode3);
-        stage.addActor(mode4);
         stage.addActor(mode2);
         stage.addActor(mode1);
-        
+
 
         // Setup button listeners
         class BackListener extends ChangeListener {
@@ -150,22 +147,37 @@ public class MultiplayerScreen implements Screen{
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                String formula = "1 + 0.3 * x + 0.4 * x ^ 2";
-                double[] start = new double[]{-2, 3};
-                double[] goal = new double[]{0, 1};
+                String formula = " x + 10 + x ^ 2 * 0.4";
+                double[] start = new double[]{-0.3, 2};
+                double[] goal = new double[]{5, 5};
 
-                double[] start2 = new double[]{-1, 3};
-                double[] goal2 = new double[]{0, 2};
+                double[] start2 = new double[]{-0.3, 3};
+                double[] goal2 = new double[]{2, 4};
 
                 Function function = new Function(formula);
                 Computable[][] functions = new Computable[1][1];
                 functions[0][0] = function;
-                Course course = new Course(functions, 9.81, 0.95, 2, start, start2, goal, goal2, 0.5);
-                course.addWall(new Rectangle(120,221,80,280));
-                course.addWall(new Rectangle(0,700,100,76));
-                course.addWall(new Rectangle(365,6,60,442));
-
-
+                Course course = new Course(functions, 4.11, 0.95, 80, start, start2, goal, goal2, 0.5);
+                course.addWall(new Rectangle(144,-6,54,364));
+                course.addWall(new Rectangle(6,581,33,112));
+                course.addWall(new Rectangle(146,607,48,60));
+                course.addWall(new Rectangle(244,651,36,42));
+                course.addWall(new Rectangle(71,658,39,39));
+                course.addWall(new Rectangle(328,601,49,67));
+                course.addWall(new Rectangle(411,658,37,35));
+                course.addWall(new Rectangle(280,206,304,38));
+                course.addWall(new Rectangle(508,237,74,435));
+                course.addWall(new Rectangle(280,39,44,165));
+                course.addWall(new Rectangle(370,0,49,180));
+                course.addWall(new Rectangle(587,206,93,49));
+                course.addWall(new Rectangle(575,209,31,47));
+                course.addWall(new Rectangle(681,453,42,92));
+                course.addWall(new Rectangle(79,562,426,52));
+                course.addWall(new Rectangle(79,408,49,153));
+                course.addWall(new Rectangle(22,412,62,34));
+                course.addWall(new Rectangle(476,64,52,140));
+                course.addWall(new Rectangle(624,319,36,86));
+                course.addWall(new Rectangle( 625,557,35,73));
                 mode3.setTouchable(Touchable.disabled);
                 mode1.setTouchable(Touchable.disabled);
                 mode2.setTouchable(Touchable.disabled);
@@ -223,7 +235,6 @@ public class MultiplayerScreen implements Screen{
       mode3.addListener(new Mode3Listener(this.game, this));
 
 
-
         // Setup cam
         this.cam = new OrthographicCamera();
         this.cam.setToOrtho(false, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
@@ -249,7 +260,6 @@ public class MultiplayerScreen implements Screen{
 
         this.cam.update();
         this.game.batch.setProjectionMatrix(this.cam.combined);
-
         this.game.batch.begin();
         this.game.batch.draw(this.background, 0, 0, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
         this.game.batch.end();
