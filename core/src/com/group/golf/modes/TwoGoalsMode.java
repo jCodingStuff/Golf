@@ -129,7 +129,7 @@ public class TwoGoalsMode extends GameMode {
         if (!currentBall.isMoving()) {
 
             // Check if the goal is achieved
-            if (this.engine.isGoalAchieved(balls[0]) && this.engine.isGoalAchieved(balls[1])) {
+            if (this.engine.isGoalAchieved(balls[0]) && this.engine.isGoalAchieved2(balls[1])) {
                 this.informWinner();
                 this.winSound.play();
                 try { Thread.sleep(3000); }
