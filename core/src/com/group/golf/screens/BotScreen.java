@@ -68,7 +68,7 @@ public class BotScreen implements Screen {
             martijn.setPosition(600, 400);
             dum.setPosition(600, 300);
             back.setPosition(100, 300);
-            pledge.setPosition(300, 200);
+            pledge.setPosition(600, 400);
 
             genetic.setSize(200, 60);
             random.setSize(200, 60);
