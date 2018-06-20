@@ -30,14 +30,20 @@ public class RK4 extends Physics {
                 ball.getVelocityY() + (k1.accelerationY + 3 * k2.accelerationY + 3 * k3.accelerationY + k4.accelerationY)/8};
 
 
-        ball.setVelocities(newVelocities);
+        float error = 0.01f;
+        if (Math.abs(newVelocities[0] - ball.getVelocityX()) < error && Math.abs(newVelocities[1] - ball.getVelocityY()) < error) {
+            ball.reset();
+        } else {
+            ball.setVelocities(newVelocities);
+        }
 
         ball.setCoords(newCoordinates);
 
         super.checkCollision(ball);
         ball.limit(super.getCourse().getVmax());
 
-        System.out.println("RK4 Velocity x:     " + newVelocities[0] + "   Velocity y:     " + newVelocities[1]);
+
+//        System.out.println("RK4 Velocity x:     " + newVelocities[0] + "   Velocity y:     " + newVelocities[1]);
 
     }
 

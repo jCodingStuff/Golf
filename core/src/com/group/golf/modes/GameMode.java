@@ -25,12 +25,10 @@ abstract public class GameMode {
 
     public void setOffsets(float[] offsets) {
         this.offsets = offsets;
-        this.engine.setOffsets(this.offsets);
     }
 
     public void setScales(float[] scales) {
         this.scales = scales;
-        this.engine.setOffsets(this.scales);
     }
 
     public abstract void dispose();

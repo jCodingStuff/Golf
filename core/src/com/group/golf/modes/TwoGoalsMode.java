@@ -170,6 +170,10 @@ public class TwoGoalsMode extends GameMode {
             if (this.firstX != this.lastX || this.lastY != this.firstY) {
                 float xLength = Math.abs(lastX - firstX);
                 float yLength = Math.abs(lastY - firstY);
+
+                xLength = MathLib.map(xLength, 0, 600, 0, this.course.getVmax());
+                yLength = MathLib.map(yLength, 0, 600, 0, this.course.getVmax());
+
                 if (lastX < firstX)
                     xLength *= -1;
                 if (lastY < firstY)

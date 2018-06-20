@@ -175,6 +175,9 @@ public class PlayerVSBotMode extends GameMode {
                 float xLength = Math.abs(lastX - firstX);
                 float yLength = Math.abs(lastY - firstY);
 
+                xLength = MathLib.map(xLength, 0, 600, 0, this.course.getVmax());
+                yLength = MathLib.map(yLength, 0, 600, 0, this.course.getVmax());
+
                 if (lastX < firstX)
                     xLength *= -1;
                 if (lastY < firstY)
@@ -206,7 +209,6 @@ public class PlayerVSBotMode extends GameMode {
     @Override
     public void setScales(float[] scales) {
         this.scales = scales;
-        this.engine.setScales(scales);
         this.setUpBot();
     }
 

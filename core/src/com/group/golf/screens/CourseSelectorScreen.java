@@ -110,7 +110,7 @@ public class CourseSelectorScreen implements Screen {
                 Function function = new Function(formula);
                 Computable[][] functions = new Computable[1][1];
                 functions[0][0] = function;
-                Course course = new Course(functions, 9.81f, 0.95f, 80f, start, goal, 0.5f);
+                Course course = new Course(functions, 9.81f, 0.95f, 15.0f, start, goal, 0.5f);
                 design.setTouchable(Touchable.disabled);
                 importbtn.setTouchable(Touchable.disabled);
                 play.setTouchable(Touchable.disabled);

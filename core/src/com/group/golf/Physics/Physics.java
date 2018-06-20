@@ -176,14 +176,6 @@ public class Physics {
     }
 
 
-    public void setOffsets(float[] offsets) {
-        this.course.setOffsets(offsets);
-    }
-
-    public void setScales(float[] scales) {
-        this.course.setScales(scales);
-    }
-
     public boolean isWater() {
         if (water)  {
             water = false;

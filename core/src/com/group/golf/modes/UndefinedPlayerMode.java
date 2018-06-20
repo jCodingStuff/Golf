@@ -154,12 +154,16 @@ public class UndefinedPlayerMode extends GameMode {
                 float xLength = Math.abs(lastX - firstX);
                 float yLength = Math.abs(lastY - firstY);
 
+                xLength = MathLib.map(xLength, 0, 600, 0, this.course.getVmax());
+                yLength = MathLib.map(yLength, 0, 600, 0, this.course.getVmax());
+
                 if (lastX < firstX)
                     xLength *= -1;
                 if (lastY < firstY)
                     yLength *= -1;
 
                 double modulus = Math.sqrt(Math.pow((lastX - firstX), 2) + Math.pow((lastY - firstY), 2));
+
 
                 xLength *= this.scales[0] * CourseScreen.SCALE_MULTIPLIER;
                 yLength *= this.scales[1] * CourseScreen.SCALE_MULTIPLIER;

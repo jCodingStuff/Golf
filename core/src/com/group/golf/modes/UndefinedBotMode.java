@@ -179,7 +179,6 @@ public class UndefinedBotMode extends GameMode {
     @Override
     public void setScales(float[] scales) {
         this.scales = scales;
-        this.engine.setScales(scales);
         this.setUpBots();
     }
 
