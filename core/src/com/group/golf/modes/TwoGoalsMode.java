@@ -39,14 +39,15 @@ public class TwoGoalsMode implements GameMode {
 
     private boolean landed;
     private int counter;
-    private double distanceLimit = 2.5;
+    private double distanceLimit;
     private boolean touchFlag;
     private int firstX;
     private int firstY;
     private int lastX;
     private int lastY;
 
-    public TwoGoalsMode(Golf game, Course course, Ball[] balls) {
+    public TwoGoalsMode(Golf game, Course course, Ball[] balls, double distanceLimit) {
+        this.distanceLimit = distanceLimit;
         this.game = game;
         this.course = course;
         this.balls = balls;
