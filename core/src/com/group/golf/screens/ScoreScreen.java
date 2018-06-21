@@ -104,6 +104,21 @@ class ScoreScreen implements Screen {
         this.game.batch.begin();
         this.game.batch.draw(this.background, 0, 0, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
         this.subTitleFont.draw(this.game.batch, "Highscores", 350, 600);
+
+        try{
+            int lineCounter = 600;
+            FileHandle file = Gdx.files.internal("scores.txt");
+            String text = file.readString();
+            String[] splitStr = text.split("\\s+");
+
+            for (int i=0; i<5; i++) {
+                for (int j = 0; j < text.length(); j++) {
+                    lineCounter = lineCounter - 100;
+                    this.subTitleFont.draw(this.game.batch, splitStr[j], 450, lineCounter);
+                }
+            }
+        } catch (Exception e){ System.out.println("File Not Found."); }
+
         this.game.batch.end();
 
         stage.act(delta);

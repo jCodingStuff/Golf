@@ -19,6 +19,7 @@ import com.group.golf.math.Point3D;
 import com.group.golf.screens.CourseScreen;
 import com.group.golf.screens.CourseSelectorScreen;
 
+
 public class TwoGoalsMode extends GameMode {
 
     private final Golf game;
@@ -128,7 +129,7 @@ public class TwoGoalsMode extends GameMode {
     }
 
     @Override
-    public boolean move(OrthographicCamera cam) {
+    public boolean move(OrthographicCamera cam){
         Ball currentBall = this.balls[this.counter];
         if (!currentBall.isMoving()) {
 
