@@ -118,6 +118,7 @@ class ScoreScreen implements Screen {
                 }
             }
         } catch (Exception e){ System.out.println("File Not Found."); }
+
         this.game.batch.end();
 
         stage.act(delta);

@@ -149,6 +149,25 @@ public class Course {
             }
         }
     }
+    
+    public boolean isWaterBetween(Point3D a, Point3D b) {
+        Line2D path = new Line2D(a, b);
+        boolean water = false;
+        if (b.getX() >= a.getX()) { // B is on the right of A
+            for (float x = a.getX(); x <= b.getX() && !water; x += STEP) {
+                if (this.getHeight(x, path.getY(x)) < 0) { // Ball in water
+                    water = true;
+                }
+            }
+        } else { // B is on the left of A
+            for (float x = b.getX(); x <= a.getX() && !water; x += STEP) {
+                if (this.getHeight(x, path.getY(x)) < 0) { // Ball in water
+                    water = true;
+                }
+            }
+        }
+        return water;
+    }
 
     /**
      * Get access to the gravity

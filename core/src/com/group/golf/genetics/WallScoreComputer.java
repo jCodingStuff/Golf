@@ -20,7 +20,13 @@ public class WallScoreComputer implements ScoreComputer {
 //            System.out.println("WALLS: " + wallNum);
 
             population[i].setLastMove(index - 1);
-            double score = (1/dist) + (1/(1+wallNum));
+            float water;
+            if (course.isWaterBetween(new Point3D(goal[0], goal[1], 0), new Point3D(spot.getX(), spot.getY(), 0))) {
+                water = 1;
+            } else {
+                water = 0;
+            }
+            double score = (1/dist) + (1/(1+wallNum)) + (1/(1+water));
             population[i].setScore(score);
         }
     }
