@@ -80,7 +80,7 @@ public class Physics {
         float[] ballPixels = MathLib.toPixel(new float[]{this.ball.getX(), this.ball.getY()}, this.course.getOffsets(),
                 this.course.getScales());
         this.collision.checkForWalls(ballPixels[0], ballPixels[1]);
-        if (!this.collision.checkForGraphicWalls(ballPixels[0], ballPixels[1], walls)) this.wall_stop = true;
+        this.collision.checkForGraphicWalls(ballPixels[0], ballPixels[1], walls);
 
         if (this.collision.ballInWater()) {
             ball.reset();

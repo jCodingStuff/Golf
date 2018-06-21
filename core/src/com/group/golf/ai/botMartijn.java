@@ -111,7 +111,7 @@ public class botMartijn implements Bot {
 
         //needs adjusting
         private double waterScore(Point3D ballPoint, Point3D goal){
-            if (this.collision.isWaterBetween(ballPoint, goal))
+            if (this.course.isWaterBetween(ballPoint, goal))
                 return Double.NEGATIVE_INFINITY;
 
             else {

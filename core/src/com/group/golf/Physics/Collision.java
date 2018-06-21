@@ -19,7 +19,7 @@ import java.util.List;
 public class Collision {
 
     private static final float STEP = 0.001f;
-    private static final float STOP_CONDITION = 0.05f;
+    private static final float STOP_CONDITION = 0.1f;
 
     private Ball ball;
     private final Course course;
@@ -86,27 +86,26 @@ public class Collision {
         }
     }
     
-    public boolean checkForGraphicWalls(float ballX, float ballY, List<Rectangle> rects) {
+    public void checkForGraphicWalls(float ballX, float ballY, List<Rectangle> rects) {
         for (Rectangle wall : rects) {
             if (this.hittingWallRight(ballX, ballY, wall)) { // Hitting by the right
 //                System.out.println("Hitting by the right!");
-                if (this.stopConditions()) return false;
+                this.stopConditions();
                 this.ball.invertVelocityX();
             } else if (this.hittingWallLeft(ballX, ballY, wall)) { // Hitting by the left
 //                System.out.println("Hitting by the left!");
-                if (this.stopConditions()) return false;
+                this.stopConditions();
                 this.ball.invertVelocityX();
             } else if (this.hittingWallTop(ballX, ballY, wall)) { // Hitting from the top
 //                System.out.println("Hitting by the top!");
-                if (this.stopConditions()) return false;
+                this.stopConditions();
                 this.ball.invertVelocityY();
             } else if (this.hittingWallBottom(ballX, ballY, wall)) { // Hitting from the bottom
 //                System.out.println("Hitting by the bottom!");
-                if (this.stopConditions()) return false;
+                this.stopConditions();
                 this.ball.invertVelocityY();
             }
         }
-        return true;
     }
 
     private boolean hittingWallRight(float ballX, float ballY, Rectangle wall) {
@@ -141,14 +140,10 @@ public class Collision {
                 this.ball.getVelocityY() > 0);
     }
 
-    private boolean stopConditions() {
+    private void stopConditions() {
         if (Math.abs(this.ball.getVelocityX()) <= STOP_CONDITION &&
                 Math.abs(this.ball.getVelocityY()) <= STOP_CONDITION) {
             this.ball.reset();
-            //System.out.println("Ball stopping because of the wall!");
-            return true;
-        } else {
-            return false;
         }
     }
    
@@ -191,30 +186,30 @@ public class Collision {
         return water;
     }
 
-    /**
-     * Check if there is water in the straight line that joins two points
-     * @param a a Point3D instance
-     * @param b a Point3D instance
-     * @return
-     */
-    public boolean isWaterBetween(Point3D a, Point3D b) {
-        Line2D path = new Line2D(a, b);
-        boolean water = false;
-        if (b.getX() >= a.getX()) { // B is on the right of A
-            for (float x = a.getX(); x <= b.getX() && !water; x += STEP) {
-                if (this.course.getHeight(x, path.getY(x)) < 0) { // Ball in water
-                    water = true;
-                }
-            }
-        } else { // B is on the left of A
-            for (float x = b.getX(); x <= a.getX() && !water; x += STEP) {
-                if (this.course.getHeight(x, path.getY(x)) < 0) { // Ball in water
-                    water = true;
-                }
-            }
-        }
-        return water;
-    }
+//    /**
+//     * Check if there is water in the straight line that joins two points
+//     * @param a a Point3D instance
+//     * @param b a Point3D instance
+//     * @return
+//     */
+//    public boolean isWaterBetween(Point3D a, Point3D b) {
+//        Line2D path = new Line2D(a, b);
+//        boolean water = false;
+//        if (b.getX() >= a.getX()) { // B is on the right of A
+//            for (float x = a.getX(); x <= b.getX() && !water; x += STEP) {
+//                if (this.course.getHeight(x, path.getY(x)) < 0) { // Ball in water
+//                    water = true;
+//                }
+//            }
+//        } else { // B is on the left of A
+//            for (float x = b.getX(); x <= a.getX() && !water; x += STEP) {
+//                if (this.course.getHeight(x, path.getY(x)) < 0) { // Ball in water
+//                    water = true;
+//                }
+//            }
+//        }
+//        return water;
+//    }
 
     public Ball getBall() {
         return ball;
