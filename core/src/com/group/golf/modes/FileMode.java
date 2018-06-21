@@ -133,7 +133,7 @@ public class FileMode extends GameMode {
                 (float)(forceY * this.scales[1] * CourseScreen.SCALE_MULTIPLIER));
         this.landed = true;
         this.counter++;
-        this.hitSound.play();
+        this.hitSound.play(Golf.HIT_VOLUME);
     }
 
     @Override

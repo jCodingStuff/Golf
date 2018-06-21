@@ -21,6 +21,7 @@ public class Golf extends Game {
 	public static final int VIRTUAL_WIDTH = 1000;
 	public static final int VIRTUAL_HEIGHT = 700;
 	public static final float DELTA = 0.01666666666f;
+	public static final float HIT_VOLUME = 0.6f;
 
 	public SpriteBatch batch;
 	public BitmapFont font;

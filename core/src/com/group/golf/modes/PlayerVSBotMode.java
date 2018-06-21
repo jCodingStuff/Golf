@@ -150,7 +150,7 @@ public class PlayerVSBotMode extends GameMode {
         this.bot.makeMove();
         this.landed = true;
         System.out.println("Bot moves!");
-        this.hitSound.play();
+        this.hitSound.play(Golf.HIT_VOLUME);
     }
 
     private void informWinner() {
@@ -193,7 +193,7 @@ public class PlayerVSBotMode extends GameMode {
                 this.engine.hit(balls[this.counter], xLength, yLength);
                 this.landed = true;
 
-                this.hitSound.play();
+                this.hitSound.play(Golf.HIT_VOLUME);
 
 //                int playerNum = this.counter + 1;
                 System.out.println("Human moved!");

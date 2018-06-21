@@ -243,7 +243,7 @@ public class TwoGoalsMode extends GameMode {
                 this.engine.hit(balls[this.counter],xLength, yLength);
                 this.landed = true;
 
-                this.hitSound.play();
+                this.hitSound.play(Golf.HIT_VOLUME);
 
                 System.out.println("Counter: " + this.counter);
 

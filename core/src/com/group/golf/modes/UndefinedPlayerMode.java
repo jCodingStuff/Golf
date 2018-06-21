@@ -172,7 +172,7 @@ public class UndefinedPlayerMode extends GameMode {
                 this.engine.hit(balls[this.counter],xLength, yLength);
                 this.landed = true;
 
-                this.hitSound.play();
+                this.hitSound.play(Golf.HIT_VOLUME);
 
                 int playerNum = this.counter + 1;
                 System.out.println("Player " + playerNum + " moved!");

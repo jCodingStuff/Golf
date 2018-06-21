@@ -153,7 +153,7 @@ public class UndefinedBotMode extends GameMode {
         this.bots[this.counter].makeMove();
         this.informMove();
         this.landed = true;
-        this.hitSound.play();
+        this.hitSound.play(Golf.HIT_VOLUME);
     }
 
     private void informMove() {
