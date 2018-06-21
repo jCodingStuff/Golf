@@ -148,7 +148,7 @@ public class GMath {
      * @param y the value for y
      * @return the output of the function
      */
-    public double compute(double x, double y) {
+    public float compute(double x, double y) {
         Stack<Double> stack = new Stack<Double>();
         StringTokenizer tokenizer = new StringTokenizer(this.formula);
         while (tokenizer.hasMoreTokens()) {
@@ -179,7 +179,8 @@ public class GMath {
                 stack.push(result);
             }
         }
-        return stack.pop();
+        double output = stack.pop();
+        return (float) output;
     }
 
     @Override

@@ -2,21 +2,43 @@ package com.group.golf.modes;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.group.golf.Course;
+import com.group.golf.Physics.Euler;
+import com.group.golf.Physics.Physics;
+import com.group.golf.Physics.RK4;
 
-public interface GameMode {
+abstract public class GameMode {
 
-    void render(Batch batch);
+    protected float[] offsets;
+    protected float[] scales;
 
-    boolean move(OrthographicCamera cam);
+    protected Physics engine;
+    protected Course course;
 
-    void water();
+    public abstract void render(Batch batch);
 
-    void extraChecks();
+    public abstract boolean move(OrthographicCamera cam);
 
-    void setOffsets(double[] offsets);
+//    public abstract void water();
 
-    void setScales(double[] scales);
+    public abstract void extraChecks();
 
-    void dispose();
+    public void setOffsets(float[] offsets) {
+        this.offsets = offsets;
+    }
+
+    public void setScales(float[] scales) {
+        this.scales = scales;
+    }
+
+    public abstract void dispose();
+
+    protected void setUpPhysics(String diffMethod) {
+        if (diffMethod.equals("RK4")) {
+            this.engine = new RK4(this.course);
+        } else {
+            this.engine = new Euler(this.course);
+        }
+    }
 
 }

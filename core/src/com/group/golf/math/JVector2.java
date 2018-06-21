@@ -2,11 +2,11 @@ package com.group.golf.math;
 
 public class JVector2 {
 
-    private double x;
-    private double y;
-    private double magnitude;
+    private float x;
+    private float y;
+    private float magnitude;
 
-    public JVector2(double x, double y) {
+    public JVector2(float x, float y) {
         this.x = x;
         this.y = y;
         this.updateMagnitude();
@@ -19,10 +19,10 @@ public class JVector2 {
     }
 
     private void updateMagnitude() {
-        this.magnitude = Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+        this.magnitude = (float)Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
     }
 
-    public double getX() {
+    public float getX() {
         return x;
     }
 
@@ -34,7 +34,7 @@ public class JVector2 {
         return (int) x;
     }
 
-    public double getY() {
+    public float getY() {
         return y;
     }
 
@@ -46,17 +46,17 @@ public class JVector2 {
         return (int) y;
     }
 
-    public double getMagnitude() {
+    public float getMagnitude() {
         return this.magnitude;
     }
 
-    public void multiply(double scalar) {
+    public void multiply(float scalar) {
         x = x * scalar;
         y = y * scalar;
         magnitude = magnitude * scalar;
     }
 
-    public void divide(double scalar) {
+    public void divide(float scalar) {
         x = x / scalar;
         y = y / scalar;
         magnitude = magnitude / scalar;
@@ -68,30 +68,30 @@ public class JVector2 {
         magnitude = 1;
     }
 
-    public void setMagnitude(double number) {
+    public void setMagnitude(float number) {
         this.normalize();
         this.multiply(number);
     }
 
-    public void limit(double value) {
+    public void limit(float value) {
         if (this.getMagnitude() > value) {
             this.setMagnitude(value);
         }
     }
 
     public void swap() {
-        double tmp = this.x;
+        float tmp = this.x;
         this.x = this.y;
         this.y = tmp;
     }
 
-    public void setPosition(double x, double y) {
+    public void setPosition(float x, float y) {
         this.x = x; this.y = y;
     }
 
     public static JVector2 opposite(JVector2 vector) {
-        double invX = vector.y;
-        double invY = vector.x;
+        float invX = vector.y;
+        float invY = vector.x;
         return new JVector2(invX, invY);
     }
 
@@ -108,41 +108,48 @@ public class JVector2 {
     }
 
     public static JVector2 add2Vecs(JVector2 vector1, JVector2 vector2) {
-        double sumX = vector1.getX() + vector2.getX();
-        double sumY = vector1.getY() + vector2.getY();
+        float sumX = vector1.getX() + vector2.getX();
+        float sumY = vector1.getY() + vector2.getY();
         return new JVector2(sumX, sumY);
     }
 
     public static JVector2 sub2Vecs(JVector2 vector1, JVector2 vector2) {
-        double subX = vector1.getX() - vector2.getX();
-        double subY = vector1.getY() - vector2.getY();
+        float subX = vector1.getX() - vector2.getX();
+        float subY = vector1.getY() - vector2.getY();
         return new JVector2(subX, subY);
     }
 
-    public static double dist2Vecs(JVector2 vector1, JVector2 vector2) {
-        double intervalX = vector2.getX() - vector1.getX();
-        double intervalY = vector2.getY() - vector1.getY();
-        double distance = Math.sqrt(Math.pow(intervalX, 2) + Math.pow(intervalY, 2));
+    public static float dist2Vecs(JVector2 vector1, JVector2 vector2) {
+        float intervalX = vector2.getX() - vector1.getX();
+        float intervalY = vector2.getY() - vector1.getY();
+        float distance = (float)Math.sqrt(Math.pow(intervalX, 2) + Math.pow(intervalY, 2));
         return distance;
     }
 
-    public static double dist(double x1, double y1, double x2, double y2) {
-        double intervalX = x2 - x1;
-        double intervalY = y2 - y1;
-        double distance = Math.sqrt(Math.pow(intervalX, 2) + Math.pow(intervalY, 2));
+    public static float dist(float x1, float y1, float x2, float y2) {
+        float intervalX = x2 - x1;
+        float intervalY = y2 - y1;
+        float distance = (float)Math.sqrt(Math.pow(intervalX, 2) + Math.pow(intervalY, 2));
         return distance;
     }
 
-    public static double dotProduct(JVector2 vector1, JVector2 vector2) {
-        double result = vector1.getX() * vector2.getX() + vector1.getY() * vector2.getY();
+    public static float dotProduct(JVector2 vector1, JVector2 vector2) {
+        float result = vector1.getX() * vector2.getX() + vector1.getY() * vector2.getY();
         return result;
     }
 
-    public static double angleBetween(JVector2 vector1, JVector2 vector2) { //Gives the angle in radians
-        double topPart = dotProduct(vector1, vector2);
-        double botPart = vector1.getMagnitude() * vector2.getMagnitude();
-        double cosine = topPart / botPart;
-        return Math.acos(cosine);
+    public static float dist2(float x1, float y1, float x2, float y2) {
+        float intervalX = x2 - x1;
+        float intervalY = y2 - y1;
+        float distance = (float)(Math.pow(intervalX, 2) + Math.pow(intervalY, 2));
+        return distance;
+    }
+
+    public static float angleBetween(JVector2 vector1, JVector2 vector2) { //Gives the angle in radians
+        float topPart = dotProduct(vector1, vector2);
+        float botPart = vector1.getMagnitude() * vector2.getMagnitude();
+        float cosine = topPart / botPart;
+        return (float)Math.acos(cosine);
     }
 
     @Override
