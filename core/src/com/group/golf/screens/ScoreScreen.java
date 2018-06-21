@@ -3,6 +3,7 @@ package com.group.golf.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -103,13 +104,6 @@ class ScoreScreen implements Screen {
         this.game.batch.begin();
         this.game.batch.draw(this.background, 0, 0, Golf.VIRTUAL_WIDTH, Golf.VIRTUAL_HEIGHT);
         this.subTitleFont.draw(this.game.batch, "Highscores", 350, 600);
-
-        try{
-            FileReader f = new FileReader("scores.txt");
-            BufferedReader b = new BufferedReader(f);
-            String line = b.readLine();
-            this.subTitleFont.draw(this.game.batch, line, 600, 600);
-        } catch (Exception e){ System.out.println("File Not Found."); }
         this.game.batch.end();
 
         stage.act(delta);
