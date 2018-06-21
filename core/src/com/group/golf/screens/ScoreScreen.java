@@ -117,7 +117,7 @@ class ScoreScreen implements Screen {
                     this.subTitleFont.draw(this.game.batch, splitStr[j], 450, lineCounter);
                 }
             }
-        } catch (Exception e){ System.out.println("File Not Found."); }
+        } catch (Exception e){  }
 
         this.game.batch.end();
 

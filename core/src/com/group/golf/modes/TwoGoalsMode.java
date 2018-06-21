@@ -155,19 +155,17 @@ public class TwoGoalsMode extends GameMode {
         }
         System.out.println("position "+position);
         String output = "";
+        boolean added = false;
         for (int i = 0; i < scores.length; i++) {
 
             if (i == position){
                 output += modScore + " ";
+                added = true;
+            }
+            else if(added)
+                output += scores[i-1] + " ";
+            else
                 output += scores[i] + " ";
-                i++;
-            }
-            else if(i == scores.length-1){
-                output += scores[i-1];
-            }
-            else{
-                output += scores[i] + " ";
-            }
         }
         System.out.print(output);
         scoreFile.writeString(output,false);
