@@ -214,13 +214,12 @@ public class PledgeBot implements Bot {
     // Check for movement repetition
    private boolean repetition(float[] tracker) {
 	   boolean isRepeating = false;
-
-	   float[] loc1 = new float[] {tracker[tracker.length - 2], tracker[tracker.length - 1]};
-	   float[] loc2 = new float[] {tracker[tracker.length - 4], tracker[tracker.length - 3]};
-	   float[] loc3 = new float[] {tracker[tracker.length - 6], tracker[tracker.length - 5]};
-	   float[] loc4 = new float[] {tracker[tracker.length - 8], tracker[tracker.length - 7]};
-	   float[] loc5 = new float[] {tracker[tracker.length - 10], tracker[tracker.length - 9]};
-
+	   float[] loc1 = new float[] {(float) Math.round(tracker[tracker.length - 2] * 10) / 10, (float) Math.round(tracker[tracker.length - 1] * 10) / 10};
+	   float[] loc2 = new float[] {(float) Math.round(tracker[tracker.length - 4] * 10) / 10, (float) Math.round(tracker[tracker.length - 3] * 10) / 10};
+	   float[] loc3 = new float[] {(float) Math.round(tracker[tracker.length - 6] * 10) / 10, (float) Math.round(tracker[tracker.length - 5] * 10) / 10};
+	   float[] loc4 = new float[] {(float) Math.round(tracker[tracker.length - 8] * 10) / 10, (float) Math.round(tracker[tracker.length - 7] * 10) / 10};
+	   float[] loc5 = new float[] {(float) Math.round(tracker[tracker.length - 10] * 10) / 10, (float) Math.round(tracker[tracker.length - 9] * 10) / 10};
+	   
 	   if ((loc1[0] == loc2[0]) &&  (loc1[1] == loc2[1]) && (loc1[0] == loc3[0]) && (loc1[1] == loc3[1])) {
 		   isRepeating = true;
 	   }
