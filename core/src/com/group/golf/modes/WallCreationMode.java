@@ -132,7 +132,7 @@ public class WallCreationMode extends GameMode {
         // Setup balls collision
         this.ballsCollision = new Circle[this.balls.length];
         for (int i = 0; i < this.ballsCollision.length; i++) {
-            this.ballsCollision[i] = new Circle((float) this.ballsPixels[i].getX(), (float) this.ballsPixels[i].getY(),
+            this.ballsCollision[i] = new Circle(this.ballsPixels[i].getX(), this.ballsPixels[i].getY(),
                     Ball.RADIUS);
         }
     }

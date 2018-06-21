@@ -25,7 +25,7 @@ public class PlayerVSBotMode extends GameMode {
     private final Golf game;
 
     private Sound hitSound;
-    private Sound loseSound;
+//    private Sound loseSound;
     private Sound winSound;
 
     private Bot bot;
@@ -59,6 +59,7 @@ public class PlayerVSBotMode extends GameMode {
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
 //        this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
         this.winSound = Gdx.audio.newSound(Gdx.files.internal("success_2.wav"));
+
     }
 
 
@@ -111,7 +112,7 @@ public class PlayerVSBotMode extends GameMode {
     @Override
     public boolean move(OrthographicCamera cam) {
         Ball currentBall = this.balls[this.counter];
-        if (currentBall.isMoving()) {
+        if (!currentBall.isMoving()) {
 
             // Check if the goal is achieved
             if (this.engine.isGoalAchieved(currentBall)) {
@@ -133,7 +134,6 @@ public class PlayerVSBotMode extends GameMode {
 
             // Make a move
             if (this.counter == 0) {
-                System.out.println("Looking for user imput!");
                 this.userInput(cam);
             }
             else if (this.counter == 1 && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
@@ -141,7 +141,7 @@ public class PlayerVSBotMode extends GameMode {
             }
             return true;
         } else {
-            this.engine.movement(Golf.DELTA);
+            this.engine.movement(Golf.DELTA, false);
             return true;
         }
     }
@@ -222,7 +222,6 @@ public class PlayerVSBotMode extends GameMode {
     public void dispose() {
         this.hitSound.dispose();
         this.winSound.dispose();
-        this.loseSound.dispose();
     }
 
 }

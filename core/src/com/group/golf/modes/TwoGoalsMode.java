@@ -24,7 +24,7 @@ public class TwoGoalsMode extends GameMode {
     private final Golf game;
 
     private Sound hitSound;
-    private Sound loseSound;
+//    private Sound loseSound;
     private Sound winSound;
 
     private Ball[] balls;
@@ -153,7 +153,7 @@ public class TwoGoalsMode extends GameMode {
             this.userInput(cam);
             return true;
         } else {
-            this.engine.movement(Golf.DELTA);
+            this.engine.movement(Golf.DELTA, false);
             return true;
         }
     }
@@ -215,6 +215,5 @@ public class TwoGoalsMode extends GameMode {
     public void dispose() {
         this.hitSound.dispose();
         this.winSound.dispose();
-        this.loseSound.dispose();
     }
 }

@@ -28,7 +28,7 @@ public class FileMode extends GameMode {
     private final Golf game;
 
     private Sound hitSound;
-    private Sound loseSound;
+//    private Sound loseSound;
     private Sound winSound;
 
     private Physics engine;
@@ -118,7 +118,7 @@ public class FileMode extends GameMode {
             if (this.counter < this.moves.size() && Gdx.input.isKeyPressed(Input.Keys.SPACE)) this.readMove();
             return true;
         } else {
-            this.engine.movement(Golf.DELTA);
+            this.engine.movement(Golf.DELTA, false);
             return true;
         }
     }
@@ -146,6 +146,5 @@ public class FileMode extends GameMode {
     public void dispose() {
         this.hitSound.dispose();
         this.winSound.dispose();
-        this.loseSound.dispose();
     }
 }

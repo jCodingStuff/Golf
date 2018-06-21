@@ -148,7 +148,7 @@ public class botMartijn implements Bot {
         private void simulateShot(JVector2 force) {
             this.virtualEngine.hit(virtualBall,(float)force.getX(), (float)force.getY());
             while (this.virtualBall.isMoving()) {
-                this.engine.movement(Golf.DELTA);
+                this.engine.movement(Golf.DELTA, true);
 //                if (this.engine.isWater()) {
 //                    this.virtualBall.setX(this.engine.getHitCoord()[0]);
 //                    this.virtualBall.setY(this.engine.getHitCoord()[1]);

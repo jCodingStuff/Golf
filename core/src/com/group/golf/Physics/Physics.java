@@ -72,11 +72,11 @@ public class Physics {
 
     }
 
-    public void movement(float delta) {
+    public void movement(float delta, boolean simulation) {
         System.out.println("No differential equation created");
     }
 
-    public void checkCollision() {
+    public void checkCollision(boolean simulation) {
         float[] ballPixels = MathLib.toPixel(new float[]{this.ball.getX(), this.ball.getY()}, this.course.getOffsets(),
                 this.course.getScales());
         this.collision.checkForWalls(ballPixels[0], ballPixels[1]);
@@ -86,7 +86,7 @@ public class Physics {
             ball.reset();
             this.ball.setX(hitCoord[0]);
             this.ball.setY(hitCoord[1]);
-            loseSound.play(0.2f);
+            if (!simulation) loseSound.play(0.2f);
             water = true;
         }
     }

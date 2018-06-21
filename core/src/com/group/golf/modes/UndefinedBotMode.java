@@ -25,7 +25,7 @@ public class UndefinedBotMode extends GameMode {
     private Bot[] bots;
 
     private Sound hitSound;
-    private Sound loseSound;
+//    private Sound loseSound;
     private Sound winSound;
 
     private Ball[] balls;
@@ -129,7 +129,7 @@ public class UndefinedBotMode extends GameMode {
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) this.botMove();
             return true;
         } else {
-            this.engine.movement(Golf.DELTA);
+            this.engine.movement(Golf.DELTA, false);
             return true;
         }
     }
@@ -187,6 +187,5 @@ public class UndefinedBotMode extends GameMode {
     public void dispose() {
         this.hitSound.dispose();
         this.winSound.dispose();
-        this.loseSound.dispose();
     }
 }
