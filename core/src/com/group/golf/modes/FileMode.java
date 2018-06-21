@@ -58,7 +58,7 @@ public class FileMode extends GameMode {
 
         // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
-        this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
+//        this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
         this.winSound = Gdx.audio.newSound(Gdx.files.internal("success_2.wav"));
     }
 
@@ -89,14 +89,14 @@ public class FileMode extends GameMode {
         this.ball.render(batch, this.ball.getX(), this.ball.getY());
     }
 
-    @Override
-    public void water() {
-        if (this.engine.isWater()) {
-            this.ball.setX(engine.getHitCoord()[0]);
-            this.ball.setY(engine.getHitCoord()[1]);
-            this.loseSound.play(0.2f);
-        }
-    }
+//    @Override
+//    public void water() {
+//        if (this.engine.isWater()) {
+//            this.ball.setX(engine.getHitCoord()[0]);
+//            this.ball.setY(engine.getHitCoord()[1]);
+//            this.loseSound.play(0.2f);
+//        }
+//    }
 
     @Override
     public boolean move(OrthographicCamera cam) {
@@ -118,7 +118,7 @@ public class FileMode extends GameMode {
             if (this.counter < this.moves.size() && Gdx.input.isKeyPressed(Input.Keys.SPACE)) this.readMove();
             return true;
         } else {
-            this.engine.movement(ball, Golf.DELTA);
+            this.engine.movement(Golf.DELTA);
             return true;
         }
     }

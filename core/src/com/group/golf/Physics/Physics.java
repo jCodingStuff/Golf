@@ -1,6 +1,7 @@
 package com.group.golf.Physics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Rectangle;
 import com.group.golf.Ball;
 import com.group.golf.Course;
@@ -23,6 +24,10 @@ public class Physics {
     private boolean water;
     private boolean wall_stop;
     private List<Rectangle> walls;
+
+    private static final Sound loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
+
+    private Ball ball;
 
     public static float[] hitCoord;
 
@@ -53,30 +58,35 @@ public class Physics {
      * @param yLength the length that the mouse was dragged vertically
      */
     public void hit(Ball ball, float xLength, float yLength) {
+        this.ball = ball;
+        this.collision.setBall(this.ball);
         water = false;
 
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
 
-        ball.setVelocityX(xLength);
-        ball.setVelocityY(yLength);
+        this.ball.setVelocityX(xLength);
+        this.ball.setVelocityY(yLength);
 
-        ball.limit(this.course.getVmax());
+        this.ball.limit(this.course.getVmax());
 
     }
 
-    public void movement(Ball ball, float delta) {
+    public void movement(float delta) {
         System.out.println("No differential equation created");
     }
 
-    public void checkCollision(Ball ball) {
-        this.collision.setBall(ball);
-        float[] ballPixels = MathLib.toPixel(new float[]{ball.getX(),ball.getY()},this.course.getOffsets(),this.course.getScales());
+    public void checkCollision() {
+        float[] ballPixels = MathLib.toPixel(new float[]{this.ball.getX(), this.ball.getY()}, this.course.getOffsets(),
+                this.course.getScales());
         this.collision.checkForWalls(ballPixels[0], ballPixels[1]);
         if (!this.collision.checkForGraphicWalls(ballPixels[0], ballPixels[1], walls)) this.wall_stop = true;
 
         if (this.collision.ballInWater()) {
             ball.reset();
+            this.ball.setX(hitCoord[0]);
+            this.ball.setY(hitCoord[1]);
+            loseSound.play(0.2f);
             water = true;
         }
     }
@@ -203,5 +213,13 @@ public class Physics {
 
     public void setCollision(Collision collision) {
         this.collision = collision;
+    }
+
+    public Ball getBall() {
+        return ball;
+    }
+
+    public void setBall(Ball ball) {
+        this.ball = ball;
     }
 }

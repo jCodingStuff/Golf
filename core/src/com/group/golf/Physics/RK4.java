@@ -14,7 +14,8 @@ public class RK4 extends Physics {
 
     //method to be overwritten by each subclass
     //RK4
-    public void movement(Ball ball, float delta) {
+    public void movement(float delta) {
+        Ball ball = super.getBall();
         derivative k1,k2,k3,k4;
 
         k1 = new derivative(ball,delta);
@@ -39,7 +40,7 @@ public class RK4 extends Physics {
 
         ball.setCoords(newCoordinates);
 
-        super.checkCollision(ball);
+        super.checkCollision();
         ball.limit(super.getCourse().getVmax());
 
 

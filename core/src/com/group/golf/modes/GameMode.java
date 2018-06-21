@@ -19,7 +19,7 @@ abstract public class GameMode {
 
     public abstract boolean move(OrthographicCamera cam);
 
-    public abstract void water();
+//    public abstract void water();
 
     public abstract void extraChecks();
 

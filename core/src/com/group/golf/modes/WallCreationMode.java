@@ -86,8 +86,8 @@ public class WallCreationMode extends GameMode {
         }
     }
 
-    @Override
-    public void water() {}
+//    @Override
+//    public void water() {}
 
     @Override
     public boolean move(OrthographicCamera cam) {

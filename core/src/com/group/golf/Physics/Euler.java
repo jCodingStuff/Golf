@@ -9,7 +9,8 @@ public class Euler extends Physics {
         super(course);
     }
 
-    public void movement(Ball ball, float delta) {
+    public void movement(float delta) {
+        Ball ball = super.getBall();
         float[] newCoords = new float[2];
         float[] newVelocities = new float[2];
 
@@ -26,7 +27,7 @@ public class Euler extends Physics {
 
         ball.setVelocities(newVelocities);
 
-        super.checkCollision(ball);
+        super.checkCollision();
 
         System.out.println("Euler Velocity x:     " + newVelocities[0] + "   Velocity y:     " + newVelocities[1]);
 

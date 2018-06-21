@@ -230,11 +230,11 @@ public class GeneticBot implements Bot {
         force.multiply(error);
         this.engine.hit(virtualBall,force.getX(), force.getY());
         while (this.virtualBall.isMoving()) {
-            this.engine.movement(virtualBall, Golf.DELTA);
-            if (this.engine.isWater()) {
-                this.virtualBall.setX(this.engine.getHitCoord()[0]);
-                this.virtualBall.setY(this.engine.getHitCoord()[1]);
-            }
+            this.engine.movement(Golf.DELTA);
+//            if (this.engine.isWater()) {
+//                this.virtualBall.setX(this.engine.getHitCoord()[0]);
+//                this.virtualBall.setY(this.engine.getHitCoord()[1]);
+//            }
         }
     }
 

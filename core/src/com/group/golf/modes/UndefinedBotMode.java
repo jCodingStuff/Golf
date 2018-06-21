@@ -48,7 +48,7 @@ public class UndefinedBotMode extends GameMode {
 
         // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
-        this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
+//        this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
         this.winSound = Gdx.audio.newSound(Gdx.files.internal("success_2.wav"));
     }
 
@@ -90,15 +90,15 @@ public class UndefinedBotMode extends GameMode {
         }
     }
 
-    @Override
-    public void water() {
-        Ball ball = this.balls[this.counter];
-        if (engine.isWater()) {
-            ball.setX(engine.getHitCoord()[0]);
-            ball.setY(engine.getHitCoord()[1]);
-            this.loseSound.play(0.2f);
-        }
-    }
+//    @Override
+//    public void water() {
+//        Ball ball = this.balls[this.counter];
+//        if (engine.isWater()) {
+//            ball.setX(engine.getHitCoord()[0]);
+//            ball.setY(engine.getHitCoord()[1]);
+//            this.loseSound.play(0.2f);
+//        }
+//    }
 
     private void incrementCounter() {
         this.counter++;
@@ -129,7 +129,7 @@ public class UndefinedBotMode extends GameMode {
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) this.botMove();
             return true;
         } else {
-            this.engine.movement(currentBall, Golf.DELTA);
+            this.engine.movement(Golf.DELTA);
             return true;
         }
     }

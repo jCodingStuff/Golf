@@ -240,7 +240,7 @@ public class CourseScreen implements Screen {
         boolean moved = this.activeMode.move(this.cam);
         if (!moved) this.dispose(); // Goal reached
 
-        this.activeMode.water();
+//        this.activeMode.water();
 
         this.activeMode.extraChecks();
 

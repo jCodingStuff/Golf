@@ -222,5 +222,7 @@ public class Collision {
 
     public void setBall(Ball ball) {
         this.ball = ball;
+        this.lastX = this.ball.getX();
+        this.lastY = this.ball.getY();
     }
 }
