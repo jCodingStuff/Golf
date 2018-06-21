@@ -9,13 +9,13 @@ import java.io.IOException;
 import com.group.golf.Golf;
 
     public class ScoreListener {
-//    FileHandle scoreFile;
+    FileHandle scoreFile;
 
 
     public ScoreListener() {
 
-//   this.scoreFile =
-//            (Gdx.files.classpath("scores.txt"));
+   this.scoreFile =
+            (Gdx.files.local("scores.txt"));
 //        new FileHandle("scores.txt");
 
 
@@ -24,13 +24,12 @@ import com.group.golf.Golf;
 
     public void addScore(String name, int score) {
 
-        try {
-            FileReader f = new FileReader("scores.txt");
-            BufferedReader b = new BufferedReader(f);
-            String line = b.readLine();
-//        String reader = scoreFile.readString();
-            String[] scores = line.split(" ");
-
+//        try {
+//            FileReader f = new FileReader("scores.txt");
+//            BufferedReader b = new BufferedReader(f);
+//            String line = b.readLine();
+            String reader = scoreFile.readString();
+            String[] scores = reader.split(" ");
             String modScore = Integer.toString(score);
 
             int position = 1;
@@ -48,8 +47,8 @@ import com.group.golf.Golf;
                     output += name + " " + modScore + " ";
             }
             System.out.println(output);
-//        scoreFile.writeString(output,false);
-        }catch(Exception e){System.out.println("File Not Found");}
+        scoreFile.writeString(output,false);
+
     }
 
 }
