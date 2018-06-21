@@ -31,6 +31,7 @@ public class Physics {
 
     public static float[] hitCoord;
 
+
     /**
      * Construct a Physics engine
      *
@@ -41,7 +42,6 @@ public class Physics {
         this.hitCoord = new float[2];
         this.collision = new Collision(this.course);
         this.walls = course.getWalls();
-
     }
 
     public Physics(Physics other) {
@@ -69,7 +69,6 @@ public class Physics {
         this.ball.setVelocityY(yLength);
 
         this.ball.limit(this.course.getVmax());
-
     }
 
     public void movement(float delta, boolean simulation) {

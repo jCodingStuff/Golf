@@ -3,6 +3,7 @@ package com.group.golf.modes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -18,6 +19,9 @@ import com.group.golf.math.MathLib;
 import com.group.golf.math.Point3D;
 import com.group.golf.screens.CourseScreen;
 import com.group.golf.screens.CourseSelectorScreen;
+
+import java.util.Arrays;
+
 
 public class TwoGoalsMode extends GameMode {
 
@@ -39,8 +43,11 @@ public class TwoGoalsMode extends GameMode {
     private int lastX;
     private int lastY;
 
+    private int p1counter;
+    private int p2counter;
+
     public TwoGoalsMode(Golf game, Course course, Ball[] balls, double distanceLimit) {
-        this.distanceLimit = distanceLimit;
+        this.distanceLimit = 10.5;
         this.game = game;
         this.course = course;
         this.balls = balls;
@@ -55,6 +62,10 @@ public class TwoGoalsMode extends GameMode {
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
 //        this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
         this.winSound = Gdx.audio.newSound(Gdx.files.internal("success_2.wav"));
+
+
+        this.p1counter = 0;
+        this.p2counter = 0;
     }
 
 
@@ -127,8 +138,44 @@ public class TwoGoalsMode extends GameMode {
         }
     }
 
+    public void addScore(int score) {
+        FileHandle scoreFile = Gdx.files.local("scores.txt");
+
+        String reader = scoreFile.readString();
+        String[] scores = reader.split(" ");
+
+        String modScore = Integer.toString(score);
+        System.out.println("Scores "+ Arrays.toString(scores));
+        int position = 0;
+        for (int i = 0; i < scores.length; i++) {
+            position = i;
+            if (score < Integer.parseInt(scores[i])) {
+                break;
+            }
+        }
+        System.out.println("position "+position);
+        String output = "";
+        for (int i = 0; i < scores.length; i++) {
+
+            if (i == position){
+                output += modScore + " ";
+                output += scores[i] + " ";
+                i++;
+            }
+            else if(i == scores.length-1){
+                output += scores[i-1];
+            }
+            else{
+                output += scores[i] + " ";
+            }
+        }
+        System.out.print(output);
+        scoreFile.writeString(output,false);
+
+    }
+
     @Override
-    public boolean move(OrthographicCamera cam) {
+    public boolean move(OrthographicCamera cam){
         Ball currentBall = this.balls[this.counter];
         if (!currentBall.isMoving()) {
 
@@ -160,6 +207,10 @@ public class TwoGoalsMode extends GameMode {
 
     private void informWinner() {
         System.out.println("EVERYONE WINS!");
+        if(p1counter>p2counter) addScore(p1counter);
+        else addScore(p2counter);
+
+
     }
 
     private void userInput(OrthographicCamera cam) {
@@ -200,6 +251,9 @@ public class TwoGoalsMode extends GameMode {
 
                 int playerNum = this.counter + 1;
                 System.out.println("Player " + playerNum + " moved!");
+
+                if(playerNum ==1) p1counter++;
+                if(playerNum ==2) p2counter++;
             }
             this.touchFlag = false;
         }
