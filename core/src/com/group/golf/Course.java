@@ -149,6 +149,7 @@ public class Course {
             }
         }
     }
+    
     public boolean isWaterBetween(Point3D a, Point3D b) {
         Line2D path = new Line2D(a, b);
         boolean water = false;
