@@ -125,7 +125,7 @@ public class Collision {
     }
 
     private boolean hittingWallTop(float ballX, float ballY, Rectangle wall) {
-        return (ballX - Ball.RADIUS/2 >= wall.x &&
+        return (ballX + Ball.RADIUS/2 >= wall.x &&
                 ballX - Ball.RADIUS/2 <= wall.x + wall.width &&
                 ballY - (wall.y + wall.height) <= Ball.RADIUS &&
                 ballY - (wall.y + wall.height) >= -Ball.RADIUS &&
@@ -133,7 +133,7 @@ public class Collision {
     }
 
     private boolean hittingWallBottom(float ballX, float ballY, Rectangle wall) {
-        return (ballX - Ball.RADIUS/2 >= wall.x &&
+        return (ballX + Ball.RADIUS/2 >= wall.x &&
                 ballX - Ball.RADIUS/2 <= wall.x + wall.width &&
                 ballY - wall.y <= Ball.RADIUS &&
                 ballY - wall.y >= -Ball.RADIUS &&
