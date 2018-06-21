@@ -29,7 +29,7 @@ public class GeneticBot implements Bot {
     private int counter;
 
     private static final int POPULATION_SIZE = 200;
-    private static final int DNA_LENGTH = 20;
+    private static final int DNA_LENGTH = 15;
 
     private static final int GENERATION_LIMIT = 700;
     private static final double MUTATION_RATE = 0.01;

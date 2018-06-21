@@ -109,32 +109,32 @@ public class Collision {
     }
 
     private boolean hittingWallRight(float ballX, float ballY, Rectangle wall) {
-        return (ballY - Ball.RADIUS/2 <= wall.y + wall.height &&
-                ballY + Ball.RADIUS/2 >= wall.y &&
+        return (ballY <= wall.y + wall.height &&
+                ballY >= wall.y &&
                 ballX - (wall.x + wall.width) >= -Ball.RADIUS &&
                 ballX - (wall.x + wall.width) <= Ball.RADIUS &&
                 this.ball.getVelocityX() < 0);
     }
 
     private boolean hittingWallLeft(float ballX, float ballY, Rectangle wall) {
-        return (ballY - Ball.RADIUS/2 <= wall.y + wall.height &&
-                ballY + Ball.RADIUS/2 >= wall.y &&
+        return (ballY <= wall.y + wall.height &&
+                ballY >= wall.y &&
                 ballX - wall.x <= Ball.RADIUS &&
                 ballX - wall.x >= -Ball.RADIUS &&
                 this.ball.getVelocityX() > 0);
     }
 
     private boolean hittingWallTop(float ballX, float ballY, Rectangle wall) {
-        return (ballX + Ball.RADIUS/2 >= wall.x &&
-                ballX - Ball.RADIUS/2 <= wall.x + wall.width &&
+        return (ballX >= wall.x &&
+                ballX <= wall.x + wall.width &&
                 ballY - (wall.y + wall.height) <= Ball.RADIUS &&
                 ballY - (wall.y + wall.height) >= -Ball.RADIUS &&
                 this.ball.getVelocityY() < 0);
     }
 
     private boolean hittingWallBottom(float ballX, float ballY, Rectangle wall) {
-        return (ballX + Ball.RADIUS/2 >= wall.x &&
-                ballX - Ball.RADIUS/2 <= wall.x + wall.width &&
+        return (ballX >= wall.x &&
+                ballX <= wall.x + wall.width &&
                 ballY - wall.y <= Ball.RADIUS &&
                 ballY - wall.y >= -Ball.RADIUS &&
                 this.ball.getVelocityY() > 0);
