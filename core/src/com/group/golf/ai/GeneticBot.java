@@ -55,7 +55,7 @@ public class GeneticBot implements Bot {
     public GeneticBot(Course course, Ball ball) {
         this.counter = 0;
         this.course = course;
-        this.componentVMax = this.course.getVmax()/((float)Math.sqrt(2));
+        this.componentVMax = this.course.getVmax();
 
         this.realBall = ball;
         this.virtualBall = new Ball(ball);
