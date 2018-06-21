@@ -24,18 +24,16 @@ public class Collision {
     private Ball ball;
     private final Course course;
 
-    private double lastX;
-    private double lastY;
+    private float lastX;
+    private float lastY;
 
 
 
     /**
      * Create a new instance of Collision
-     * @param ball the ball to evaluate
      * @param course the course in which the ball rolls
      */
-    public Collision(Ball ball, Course course) {
-        this.ball = ball;
+    public Collision(Course course) {
         this.course = course;
         this.lastX = this.course.getStart()[0];
         this.lastX = this.course.getStart()[1];
@@ -43,7 +41,6 @@ public class Collision {
 
     public Collision(Collision other) {
         this.course = other.course;
-        this.ball = other.ball;
         this.lastX = other.lastX;
         this.lastY = other.lastY;
     }
@@ -76,30 +73,35 @@ public class Collision {
         double vx = this.ball.getVelocityX();
         double vy = this.ball.getVelocityY();
         if ((ballX < Ball.RADIUS && vx < 0) || (ballX > Golf.VIRTUAL_WIDTH - Ball.RADIUS && vx > 0)) {
-            this.ball.setVelocityX(-this.ball.getVelocityX());
+            this.ball.invertVelocityX();
+//            System.out.println("Hitting side wall");
+//            System.out.println("BallX: " + ballX + ", BallY" + ballY);
 
         }
         if ((ballY < Ball.RADIUS && vy < 0) || (ballY > Golf.VIRTUAL_HEIGHT - Ball.RADIUS && vy > 0)) {
-            this.ball.setVelocityY(-this.ball.getVelocityY());
+            this.ball.invertVelocityY();
+//            System.out.println("Hitting up wall");
+//            System.out.println("BallX: " + ballX + ", BallY" + ballY);
+
         }
     }
     
     public boolean checkForGraphicWalls(double ballX, double ballY, List<Rectangle> rects) {
         for (Rectangle wall : rects) {
             if (this.hittingWallRight(ballX, ballY, wall)) { // Hitting by the right
-                //System.out.println("Hitting by the right!");
+//                System.out.println("Hitting by the right!");
                 if (this.stopConditions()) return false;
                 this.ball.invertVelocityX();
             } else if (this.hittingWallLeft(ballX, ballY, wall)) { // Hitting by the left
-                //System.out.println("Hitting by the left!");
+//                System.out.println("Hitting by the left!");
                 if (this.stopConditions()) return false;
                 this.ball.invertVelocityX();
             } else if (this.hittingWallTop(ballX, ballY, wall)) { // Hitting from the top
-                //System.out.println("Hitting by the top!");
+//                System.out.println("Hitting by the top!");
                 if (this.stopConditions()) return false;
                 this.ball.invertVelocityY();
             } else if (this.hittingWallBottom(ballX, ballY, wall)) { // Hitting from the bottom
-                //System.out.println("Hitting by the bottom!");
+//                System.out.println("Hitting by the bottom!");
                 if (this.stopConditions()) return false;
                 this.ball.invertVelocityY();
             }
@@ -157,19 +159,19 @@ public class Collision {
     public boolean ballInWater() {
         boolean water = false;
 
-        double ballX = this.ball.last()[0];
-        double ballY = this.ball.last()[1];
+        float ballX = this.ball.getX();
+        float ballY = this.ball.getY();
         Line2D path = new Line2D(this.lastX, this.lastY, ballX, ballY);
 
         // Evaluate the line
         if (ballX >= this.lastX) { // Ball is moving to the right
-            for (double x = this.lastX; x <= ballX && !water; x += STEP) {
+            for (float x = this.lastX; x <= ballX && !water; x += STEP) {
                 if (this.course.getHeight(x, path.getY(x)) < 0) { // Ball in water
                     water = true;
                 }
             }
         } else { // Ball is moving to the left
-            for (double x = ballX; x <= this.lastX && !water; x += STEP) {
+            for (float x = ballX; x <= this.lastX && !water; x += STEP) {
                 if (this.course.getHeight(x, path.getY(x)) < 0) { // Ball in water
                     water = true;
                 }
@@ -199,13 +201,13 @@ public class Collision {
         Line2D path = new Line2D(a, b);
         boolean water = false;
         if (b.getX() >= a.getX()) { // B is on the right of A
-            for (double x = a.getX(); x <= b.getX() && !water; x += STEP) {
+            for (float x = a.getX(); x <= b.getX() && !water; x += STEP) {
                 if (this.course.getHeight(x, path.getY(x)) < 0) { // Ball in water
                     water = true;
                 }
             }
         } else { // B is on the left of A
-            for (double x = b.getX(); x <= a.getX() && !water; x += STEP) {
+            for (float x = b.getX(); x <= a.getX() && !water; x += STEP) {
                 if (this.course.getHeight(x, path.getY(x)) < 0) { // Ball in water
                     water = true;
                 }
@@ -220,5 +222,7 @@ public class Collision {
 
     public void setBall(Ball ball) {
         this.ball = ball;
+        this.lastX = this.ball.getX();
+        this.lastY = this.ball.getY();
     }
 }

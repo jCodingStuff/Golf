@@ -20,20 +20,19 @@ import com.group.golf.math.Point3D;
 
 public class PledgeBot implements Bot { 
 
-	private static final double A_SCALAR = 15; 
-    private static final double F_SCALAR = 2; 
-    private static final double BIG_SCALAR = 30; 
-	
+	private static final float A_SCALAR = 15;
+    private static final float F_SCALAR = 2;
+    private static final float BIG_SCALAR = 30;
+
 	private final Course course;
     private final Ball ball;
     private Physics engine;
-    private Collision collision;
     private List<Rectangle> walls;
     private Rectangle lastWall;
     private Line2D right;
     private Line2D forward;
     private Line2D left;
-    private double lineLength = 30;
+    private float lineLength = 30;
     private int currentDir = 0;
 
     /**
@@ -52,36 +51,32 @@ public class PledgeBot implements Bot {
         this.engine = physics;
     }
 
-    @Override
-    public void setCollision(Collision collision) {
-        this.collision = collision;
-    }
 
     @Override
     public void makeMove() {
-    	double extraPower = 6.5; 
-    	double distanceLimit = 0.75; 
-    	double[] goalCoords = this.course.getGoal();
+    	double extraPower = 6.5;
+    	double distanceLimit = 0.75;
+    	float[] goalCoords = this.course.getGoal();
     	//double[] distances = new double[] {goalCoords[0]-this.ball.getX(), goalCoords[1]-this.ball.getY()};
-    	
+
     	// 0 = forward, 1 = left, 2 = bot, 3 = right     the 'way' the ball is 'facing'.
     	setLines();
     	 if (goalBallDistance() < 0.35) {
-    		 double[] distances = new double[] {goalCoords[0]-this.ball.getX(), goalCoords[1]-this.ball.getY()};
-    		 this.engine.hit(75, 75);
+    		 float[] distances = new float[] {goalCoords[0]-this.ball.getX(), goalCoords[1]-this.ball.getY()};
+    		 this.engine.hit(ball,75, 75);
     	 }
     	 else	if (currentDir == 0) {
     		 System.out.println("At 0");
     	if (rightClear()) {
-    		this.engine.hit(200, 0);
+    		this.engine.hit(ball,200, 0);
     		currentDir = 3;
     	}
     	else if (forwardClear()) {
-    		this.engine.hit(0, 200);
+    		this.engine.hit(ball,0, 200);
     		currentDir = 0;
     	}
     	else if (leftClear()) {
-    		this.engine.hit(-200, 0);
+    		this.engine.hit(ball,-200, 0);
     		currentDir = 1;
     	}
     	else currentDir = 1;
@@ -89,75 +84,75 @@ public class PledgeBot implements Bot {
     	else if (currentDir == 1) {
     		System.out.println("At 1");
     		if (forwardClear()) {
-        		this.engine.hit(0, 200);
+        		this.engine.hit(ball,0, 200);
         		currentDir = 0;
         	}
     		else	if (leftClear()) {
-        		this.engine.hit(-200, 0);
+        		this.engine.hit(ball,-200, 0);
         		currentDir = 1;
         	}
     		else if (bottomClear()) {
-        		this.engine.hit(0, -200);
+        		this.engine.hit(ball,0, -200);
         		currentDir = 2;
         	}
     		else currentDir = 2;
     	}
-    	
+
     	else if (currentDir == 2) {
     		System.out.println("At 2");
     		if (leftClear()) {
-        		this.engine.hit(-200, 0);
+        		this.engine.hit(ball,-200, 0);
         		currentDir = 1;
         	}
     		else if (bottomClear()) {
-        		this.engine.hit(0, -200);
+        		this.engine.hit(ball,0, -200);
         		currentDir = 2;
         	}
     		else if (rightClear()) {
-        		this.engine.hit(200, 0);
+        		this.engine.hit(ball,200, 0);
         		currentDir = 3;
         	}
     		else currentDir = 3;
     	}
-    	
+
     	else if (currentDir == 3) {
     		System.out.println("At 3");
     		if (bottomClear()) {
-        		this.engine.hit(0, -200);
+        		this.engine.hit(ball,0, -200);
         		currentDir = 2;
         	}
     		else if (rightClear()) {
-        		this.engine.hit(200, 0);
+        		this.engine.hit(ball,200, 0);
         		currentDir = 3;
         	}
     		else if (forwardClear()) {
-        		this.engine.hit(0, 200);
+        		this.engine.hit(ball,0, 200);
         		currentDir = 0;
         	}
     		else currentDir = 0;
     	}
     	}
-    	
+
     	/*
     	if ((Math.abs(distances[0]) + Math.abs(distances[1])) / 2 < Math.abs(distanceLimit)) {
     		System.out.println("distanceLimit applied");
     		distances[0] *= extraPower;
-        	distances[1] *= extraPower; 
+        	distances[1] *= extraPower;
     	}
     	distances[0] *= BIG_SCALAR;
-    	distances[1] *= BIG_SCALAR; 
+    	distances[1] *= BIG_SCALAR;
         this.scale(distances);
     	this.engine.hit(distances[0], distances[1]);
     }
 
-    private void scale(double[] forces) {
-        double[] derivatives = this.engine.calculateSlope(new double[]{this.ball.getX(), this.ball.getY()});
+    private void scale(float[] forces) {
+        float[] derivatives = this.engine.calculateSlope(new float[]{this.ball.getX(), this.ball.getY()});
         for (int i = 0; i < forces.length; i++) {
             forces[i] = this.scaleForce(forces[i], derivatives[i]);
         }
         */
-    
-    
+
+
     // Initialize arrows
     private void setLines() {
     	// Right arrow
@@ -173,7 +168,7 @@ public class PledgeBot implements Bot {
     	Point3D leftUseb = new Point3D(this.ball.getX() - lineLength, this.ball.getY());
         this.left = new Line2D(leftUsea, leftUseb);
     }
-    
+
     // Check if right side of ball is clear
     private boolean rightClear() {
     	boolean result = true;
@@ -183,17 +178,17 @@ public class PledgeBot implements Bot {
     		j = j + 1;
     		float coordX = (float) this.ball.getX();
         	float coordY = (float) this.ball.getY();
-        	double coordXd = this.ball.getX();
-        	double coordYd = this.ball.getY();
-        	double[] coords = new double[]{coordXd, coordYd};
-        	double[] real = MathLib.toPixel(coords, new double[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
-                    new double[]{this.course.getScales()[0], this.course.getScales()[1]});
-        	float realFloatX = (float) real[0];
-        	float realFloatY = (float) real[1];
-    		    
-    			float a = (float) realFloatX + (float) j;
-        		float b = (float) realFloatY;
-        		
+        	float coordXd = this.ball.getX();
+        	float coordYd = this.ball.getY();
+        	float[] coords = new float[]{coordXd, coordYd};
+        	float[] real = MathLib.toPixel(coords, new float[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
+                    new float[]{this.course.getScales()[0], this.course.getScales()[1]});
+        	float realFloatX = real[0];
+        	float realFloatY = real[1];
+
+    			float a = realFloatX + (float) j;
+        		float b = realFloatY;
+
         		if (walls.get(i).contains(a, b) == true) {
         			System.out.println("rightClear became false");
         			result = false;
@@ -211,7 +206,7 @@ public class PledgeBot implements Bot {
     	}
     	return result;
     }
-    
+
  // Check if ahead of ball is clear
     private boolean forwardClear() {
     	boolean result = true;
@@ -221,14 +216,14 @@ public class PledgeBot implements Bot {
     		j = j + 1;
     		float coordX = (float) this.ball.getX();
         	float coordY = (float) this.ball.getY();
-        	double coordXd = this.ball.getX();
-        	double coordYd = this.ball.getY();
-        	double[] coords = new double[]{coordXd, coordYd};
-        	double[] real = MathLib.toPixel(coords, new double[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
-                    new double[]{this.course.getScales()[0], this.course.getScales()[1]});
+        	float coordXd = this.ball.getX();
+        	float coordYd = this.ball.getY();
+        	float[] coords = new float[]{coordXd, coordYd};
+        	float[] real = MathLib.toPixel(coords, new float[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
+                    new float[]{this.course.getScales()[0], this.course.getScales()[1]});
         	float realFloatX = (float) real[0];
         	float realFloatY = (float) real[1];
-    		    
+
     			float a = (float) realFloatX;
         		float b = (float) realFloatY + (float) j;
     		if (walls.get(i).contains(a, b) == true) {
@@ -248,7 +243,7 @@ public class PledgeBot implements Bot {
     	}
     	return result;
     }
-    
+
  // Check if left side of ball is clear
     private boolean leftClear() {
     	boolean result = true;
@@ -258,17 +253,17 @@ public class PledgeBot implements Bot {
     		j = j + 1;
     		float coordX = (float) this.ball.getX();
         	float coordY = (float) this.ball.getY();
-        	double coordXd = this.ball.getX();
-        	double coordYd = this.ball.getY();
-        	double[] coords = new double[]{coordXd, coordYd};
-        	double[] real = MathLib.toPixel(coords, new double[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
-                    new double[]{this.course.getScales()[0], this.course.getScales()[1]});
+        	float coordXd = this.ball.getX();
+        	float coordYd = this.ball.getY();
+        	float[] coords = new float[]{coordXd, coordYd};
+        	float[] real = MathLib.toPixel(coords, new float[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
+                    new float[]{this.course.getScales()[0], this.course.getScales()[1]});
         	float realFloatX = (float) real[0];
         	float realFloatY = (float) real[1];
-    		    
+
     			float a = (float) realFloatX - (float) j;
         		float b = (float) realFloatY;
-    		
+
     		if (walls.get(i).contains(a, b) == true) {
     			System.out.println("leftClear became false");
     			result = false;
@@ -286,7 +281,7 @@ public class PledgeBot implements Bot {
     	}
     	return result;
     }
-    
+
  // Check if leftt side of ball is clear
     private boolean bottomClear() {
     	boolean result = true;
@@ -296,17 +291,17 @@ public class PledgeBot implements Bot {
     		j = j + 1;
     		float coordX = (float) this.ball.getX();
         	float coordY = (float) this.ball.getY();
-        	double coordXd = this.ball.getX();
-        	double coordYd = this.ball.getY();
-        	double[] coords = new double[]{coordXd, coordYd};
-        	double[] real = MathLib.toPixel(coords, new double[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
-                    new double[]{this.course.getScales()[0], this.course.getScales()[1]});
+        	float coordXd = this.ball.getX();
+        	float coordYd = this.ball.getY();
+        	float[] coords = new float[]{coordXd, coordYd};
+        	float[] real = MathLib.toPixel(coords, new float[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
+                    new float[]{this.course.getScales()[0], this.course.getScales()[1]});
         	float realFloatX = (float) real[0];
         	float realFloatY = (float) real[1];
-    		    
+
     			float a = (float) realFloatX;
         		float b = (float) realFloatY - (float) j;
-    		
+
     		if (walls.get(i).contains(a, b) == true) {
     			System.out.println("bottomClear became false");
     			result = false;
@@ -324,16 +319,16 @@ public class PledgeBot implements Bot {
     	}
     	return result;
     }
-    
+
     // Find distance between given wall and ball
-    private double goalBallDistance() {
+    private float goalBallDistance() {
     	Point3D goalPoint = new Point3D(this.course.getGoal()[0], this.course.getGoal()[1]);
     	Point3D ballPoint = new Point3D(this.ball.getX(), this.ball.getY());
     	return MathLib.distanceSquared(ballPoint, goalPoint);
     }
 
-    private double scaleForce(double force, double d) {
-    	double scaledForce;
+    private float scaleForce(float force, float d) {
+    	float scaledForce;
     	if (force > 0 && d > 0) {
     		scaledForce = force * Math.abs(d) * A_SCALAR;
     	}

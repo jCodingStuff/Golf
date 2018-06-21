@@ -5,6 +5,6 @@ import com.group.golf.Physics.Collision;
 
 public interface GoalChecker {
 
-    boolean goalReached(double[] goal, Individual[] population, Ball virtualBall, Collision virtualCollision);
+    boolean goalReached(float[] goal, Individual[] population, Ball virtualBall, Collision virtualCollision);
 
 }

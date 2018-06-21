@@ -3,27 +3,21 @@ package com.group.golf;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Circle;
-import com.group.golf.Physics.Queue;
-import com.group.golf.math.MathLib;
-import com.group.golf.screens.CourseScreen;
 
 
 /**
  * A class to save the data of the ball
  */
-public class Ball extends Queue<double[]>{
+public class Ball {
 
     public static final float RADIUS = 10;
 
 
-    private double mass;
-    private double x;
-    private double y;
-    private double velocityX;
-    private double velocityY;
-    private double accelerationX;
-    private double accelerationY;
-
+    private float mass;
+    private float x;
+    private float y;
+    private float velocityX;
+    private float velocityY;
 
     private Texture texture;
     private Circle collisionCircle;
@@ -34,7 +28,7 @@ public class Ball extends Queue<double[]>{
      * @param x the x coordinate of the ball
      * @param y the y coordinate of the ball
      */
-    public Ball(double mass, double x, double y) {
+    public Ball(float mass, float x, float y) {
         this.mass = mass;
         this.x = x;
         this.y = y;
@@ -47,24 +41,13 @@ public class Ball extends Queue<double[]>{
      * Create a default ball with position at [0, 0]
      * @param mass the mass of the ball
      */
-    public Ball(double mass) {
+    public Ball(float mass) {
         this.mass = mass;
         this.x = 0;
         this.y = 0;
         this.velocityX = 0;
         this.velocityY = 0;
         this.collisionCircle = new Circle((float) this.x, (float) this.y, RADIUS);
-    }
-
-    public double[] dequeue() {
-        double[] coord = super.dequeue();
-        setX(coord[0]);
-        setY(coord[1]);
-        return coord;
-    }
-
-    public void addCoord(double[] coord) {
-        super.enqueue(coord);
     }
 
     /**
@@ -92,7 +75,7 @@ public class Ball extends Queue<double[]>{
      * Limit the velocity to a maximum
      * @param max the limit
      */
-    public void limit(double max) {
+    public void limit(float max) {
         double velocity = this.calcVelocity();
         if (velocity > max) {
             this.velocityX /= velocity;
@@ -153,14 +136,14 @@ public class Ball extends Queue<double[]>{
      * Get access to the x-component of the velocity
      * @return the x-component of the velocity
      */
-    public double getVelocityX() {return velocityX;
+    public float getVelocityX() {return velocityX;
     }
 
     /**
      * Set a new value for the x-component of the velocity
      * @param velocityX the new x-component of the velocity
      */
-    public void setVelocityX(double velocityX) {
+    public void setVelocityX(float velocityX) {
         this.velocityX = velocityX;
     }
 
@@ -168,7 +151,7 @@ public class Ball extends Queue<double[]>{
      * Get access to the y-component of the velocity
      * @return the y-component of the velocity
      */
-    public double getVelocityY() {
+    public float getVelocityY() {
         return velocityY;
     }
 
@@ -176,7 +159,7 @@ public class Ball extends Queue<double[]>{
      * Set a new value for the y-component of the velocity
      * @param velocityY the new y-component of the velocity
      */
-    public void setVelocityY(double velocityY) {
+    public void setVelocityY(float velocityY) {
         this.velocityY = velocityY;
     }
 
@@ -184,7 +167,7 @@ public class Ball extends Queue<double[]>{
      * Get access to the mass
      * @return the mass
      */
-    public double getMass() {
+    public float getMass() {
         return mass;
     }
 
@@ -192,7 +175,7 @@ public class Ball extends Queue<double[]>{
      * Set a new mass
      * @param mass the new mass
      */
-    public void setMass(double mass) {
+    public void setMass(float mass) {
         this.mass = mass;
     }
 
@@ -200,7 +183,7 @@ public class Ball extends Queue<double[]>{
      * Get access to the x-position
      * @return the x-coordinate for position
      */
-    public double getX() {
+    public float getX() {
 //        if (super.tail == null)
             return x;
 //        return super.last()[0];
@@ -213,7 +196,7 @@ public class Ball extends Queue<double[]>{
      * Set a new x-position
      * @param x the new x-position
      */
-    public void setX(double x) {
+    public void setX(float x) {
         this.x = x;
         this.updateCollisionCircle();
     }
@@ -222,7 +205,7 @@ public class Ball extends Queue<double[]>{
      * Get access to the y-position
      * @return the y-coordinate for position
      */
-    public double getY() {
+    public float getY() {
 //        if (super.tail == null)
             return y;
 //        return super.last()[1];
@@ -232,7 +215,7 @@ public class Ball extends Queue<double[]>{
      * Set a new value for the y-position
      * @param y the new y-position
      */
-    public void setY(double y) {
+    public void setY(float y) {
         this.y = y;
         this.updateCollisionCircle();
     }
@@ -242,27 +225,23 @@ public class Ball extends Queue<double[]>{
      * @param x the new x-position
      * @param y the new y-position
      */
-    public void setPosition(double x, double y) {
+    public void setPosition(float x, float y) {
         this.x = x;
         this.y = y;
         this.updateCollisionCircle();
     }
 
-    public void setAccelerationX(double accelerationX) {
-        this.accelerationX = accelerationX;
+    public void setCoords(float[] coords) {
+        setX(coords[0]);
+        setY(coords[1]);
     }
 
-    public void setAccelerationY(double accelerationY) {
-        this.accelerationY = accelerationY;
+    public void setVelocities(float[] velocities) {
+        setVelocityX(velocities[0]);
+        setVelocityY(velocities[1]);
     }
 
-    public double getAccelerationX() {
-        return accelerationX;
-    }
 
-    public double getAccelerationY() {
-        return accelerationY;
-    }
 
     public Circle getCollisionCircle() {
         return collisionCircle;

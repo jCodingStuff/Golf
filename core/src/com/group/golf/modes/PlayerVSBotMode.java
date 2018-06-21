@@ -13,32 +13,26 @@ import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
+import com.group.golf.Physics.RK4;
 import com.group.golf.ai.Bot;
 import com.group.golf.math.JVector2;
 import com.group.golf.math.MathLib;
 import com.group.golf.screens.CourseScreen;
 import com.group.golf.screens.CourseSelectorScreen;
 
-public class PlayerVSBotMode implements GameMode {
+public class PlayerVSBotMode extends GameMode {
 
     private final Golf game;
 
     private Sound hitSound;
-    private Sound loseSound;
+//    private Sound loseSound;
     private Sound winSound;
 
     private Bot bot;
 
-    // All arrays have 2 items: player and bot
-    private Physics[] engines;
-    private Collision[] collisions;
-    private Course course;
-
     private Ball[] balls;
     private JVector2[] ballsPixels;
 
-    private double[] scales;
-    private double[] offsets;
 
     private boolean landed;
     private int counter;
@@ -59,22 +53,15 @@ public class PlayerVSBotMode implements GameMode {
         this.landed = false;
 
         this.setUpBalls();
-        this.setUpPhysics();
+        this.setUpPhysics("RK4");
 
         // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
-        this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
+//        this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
         this.winSound = Gdx.audio.newSound(Gdx.files.internal("success_2.wav"));
+
     }
 
-    private void setUpPhysics() {
-        this.engines = new Physics[this.balls.length];
-        this.collisions = new Collision[this.balls.length];
-        for (int i = 0; i < this.engines.length; i++) {
-            this.engines[i] = new Physics(this.course, this.balls[i]);
-            this.collisions[i] = new Collision(this.balls[i], this.course);
-        }
-    }
 
     private void setUpBalls() {
         for (Ball ball : this.balls) {
@@ -93,7 +80,7 @@ public class PlayerVSBotMode implements GameMode {
 
     private void computePixels() {
         for (int i = 0; i < this.ballsPixels.length; i++) {
-            double[] ballPixels = MathLib.toPixel(new double[]{this.balls[i].getX(), this.balls[i].getY()},
+            float[] ballPixels = MathLib.toPixel(new float[]{this.balls[i].getX(), this.balls[i].getY()},
                     this.offsets, this.scales);
             this.ballsPixels[i].setPosition(ballPixels[0], ballPixels[1]);
         }
@@ -107,17 +94,15 @@ public class PlayerVSBotMode implements GameMode {
         }
     }
 
-    @Override
-    public void water() {
-        Ball ball = this.balls[this.counter];
-        Physics engine = this.engines[this.counter];
-        if (engine.isWater() && ball.getSize() == 0) {
-            ball.clear();
-            ball.setX(engine.getHitCoord()[0]);
-            ball.setY(engine.getHitCoord()[1]);
-            this.loseSound.play(0.2f);
-        }
-    }
+//    @Override
+//    public void water() {
+//        Ball ball = this.balls[this.counter];
+//        if (engine.isWater()) {
+//            ball.setX(engine.getHitCoord()[0]);
+//            ball.setY(engine.getHitCoord()[1]);
+//            this.loseSound.play(0.2f);
+//        }
+//    }
 
     private void incrementCounter() {
         this.counter++;
@@ -127,10 +112,11 @@ public class PlayerVSBotMode implements GameMode {
     @Override
     public boolean move(OrthographicCamera cam) {
         Ball currentBall = this.balls[this.counter];
-        if (currentBall.getSize() == 0) {
+        if (!currentBall.isMoving()) {
 
             // Check if the goal is achieved
-            if (this.collisions[this.counter].isGoalAchieved()) {
+            if (this.engine.isGoalAchieved(currentBall)) {
+                System.out.println("Ball landed: " + currentBall.getX() + " " + currentBall.getY());
                 this.informWinner();
                 this.winSound.play();
                 try { Thread.sleep(3000); }
@@ -155,7 +141,7 @@ public class PlayerVSBotMode implements GameMode {
             }
             return true;
         } else {
-            currentBall.dequeue();
+            this.engine.movement(Golf.DELTA, false);
             return true;
         }
     }
@@ -171,7 +157,7 @@ public class PlayerVSBotMode implements GameMode {
         if (this.counter == 0) {
             System.out.println("HUMAN WINS!");
         } else {
-            System.out.println("BOT WINS! (YOU ARE GARBAGE LOL)");
+            System.out.println("BOT WINS!");
         }
     }
 
@@ -188,8 +174,11 @@ public class PlayerVSBotMode implements GameMode {
         }
         else if (this.touchFlag) {
             if (this.firstX != this.lastX || this.lastY != this.firstY) {
-                double xLength = Math.abs(lastX - firstX);
-                double yLength = Math.abs(lastY - firstY);
+                float xLength = Math.abs(lastX - firstX);
+                float yLength = Math.abs(lastY - firstY);
+
+                xLength = MathLib.map(xLength, 0, 600, 0, this.course.getVmax());
+                yLength = MathLib.map(yLength, 0, 600, 0, this.course.getVmax());
 
                 if (lastX < firstX)
                     xLength *= -1;
@@ -201,12 +190,12 @@ public class PlayerVSBotMode implements GameMode {
                 xLength *= this.scales[0] * CourseScreen.SCALE_MULTIPLIER;
                 yLength *= this.scales[1] * CourseScreen.SCALE_MULTIPLIER;
 
-                this.engines[this.counter].hit(xLength, yLength);
+                this.engine.hit(balls[this.counter], xLength, yLength);
                 this.landed = true;
 
                 this.hitSound.play();
 
-                int playerNum = this.counter + 1;
+//                int playerNum = this.counter + 1;
                 System.out.println("Human moved!");
             }
             this.touchFlag = false;
@@ -218,29 +207,21 @@ public class PlayerVSBotMode implements GameMode {
 
     }
 
-    @Override
-    public void setOffsets(double[] offsets) {
-        this.offsets = offsets;
-        for (Physics engine : this.engines) engine.setOffsets(offsets);
-    }
 
     @Override
-    public void setScales(double[] scales) {
+    public void setScales(float[] scales) {
         this.scales = scales;
-        for (Physics engine : this.engines) engine.setScales(scales);
         this.setUpBot();
     }
 
     private void setUpBot() {
-        this.bot.setPhysics(this.engines[1]);
-        this.bot.setCollision(this.collisions[1]);
+        this.bot.setPhysics(this.engine);
     }
 
     @Override
     public void dispose() {
         this.hitSound.dispose();
         this.winSound.dispose();
-        this.loseSound.dispose();
     }
 
 }

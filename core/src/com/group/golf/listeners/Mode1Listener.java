@@ -63,21 +63,21 @@ public class Mode1Listener extends ChangeListener {
     @Override
     public void changed(ChangeEvent event, Actor actor) {
         String formula = this.txtFunction.getText();
-        double g = Double.parseDouble(this.txtGravity.getText());
-        double mu = Double.parseDouble(this.txtFriction.getText());
-        double vmax = Double.parseDouble(this.txtVMax.getText());
-        double tolerance = Double.parseDouble(this.txtRadius.getText());
+        float g = Float.parseFloat(this.txtGravity.getText());
+        float mu = Float.parseFloat(this.txtFriction.getText());
+        float vmax = Float.parseFloat(this.txtVMax.getText());
+        float tolerance = Float.parseFloat(this.txtRadius.getText());
 
         // Get arrays for start and goal
         StringTokenizer tokenizerStart = new StringTokenizer(this.txtStartPos.getText());
-        double startX = Double.parseDouble(tokenizerStart.nextToken());
-        double startY = Double.parseDouble(tokenizerStart.nextToken());
-        double[] start = new double[]{startX, startY};
+        float startX = Float.parseFloat(tokenizerStart.nextToken());
+        float startY = Float.parseFloat(tokenizerStart.nextToken());
+        float[] start = new float[]{startX, startY};
         StringTokenizer tokenizerGoal = new StringTokenizer(this.txtGoalPos.getText());
-        double goalX = Double.parseDouble(tokenizerGoal.nextToken());
-        double goalY = Double.parseDouble(tokenizerGoal.nextToken());
-        double[] goal = new double[]{goalX, goalY};
-        Ball ball = new Ball(Double.parseDouble(this.txtBallMass.getText()));
+        float goalX = Float.parseFloat(tokenizerGoal.nextToken());
+        float goalY = Float.parseFloat(tokenizerGoal.nextToken());
+        float[] goal = new float[]{goalX, goalY};
+        Ball ball = new Ball(Float.parseFloat(this.txtBallMass.getText()));
         Function function = new Function(formula);
         Computable[][] functions = new Computable[1][1];
         functions[0][0] = function;

@@ -13,7 +13,7 @@ public class Interpolator {
      * @param dxy the 2D-array of dxy
      * @return the 2D-array of BicubicInterpolators
      */
-    public static Computable[][] getInterpolators(Point3D[][] points, double[][] dx, double[][] dy, double[][] dxy) {
+    public static Computable[][] getInterpolators(Point3D[][] points, float[][] dx, float[][] dy, float[][] dxy) {
         Computable[][] interpolators = new Computable[points.length - 1][points[0].length - 1];
         fillComputable(points, interpolators, dx, dy, dxy);
         return interpolators;
@@ -26,9 +26,9 @@ public class Interpolator {
      */
     public static Computable[][] getInterpolators(Point3D[][] points) {
         Computable[][] interpolators = new Computable[points.length - 1][points[0].length - 1];
-        double[][] dx = computeDx(points);
-        double[][] dy = computeDy(points);
-        double[][] dxy = computeDxy(points, dy);
+        float[][] dx = computeDx(points);
+        float[][] dy = computeDy(points);
+        float[][] dxy = computeDxy(points, dy);
         fillComputable(points, interpolators, dx, dy, dxy);
         for (int i = 0; i < interpolators.length; i++) {
 
@@ -44,17 +44,17 @@ public class Interpolator {
      * @param dy the derivatives in terms of y
      * @param dxy the mixed derivatives in terms of x and y
      */
-    private static void fillComputable(Point3D[][] points, Computable[][] interpolators, double[][] dx, double[][] dy,
-                                       double[][] dxy) {
+    private static void fillComputable(Point3D[][] points, Computable[][] interpolators, float[][] dx, float[][] dy,
+                                       float[][] dxy) {
         for (int y = 0; y < interpolators[0].length; y++) {
             for (int x = 0; x < interpolators.length; x++) {
                 Point3D[][] localPoints = new Point3D[][]{{points[x][y], points[x][y + 1]},
                         {points[x + 1][y], points[x + 1][y + 1]}};
-                double[][] localDx = new double[][]{{dx[x][y], dx[x][y + 1]},
+                float[][] localDx = new float[][]{{dx[x][y], dx[x][y + 1]},
                         {dx[x + 1][y], dx[x + 1][y + 1]}};
-                double[][] localDy = new double[][]{{dy[x][y], dy[x][y + 1]},
+                float[][] localDy = new float[][]{{dy[x][y], dy[x][y + 1]},
                         {dy[x + 1][y], dy[x + 1][y + 1]}};
-                double[][] localDxy = new double[][]{{dxy[x][y], dxy[x][y + 1]},
+                float[][] localDxy = new float[][]{{dxy[x][y], dxy[x][y + 1]},
                         {dxy[x + 1][y], dxy[x + 1][y + 1]}};
                 interpolators[x][y] = new BicubicInterpolator(localPoints, localDx, localDy, localDxy);
             }
@@ -66,8 +66,8 @@ public class Interpolator {
      * @param points the points coordinates
      * @return the 2D-array containing the partial derivatives
      */
-    private static double[][] computeDx(Point3D[][] points) {
-        double[][] dx = new double[points.length][points[0].length];
+    private static float[][] computeDx(Point3D[][] points) {
+        float[][] dx = new float[points.length][points[0].length];
         for (int i = 0; i < points.length; i++) {
             for (int j = 0; j < points[i].length; j++) {
                 if (i == 0) {
@@ -87,8 +87,8 @@ public class Interpolator {
      * @param points the points coordinates
      * @return the 2D-array containing the partial derivatives
      */
-    private static double[][] computeDy(Point3D[][] points) {
-        double[][] dy = new double[points.length][points[0].length];
+    private static float[][] computeDy(Point3D[][] points) {
+        float[][] dy = new float[points.length][points[0].length];
         for (int i = 0; i < points.length; i++) {
             for (int j = 0; j < points[i].length; j++) {
                 if (j == 0) {
@@ -109,7 +109,7 @@ public class Interpolator {
      * @param dy the partial derivates in terms of y
      * @return the mixed derivatives
      */
-    private static double[][] computeDxy(Point3D[][] points, double[][] dy) {
+    private static float[][] computeDxy(Point3D[][] points, float[][] dy) {
         Point3D[][] derivatives = new Point3D[points.length][points[0].length];
         for (int i = 0; i < points.length; i++) {
             for (int j = 0; j < points[i].length; j++) {

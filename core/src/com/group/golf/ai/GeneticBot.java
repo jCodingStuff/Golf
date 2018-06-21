@@ -3,6 +3,7 @@ package com.group.golf.ai;
 import com.badlogic.gdx.Gdx;
 import com.group.golf.Ball;
 import com.group.golf.Course;
+import com.group.golf.Golf;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
 import com.group.golf.genetics.*;
@@ -18,24 +19,25 @@ public class GeneticBot implements Bot {
 
     private final Course course;
     private Physics engine;
-    private Collision collision;
+
+    private Ball realBall;
 
     private Ball virtualBall;
-    private Physics virtualEngine;
-    private Collision virtualCollision;
+
+
 
     private int counter;
 
-    private static final int POPULATION_SIZE = 200;
-    private static final int DNA_LENGTH = 15;
-    private static final double MAX_FORCE = 400;
+    private static final int POPULATION_SIZE = 100;
+    private static final int DNA_LENGTH = 3;
 
-    private static final int GENERATION_LIMIT = 700;
+    private static final int GENERATION_LIMIT = 5;
     private static final double MUTATION_RATE = 0.01;
-    private static double error;
+    private static float error;
 
     private Individual[] population;
     private Individual winner;
+    private float vMax;
 
 
     // Algorithms
@@ -52,14 +54,16 @@ public class GeneticBot implements Bot {
     public GeneticBot(Course course, Ball ball) {
         this.counter = 0;
         this.course = course;
+        this.vMax = this.course.getVmax();
 
+        this.realBall = ball;
         this.virtualBall = new Ball(ball);
         this.virtualBall.setPosition(this.course.getStart()[0], this.course.getStart()[1]);
 
         this.crossOver = new AverageCrossOver(this);
         this.mutation = new AlterMutation();
-        this.computer = new WallScoreComputer();
-        this.checker = new MazeChecker(this);
+        this.computer = new InverseScoreComputer();
+        this.checker = new SimpleChecker(this);
     }
 
     @Override
@@ -71,7 +75,7 @@ public class GeneticBot implements Bot {
             }
             JVector2 currentShot = this.winner.getGenes()[this.counter];
             System.out.println("Hitting force: " + currentShot.getX() + " " + currentShot.getY());
-            this.engine.hit(currentShot.getX(), currentShot.getY());
+            this.engine.hit(realBall, currentShot.getX(), currentShot.getY());
             this.counter++;
         }
     }
@@ -79,18 +83,19 @@ public class GeneticBot implements Bot {
     @Override
     public void setPhysics(Physics physics) {
         this.engine = physics;
-        this.virtualEngine = new Physics(physics);
-        this.virtualEngine.setBall(this.virtualBall);
+        this.startEvolution();
+//        this.virtualEngine = new Physics(physics);
+//        this.virtualEngine.setBall(this.virtualBall);
     }
 
-    @Override
-    public void setCollision(Collision collision) {
-        this.collision = collision;
-        this.virtualCollision = new Collision(collision);
-        this.virtualCollision.setBall(this.virtualEngine.getBall());
-        this.virtualEngine.setCollision(this.virtualCollision);
-        this.startEvolution();
-    }
+//    @Override
+//    public void setCollision(Collision collision) {
+//        this.collision = collision;
+//        this.virtualCollision = new Collision(collision);
+//        this.virtualCollision.setBall(this.virtualEngine.getBall());
+//        this.virtualEngine.setCollision(this.virtualCollision);
+//        this.startEvolution();
+//    }
 
     /**
      * Generate the path using genetic algorithm
@@ -105,7 +110,7 @@ public class GeneticBot implements Bot {
             System.out.println("Generations: " + generations);
             this.computer.compute(this.course, this.population);
             if (this.checker.goalReached(this.course.getGoal(), this.population, this.virtualBall,
-                    this.virtualCollision)) {
+                    this.engine.getCollision())) {
 //                System.out.println("Generations: " + generations);
                 reached = true;
                 break;
@@ -173,8 +178,8 @@ public class GeneticBot implements Bot {
         JVector2[] landings = new JVector2[DNA_LENGTH + 1];
         landings[0] = new JVector2(this.course.getStart()[0], this.course.getStart()[1]);
         for (int i = 0; i < DNA_LENGTH; i++) {
-            double forceX = MathLib.randomDouble(-MAX_FORCE, MAX_FORCE);
-            double forceY = MathLib.randomDouble(-MAX_FORCE, MAX_FORCE);
+            float forceX = MathLib.randomFloat(-this.vMax, this.vMax);
+            float forceY = MathLib.randomFloat(-this.vMax, this.vMax);
             genes[i] = new JVector2(forceX, forceY);
         }
         this.fillLandings(genes, landings);
@@ -200,7 +205,7 @@ public class GeneticBot implements Bot {
      */
     public void fillLandings(JVector2[] forces, JVector2[] landings) {
         this.virtualBall.reset();
-        this.virtualBall.setPosition(landings[0].getX(), landings[0].getY());
+        this.virtualBall.setPosition((float)landings[0].getX(), (float)landings[0].getY());
         for (int i = 1; i < landings.length; i++) {
             // small random error for the force applied to the ball
             double min = 0.999;
@@ -223,14 +228,13 @@ public class GeneticBot implements Bot {
         //error = MathLib.randomDouble(min, max);
         error = 1;
         force.multiply(error);
-        this.virtualEngine.hit(force.getX(), force.getY());
-        while (this.virtualBall.getSize() != 0) {
-            this.virtualBall.dequeue();
-            if (this.virtualEngine.isWater() && this.virtualBall.getSize() == 0) {
-                this.virtualBall.clear();
-                this.virtualBall.setX(this.engine.getHitCoord()[0]);
-                this.virtualBall.setY(this.engine.getHitCoord()[1]);
-            }
+        this.engine.hit(virtualBall,force.getX(), force.getY());
+        while (this.virtualBall.isMoving()) {
+            this.engine.movement(Golf.DELTA, true);
+//            if (this.engine.isWater()) {
+//                this.virtualBall.setX(this.engine.getHitCoord()[0]);
+//                this.virtualBall.setY(this.engine.getHitCoord()[1]);
+//            }
         }
     }
 

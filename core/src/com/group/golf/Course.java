@@ -14,21 +14,21 @@ public class Course {
 
     private static final double STEP = 0.001;
 
-    private double g;
-    private double mu;
-    private double vmax;
-    private double[] start;
-    private double[] goal;
+    private float g;
+    private float mu;
+    private float vmax;
+    private float[] start;
+    private float[] goal;
     
-    private double[] start2;
-    private double[] goal2;
+    private float[] start2;
+    private float[] goal2;
 
-    private double[] offsets;
-    private double[] scales;
+    private float[] offsets;
+    private float[] scales;
 
     private List<Rectangle> walls; // Pixel coordinates, CAREFUL!
     
-    private double tolerance;
+    private float tolerance;
     private Computable[][] functions;
 
     /**
@@ -41,8 +41,8 @@ public class Course {
      * @param goal the goal coordinates
      * @param tolerance the radius of the goal
      */
-    public Course(Computable[][] functions, double g, double mu, double vmax, double[] start, double[] goal,
-                  double tolerance) {
+    public Course(Computable[][] functions, float g, float mu, float vmax, float[] start, float[] goal,
+                  float tolerance) {
         this.g = g;
         this.mu = mu;
         this.vmax = vmax;
@@ -58,8 +58,8 @@ public class Course {
         this.walls = new ArrayList<Rectangle>();
     }
 
-    public Course(Computable[][] functions, double g, double mu, double vmax, double[] start, double[] start2, double[] goal, double[] goal2,
-            double tolerance) {
+    public Course(Computable[][] functions, float g, float mu, float vmax, float[] start, float[] start2, float[] goal, float[] goal2,
+            float tolerance) {
         this.g = g;
         this.mu = mu;
         this.vmax = vmax;
@@ -91,7 +91,7 @@ public class Course {
      * @param y the y-coordinate
      * @return the computable whose domain includes the point (x, y)
      */
-    public Computable getFunctionFor(double x, double y) {
+    public Computable getFunctionFor(float x, float y) {
         //System.out.println("Coordinate to compute: " + x + ", " + y);
         BicubicInterpolator botLeftSquare = (BicubicInterpolator) this.functions[0][0];
         Point3D botLeftPoint = botLeftSquare.getPoints()[0][0];
@@ -109,7 +109,7 @@ public class Course {
      * @param y the y-coordinate
      * @return the height at (x, y)
      */
-    public double getHeight(double x, double y) {
+    public float getHeight(float x, float y) {
         if (this.isSpline()) {
             return this.getFunctionFor(x, y).getZ(x, y);
         } else {
@@ -126,11 +126,11 @@ public class Course {
         Line2D line = new Line2D(goalPoint, closest);
 
         if (goalPoint.getX() <= closest.getX()) {
-            for (double x = goalPoint.getX(); x <= closest.getX(); x += STEP) {
+            for (float x = goalPoint.getX(); x <= closest.getX(); x += STEP) {
                 this.helpWallNum(x, line, cloneWalls);
             }
         } else {
-            for (double x = closest.getX(); x <= goalPoint.getX(); x += STEP) {
+            for (float x = closest.getX(); x <= goalPoint.getX(); x += STEP) {
                 this.helpWallNum(x, line, cloneWalls);
             }
         }
@@ -138,11 +138,11 @@ public class Course {
         return this.walls.size() - cloneWalls.size();
     }
 
-    private void helpWallNum(double x, Line2D line, List<Rectangle> cloneWalls) {
-        double y = line.getY(x);
-        double[] coord = MathLib.toPixel(new double[]{x, y}, this.offsets, this.scales);
-        float realX = (float) coord[0];
-        float realY = (float) coord[1];
+    private void helpWallNum(float x, Line2D line, List<Rectangle> cloneWalls) {
+        float y = line.getY(x);
+        float[] coord = MathLib.toPixel(new float[]{x, y}, this.offsets, this.scales);
+        float realX = coord[0];
+        float realY = coord[1];
         for (int i = cloneWalls.size() - 1; i >= 0; i--) {
             if (cloneWalls.get(i).contains(realX, realY)) {
                 cloneWalls.remove(i);
@@ -154,7 +154,7 @@ public class Course {
      * Get access to the gravity
      * @return the gravity
      */
-    public double getG() {
+    public float getG() {
         return g;
     }
 
@@ -162,7 +162,7 @@ public class Course {
      * Set a new value for the gravity
      * @param g the new gravity
      */
-    public void setG(double g) {
+    public void setG(float g) {
         this.g = g;
     }
 
@@ -170,7 +170,7 @@ public class Course {
      * Get access to the friction coefficient
      * @return the friction coefficient
      */
-    public double getMu() {
+    public float getMu() {
         return mu;
     }
 
@@ -178,7 +178,7 @@ public class Course {
      * Set a new value for the friction coefficient
      * @param mu the new friction coefficient
      */
-    public void setMu(double mu) {
+    public void setMu(float mu) {
         this.mu = mu;
     }
 
@@ -186,7 +186,7 @@ public class Course {
      * Get access to the terminal velocity
      * @return the terminal velocity
      */
-    public double getVmax() {
+    public float getVmax() {
         return vmax;
     }
 
@@ -194,7 +194,7 @@ public class Course {
      * Set a new value for the terminal velocity
      * @param vmax the new terminal velocity
      */
-    public void setVmax(double vmax) {
+    public void setVmax(float vmax) {
         this.vmax = vmax;
     }
 
@@ -202,7 +202,7 @@ public class Course {
      * Get access to the start coordinates
      * @return the start coordinates
      */
-    public double[] getStart() {
+    public float[] getStart() {
         return start;
     }
 
@@ -210,7 +210,7 @@ public class Course {
      * Set a new set of start coordinates
      * @param start the new start coordinates
      */
-    public void setStart(double[] start) {
+    public void setStart(float[] start) {
         this.start = start;
     }
 
@@ -218,7 +218,7 @@ public class Course {
      * Get access to the goal coordinates
      * @return the goal coordinates
      */
-    public double[] getGoal() {
+    public float[] getGoal() {
         return goal;
     }
 
@@ -226,11 +226,11 @@ public class Course {
      * Set a new set of goal coordinates
      * @param goal the new goal coordinates
      */
-    public void setGoal(double[] goal) {
+    public void setGoal(float[] goal) {
         this.goal = goal;
     }
     
-    public double[] getStart2() {
+    public float[] getStart2() {
         return start2;
     }
 
@@ -238,7 +238,7 @@ public class Course {
      * Set a new set of start coordinates
      * @param start2 the new start coordinates
      */
-    public void setStart2(double[] start2) {
+    public void setStart2(float[] start2) {
         this.start2 = start2;
     }
 
@@ -246,7 +246,7 @@ public class Course {
      * Get access to the goal coordinates
      * @return the goal coordinates
      */
-    public double[] getGoal2() {
+    public float[] getGoal2() {
         return goal2;
     }
 
@@ -254,7 +254,7 @@ public class Course {
      * Set a new set of goal coordinates
      * @param goal2 the new goal coordinates
      */
-    public void setGoal2(double[] goal2) {
+    public void setGoal2(float[] goal2) {
         this.goal2 = goal2;
     }
 
@@ -262,7 +262,7 @@ public class Course {
      * Get access to the goal tolerance
      * @return the goal tolerance
      */
-    public double getTolerance() {
+    public float getTolerance() {
         return tolerance;
     }
 
@@ -270,7 +270,7 @@ public class Course {
      * Set a new value for the goal tolerance
      * @param tolerance the new goal tolerance
      */
-    public void setTolerance(double tolerance) {
+    public void setTolerance(float tolerance) {
         this.tolerance = tolerance;
     }
 
@@ -328,24 +328,26 @@ public class Course {
         this.walls = walls;
     }
 
-    public void setOffsets(double[] offsets) {
+    public void setOffsets(float[] offsets) {
         this.offsets = offsets;
     }
 
-    public void setScales(double[] scales) {
+    public void setScales(float[] scales) {
         this.scales = scales;
     }
-    
-    public double[] getOffsets() {
-    	return offsets;
+
+    public float[] getOffsets() {
+        return offsets;
     }
-    
-    public double[] getScales() {
-    	return scales;
+
+    public float[] getScales() {
+        return scales;
     }
 
     @Override
     public String toString() {
+
+
         String message = this.getClass().getName() + " [" + this.functions + ", start=" + arrToStr(this.start) + ", ";
         message += "goal=" + arrToStr(this.goal) + ", tolerance=" + this.tolerance + ", g=" + this.g + ", mu=" + this.mu;
         message += ", vmax=" + this.vmax + "]";
@@ -357,7 +359,7 @@ public class Course {
      * @param array the array to represent
      * @return the string representation
      */
-    private static String arrToStr(double[] array) {
+    private static String arrToStr(float[] array) {
         String message = "[";
         for (int i = 0; i < array.length; i++) {
             message += array[i];

@@ -58,24 +58,24 @@ public class ImportListener extends ChangeListener {
             String formula = in.nextLine();
             Function function = new Function(formula);
 
-            double g = Double.parseDouble(in.nextLine());
-            double tolerance = Double.parseDouble(in.nextLine());
-            double mu = Double.parseDouble(in.nextLine());
+            float g = Float.parseFloat(in.nextLine());
+            float tolerance = Float.parseFloat(in.nextLine());
+            float mu = Float.parseFloat(in.nextLine());
 
             String startText = in.nextLine();
             StringTokenizer tokStart = new StringTokenizer(startText);
-            double startX = Double.parseDouble(tokStart.nextToken());
-            double startY = Double.parseDouble(tokStart.nextToken());
-            double[] start = new double[]{startX, startY};
+            float startX = Float.parseFloat(tokStart.nextToken());
+            float startY = Float.parseFloat(tokStart.nextToken());
+            float[] start = new float[]{startX, startY};
 
             String goalText = in.nextLine();
             StringTokenizer tokGoal = new StringTokenizer(goalText);
-            double goalX = Double.parseDouble(tokGoal.nextToken());
-            double goalY = Double.parseDouble(tokGoal.nextToken());
-            double[] goal = new double[]{goalX, goalY};
+            float goalX = Float.parseFloat(tokGoal.nextToken());
+            float goalY = Float.parseFloat(tokGoal.nextToken());
+            float[] goal = new float[]{goalX, goalY};
 
-            double vmax = Double.parseDouble(in.nextLine());
-            double mass = Double.parseDouble(in.nextLine());
+            float vmax = Float.parseFloat(in.nextLine());
+            float mass = Float.parseFloat(in.nextLine());
 
             while (in.hasNextLine()) {
                 String newRectangleData = in.nextLine();
