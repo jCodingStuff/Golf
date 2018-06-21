@@ -43,7 +43,7 @@ public class PledgeBot implements Bot {
 	private float lowerBound = (float) 7.5;
 	private float upperBounda = 12;
 	private float lowerBounda = -12;
-	private float hitForce = (float) 4.1;
+	private float hitForce = (float) 4.1; // Default 4.1
 	private int repeatCount;
 	private float extraCheckLength = 7;
 
