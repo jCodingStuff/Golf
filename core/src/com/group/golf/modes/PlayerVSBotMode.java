@@ -133,6 +133,7 @@ public class PlayerVSBotMode extends GameMode {
 
             // Make a move
             if (this.counter == 0) {
+                System.out.println("Looking for user imput!");
                 this.userInput(cam);
             }
             else if (this.counter == 1 && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
@@ -156,7 +157,7 @@ public class PlayerVSBotMode extends GameMode {
         if (this.counter == 0) {
             System.out.println("HUMAN WINS!");
         } else {
-            System.out.println("BOT WINS! (YOU ARE GARBAGE LOL)");
+            System.out.println("BOT WINS!");
         }
     }
 
@@ -189,12 +190,12 @@ public class PlayerVSBotMode extends GameMode {
                 xLength *= this.scales[0] * CourseScreen.SCALE_MULTIPLIER;
                 yLength *= this.scales[1] * CourseScreen.SCALE_MULTIPLIER;
 
-                this.engine.hit(balls[this.counter],xLength, yLength);
+                this.engine.hit(balls[this.counter], xLength, yLength);
                 this.landed = true;
 
                 this.hitSound.play();
 
-                int playerNum = this.counter + 1;
+//                int playerNum = this.counter + 1;
                 System.out.println("Human moved!");
             }
             this.touchFlag = false;

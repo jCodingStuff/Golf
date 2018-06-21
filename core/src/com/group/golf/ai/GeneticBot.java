@@ -75,7 +75,7 @@ public class GeneticBot implements Bot {
             }
             JVector2 currentShot = this.winner.getGenes()[this.counter];
             System.out.println("Hitting force: " + currentShot.getX() + " " + currentShot.getY());
-            this.engine.hit(realBall,(float)currentShot.getX(), (float)currentShot.getY());
+            this.engine.hit(realBall, currentShot.getX(), currentShot.getY());
             this.counter++;
         }
     }
