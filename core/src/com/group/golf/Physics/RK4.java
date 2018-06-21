@@ -32,7 +32,7 @@ public class RK4 extends Physics {
                 ball.getVelocityY() + (k1.accelerationY + 3 * k2.accelerationY + 3 * k3.accelerationY + k4.accelerationY)/8};
 
 
-        float error = 0.01f;
+        float error = 0.05f;
         if (Math.abs(newVelocities[0] - ball.getVelocityX()) < error && Math.abs(newVelocities[1] - ball.getVelocityY()) < error) {
             ball.reset();
         } else {
