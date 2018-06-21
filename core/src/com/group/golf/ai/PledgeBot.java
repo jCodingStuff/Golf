@@ -29,8 +29,21 @@ public class PledgeBot implements Bot {
     private Line2D right;
     private Line2D forward;
     private Line2D left;
-    private double lineLength = 30;
+    private double lineLength = 30; // In the very beginning it was 30.
     private int currentDir = 0;
+    private double extraHitPower = 0;
+    private int extraHitPowerCount = 0;
+    private int extraHitPowerCounta = 0;
+    private boolean cancelHit = false;
+    private int moveCount;
+    private float[] ballCoords = new float[1500];
+    private boolean repeat = false;
+    private List<Rectangle> rects;
+    private double distanceLimit = 3850; 
+	private double upperBound = 138;
+	private double lowerBound = 7.5;
+	private double upperBounda = 300;
+	private double lowerBounda = -300;
 
     /**
      * Create a new instance of PledgeBot
@@ -55,22 +68,50 @@ public class PledgeBot implements Bot {
 
     @Override
     public void makeMove() {
-    	double distanceLimit = 3850; 
-    	double[] goalCoords = this.course.getGoal();
+    	// Calculate ball coords in pixels.
+    	double coordXd = this.ball.getX();
+     	double coordYd = this.ball.getY();
+     	double[] coords = new double[]{coordXd, coordYd};
+     	double[] real = MathLib.toPixel(coords, new double[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
+                 new double[]{this.course.getScales()[0], this.course.getScales()[1]});
+     	float realFloatX = (float) real[0];
+     	float realFloatY = (float) real[1];
+ 		    
+ 			float a = (float) realFloatX;
+     		float b = (float) realFloatY;
+     		
+     	// Record ball location and check for repetition
+     		if (moveCount >= 10) {
+     		ballCoords[moveCount] = a;
+     		ballCoords[moveCount + 1] = b;
+     		
+     		float[] actualMoves = new float[moveCount];
+        	for (int i = 0; i < moveCount; i++) {
+        		actualMoves[i] = ballCoords[i];
+        	}
+     		
+     		
+     		repeat = repetition(actualMoves);
+     		}
+     		
+    	System.out.println("extraHitPowerCount: " + extraHitPowerCount);
+    	if (repeat) {
+    		this.engine.hit((double)(Math.random() * ((upperBounda - lowerBounda) + 1) + lowerBounda), (double)(Math.random() * ((upperBounda - lowerBounda) + 1) + lowerBounda));
+    		extraHitPowerCounta = 0;
+    		cancelHit = true;
+    	}
+    	
+    	/*
+    	if (extraHitPowerCount == 2) {
+    		extraHitPower = (double)(Math.random() * ((upperBound - lowerBound) + 1) + lowerBound);
+    		extraHitPowerCount = 0;
+    	}
+    	*/
+    	
     	// 0 = forward, 1 = left, 2 = bot, 3 = right     the 'way' the ball is 'facing'.
-    	setLines();
+    	if (cancelHit == false) {
     	 if (goalBallDistance() < distanceLimit) {
     		 double hitScalar = 4.25;
-    		 double coordXd = this.ball.getX();
-         	double coordYd = this.ball.getY();
-         	double[] coords = new double[]{coordXd, coordYd};
-         	double[] real = MathLib.toPixel(coords, new double[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
-                     new double[]{this.course.getScales()[0], this.course.getScales()[1]});
-         	float realFloatX = (float) real[0];
-         	float realFloatY = (float) real[1];
-     		    
-     			float a = (float) realFloatX;
-         		float b = (float) realFloatY;
          		
          		double coordXdGoal = this.course.getGoal()[0];
             	double coordYdGoal = this.course.getGoal()[1];
@@ -89,15 +130,15 @@ public class PledgeBot implements Bot {
     	 else	if (currentDir == 0) {
     		 System.out.println("At 0");
     	if (rightClear()) {
-    		this.engine.hit(200, 0);
+    		this.engine.hit(200 + extraHitPower, 0);
     		currentDir = 3;
     	}
     	else if (forwardClear()) {
-    		this.engine.hit(0, 200);
+    		this.engine.hit(0, 200 + extraHitPower);
     		currentDir = 0;
     	}
     	else if (leftClear()) {
-    		this.engine.hit(-200, 0);
+    		this.engine.hit(-200 - extraHitPower, 0);
     		currentDir = 1;
     	}
     	else currentDir = 1;
@@ -105,15 +146,15 @@ public class PledgeBot implements Bot {
     	else if (currentDir == 1) {
     		System.out.println("At 1");
     		if (forwardClear()) {
-        		this.engine.hit(0, 200);
+        		this.engine.hit(0, 200 + extraHitPower);
         		currentDir = 0;
         	}
     		else	if (leftClear()) {
-        		this.engine.hit(-200, 0);
+        		this.engine.hit(-200 - extraHitPower, 0);
         		currentDir = 1;
         	}
     		else if (bottomClear()) {
-        		this.engine.hit(0, -200);
+        		this.engine.hit(0, -200 - extraHitPower);
         		currentDir = 2;
         	}
     		else currentDir = 2;
@@ -122,15 +163,15 @@ public class PledgeBot implements Bot {
     	else if (currentDir == 2) {
     		System.out.println("At 2");
     		if (leftClear()) {
-        		this.engine.hit(-200, 0);
+        		this.engine.hit(-200 - extraHitPower, 0);
         		currentDir = 1;
         	}
     		else if (bottomClear()) {
-        		this.engine.hit(0, -200);
+        		this.engine.hit(0, -200 - extraHitPower);
         		currentDir = 2;
         	}
     		else if (rightClear()) {
-        		this.engine.hit(200, 0);
+        		this.engine.hit(200 + extraHitPower, 0);
         		currentDir = 3;
         	}
     		else currentDir = 3;
@@ -139,37 +180,71 @@ public class PledgeBot implements Bot {
     	else if (currentDir == 3) {
     		System.out.println("At 3");
     		if (bottomClear()) {
-        		this.engine.hit(0, -200);
+        		this.engine.hit(0, -200 - extraHitPower);
         		currentDir = 2;
         	}
     		else if (rightClear()) {
-        		this.engine.hit(200, 0);
+        		this.engine.hit(200 + extraHitPower, 0);
         		currentDir = 3;
         	}
     		else if (forwardClear()) {
-        		this.engine.hit(0, 200);
+        		this.engine.hit(0, 200 + extraHitPower);
         		currentDir = 0;
         	}
     		else currentDir = 0;
     	}
+      }
+    	 cancelHit = false;
+    	 extraHitPowerCount++;
+    	 extraHitPowerCounta++;
+    	 extraHitPower = 0;
+    	 moveCount += 2;
     }
     
-    
-    // Initialize arrows
-    private void setLines() {
-    	// Right arrow
-    	Point3D rightUsea = new Point3D(this.ball.getX(), this.ball.getY());
-    	Point3D rightUseb = new Point3D(this.ball.getX() + lineLength, this.ball.getY());
-        this.right = new Line2D(rightUsea, rightUseb);
-     // Forward arrow
-    	Point3D forwardUsea = new Point3D(this.ball.getX(), this.ball.getY());
-    	Point3D forwardUseb = new Point3D(this.ball.getX(), this.ball.getY() + lineLength);
-        this.forward = new Line2D(forwardUsea, forwardUseb);
-     // Left arrow
-    	Point3D leftUsea = new Point3D(this.ball.getX(), this.ball.getY());
-    	Point3D leftUseb = new Point3D(this.ball.getX() - lineLength, this.ball.getY());
-        this.left = new Line2D(leftUsea, leftUseb);
+    // Place rectangle in given place (added to list of walls)
+    private void placeRect(double x, double y) {
+    	float floatX = (float) x;
+    	float floatY = (float) y;
+    	float rectWidth = 30;
+    	float rectHeight = 30;
+    	Rectangle rect = new Rectangle();
+    	rect.setCenter(floatX, floatY - 15);
+    	rect.setWidth(rectWidth);
+    	rect.setHeight(rectHeight);
+    	walls.add(rect);  	
     }
+    
+    // Check for movement repetition
+   private boolean repetition(float[] tracker) {
+	   boolean isRepeating = false;
+	   
+	   float[] loc1 = new float[] {tracker[tracker.length - 2], tracker[tracker.length - 1]};
+	   float[] loc2 = new float[] {tracker[tracker.length - 4], tracker[tracker.length - 3]};
+	   float[] loc3 = new float[] {tracker[tracker.length - 6], tracker[tracker.length - 5]};
+	   float[] loc4 = new float[] {tracker[tracker.length - 8], tracker[tracker.length - 7]};
+	   float[] loc5 = new float[] {tracker[tracker.length - 10], tracker[tracker.length - 9]};
+	   
+	   if ((loc1[0] == loc2[0]) &&  (loc1[1] == loc2[1]) && (loc1[0] == loc3[0]) && (loc1[1] == loc3[1])) {
+		   isRepeating = true;
+	   }
+	   else if ((loc1[0] == loc3[0]) && (loc1[1] == loc3[1])) {
+		   isRepeating = true;
+	   }
+	   else if ((loc1[0] == loc4[0]) && (loc1[1] == loc4[1])) {
+		   isRepeating = true;
+	   }
+	   else if ((loc1[0] == loc5[0]) && (loc1[1] == loc5[1])) {
+		   isRepeating = true;
+	   }
+	   
+	  
+	   if (isRepeating == true) {
+		   System.out.println("Repetition detected!");
+	   }
+	   
+	   // placeRect(loc2[0], loc2[1]);
+	   return isRepeating;
+   }
     
     // Check if right side of ball is clear
     private boolean rightClear() {
@@ -241,6 +316,7 @@ public class PledgeBot implements Bot {
     	}
     	return result;
     }
+    
     
  // Check if left side of ball is clear
     private boolean leftClear() {
@@ -337,11 +413,6 @@ public class PledgeBot implements Bot {
     		    
     			float aGoal = (float) realFloatXGoal;
         		float bGoal = (float) realFloatYGoal;
-    	
-    	
-    	
-    	
-    	
     	
     	Point3D goalPoint = new Point3D(aGoal, bGoal);
     	Point3D ballPoint = new Point3D(a, b);
