@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.group.golf.Ball;
@@ -92,6 +93,7 @@ public class PlayerVSBotMode extends GameMode {
         for (int i = 0; i < this.balls.length; i++) {
             this.balls[i].render(batch, this.ballsPixels[i].getX(), this.ballsPixels[i].getY());
         }
+        this.highlightBall();
     }
 
 //    @Override
@@ -103,6 +105,15 @@ public class PlayerVSBotMode extends GameMode {
 //            this.loseSound.play(0.2f);
 //        }
 //    }
+
+    private void highlightBall() {
+        if (Gdx.input.isKeyPressed(Input.Keys.H)) {
+            this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            this.game.shapeRenderer.setColor(Golf.HIGHLIGHT_COLOR);
+            this.game.shapeRenderer.circle(this.ballsPixels[0].getX(), this.ballsPixels[0].getY(), Ball.RADIUS);
+            this.game.shapeRenderer.end();
+        }
+    }
 
     private void incrementCounter() {
         this.counter++;
