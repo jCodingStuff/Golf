@@ -28,9 +28,9 @@ public class PledgeBot implements Bot {
     private Line2D right;
     private Line2D forward;
     private Line2D left;
-    private float lineLength = 30;
+    private float lineLength = 30; // By default it´s 30.
     private int currentDir = 0;
-    private double extraHitPower = 0;
+    private float extraHitPower = 0;
     private int extraHitPowerCount = 0;
     private int extraHitPowerCounta = 0;
     private boolean cancelHit = false;
@@ -38,11 +38,14 @@ public class PledgeBot implements Bot {
     private float[] ballCoords = new float[1500];
     private boolean repeat = false;
     private List<Rectangle> rects;
-    private double distanceLimit = 3850;
-	private double upperBound = 138;
-	private double lowerBound = 7.5;
-	private double upperBounda = 300;
-	private double lowerBounda = -300;
+    private float distanceLimit = 3850;
+	private float upperBound = 138;
+	private float lowerBound = (float) 7.5;
+	private float upperBounda = 12;
+	private float lowerBounda = -12;
+	private float hitForce = (float) 4.1;
+	private int repeatCount;
+	private float extraCheckLength = 7;
 
     /**
      * Create a new instance of PledgeBot
@@ -64,18 +67,18 @@ public class PledgeBot implements Bot {
     @Override
     public void makeMove() {
     	// Calculate ball coords in pixels.
-    	double coordXd = this.ball.getX();
-     	double coordYd = this.ball.getY();
-     	double[] coords = new double[]{coordXd, coordYd};
-     	double[] real = MathLib.toPixel(coords, new double[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
-                 new double[]{this.course.getScales()[0], this.course.getScales()[1]});
+    	float coordXd = this.ball.getX();
+     	float coordYd = this.ball.getY();
+     	float[] coords = new float[]{coordXd, coordYd};
+     	float[] real = MathLib.toPixel(coords, new float[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
+                 new float[]{this.course.getScales()[0], this.course.getScales()[1]});
      	float realFloatX = (float) real[0];
      	float realFloatY = (float) real[1];
 
  			float a = (float) realFloatX;
      		float b = (float) realFloatY;
 
-     	// Record ball location and check for repetition
+     	// Record ball location and check for repetition in ball movement.
      		if (moveCount >= 10) {
      		ballCoords[moveCount] = a;
      		ballCoords[moveCount + 1] = b;
@@ -89,16 +92,16 @@ public class PledgeBot implements Bot {
      		repeat = repetition(actualMoves);
      		}
 
-    	System.out.println("extraHitPowerCount: " + extraHitPowerCount);
-    	if (repeat) {
-    		this.engine.hit((double)(Math.random() * ((upperBounda - lowerBounda) + 1) + lowerBounda), (double)(Math.random() * ((upperBounda - lowerBounda) + 1) + lowerBounda));
+    	// System.out.println("extraHitPowerCount: " + extraHitPowerCount);
+    	if (repeat && repeatCount > 1) {
+    		this.engine.hit(this.ball,(float)(Math.random() * ((upperBounda - lowerBounda) + 1) + lowerBounda), (float)(Math.random() * ((upperBounda - lowerBounda) + 1) + lowerBounda));
     		extraHitPowerCounta = 0;
     		cancelHit = true;
     	}
 
     	/*
     	if (extraHitPowerCount == 2) {
-    		extraHitPower = (double)(Math.random() * ((upperBound - lowerBound) + 1) + lowerBound);
+    		extraHitPower = (float)(Math.random() * ((upperBound - lowerBound) + 1) + lowerBound);
     		extraHitPowerCount = 0;
     	}
     	*/
@@ -106,34 +109,33 @@ public class PledgeBot implements Bot {
     	// 0 = forward, 1 = left, 2 = bot, 3 = right     the 'way' the ball is 'facing'.
     	if (cancelHit == false) {
     	 if (goalBallDistance() < distanceLimit) {
-    		 double hitScalar = 4.25;
+    		 float hitScalar = (float) 0.065;
 
-         		double coordXdGoal = this.course.getGoal()[0];
-            	double coordYdGoal = this.course.getGoal()[1];
-            	double[] coordsGoal = new double[]{coordXdGoal, coordYdGoal};
-            	double[] realGoal = MathLib.toPixel(coordsGoal, new double[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
-                        new double[]{this.course.getScales()[0], this.course.getScales()[1]});
-            	float realFloatXGoal = (float) realGoal[0];
-            	float realFloatYGoal = (float) realGoal[1];
+         		float coordXdGoal = this.course.getGoal()[0];
+            	float coordYdGoal = this.course.getGoal()[1];
+            	float[] coordsGoal = new float[]{coordXdGoal, coordYdGoal};
+            	float[] realGoal = MathLib.toPixel(coordsGoal, new float[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
+                        new float[]{this.course.getScales()[0], this.course.getScales()[1]});
+            	float realFloatXGoal = realGoal[0];
+            	float realFloatYGoal = realGoal[1];
 
-        			float aGoal = (float) realFloatXGoal;
-            		float bGoal = (float) realFloatYGoal;
-    		 System.out.println("Hitting directly to goal.");
-    		 double[] distances = new double[] {aGoal-a, bGoal-b};
-    		 this.engine.hit(distances[0]*hitScalar, distances[1]*hitScalar);
+        			float aGoal = realFloatXGoal;
+            		float bGoal = realFloatYGoal;
+    		 float[] distances = new float[] {aGoal-a, bGoal-b};
+    		 this.engine.hit(this.ball, distances[0]*hitScalar, distances[1]*hitScalar);
     	 }
     	 else	if (currentDir == 0) {
     		 System.out.println("At 0");
     	if (rightClear()) {
-    		this.engine.hit(200 + extraHitPower, 0);
+    		this.engine.hit(this.ball,hitForce + extraHitPower, 0);
     		currentDir = 3;
     	}
     	else if (forwardClear()) {
-    		this.engine.hit(0, 200 + extraHitPower);
+    		this.engine.hit(this.ball, 0, hitForce + extraHitPower);
     		currentDir = 0;
     	}
     	else if (leftClear()) {
-    		this.engine.hit(-200 - extraHitPower, 0);
+    		this.engine.hit(this.ball, -hitForce - extraHitPower, 0);
     		currentDir = 1;
     	}
     	else currentDir = 1;
@@ -141,15 +143,15 @@ public class PledgeBot implements Bot {
     	else if (currentDir == 1) {
     		System.out.println("At 1");
     		if (forwardClear()) {
-        		this.engine.hit(0, 200 + extraHitPower);
+        		this.engine.hit(this.ball, 0, hitForce + extraHitPower);
         		currentDir = 0;
         	}
     		else	if (leftClear()) {
-        		this.engine.hit(-200 - extraHitPower, 0);
+        		this.engine.hit(this.ball, -hitForce - extraHitPower, 0);
         		currentDir = 1;
         	}
     		else if (bottomClear()) {
-        		this.engine.hit(0, -200 - extraHitPower);
+        		this.engine.hit(this.ball, 0, -hitForce - extraHitPower);
         		currentDir = 2;
         	}
     		else currentDir = 2;
@@ -158,15 +160,15 @@ public class PledgeBot implements Bot {
     	else if (currentDir == 2) {
     		System.out.println("At 2");
     		if (leftClear()) {
-        		this.engine.hit(-200 - extraHitPower, 0);
+        		this.engine.hit(this.ball, -hitForce - extraHitPower, 0);
         		currentDir = 1;
         	}
     		else if (bottomClear()) {
-        		this.engine.hit(0, -200 - extraHitPower);
+        		this.engine.hit(this.ball, 0, -hitForce - extraHitPower);
         		currentDir = 2;
         	}
     		else if (rightClear()) {
-        		this.engine.hit(200 + extraHitPower, 0);
+        		this.engine.hit(this.ball, hitForce + extraHitPower, 0);
         		currentDir = 3;
         	}
     		else currentDir = 3;
@@ -175,15 +177,15 @@ public class PledgeBot implements Bot {
     	else if (currentDir == 3) {
     		System.out.println("At 3");
     		if (bottomClear()) {
-        		this.engine.hit(0, -200 - extraHitPower);
+        		this.engine.hit(this.ball, 0, -hitForce - extraHitPower);
         		currentDir = 2;
         	}
     		else if (rightClear()) {
-        		this.engine.hit(200 + extraHitPower, 0);
+        		this.engine.hit(this.ball, hitForce + extraHitPower, 0);
         		currentDir = 3;
         	}
     		else if (forwardClear()) {
-        		this.engine.hit(0, 200 + extraHitPower);
+        		this.engine.hit(this.ball, 0, hitForce + extraHitPower);
         		currentDir = 0;
         	}
     		else currentDir = 0;
@@ -196,8 +198,8 @@ public class PledgeBot implements Bot {
     	 moveCount += 2;
     }
 
-    // Place rectangle in given place (added to list of walls)
-    private void placeRect(double x, double y) {
+    // Place rectangle in given place (added to list of walls). Not in use right now.
+    private void placeRect(float x, float y) {
     	float floatX = (float) x;
     	float floatY = (float) y;
     	float rectWidth = 30;
@@ -235,6 +237,7 @@ public class PledgeBot implements Bot {
 
 	   if (isRepeating == true) {
 		   System.out.println("Repetition detected!");
+		   repeatCount++;
 	   }
 
 	   // placeRect(loc2[0], loc2[1]);
@@ -248,18 +251,20 @@ public class PledgeBot implements Bot {
     	int j = 0;
     	while ((result == true) && (i < walls.size())) {
     		j = j + 1;
-        	double coordXd = this.ball.getX();
-        	double coordYd = this.ball.getY();
-        	double[] coords = new double[]{coordXd, coordYd};
-        	double[] real = MathLib.toPixel(coords, new double[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
-                    new double[]{this.course.getScales()[0], this.course.getScales()[1]});
-        	float realFloatX = (float) real[0];
-        	float realFloatY = (float) real[1];
+        	float coordXd = this.ball.getX();
+        	float coordYd = this.ball.getY();
+        	float[] coords = new float[]{coordXd, coordYd};
+        	float[] real = MathLib.toPixel(coords, new float[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
+                    new float[]{this.course.getScales()[0], this.course.getScales()[1]});
+        	float realFloatX = real[0];
+        	float realFloatY = real[1];
 
-    			float a = (float) realFloatX + (float) j;
-        		float b = (float) realFloatY;
+    			float a = realFloatX + (float) j;
+        		float b = realFloatY;
+        		float extraB1 = realFloatY + (float) extraCheckLength; // new
+        		float extraB2 = realFloatY - (float) extraCheckLength; // new
 
-        		if (walls.get(i).contains(a, b) == true) {
+        		if ((walls.get(i).contains(a, b)) || (walls.get(i).contains(a, extraB1)) || (walls.get(i).contains(a, extraB2))) {
         			System.out.println("rightClear became false");
         			result = false;
         		}
@@ -284,17 +289,19 @@ public class PledgeBot implements Bot {
     	int j = 0;
     	while ((result == true) && (i < walls.size())) {
     		j = j + 1;
-        	double coordXd = this.ball.getX();
-        	double coordYd = this.ball.getY();
-        	double[] coords = new double[]{coordXd, coordYd};
-        	double[] real = MathLib.toPixel(coords, new double[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
-                    new double[]{this.course.getScales()[0], this.course.getScales()[1]});
-        	float realFloatX = (float) real[0];
-        	float realFloatY = (float) real[1];
+        	float coordXd = this.ball.getX();
+        	float coordYd = this.ball.getY();
+        	float[] coords = new float[]{coordXd, coordYd};
+        	float[] real = MathLib.toPixel(coords, new float[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
+                    new float[]{this.course.getScales()[0], this.course.getScales()[1]});
+        	float realFloatX = real[0];
+        	float realFloatY = real[1];
 
-    			float a = (float) realFloatX;
-        		float b = (float) realFloatY + (float) j;
-    		if (walls.get(i).contains(a, b) == true) {
+    			float a = realFloatX;
+        		float b = realFloatY + (float) j;
+        		float extraA1 = realFloatX - extraCheckLength; // new
+        		float extraA2 = realFloatX + extraCheckLength; // new
+    		if ((walls.get(i).contains(a, b)) || (walls.get(i).contains(extraA1, b)) ||  walls.get(i).contains(extraA2, b)) {
     			System.out.println("forwardClear became false");
     			result = false;
     		}
@@ -320,28 +327,30 @@ public class PledgeBot implements Bot {
     	int j = 0;
     	while ((result == true) && (i < walls.size())) {
     		j = j + 1;
-        	double coordXd = this.ball.getX();
-        	double coordYd = this.ball.getY();
-        	double[] coords = new double[]{coordXd, coordYd};
-        	double[] real = MathLib.toPixel(coords, new double[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
-                    new double[]{this.course.getScales()[0], this.course.getScales()[1]});
-        	float realFloatX = (float) real[0];
-        	float realFloatY = (float) real[1];
+        	float coordXd = this.ball.getX();
+        	float coordYd = this.ball.getY();
+        	float[] coords = new float[]{coordXd, coordYd};
+        	float[] real = MathLib.toPixel(coords, new float[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
+                    new float[]{this.course.getScales()[0], this.course.getScales()[1]});
+        	float realFloatX = real[0];
+        	float realFloatY = real[1];
 
-    			float a = (float) realFloatX - (float) j;
-        		float b = (float) realFloatY;
+    			float a = realFloatX - (float) j;
+        		float b = realFloatY;
+        		float extraB1 = realFloatY + (float) extraCheckLength; // new
+        		float extraB2 = realFloatY - (float) extraCheckLength; // new
 
-    		if (walls.get(i).contains(a, b) == true) {
-    			System.out.println("leftClear became false");
-    			result = false;
-    		}
-    		else {
-    			result = true;
-    		}
-    		if (j == lineLength) {
-        		i++;
-        		j = 0;
+        		if ((walls.get(i).contains(a, b)) || (walls.get(i).contains(a, extraB1)) || (walls.get(i).contains(a, extraB2))) {
+        			System.out.println("rightClear became false");
+        			result = false;
         		}
+        		else {
+        			result = true;
+        		}
+        		if (j == lineLength) {
+            		i++;
+            		j = 0;
+            		}
     	}
     	if (result == false) {
     		System.out.println("Left not clear");
@@ -349,25 +358,27 @@ public class PledgeBot implements Bot {
     	return result;
     }
 
- // Check if left side of ball is clear
+ // Check if bottom side of ball is clear
     private boolean bottomClear() {
     	boolean result = true;
     	int i = 0;
     	int j = 0;
     	while ((result == true) && (i < walls.size())) {
     		j = j + 1;
-        	double coordXd = this.ball.getX();
-        	double coordYd = this.ball.getY();
-        	double[] coords = new double[]{coordXd, coordYd};
-        	double[] real = MathLib.toPixel(coords, new double[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
-                    new double[]{this.course.getScales()[0], this.course.getScales()[1]});
-        	float realFloatX = (float) real[0];
-        	float realFloatY = (float) real[1];
+        	float coordXd = this.ball.getX();
+        	float coordYd = this.ball.getY();
+        	float[] coords = new float[]{coordXd, coordYd};
+        	float[] real = MathLib.toPixel(coords, new float[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
+                    new float[]{this.course.getScales()[0], this.course.getScales()[1]});
+        	float realFloatX = real[0];
+        	float realFloatY = real[1];
 
-    			float a = (float) realFloatX;
-        		float b = (float) realFloatY - (float) j;
+    			float a = realFloatX;
+        		float b = realFloatY - (float) j;
+        		float extraA1 = realFloatX + extraCheckLength; // new
+        		float extraA2 = realFloatX - extraCheckLength; // new
 
-    		if (walls.get(i).contains(a, b) == true) {
+    		if ((walls.get(i).contains(a, b) == true) || (walls.get(i).contains(extraA1, b)) || (walls.get(i).contains(extraA2, b))) {
     			System.out.println("bottomClear became false");
     			result = false;
     		}
@@ -386,31 +397,25 @@ public class PledgeBot implements Bot {
     }
 
     // Find distance between given wall and ball
-    private double goalBallDistance() {
-    	double coordXd = this.ball.getX();
-    	double coordYd = this.ball.getY();
-    	double[] coords = new double[]{coordXd, coordYd};
-    	double[] real = MathLib.toPixel(coords, new double[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
-                new double[]{this.course.getScales()[0], this.course.getScales()[1]});
+    private float goalBallDistance() {
+    	float coordXd = this.ball.getX();
+    	float coordYd = this.ball.getY();
+    	float[] coords = new float[]{coordXd, coordYd};
+    	float[] real = MathLib.toPixel(coords, new float[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
+                new float[]{this.course.getScales()[0], this.course.getScales()[1]});
     	float realFloatX = (float) real[0];
     	float realFloatY = (float) real[1];
 
-			float a = (float) realFloatX;
-    		float b = (float) realFloatY;
+    		float coordXdGoal = this.course.getGoal()[0];
+        	float coordYdGoal = this.course.getGoal()[1];
+        	float[] coordsGoal = new float[]{coordXdGoal, coordYdGoal};
+        	float[] realGoal = MathLib.toPixel(coordsGoal, new float[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
+                    new float[]{this.course.getScales()[0], this.course.getScales()[1]});
+        	float realFloatXGoal = realGoal[0];
+        	float realFloatYGoal = realGoal[1];
 
-    		double coordXdGoal = this.course.getGoal()[0];
-        	double coordYdGoal = this.course.getGoal()[1];
-        	double[] coordsGoal = new double[]{coordXdGoal, coordYdGoal};
-        	double[] realGoal = MathLib.toPixel(coordsGoal, new double[]{this.course.getOffsets()[0], this.course.getOffsets()[1]},
-                    new double[]{this.course.getScales()[0], this.course.getScales()[1]});
-        	float realFloatXGoal = (float) realGoal[0];
-        	float realFloatYGoal = (float) realGoal[1];
-
-    			float aGoal = (float) realFloatXGoal;
-        		float bGoal = (float) realFloatYGoal;
-
-    	Point3D goalPoint = new Point3D(aGoal, bGoal);
-    	Point3D ballPoint = new Point3D(a, b);
+    	Point3D goalPoint = new Point3D(realFloatXGoal, realFloatYGoal);
+    	Point3D ballPoint = new Point3D(realFloatX, realFloatY);
     	System.out.println("Goal ball distance: " + MathLib.distanceSquared(ballPoint, goalPoint));
     	return MathLib.distanceSquared(ballPoint, goalPoint);
     }
