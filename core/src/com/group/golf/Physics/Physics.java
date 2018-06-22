@@ -24,7 +24,7 @@ public class Physics {
     private boolean wall_stop;
     private List<Rectangle> walls;
 
-    public static float[] hitCoord;
+    protected static float[] hitCoord;
 
     /**
      * Construct a Physics engine
@@ -62,6 +62,8 @@ public class Physics {
         ball.setVelocityY(yLength);
 
         ball.limit(this.course.getVmax());
+
+        System.out.println("HIT COORDS ARE SET x:  " + hitCoord[0] + "   y: " + hitCoord[1]);
 
     }
 
