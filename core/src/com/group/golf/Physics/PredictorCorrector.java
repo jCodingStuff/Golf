@@ -19,6 +19,7 @@ public class PredictorCorrector extends Physics {
 
     int counter = 1;
 
+
     public void movement(Ball ball, float delta) {
 
         //Bootstrapping RK4
@@ -38,23 +39,14 @@ public class PredictorCorrector extends Physics {
 
             hitCoord = tempCoords;
             //Predictor three stage Adams - Bashforth
-            float[] tempCoords = new float[]{ball.getX(),ball.getY()};
-            float[] tempVel = new float[]{ball.getVelocityX(),ball.getVelocityY()};
-            float[] acceleration = acceleration(tempCoords,tempVel);
-            derivative currentFunction = new derivative(tempVel[0],tempVel[1],
-                    acceleration[0],acceleration[1]);
+//            float[] tempCoords = new float[]{ball.getX(),ball.getY()};
+//            float[] tempVel = new float[]{ball.getVelocityX(),ball.getVelocityY()};
+//            float[] acceleration = acceleration(tempCoords,tempVel);
+            derivative currentFunction = new derivative(ball);
 
-            tempCoords = new float[]{prevState_1.positionX,prevState_1.positionY};
-            tempVel = new float[]{prevState_1.velocityX,prevState_1.velocityY};
-            acceleration = acceleration(tempCoords,tempVel);
-            derivative previousFunction_1 = new derivative(tempVel[0],tempVel[1],
-                    acceleration[0], acceleration[1]);
+            derivative previousFunction_1 = new derivative(prevState_1);
 
-            tempCoords = new float[]{prevState_2.positionX,prevState_2.positionY};
-            tempVel = new float[]{prevState_2.velocityX,prevState_2.velocityY};
-            acceleration = acceleration(tempCoords,tempVel);
-            derivative previousFunction_2 = new derivative(tempVel[0],tempVel[1],
-                    acceleration[0], acceleration[1]);
+            derivative previousFunction_2 = new derivative(prevState_2);
 
 
             float[] predictorCoord = new float[]{ball.getX() + (delta/12) * (23 * currentFunction.velocityX - 16 * previousFunction_1.velocityX + 5 * previousFunction_2.velocityX),
@@ -63,10 +55,7 @@ public class PredictorCorrector extends Physics {
                     ball.getVelocityY() + (delta/12) * (23 * currentFunction.accelerationY - 16 * previousFunction_1.accelerationY + 5 * previousFunction_2.accelerationY)};
 
             //Corrector three stage implicit Adams - Moulton
-
-            acceleration = acceleration(predictorCoord,predictorVel);
-            derivative predictedFunction = new derivative(predictorVel[0],predictorVel[1],
-                    acceleration[0],acceleration[1]);
+            derivative predictedFunction = new derivative(predictorCoord,predictorVel);
 
             float[] correctedCoord = new float[]{ball.getX() + (delta/24) * (9 * predictedFunction.velocityX + 19 * currentFunction.velocityX - 5 * previousFunction_1.velocityX + previousFunction_2.velocityX),
                     ball.getY() + (delta/24) * (9 * predictedFunction.velocityY + 19 * currentFunction.velocityY - 5 * previousFunction_1.velocityY + previousFunction_2.velocityY)};
@@ -76,6 +65,8 @@ public class PredictorCorrector extends Physics {
 
             prevState_2 = prevState_1;
             prevState_1 = new state(ball.getX(),ball.getY(),ball.getVelocityX(),ball.getVelocityY());
+
+
 
             float error = 0.1f;
             if (Math.abs(correctedVel[0] - ball.getVelocityX()) < error && Math.abs(correctedVel[1] - ball.getVelocityY()) < error) {
@@ -126,11 +117,32 @@ public class PredictorCorrector extends Physics {
             this.accelerationY = accelerationY;
         }
 
-        public derivative(derivative prevK, float delta) {
-            this.velocityX = prevK.velocityX * delta;
-            this.velocityY = prevK.velocityY * delta;
-            this.accelerationX = prevK.accelerationX * delta;
-            this.accelerationY = prevK.accelerationY * delta;
+        public derivative(state state) {
+            float[] tempCoords = new float[]{state.positionX,state.positionY};
+            float[] tempVel = new float[]{state.velocityX,state.velocityY};
+            float[] acceleration = acceleration(tempCoords,tempVel);
+            this.velocityX = tempVel[0];
+            this.velocityY = tempVel[1];
+            this.accelerationX = acceleration[0];
+            this.accelerationY = acceleration[1];
+        }
+
+        public derivative(Ball ball) {
+            float[] tempCoords = new float[]{ball.getX(),ball.getY()};
+            float[] tempVel = new float[]{ball.getVelocityX(),ball.getVelocityY()};
+            float[] acceleration = acceleration(tempCoords,tempVel);
+            this.velocityX = tempVel[0];
+            this.velocityY = tempVel[1];
+            this.accelerationX = acceleration[0];
+            this.accelerationY = acceleration[1];
+        }
+
+        public derivative(float[] coords, float[] velocities) {
+            float[] acceleration = acceleration(coords,velocities);
+            this.velocityX = velocities[0];
+            this.velocityY = velocities[1];
+            this.accelerationX = acceleration[0];
+            this.accelerationY = acceleration[1];
         }
     }
 }
