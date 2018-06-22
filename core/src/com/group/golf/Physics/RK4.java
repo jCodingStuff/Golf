@@ -10,6 +10,7 @@ public class RK4 extends Physics {
 
     public RK4(Course course) {
         super(course);
+        errorBound = 0.019f;
     }
 
     //method to be overwritten by each subclass
@@ -30,14 +31,15 @@ public class RK4 extends Physics {
                 ball.getVelocityY() + (k1.accelerationY + 3 * k2.accelerationY + 3 * k3.accelerationY + k4.accelerationY)/8};
 
 
-        float error = 0.01f;
-        if (Math.abs(newVelocities[0] - ball.getVelocityX()) < error && Math.abs(newVelocities[1] - ball.getVelocityY()) < error) {
+
+        ball.setVelocities(newVelocities);
+        ball.setCoords(newCoordinates);
+
+        if (isRepeting(ball,newCoordinates)){
             ball.reset();
-        } else {
-            ball.setVelocities(newVelocities);
+            repeatChecker = new float[0][2];
         }
 
-        ball.setCoords(newCoordinates);
 
         super.checkCollision(ball);
         ball.limit(super.getCourse().getVmax());

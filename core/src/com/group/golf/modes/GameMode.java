@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.group.golf.Course;
 import com.group.golf.Physics.Euler;
 import com.group.golf.Physics.Physics;
+import com.group.golf.Physics.PredictorCorrector;
 import com.group.golf.Physics.RK4;
 
 abstract public class GameMode {
@@ -34,10 +35,11 @@ abstract public class GameMode {
     public abstract void dispose();
 
     protected void setUpPhysics(String diffMethod) {
-        if (diffMethod == "RK4")
-            engine = new RK4(course);
-        else
-            engine = new Euler(course);
+        engine = new RK4(course);
+//        if (diffMethod == "RK4")
+//            engine = new RK4(course);
+//        else
+//            engine = new Euler(course);
 
 
     }

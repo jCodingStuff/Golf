@@ -14,6 +14,7 @@ public class PredictorCorrector extends Physics {
 
     public PredictorCorrector(Course course) {
         super(course);
+        errorBound = 0.027f;
     }
 
 
@@ -35,13 +36,11 @@ public class PredictorCorrector extends Physics {
             Physics rk4 = new RK4(getCourse());
             rk4.movement(ball, delta);
             counter++;
+            hitCoord = tempCoords;
+
         } else {
 
-            hitCoord = tempCoords;
             //Predictor three stage Adams - Bashforth
-//            float[] tempCoords = new float[]{ball.getX(),ball.getY()};
-//            float[] tempVel = new float[]{ball.getVelocityX(),ball.getVelocityY()};
-//            float[] acceleration = acceleration(tempCoords,tempVel);
             derivative currentFunction = new derivative(ball);
 
             derivative previousFunction_1 = new derivative(prevState_1);
@@ -53,6 +52,7 @@ public class PredictorCorrector extends Physics {
                     ball.getY() + (delta/12) * (23 * currentFunction.velocityY - 16 * previousFunction_1.velocityY + 5 * previousFunction_2.velocityY)};
             float[] predictorVel = new float[]{ball.getVelocityX() + (delta/12) * (23 * currentFunction.accelerationX - 16 * previousFunction_1.accelerationX + 5 * previousFunction_2.accelerationX),
                     ball.getVelocityY() + (delta/12) * (23 * currentFunction.accelerationY - 16 * previousFunction_1.accelerationY + 5 * previousFunction_2.accelerationY)};
+
 
             //Corrector three stage implicit Adams - Moulton
             derivative predictedFunction = new derivative(predictorCoord,predictorVel);
@@ -67,15 +67,14 @@ public class PredictorCorrector extends Physics {
             prevState_1 = new state(ball.getX(),ball.getY(),ball.getVelocityX(),ball.getVelocityY());
 
 
+            ball.setVelocities(correctedVel);
+            ball.setCoords(correctedCoord);
 
-            float error = 0.1f;
-            if (Math.abs(correctedVel[0] - ball.getVelocityX()) < error && Math.abs(correctedVel[1] - ball.getVelocityY()) < error) {
+            if (isRepeting(ball,correctedCoord)){
                 ball.reset();
-            } else {
-                ball.setVelocities(correctedVel);
+                repeatChecker = new float[0][2];
             }
 
-            ball.setCoords(correctedCoord);
 
             super.checkCollision(ball);
             ball.limit(super.getCourse().getVmax());

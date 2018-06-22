@@ -9,6 +9,7 @@ import com.group.golf.math.MathLib;
 import com.group.golf.math.Point3D;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,6 +24,8 @@ public class Physics {
     private boolean water;
     private boolean wall_stop;
     private List<Rectangle> walls;
+     static float[][] repeatChecker;
+    protected float errorBound;
 
     protected static float[] hitCoord;
 
@@ -44,6 +47,7 @@ public class Physics {
         this.collision = other.collision;
         this.water = other.water;
         this.walls = course.getWalls();
+        this.repeatChecker = other.repeatChecker;
     }
 
 
@@ -55,6 +59,8 @@ public class Physics {
     public void hit(Ball ball, float xLength, float yLength) {
         water = false;
 
+        repeatChecker = new float[0][2];
+
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
 
@@ -64,7 +70,6 @@ public class Physics {
         ball.limit(this.course.getVmax());
 
         System.out.println("HIT COORDS ARE SET x:  " + hitCoord[0] + "   y: " + hitCoord[1]);
-
     }
 
     public void movement(Ball ball, float delta) {
@@ -82,6 +87,51 @@ public class Physics {
             water = true;
         }
     }
+
+    public boolean isRepeting(Ball ball, float[] check) {
+        if (ball.getX() - check[0] > 0.0001 || ball.getY() - check[1] > 0.0001) {
+            //change in coordinates is too high to account
+            repeatChecker = new float[0][2];
+            return false;
+        } else {
+            if (repeatChecker.length == 6) {
+                float[][] tempArray = new float[7][2];
+                for (int i = 0; i < repeatChecker.length; i++)
+                    tempArray[i] = repeatChecker[i];
+
+                tempArray[tempArray.length-1] = check;
+
+                for (int i = 0; i < repeatChecker.length; i++)
+                    repeatChecker[i] = tempArray[i+1];
+
+                for (int i = 0; i < tempArray.length-1; i++) {
+                    for (int j = i+1; j < tempArray.length; j++) {
+                        if (tempArray[i][0] < tempArray[j][0]) {
+                            float[] temp = tempArray[i];
+                            tempArray[i] = tempArray[j];
+                            tempArray[j] = temp;
+                        }
+                    }
+                }
+
+                if (tempArray[0][0] - tempArray[6][0] < errorBound && Math.abs(tempArray[0][1] - tempArray[6][1]) < errorBound) {
+                    System.out.println(Arrays.deepToString(tempArray));
+                    repeatChecker = new float[0][2];
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                float[][] temp = repeatChecker;
+                repeatChecker = new float[repeatChecker.length+1][2];
+                for (int i = 0; i < temp.length; i++)
+                    repeatChecker[i] = temp[i];
+                repeatChecker[repeatChecker.length-1] = check;
+                return false;
+            }
+        }
+    }
+
 
     public float[] acceleration(float[] coord, float[] velocities) {
         float[] gravForce = gravForce(coord);

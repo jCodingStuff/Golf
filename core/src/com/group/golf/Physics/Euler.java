@@ -7,6 +7,7 @@ public class Euler extends Physics {
 
     public Euler(Course course) {
         super(course);
+        errorBound = 0.046f;
     }
 
     public void movement(Ball ball, float delta) {
@@ -23,12 +24,17 @@ public class Euler extends Physics {
         newVelocities[1] = ball.getVelocityY() + delta * accelerations[1];
 
         ball.setCoords(newCoords);
-
         ball.setVelocities(newVelocities);
+
+        if (isRepeting(ball,newCoords)){
+            ball.reset();
+            repeatChecker = new float[0][2];
+        }
+
 
         super.checkCollision(ball);
 
-        System.out.println("Euler Velocity x:     " + newVelocities[0] + "   Velocity y:     " + newVelocities[1]);
+//        System.out.println("Euler Coords x:     " + newCoords[0] + "   Velocity y:     " + newCoords[1]);
 
     }
 }
