@@ -3,10 +3,7 @@ package com.group.golf.modes;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.group.golf.Course;
-import com.group.golf.Physics.Euler;
-import com.group.golf.Physics.Physics;
-import com.group.golf.Physics.PredictorCorrector;
-import com.group.golf.Physics.RK4;
+import com.group.golf.Physics.*;
 
 abstract public class GameMode {
 
@@ -35,7 +32,7 @@ abstract public class GameMode {
     public abstract void dispose();
 
     protected void setUpPhysics(String diffMethod) {
-        engine = new RK4(course);
+        engine = new Verlet(course);
 //        if (diffMethod == "RK4")
 //            engine = new RK4(course);
 //        else
