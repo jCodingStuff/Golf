@@ -21,7 +21,8 @@ public class PredictorCorrector extends Physics {
     int counter = 1;
 
 
-    public void movement(Ball ball, float delta) {
+    public void movement(float delta, boolean simulation) {
+        Ball ball = super.getBall();
 
         //Bootstrapping RK4
 
@@ -29,12 +30,12 @@ public class PredictorCorrector extends Physics {
             tempCoords = hitCoord;
             prevState_2 = new state(ball.getX(),ball.getY(),ball.getVelocityX(),ball.getVelocityY());
             Physics rk4 = new RK4(getCourse());
-            rk4.movement(ball,delta);
+            ((RK4) rk4).bootstrapMovement(ball,delta,simulation);
             counter++;
         } else if (counter==2) {
             prevState_1 = new state(ball.getX(), ball.getY(), ball.getVelocityX(), ball.getVelocityY());
             Physics rk4 = new RK4(getCourse());
-            rk4.movement(ball, delta);
+            ((RK4) rk4).bootstrapMovement(ball,delta,simulation);
             counter++;
             hitCoord = tempCoords;
 
@@ -76,7 +77,7 @@ public class PredictorCorrector extends Physics {
             }
 
 
-            super.checkCollision(ball);
+            super.checkCollision(simulation);
             ball.limit(super.getCourse().getVmax());
 
 //            System.out.println("Corrected velocities x: " + correctedVel[0] + "  y: " + correctedVel[1] );

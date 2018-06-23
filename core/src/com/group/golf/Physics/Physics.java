@@ -28,15 +28,10 @@ public class Physics {
      static float[][] repeatChecker;
     protected float errorBound;
 
-<<<<<<< HEAD
     protected static float[] hitCoord;
-=======
     private static final Sound loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
 
-    private Ball ball;
-
-    public static float[] hitCoord;
->>>>>>> origin/master
+    private Ball movingBall;
 
 
     /**
@@ -66,8 +61,8 @@ public class Physics {
      * @param yLength the length that the mouse was dragged vertically
      */
     public void hit(Ball ball, float xLength, float yLength) {
-        this.ball = ball;
-        this.collision.setBall(this.ball);
+        this.movingBall = ball;
+        this.collision.setBall(this.movingBall);
         water = false;
 
         repeatChecker = new float[0][2];
@@ -75,14 +70,11 @@ public class Physics {
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
 
-        this.ball.setVelocityX(xLength);
-        this.ball.setVelocityY(yLength);
+        this.movingBall.setVelocityX(xLength);
+        this.movingBall.setVelocityY(yLength);
 
-<<<<<<< HEAD
         System.out.println("HIT COORDS ARE SET x:  " + hitCoord[0] + "   y: " + hitCoord[1]);
-=======
-        this.ball.limit(this.course.getVmax());
->>>>>>> origin/master
+        this.movingBall.limit(this.course.getVmax());
     }
 
     public void movement(float delta, boolean simulation) {
@@ -90,15 +82,15 @@ public class Physics {
     }
 
     public void checkCollision(boolean simulation) {
-        float[] ballPixels = MathLib.toPixel(new float[]{this.ball.getX(), this.ball.getY()}, this.course.getOffsets(),
+        float[] ballPixels = MathLib.toPixel(new float[]{this.movingBall.getX(), this.movingBall.getY()}, this.course.getOffsets(),
                 this.course.getScales());
         this.collision.checkForWalls(ballPixels[0], ballPixels[1]);
         this.collision.checkForGraphicWalls(ballPixels[0], ballPixels[1], walls);
 
         if (this.collision.ballInWater()) {
-            ball.reset();
-            this.ball.setX(hitCoord[0]);
-            this.ball.setY(hitCoord[1]);
+            movingBall.reset();
+            this.movingBall.setX(hitCoord[0]);
+            this.movingBall.setY(hitCoord[1]);
             if (!simulation) loseSound.play(0.2f);
             water = true;
         }
@@ -274,10 +266,10 @@ public class Physics {
     }
 
     public Ball getBall() {
-        return ball;
+        return movingBall;
     }
 
     public void setBall(Ball ball) {
-        this.ball = ball;
+        this.movingBall = ball;
     }
 }

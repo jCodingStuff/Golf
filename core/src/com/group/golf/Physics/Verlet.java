@@ -10,7 +10,8 @@ public class Verlet extends Physics {
         errorBound = 0.035f;
     }
 
-    public void movement(Ball ball, float delta) {
+    public void movement(float delta, boolean simulation) {
+        Ball ball = super.getBall();
         float[] currentVelocity = new float[]{ball.getVelocityX(),ball.getVelocityY()};
         float[] currentAcceleration = acceleration(new float[]{ball.getX(),ball.getY()}, currentVelocity);
 
@@ -30,7 +31,7 @@ public class Verlet extends Physics {
             repeatChecker = new float[0][2];
         }
 
-        super.checkCollision(ball);
+        super.checkCollision(simulation);
         ball.limit(super.getCourse().getVmax());
 //        System.out.println("Verlet x:     " + newCoords[0] +     " y: " + newCoords[1]);
 //        System.out.println("Verlet velocity x: " + newVelocities[0] + "  y: " + newVelocities[1]);

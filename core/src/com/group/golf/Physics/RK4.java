@@ -39,11 +39,17 @@ public class RK4 extends Physics {
             repeatChecker = new float[0][2];
         }
 
-        super.checkCollision(ball);
+        super.checkCollision(simulation);
         ball.limit(super.getCourse().getVmax());
 
 //        System.out.println("RK4 Velocity x:     " + newVelocities[0] + "   Velocity y:     " + newVelocities[1]);
 
+    }
+
+    public void bootstrapMovement(Ball ball,float delta, boolean simulation) {
+        super.setBall(ball);
+        super.getCollision().setBall(ball);
+        movement(delta,simulation);
     }
 
     class derivative {

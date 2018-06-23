@@ -33,21 +33,11 @@ abstract public class GameMode {
     public abstract void dispose();
 
     protected void setUpPhysics(String diffMethod) {
-<<<<<<< HEAD
-        engine = new Verlet(course);
+        engine = new PredictorCorrector(course);
 //        if (diffMethod == "RK4")
 //            engine = new RK4(course);
 //        else
 //            engine = new Euler(course);
-
-
-=======
-        if (diffMethod.equals("RK4")) {
-            this.engine = new RK4(this.course);
-        } else {
-            this.engine = new Euler(this.course);
-        }
->>>>>>> origin/master
     }
 
 }
