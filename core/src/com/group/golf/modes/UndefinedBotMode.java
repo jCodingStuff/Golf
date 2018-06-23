@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.group.golf.Ball;
 import com.group.golf.Course;
@@ -25,7 +26,7 @@ public class UndefinedBotMode extends GameMode {
     private Bot[] bots;
 
     private Sound hitSound;
-    private Sound loseSound;
+//    private Sound loseSound;
     private Sound winSound;
 
     private Ball[] balls;
@@ -48,7 +49,7 @@ public class UndefinedBotMode extends GameMode {
 
         // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));
-        this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
+//        this.loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
         this.winSound = Gdx.audio.newSound(Gdx.files.internal("success_2.wav"));
     }
 
@@ -88,17 +89,28 @@ public class UndefinedBotMode extends GameMode {
         for (int i = 0; i < this.balls.length; i++) {
             this.balls[i].render(batch, this.ballsPixels[i].getX(), this.ballsPixels[i].getY());
         }
+        this.highlightBall();
     }
 
-    @Override
-    public void water() {
-        Ball ball = this.balls[this.counter];
-        if (engine.isWater()) {
-            ball.setX(engine.getHitCoord()[0]);
-            ball.setY(engine.getHitCoord()[1]);
-            this.loseSound.play(0.2f);
+    private void highlightBall() {
+        if (Gdx.input.isKeyPressed(Input.Keys.H)) {
+            this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            this.game.shapeRenderer.setColor(Golf.HIGHLIGHT_COLOR);
+            this.game.shapeRenderer.circle(this.ballsPixels[this.counter].getX(),
+                    this.ballsPixels[this.counter].getY(), Ball.RADIUS);
+            this.game.shapeRenderer.end();
         }
     }
+
+//    @Override
+//    public void water() {
+//        Ball ball = this.balls[this.counter];
+//        if (engine.isWater()) {
+//            ball.setX(engine.getHitCoord()[0]);
+//            ball.setY(engine.getHitCoord()[1]);
+//            this.loseSound.play(0.2f);
+//        }
+//    }
 
     private void incrementCounter() {
         this.counter++;
@@ -111,6 +123,7 @@ public class UndefinedBotMode extends GameMode {
         if (!currentBall.isMoving()) {
             // Check if the goal is achieved
             if (this.engine.isGoalAchieved(currentBall)) {
+                System.out.println("Ball landed: " + currentBall.getX() + " " + currentBall.getY());
                 this.informWinner();
                 this.winSound.play();
                 try { Thread.sleep(3000); }
@@ -128,7 +141,7 @@ public class UndefinedBotMode extends GameMode {
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) this.botMove();
             return true;
         } else {
-            this.engine.movement(currentBall,Gdx.graphics.getDeltaTime());
+            this.engine.movement(Golf.DELTA, false);
             return true;
         }
     }
@@ -152,7 +165,7 @@ public class UndefinedBotMode extends GameMode {
         this.bots[this.counter].makeMove();
         this.informMove();
         this.landed = true;
-        this.hitSound.play();
+        this.hitSound.play(Golf.HIT_VOLUME);
     }
 
     private void informMove() {
@@ -186,6 +199,5 @@ public class UndefinedBotMode extends GameMode {
     public void dispose() {
         this.hitSound.dispose();
         this.winSound.dispose();
-        this.loseSound.dispose();
     }
 }

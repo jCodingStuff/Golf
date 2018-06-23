@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.group.golf.Course;
 import com.group.golf.Physics.*;
 
+
 abstract public class GameMode {
 
     protected float[] offsets;
@@ -17,7 +18,7 @@ abstract public class GameMode {
 
     public abstract boolean move(OrthographicCamera cam);
 
-    public abstract void water();
+//    public abstract void water();
 
     public abstract void extraChecks();
 
@@ -32,6 +33,7 @@ abstract public class GameMode {
     public abstract void dispose();
 
     protected void setUpPhysics(String diffMethod) {
+<<<<<<< HEAD
         engine = new Verlet(course);
 //        if (diffMethod == "RK4")
 //            engine = new RK4(course);
@@ -39,6 +41,13 @@ abstract public class GameMode {
 //            engine = new Euler(course);
 
 
+=======
+        if (diffMethod.equals("RK4")) {
+            this.engine = new RK4(this.course);
+        } else {
+            this.engine = new Euler(this.course);
+        }
+>>>>>>> origin/master
     }
 
 }

@@ -2,6 +2,7 @@ package com.group.golf.ai;
 
 
 import com.badlogic.gdx.Gdx;
+import com.group.golf.Golf;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
 import com.badlogic.gdx.math.Vector2;
@@ -110,7 +111,7 @@ public class botMartijn implements Bot {
 
         //needs adjusting
         private double waterScore(Point3D ballPoint, Point3D goal){
-            if (this.collision.isWaterBetween(ballPoint, goal))
+            if (this.course.isWaterBetween(ballPoint, goal))
                 return Double.NEGATIVE_INFINITY;
 
             else {
@@ -147,12 +148,11 @@ public class botMartijn implements Bot {
         private void simulateShot(JVector2 force) {
             this.virtualEngine.hit(virtualBall,(float)force.getX(), (float)force.getY());
             while (this.virtualBall.isMoving()) {
-                virtualEngine.movement(virtualBall,0.04f);
-                if (this.virtualEngine.isWater()) {
-
-                    this.virtualBall.setX(this.engine.getHitCoord()[0]);
-                    this.virtualBall.setY(this.engine.getHitCoord()[1]);
-                }
+                this.engine.movement(Golf.DELTA, true);
+//                if (this.engine.isWater()) {
+//                    this.virtualBall.setX(this.engine.getHitCoord()[0]);
+//                    this.virtualBall.setY(this.engine.getHitCoord()[1]);
+//                }
             }
         }
 

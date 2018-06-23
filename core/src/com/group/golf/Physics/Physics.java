@@ -1,6 +1,7 @@
 package com.group.golf.Physics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Rectangle;
 import com.group.golf.Ball;
 import com.group.golf.Course;
@@ -27,7 +28,16 @@ public class Physics {
      static float[][] repeatChecker;
     protected float errorBound;
 
+<<<<<<< HEAD
     protected static float[] hitCoord;
+=======
+    private static final Sound loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
+
+    private Ball ball;
+
+    public static float[] hitCoord;
+>>>>>>> origin/master
+
 
     /**
      * Construct a Physics engine
@@ -39,7 +49,6 @@ public class Physics {
         this.hitCoord = new float[2];
         this.collision = new Collision(this.course);
         this.walls = course.getWalls();
-
     }
 
     public Physics(Physics other) {
@@ -57,6 +66,8 @@ public class Physics {
      * @param yLength the length that the mouse was dragged vertically
      */
     public void hit(Ball ball, float xLength, float yLength) {
+        this.ball = ball;
+        this.collision.setBall(this.ball);
         water = false;
 
         repeatChecker = new float[0][2];
@@ -64,26 +75,31 @@ public class Physics {
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
 
-        ball.setVelocityX(xLength);
-        ball.setVelocityY(yLength);
+        this.ball.setVelocityX(xLength);
+        this.ball.setVelocityY(yLength);
 
-        ball.limit(this.course.getVmax());
-
+<<<<<<< HEAD
         System.out.println("HIT COORDS ARE SET x:  " + hitCoord[0] + "   y: " + hitCoord[1]);
+=======
+        this.ball.limit(this.course.getVmax());
+>>>>>>> origin/master
     }
 
-    public void movement(Ball ball, float delta) {
+    public void movement(float delta, boolean simulation) {
         System.out.println("No differential equation created");
     }
 
-    public void checkCollision(Ball ball) {
-        this.collision.setBall(ball);
-        float[] ballPixels = MathLib.toPixel(new float[]{ball.getX(),ball.getY()},this.course.getOffsets(),this.course.getScales());
+    public void checkCollision(boolean simulation) {
+        float[] ballPixels = MathLib.toPixel(new float[]{this.ball.getX(), this.ball.getY()}, this.course.getOffsets(),
+                this.course.getScales());
         this.collision.checkForWalls(ballPixels[0], ballPixels[1]);
-        if (!this.collision.checkForGraphicWalls(ballPixels[0], ballPixels[1], walls)) this.wall_stop = true;
+        this.collision.checkForGraphicWalls(ballPixels[0], ballPixels[1], walls);
 
         if (this.collision.ballInWater()) {
             ball.reset();
+            this.ball.setX(hitCoord[0]);
+            this.ball.setY(hitCoord[1]);
+            if (!simulation) loseSound.play(0.2f);
             water = true;
         }
     }
@@ -255,5 +271,13 @@ public class Physics {
 
     public void setCollision(Collision collision) {
         this.collision = collision;
+    }
+
+    public Ball getBall() {
+        return ball;
+    }
+
+    public void setBall(Ball ball) {
+        this.ball = ball;
     }
 }

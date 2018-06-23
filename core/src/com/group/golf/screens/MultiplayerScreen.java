@@ -112,7 +112,7 @@ public class MultiplayerScreen implements Screen{
                 Function function = new Function(formula);
                 Computable[][] functions = new Computable[1][1];
                 functions[0][0] = function;
-                Course course = new Course(functions, 9.81f, 0.95f, 80f, start, start2, goal, goal2, 0.5f);
+                Course course = new Course(functions, 9.81f, 0.95f, 15f, start, start2, goal, goal2, 0.5f);
                 course.addWall(new Rectangle(491,221,69,280));
                 course.addWall(new Rectangle(550,317,444,76));
                 course.addWall(new Rectangle(365,6,60,442));
@@ -157,7 +157,7 @@ public class MultiplayerScreen implements Screen{
                 Function function = new Function(formula);
                 Computable[][] functions = new Computable[1][1];
                 functions[0][0] = function;
-                Course course = new Course(functions, 4.11f, 0.95f, 80f, start, start2, goal, goal2, 0.5f);
+                Course course = new Course(functions, 4.11f, 0.95f, 15f, start, start2, goal, goal2, 0.5f);
                 course.addWall(new Rectangle(144,-6,54,364));
                 course.addWall(new Rectangle(6,581,33,112));
                 course.addWall(new Rectangle(146,607,48,60));
@@ -215,7 +215,7 @@ public class MultiplayerScreen implements Screen{
                 Function function = new Function(formula);
                 Computable[][] functions = new Computable[1][1];
                 functions[0][0] = function;
-                Course course = new Course(functions, 9.81f, 0.95f, 80f, start, start2, goal, goal2, 0.5f);
+                Course course = new Course(functions, 9.81f, 0.95f, 15f, start, start2, goal, goal2, 0.5f);
                 course.addWall(new Rectangle(523, 384, 49, 246));
                 course.addWall(new Rectangle(220, 616, 294, 35));
                 course.addWall(new Rectangle(222, 414, 56, 202));

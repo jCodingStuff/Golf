@@ -15,7 +15,9 @@ public class RK4 extends Physics {
 
     //method to be overwritten by each subclass
     //RK4
-    public void movement(Ball ball, float delta) {
+    @Override
+    public void movement(float delta, boolean simulation) {
+        Ball ball = super.getBall();
         derivative k1,k2,k3,k4;
 
         k1 = new derivative(ball,delta);

@@ -17,7 +17,6 @@ public class MazeChecker implements GoalChecker {
     public boolean goalReached(float[] goal, Individual[] population, Ball virtualBall, Collision virtualCollision) {
         boolean reached = false;
         double recordDistance = Double.MAX_VALUE;
-        Individual winner = population[0];
         for (int i = 0; i < population.length && !reached; i++) {
             JVector2[] landings = population[i].getLandings();
             for (int j = 0; j < landings.length && !reached; j++) {
@@ -26,6 +25,7 @@ public class MazeChecker implements GoalChecker {
                 // Compute distance to goal and register it
                 double dist = JVector2.dist(goal[0], goal[1], spot.getX(), spot.getY());
                 if (dist < recordDistance) {
+                    population[i].setLastMove(j-1);
                     this.bot.setWinner(population[i]);
                     recordDistance = dist;
                 }

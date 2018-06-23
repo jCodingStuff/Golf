@@ -86,8 +86,8 @@ public class WallCreationMode extends GameMode {
         }
     }
 
-    @Override
-    public void water() {}
+//    @Override
+//    public void water() {}
 
     @Override
     public boolean move(OrthographicCamera cam) {
@@ -117,7 +117,7 @@ public class WallCreationMode extends GameMode {
     }
 
     private boolean isWallAllowed(Rectangle wall) {
-        return !this.wallOverlapsBalls(wall) && wall.width >= 3*Ball.RADIUS && wall.height >= 3*Ball.RADIUS;
+        return !this.wallOverlapsBalls(wall) && wall.width >= 2*Ball.RADIUS && wall.height >= 2*Ball.RADIUS;
     }
 
     private boolean wallOverlapsBalls(Rectangle wall) {
@@ -132,7 +132,7 @@ public class WallCreationMode extends GameMode {
         // Setup balls collision
         this.ballsCollision = new Circle[this.balls.length];
         for (int i = 0; i < this.ballsCollision.length; i++) {
-            this.ballsCollision[i] = new Circle((float) this.ballsPixels[i].getX(), (float) this.ballsPixels[i].getY(),
+            this.ballsCollision[i] = new Circle(this.ballsPixels[i].getX(), this.ballsPixels[i].getY(),
                     Ball.RADIUS);
         }
     }

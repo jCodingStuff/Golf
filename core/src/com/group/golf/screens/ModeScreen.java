@@ -26,7 +26,6 @@ public class ModeScreen implements Screen {
 
     private final Golf game;
     private Stage stage;
-    private final Scanner in;
 
     private final Course course;
     private final Ball ball;
@@ -42,7 +41,6 @@ public class ModeScreen implements Screen {
     private Texture background;
 
     public ModeScreen(final Golf game, final Course course, final Ball ball) {
-        this.in = new Scanner(System.in);
         this.game = game;
         this.course = course;
         this.ball = ball;
@@ -164,6 +162,7 @@ public class ModeScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.print("Number of players: ");
+                Scanner in = new Scanner(System.in);
                 int numberOfPlayers = in.nextInt();
                 if (numberOfPlayers > 1) {
                     Ball[] balls = new Ball[numberOfPlayers];
@@ -252,7 +251,6 @@ public class ModeScreen implements Screen {
     public void dispose() {
         this.menuMusic.dispose();
         this.background.dispose();
-        this.in.close();
     }
 
 }
