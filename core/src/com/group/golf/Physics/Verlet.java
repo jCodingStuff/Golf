@@ -21,7 +21,7 @@ public class Verlet extends Physics {
 
         float[] newVelocities = new float[]{ball.getVelocityX() + 0.5f * delta * (currentAcceleration[0] + nextAcceleration[0]),
                 ball.getVelocityY() + 0.5f * (currentAcceleration[1] + nextAcceleration[1]) * delta};
-        
+
         ball.setCoords(newCoordinates);
         ball.setVelocities(newVelocities);
 

@@ -29,8 +29,7 @@ public class Euler extends Physics {
         }
 
         super.checkCollision(ball);
-
+        ball.limit(super.getCourse().getVmax());
 //        System.out.println("Euler Coords x:     " + newCoords[0] + "   Velocity y:     " + newCoords[1]);
-
     }
 }

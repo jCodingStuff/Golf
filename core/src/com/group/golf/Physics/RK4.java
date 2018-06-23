@@ -19,7 +19,6 @@ public class RK4 extends Physics {
         derivative k1,k2,k3,k4;
 
         k1 = new derivative(ball,delta);
-
         k2 = new derivative(ball,k1,delta);
         k3 = new derivative(ball,k1,k2,delta);
         k4 = new derivative(ball,k1,k2,k3,delta);
@@ -30,8 +29,6 @@ public class RK4 extends Physics {
         float[] newVelocities = new float[]{ball.getVelocityX() + (k1.accelerationX + 3 * k2.accelerationX + 3 * k3.accelerationX + k4.accelerationX)/8,
                 ball.getVelocityY() + (k1.accelerationY + 3 * k2.accelerationY + 3 * k3.accelerationY + k4.accelerationY)/8};
 
-
-
         ball.setVelocities(newVelocities);
         ball.setCoords(newCoordinates);
 
@@ -40,10 +37,8 @@ public class RK4 extends Physics {
             repeatChecker = new float[0][2];
         }
 
-
         super.checkCollision(ball);
         ball.limit(super.getCourse().getVmax());
-
 
 //        System.out.println("RK4 Velocity x:     " + newVelocities[0] + "   Velocity y:     " + newVelocities[1]);
 
