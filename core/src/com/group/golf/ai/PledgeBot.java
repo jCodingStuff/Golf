@@ -28,7 +28,7 @@ public class PledgeBot implements Bot {
     private Line2D right;
     private Line2D forward;
     private Line2D left;
-    private float lineLength = 30; // By default it´s 30.
+    private float lineLength = 38; // By default it´s 30.
     private int currentDir = 0;
     private float extraHitPower = 0;
     private int extraHitPowerCount = 0;
