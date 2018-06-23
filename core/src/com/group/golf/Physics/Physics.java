@@ -73,7 +73,7 @@ public class Physics {
         this.movingBall.setVelocityX(xLength);
         this.movingBall.setVelocityY(yLength);
 
-        System.out.println("HIT COORDS ARE SET x:  " + hitCoord[0] + "   y: " + hitCoord[1]);
+//        System.out.println("HIT COORDS ARE SET x:  " + hitCoord[0] + "   y: " + hitCoord[1]);
         this.movingBall.limit(this.course.getVmax());
     }
 
@@ -123,7 +123,7 @@ public class Physics {
                 }
 
                 if (tempArray[0][0] - tempArray[6][0] < errorBound && Math.abs(tempArray[0][1] - tempArray[6][1]) < errorBound) {
-                    System.out.println(Arrays.deepToString(tempArray));
+//                    System.out.println(Arrays.deepToString(tempArray));
                     repeatChecker = new float[0][2];
                     return true;
                 } else {

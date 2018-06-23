@@ -215,6 +215,9 @@ public class CourseScreen implements Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Look for quit
+        this.checkQuit();
+
         // Look for start
         this.checkForStart();
 
@@ -245,6 +248,13 @@ public class CourseScreen implements Screen {
         this.activeMode.extraChecks();
 
         this.activeMode.render(this.game.batch);
+    }
+
+    private void checkQuit() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            this.game.setScreen(new CourseSelectorScreen(this.game));
+            this.dispose();
+        }
     }
 
     private void checkWallPrint() {
@@ -402,6 +412,7 @@ public class CourseScreen implements Screen {
     public void dispose() {
         this.music.dispose();
         this.flag.dispose();
+//        this.activeMode.dispose();
         this.gameMode.dispose();
     }
 

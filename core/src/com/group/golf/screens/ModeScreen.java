@@ -126,7 +126,7 @@ public class ModeScreen implements Screen {
                 Ball[] balls = new Ball[]{ball};
                 GameMode gameMode = new UndefinedPlayerMode(this.game, course, balls);
                 GameMode wallMode = new WallCreationMode(this.game, course, balls);
-                this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
+                this.game.setScreen(new EngineSelectorScreen(this.game, course, gameMode, wallMode));
                 this.screen.dispose();
             }
         }
@@ -174,7 +174,7 @@ public class ModeScreen implements Screen {
                         GameMode gameMode = new UndefinedPlayerMode(this.game, course, balls);
                         GameMode wallMode = new WallCreationMode(this.game, course, balls);this.screen.dispose();
                         ((ModeScreen) this.screen).disableButtons();
-                        this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
+                        this.game.setScreen(new EngineSelectorScreen(this.game, course, gameMode, wallMode));
                     }
                 } else {
                     System.out.println("PLAY SINGLEPLAYER MODE!");
