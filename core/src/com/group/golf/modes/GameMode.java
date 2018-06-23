@@ -32,7 +32,7 @@ abstract public class GameMode {
 
     public abstract void dispose();
 
-    protected void setUpPhysics(String diffMethod) {
+    public void setUpPhysics(String diffMethod) {
         engine = new PredictorCorrector(course);
 //        if (diffMethod == "RK4")
 //            engine = new RK4(course);
