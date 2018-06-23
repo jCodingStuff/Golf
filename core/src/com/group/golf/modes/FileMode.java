@@ -37,8 +37,8 @@ public class FileMode extends GameMode {
     private Ball ball;
     private JVector2 ballPixels;
 
-    private float[] scales;
-    private float[] offsets;
+//    private float[] scales;
+//    private float[] offsets;
 
     private boolean landed;
     private int counter;

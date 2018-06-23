@@ -143,11 +143,6 @@ public class WallCreationMode extends GameMode {
     }
 
     @Override
-    public void setOffsets(float[] offsets) {
-        this.offsets = offsets;
-    }
-
-    @Override
     public void setScales(float[] scales) {
         this.scales = scales;
         this.computePixels();
