@@ -22,14 +22,14 @@ public class RK4 extends Physics {
 
         k1 = new derivative(ball,delta);
         k2 = new derivative(ball,k1,delta);
-        k3 = new derivative(ball,k1,k2,delta);
-        k4 = new derivative(ball,k1,k2,k3,delta);
+        k3 = new derivative(ball,k2,delta);
+        k4 = new derivative(ball,k3,delta,true);
 
-        float[] newCoordinates = new float[] {ball.getX() + (k1.velocityX + 3 * k2.velocityX + 3 * k3.velocityX + k4.velocityX)/8,
-                ball.getY() + (k1.velocityY + 3 * k2.velocityY + 3 * k3.velocityY + k4.velocityY)/8};
+        float[] newCoordinates = new float[] {ball.getX() + (k1.velocityX + 2 * k2.velocityX + 2 * k3.velocityX + k4.velocityX)/6,
+                ball.getY() + (k1.velocityY + 2 * k2.velocityY + 2 * k3.velocityY + k4.velocityY)/6};
 
-        float[] newVelocities = new float[]{ball.getVelocityX() + (k1.accelerationX + 3 * k2.accelerationX + 3 * k3.accelerationX + k4.accelerationX)/8,
-                ball.getVelocityY() + (k1.accelerationY + 3 * k2.accelerationY + 3 * k3.accelerationY + k4.accelerationY)/8};
+        float[] newVelocities = new float[]{ball.getVelocityX() + (k1.accelerationX + 2 * k2.accelerationX + 2 * k3.accelerationX + k4.accelerationX)/6,
+                ball.getVelocityY() + (k1.accelerationY + 2 * k2.accelerationY + 2 * k3.accelerationY + k4.accelerationY)/6};
 
         ball.setVelocities(newVelocities);
         ball.setCoords(newCoordinates);
@@ -66,27 +66,18 @@ public class RK4 extends Physics {
             setValues(ball,tempVel,accelerations,delta);
         }
 
-        public derivative(Ball ball, derivative k1, float delta) {
-            float[] tempCoords = new float[]{ball.getX() + k1.velocityX/3, ball.getY() + k1.velocityY/3};
-            float[] tempVel = new float[]{ball.getVelocityX() + k1.accelerationX/3,ball.getVelocityY() + k1.accelerationY/3};
+        public derivative(Ball ball, derivative k, float delta) {
+            float[] tempCoords = new float[]{ball.getX() + k.velocityX/2, ball.getY() + k.velocityY/2};
+            float[] tempVel = new float[]{ball.getVelocityX() + k.accelerationX/2,ball.getVelocityY() + k.accelerationY/2};
             float[] accelerations = acceleration(tempCoords, tempVel);
             setValues(ball,tempVel,accelerations,delta);
         }
 
-        public derivative(Ball ball, derivative k1, derivative k2, float delta) {
-            float[] tempCoords = new float[]{(ball.getX() - k1.velocityX/3 + k2.velocityX),
-                    (ball.getY() - k1.velocityY/3 + k2.velocityY)};
-            float[] tempVel = new float[]{ball.getVelocityX() - k1.accelerationX/3 + k2.accelerationX,
-                    ball.getVelocityY() - k1.accelerationX/3 + k2.accelerationY};
-            float[] accelerations = acceleration(tempCoords,tempVel);
-            setValues(ball,tempVel,accelerations,delta);
-        }
-
-        public derivative(Ball ball, derivative k1, derivative k2, derivative k3, float delta) {
-            float[] tempCoords = new float[]{ball.getX() + k1.velocityX - k2.velocityX + k3.velocityX,
-                    ball.getY() + k1.velocityY - k2.velocityY + k3.velocityY};
-            float[] tempVel = new float[]{ball.getVelocityX() + k1.accelerationX - k2.accelerationX + k3.accelerationX,
-                    ball.getVelocityY() + k1.accelerationY - k2.accelerationY + k3.accelerationY};
+        public derivative(Ball ball, derivative k3, float delta,boolean flag) {
+            float[] tempCoords = new float[]{ball.getX() + k3.velocityX,
+                    ball.getY() + k3.velocityY};
+            float[] tempVel = new float[]{ball.getVelocityX() + k3.accelerationX,
+                    ball.getVelocityY() + k3.accelerationY};
             float[] accelerations = acceleration(tempCoords,tempVel);
             setValues(ball,tempVel,accelerations,delta);
         }

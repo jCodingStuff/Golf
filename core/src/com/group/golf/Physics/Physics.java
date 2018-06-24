@@ -190,7 +190,7 @@ public class Physics {
     public float[] calculateSlope(float[] coord) {
         float[] slope = new float[2];
 
-        float step = 0.001f;
+        float step = 1e-10f;
 
         slope[0] = ((this.course.getHeight(coord[0]+step,coord[1]) - this.course.getHeight(coord[0]-step,coord[1]))/(2*step));
         slope[1] = ((this.course.getHeight(coord[0],coord[1]+step) - this.course.getHeight(coord[0],coord[1]-step))/(2*step));
