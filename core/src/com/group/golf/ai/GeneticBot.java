@@ -209,9 +209,9 @@ public class GeneticBot implements Bot {
         this.virtualBall.setPosition((float)landings[0].getX(), (float)landings[0].getY());
         for (int i = 1; i < landings.length; i++) {
             // small random error for the force applied to the ball
-            double min = 0.999;
-            double max= 1.001;
-            //error = MathLib.randomDouble(min, max);
+            float min = 0.999f;
+            float max= 1.001f;
+            //error = MathLib.randomFloat(min, max);
             error = 1;
             this.simulateShot(forces[i-1]);
             landings[i] = new JVector2(this.virtualBall.getX()*error, this.virtualBall.getY()*error);
@@ -224,9 +224,9 @@ public class GeneticBot implements Bot {
     private void simulateShot(JVector2 force) {
 
         // small random error for the force applied to the ball
-        double min = 0.999;
-        double max= 1.001;
-        //error = MathLib.randomDouble(min, max);
+        float min = 0.999f;
+        float max= 1.001f;
+        //error = MathLib.randomFloat(min, max);
         error = 1;
         force.multiply(error);
         this.engine.hit(virtualBall,force.getX(), force.getY());
