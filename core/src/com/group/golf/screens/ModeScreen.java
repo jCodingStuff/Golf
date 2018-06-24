@@ -59,12 +59,14 @@ public class ModeScreen implements Screen {
         ai.setPosition(600, 300);
         playerVSai.setPosition(300, 400);
         multiplayer.setPosition(600, 400);
+        aiVSai.setPosition(300, 200);
 
         back.setSize(100, 60);
         singlePlayer.setSize(200, 60);
         ai.setSize(200, 60);
         playerVSai.setSize(200, 60);
         multiplayer.setSize(200, 60);
+        aiVSai.setSize(200, 60);
 
 
         stage.addActor(back);
@@ -72,7 +74,7 @@ public class ModeScreen implements Screen {
         stage.addActor(multiplayer);
         stage.addActor(ai);
         stage.addActor(playerVSai);
-        //stage.addActor(aiVSai);
+        stage.addActor(aiVSai);
 
         // Setup button listeners
         class BackListener extends ChangeListener {
@@ -126,7 +128,7 @@ public class ModeScreen implements Screen {
                 Ball[] balls = new Ball[]{ball};
                 GameMode gameMode = new UndefinedPlayerMode(this.game, course, balls);
                 GameMode wallMode = new WallCreationMode(this.game, course, balls);
-                this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
+                this.game.setScreen(new EngineSelectorScreen(this.game, course, gameMode, wallMode));
                 this.screen.dispose();
             }
         }
@@ -174,7 +176,7 @@ public class ModeScreen implements Screen {
                         GameMode gameMode = new UndefinedPlayerMode(this.game, course, balls);
                         GameMode wallMode = new WallCreationMode(this.game, course, balls);this.screen.dispose();
                         ((ModeScreen) this.screen).disableButtons();
-                        this.game.setScreen(new CourseScreen(this.game, course, gameMode, wallMode));
+                        this.game.setScreen(new EngineSelectorScreen(this.game, course, gameMode, wallMode));
                     }
                 } else {
                     System.out.println("PLAY SINGLEPLAYER MODE!");
@@ -182,6 +184,24 @@ public class ModeScreen implements Screen {
             }
         }
         multiplayer.addListener(new MultiplayerListener(this.game, this));
+
+        class AIvsAIListener extends ChangeListener {
+            final Golf game;
+            private Screen screen;
+
+            public AIvsAIListener(final Golf game, Screen screen) {
+                this.game = game;
+                this.screen = screen;
+            }
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                ((ModeScreen) this.screen).disableButtons();
+                this.game.setScreen(new AIvsAIScreen(this.game, course, ball));
+                this.screen.dispose();
+            }
+        }
+        aiVSai.addListener(new AIvsAIListener(this.game, this));
 
         // Setup cam
         this.cam = new OrthographicCamera();

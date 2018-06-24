@@ -10,6 +10,7 @@ public class RK4 extends Physics {
 
     public RK4(Course course) {
         super(course);
+        errorBound = 0.019f;
     }
 
     //method to be overwritten by each subclass
@@ -20,7 +21,6 @@ public class RK4 extends Physics {
         derivative k1,k2,k3,k4;
 
         k1 = new derivative(ball,delta);
-
         k2 = new derivative(ball,k1,delta);
         k3 = new derivative(ball,k1,k2,delta);
         k4 = new derivative(ball,k1,k2,k3,delta);
@@ -31,22 +31,25 @@ public class RK4 extends Physics {
         float[] newVelocities = new float[]{ball.getVelocityX() + (k1.accelerationX + 3 * k2.accelerationX + 3 * k3.accelerationX + k4.accelerationX)/8,
                 ball.getVelocityY() + (k1.accelerationY + 3 * k2.accelerationY + 3 * k3.accelerationY + k4.accelerationY)/8};
 
-
-        float error = 0.05f;
-        if (Math.abs(newVelocities[0] - ball.getVelocityX()) < error && Math.abs(newVelocities[1] - ball.getVelocityY()) < error) {
-            ball.reset();
-        } else {
-            ball.setVelocities(newVelocities);
-        }
-
+        ball.setVelocities(newVelocities);
         ball.setCoords(newCoordinates);
+
+        if (isRepeting(ball,newCoordinates)){
+            ball.reset();
+            repeatChecker = new float[0][2];
+        }
 
         super.checkCollision(simulation);
         ball.limit(super.getCourse().getVmax());
 
-
 //        System.out.println("RK4 Velocity x:     " + newVelocities[0] + "   Velocity y:     " + newVelocities[1]);
 
+    }
+
+    public void bootstrapMovement(Ball ball,float delta, boolean simulation) {
+        super.setBall(ball);
+        super.getCollision().setBall(ball);
+        movement(delta,simulation);
     }
 
     class derivative {

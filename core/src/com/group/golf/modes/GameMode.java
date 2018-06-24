@@ -3,9 +3,7 @@ package com.group.golf.modes;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.group.golf.Course;
-import com.group.golf.Physics.Euler;
-import com.group.golf.Physics.Physics;
-import com.group.golf.Physics.RK4;
+import com.group.golf.Physics.*;
 
 
 abstract public class GameMode {
@@ -34,11 +32,22 @@ abstract public class GameMode {
 
     public abstract void dispose();
 
-    protected void setUpPhysics(String diffMethod) {
-        if (diffMethod.equals("RK4")) {
-            this.engine = new RK4(this.course);
-        } else {
+    public void setUpPhysics(String diffMethod) {
+        if (diffMethod.equalsIgnoreCase("Euler")) {
             this.engine = new Euler(this.course);
+            System.out.println("Setting up Euler physics");
+        } else if (diffMethod.equalsIgnoreCase("Verlet")) {
+            this.engine = new Verlet(this.course);
+            System.out.println("Setting up Verlet physics");
+        } else if (diffMethod.equalsIgnoreCase("RK4")) {
+            this.engine = new RK4(this.course);
+            System.out.println("Setting up RK4 physics");
+        } else if (diffMethod.equalsIgnoreCase("PredictorCorrector")) {
+            this.engine = new PredictorCorrector(this.course);
+            System.out.println("Setting up Predictor-Corrector physics");
+        } else {
+            this.engine = new RK4(this.course);
+            System.out.println("Setting up RK4 physics by DEFAULT...");
         }
     }
 

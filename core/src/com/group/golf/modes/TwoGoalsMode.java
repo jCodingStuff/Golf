@@ -56,7 +56,7 @@ public class TwoGoalsMode extends GameMode {
         this.landed = false;
 
         this.setUpBalls();
-        this.setUpPhysics("RK4");
+//        this.setUpPhysics("RK4");
 
         // Setup sounds
         this.hitSound = Gdx.audio.newSound(Gdx.files.internal("golf_hit_1.wav"));

@@ -10,6 +10,7 @@ import com.group.golf.math.MathLib;
 import com.group.golf.math.Point3D;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,12 +25,13 @@ public class Physics {
     private boolean water;
     private boolean wall_stop;
     private List<Rectangle> walls;
+     static float[][] repeatChecker;
+    protected float errorBound;
 
+    protected static float[] hitCoord;
     private static final Sound loseSound = Gdx.audio.newSound(Gdx.files.internal("defeat_2.wav"));
 
-    private Ball ball;
-
-    public static float[] hitCoord;
+    private Ball movingBall;
 
 
     /**
@@ -49,6 +51,7 @@ public class Physics {
         this.collision = other.collision;
         this.water = other.water;
         this.walls = course.getWalls();
+        this.repeatChecker = other.repeatChecker;
     }
 
 
@@ -58,17 +61,20 @@ public class Physics {
      * @param yLength the length that the mouse was dragged vertically
      */
     public void hit(Ball ball, float xLength, float yLength) {
-        this.ball = ball;
-        this.collision.setBall(this.ball);
+        this.movingBall = ball;
+        this.collision.setBall(this.movingBall);
         water = false;
+
+        repeatChecker = new float[0][2];
 
         hitCoord[0] = ball.getX();
         hitCoord[1] = ball.getY();
 
-        this.ball.setVelocityX(xLength);
-        this.ball.setVelocityY(yLength);
+        this.movingBall.setVelocityX(xLength);
+        this.movingBall.setVelocityY(yLength);
 
-        this.ball.limit(this.course.getVmax());
+//        System.out.println("HIT COORDS ARE SET x:  " + hitCoord[0] + "   y: " + hitCoord[1]);
+        this.movingBall.limit(this.course.getVmax());
     }
 
     public void movement(float delta, boolean simulation) {
@@ -76,19 +82,64 @@ public class Physics {
     }
 
     public void checkCollision(boolean simulation) {
-        float[] ballPixels = MathLib.toPixel(new float[]{this.ball.getX(), this.ball.getY()}, this.course.getOffsets(),
+        float[] ballPixels = MathLib.toPixel(new float[]{this.movingBall.getX(), this.movingBall.getY()}, this.course.getOffsets(),
                 this.course.getScales());
         this.collision.checkForWalls(ballPixels[0], ballPixels[1]);
         this.collision.checkForGraphicWalls(ballPixels[0], ballPixels[1], walls);
 
         if (this.collision.ballInWater()) {
-            ball.reset();
-            this.ball.setX(hitCoord[0]);
-            this.ball.setY(hitCoord[1]);
+            movingBall.reset();
+            this.movingBall.setX(hitCoord[0]);
+            this.movingBall.setY(hitCoord[1]);
             if (!simulation) loseSound.play(0.2f);
             water = true;
         }
     }
+
+    public boolean isRepeting(Ball ball, float[] check) {
+        if (ball.getX() - check[0] > 0.0001 || ball.getY() - check[1] > 0.0001) {
+            //change in coordinates is too high to account
+            repeatChecker = new float[0][2];
+            return false;
+        } else {
+            if (repeatChecker.length == 6) {
+                float[][] tempArray = new float[7][2];
+                for (int i = 0; i < repeatChecker.length; i++)
+                    tempArray[i] = repeatChecker[i];
+
+                tempArray[tempArray.length-1] = check;
+
+                for (int i = 0; i < repeatChecker.length; i++)
+                    repeatChecker[i] = tempArray[i+1];
+
+                for (int i = 0; i < tempArray.length-1; i++) {
+                    for (int j = i+1; j < tempArray.length; j++) {
+                        if (tempArray[i][0] < tempArray[j][0]) {
+                            float[] temp = tempArray[i];
+                            tempArray[i] = tempArray[j];
+                            tempArray[j] = temp;
+                        }
+                    }
+                }
+
+                if (tempArray[0][0] - tempArray[6][0] < errorBound && Math.abs(tempArray[0][1] - tempArray[6][1]) < errorBound) {
+//                    System.out.println(Arrays.deepToString(tempArray));
+                    repeatChecker = new float[0][2];
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                float[][] temp = repeatChecker;
+                repeatChecker = new float[repeatChecker.length+1][2];
+                for (int i = 0; i < temp.length; i++)
+                    repeatChecker[i] = temp[i];
+                repeatChecker[repeatChecker.length-1] = check;
+                return false;
+            }
+        }
+    }
+
 
     public float[] acceleration(float[] coord, float[] velocities) {
         float[] gravForce = gravForce(coord);
@@ -215,10 +266,10 @@ public class Physics {
     }
 
     public Ball getBall() {
-        return ball;
+        return movingBall;
     }
 
     public void setBall(Ball ball) {
-        this.ball = ball;
+        this.movingBall = ball;
     }
 }
