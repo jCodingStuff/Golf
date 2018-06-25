@@ -71,10 +71,8 @@ public class PredictorCorrector extends Physics {
             ball.setVelocities(correctedVel);
             ball.setCoords(correctedCoord);
 
-            if (isRepeting(ball,correctedCoord)){
-                ball.reset();
-                repeatChecker = new float[0][2];
-            }
+            checkLowVelocity();
+
 
 
             super.checkCollision(simulation);

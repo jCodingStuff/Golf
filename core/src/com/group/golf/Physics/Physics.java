@@ -96,49 +96,11 @@ public class Physics {
         }
     }
 
-    public boolean isRepeting(Ball ball, float[] check) {
-        if (ball.getX() - check[0] > 0.0001 || ball.getY() - check[1] > 0.0001) {
-            //change in coordinates is too high to account
-            repeatChecker = new float[0][2];
-            return false;
-        } else {
-            if (repeatChecker.length == 6) {
-                float[][] tempArray = new float[7][2];
-                for (int i = 0; i < repeatChecker.length; i++)
-                    tempArray[i] = repeatChecker[i];
-
-                tempArray[tempArray.length-1] = check;
-
-                for (int i = 0; i < repeatChecker.length; i++)
-                    repeatChecker[i] = tempArray[i+1];
-
-                for (int i = 0; i < tempArray.length-1; i++) {
-                    for (int j = i+1; j < tempArray.length; j++) {
-                        if (tempArray[i][0] < tempArray[j][0]) {
-                            float[] temp = tempArray[i];
-                            tempArray[i] = tempArray[j];
-                            tempArray[j] = temp;
-                        }
-                    }
-                }
-
-                if (tempArray[0][0] - tempArray[6][0] < errorBound && Math.abs(tempArray[0][1] - tempArray[6][1]) < errorBound) {
-//                    System.out.println(Arrays.deepToString(tempArray));
-                    repeatChecker = new float[0][2];
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                float[][] temp = repeatChecker;
-                repeatChecker = new float[repeatChecker.length+1][2];
-                for (int i = 0; i < temp.length; i++)
-                    repeatChecker[i] = temp[i];
-                repeatChecker[repeatChecker.length-1] = check;
-                return false;
-            }
+   protected void checkLowVelocity() {
+        if (Math.abs(movingBall.calcVelocity()) < errorBound) {
+            movingBall.reset();
         }
-    }
+   }
 
 
     public float[] acceleration(float[] coord, float[] velocities) {
@@ -190,7 +152,7 @@ public class Physics {
     public float[] calculateSlope(float[] coord) {
         float[] slope = new float[2];
 
-        float step = 1e-10f;
+        float step = 1e-4f;
 
         slope[0] = ((this.course.getHeight(coord[0]+step,coord[1]) - this.course.getHeight(coord[0]-step,coord[1]))/(2*step));
         slope[1] = ((this.course.getHeight(coord[0],coord[1]+step) - this.course.getHeight(coord[0],coord[1]-step))/(2*step));

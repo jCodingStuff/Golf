@@ -7,7 +7,7 @@ public class Verlet extends Physics {
 
     public Verlet(Course course) {
         super(course);
-        errorBound = 0.035f;
+        errorBound = 0.07f;
     }
 
     public void movement(float delta, boolean simulation) {
@@ -26,10 +26,8 @@ public class Verlet extends Physics {
         ball.setCoords(newCoordinates);
         ball.setVelocities(newVelocities);
 
-        if (isRepeting(ball,newCoordinates)){
-            ball.reset();
-            repeatChecker = new float[0][2];
-        }
+        checkLowVelocity();
+
 
         super.checkCollision(simulation);
         ball.limit(super.getCourse().getVmax());
