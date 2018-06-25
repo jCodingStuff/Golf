@@ -23,7 +23,7 @@ public class RandomBot implements Bot{
     private final Course course;
     private Random rand;
 
-    float MAXFORCE = 200;
+    float MAXFORCE = 4;
 
     float forceX = 0;
     float forceY = 0;
@@ -77,12 +77,12 @@ public class RandomBot implements Bot{
         System.out.println(Arrays.toString(goal));
         forceX = GetBestRandomChoice(this.ball.getX(),goal[0]);
         forceY = GetBestRandomChoice(this.ball.getY(),goal[1]);
-        while(!checkPath()){
+       /* while(!checkPath()){
             forceX = GetBestRandomChoice(this.ball.getX(),goal[0]);
             //System.out.println(forceX);
             forceY = GetBestRandomChoice(this.ball.getY(),goal[1]);
         }
-
+*/
         this.engine.hit(ball, forceX, forceY);
 
         counter += 1;
