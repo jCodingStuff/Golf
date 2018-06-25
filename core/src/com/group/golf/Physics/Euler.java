@@ -7,7 +7,7 @@ public class Euler extends Physics {
 
     public Euler(Course course) {
         super(course);
-        errorBound = 0.046f;
+        errorBound = 0.08f;
     }
 
     @Override
@@ -26,10 +26,8 @@ public class Euler extends Physics {
         ball.setCoords(newCoords);
         ball.setVelocities(newVelocities);
 
-        if (isRepeting(ball,newCoords)){
-            ball.reset();
-            repeatChecker = new float[0][2];
-        }
+        checkLowVelocity();
+
         super.checkCollision(simulation);
 
 //        System.out.println("Euler Velocity x:     " + newVelocities[0] + "   Velocity y:     " + newVelocities[1]);

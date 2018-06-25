@@ -10,7 +10,7 @@ public class RK4 extends Physics {
 
     public RK4(Course course) {
         super(course);
-        errorBound = 0.019f;
+        errorBound = 0.05f;
     }
 
     //method to be overwritten by each subclass
@@ -34,10 +34,7 @@ public class RK4 extends Physics {
         ball.setVelocities(newVelocities);
         ball.setCoords(newCoordinates);
 
-        if (isRepeting(ball,newCoordinates)){
-            ball.reset();
-            repeatChecker = new float[0][2];
-        }
+       checkLowVelocity();
 
         super.checkCollision(simulation);
         ball.limit(super.getCourse().getVmax());
