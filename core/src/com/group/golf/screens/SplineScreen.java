@@ -50,9 +50,9 @@ public class SplineScreen implements Screen{
 
 
     Point3D[][] xyzMatrix;
-    double[][] dxMatrix;
-    double[][] dyMatrix;
-    double[][] dxyMatrix;
+    float[][] dxMatrix;
+    float[][] dyMatrix;
+    float[][] dxyMatrix;
 
     public SplineScreen(final Golf game){
 
@@ -194,9 +194,9 @@ public class SplineScreen implements Screen{
                 int y = parseInt(yUnits.getText())+1;
 
                 xyzMatrix = new Point3D[x][y];
-                dxMatrix = new double[x][y];
-                dyMatrix = new double[x][y];
-                dxyMatrix = new double[x][y];
+                dxMatrix = new float[x][y];
+                dyMatrix = new float[x][y];
+                dxyMatrix = new float[x][y];
                 stage.addActor(btnSubmit);
                 btnSubmit.addListener(new SplineSubmitListener(game, screen, xyz, dx, dy, dxy, xyzMatrix, dxMatrix, dyMatrix, dxyMatrix,  xUnits, yUnits));
                 btnSubmitUnits.setTouchable(Touchable.disabled);

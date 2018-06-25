@@ -68,7 +68,7 @@ public class BotScreen implements Screen {
             martijn.setPosition(600, 400);
             dum.setPosition(600, 300);
             back.setPosition(100, 300);
-            pledge.setPosition(300, 200);
+            pledge.setPosition(600, 400);
 
             genetic.setSize(200, 60);
             random.setSize(200, 60);
@@ -131,7 +131,7 @@ public class BotScreen implements Screen {
                         gameMode = new UndefinedBotMode(this.game, bots, this.course, balls);
                         wallMode = new WallCreationMode(this.game, this.course, balls);
                     }
-                    this.game.setScreen(new CourseScreen(this.game, this.course, gameMode, wallMode));
+                    this.game.setScreen(new EngineSelectorScreen(this.game, this.course, gameMode, wallMode));
                     this.screen.dispose();
                 }
 
@@ -172,7 +172,7 @@ public class BotScreen implements Screen {
                         gameMode = new UndefinedBotMode(this.game, bots, this.course, balls);
                         wallMode = new WallCreationMode(this.game, this.course, balls);
                     }
-                    this.game.setScreen(new CourseScreen(this.game, this.course, gameMode, wallMode));
+                    this.game.setScreen(new EngineSelectorScreen(this.game, this.course, gameMode, wallMode));
                     this.screen.dispose();
                 }
 
@@ -213,7 +213,7 @@ public class BotScreen implements Screen {
                         gameMode = new UndefinedBotMode(this.game, bots, this.course, balls);
                         wallMode = new WallCreationMode(this.game, this.course, balls);
                     }
-                    this.game.setScreen(new CourseScreen(this.game, this.course, gameMode, wallMode));
+                    this.game.setScreen(new EngineSelectorScreen(this.game, this.course, gameMode, wallMode));
                     this.screen.dispose();
                 }
 
@@ -254,7 +254,7 @@ public class BotScreen implements Screen {
                         gameMode = new UndefinedBotMode(this.game, bots, this.course, balls);
                         wallMode = new WallCreationMode(this.game, this.course, balls);
                     }
-                    this.game.setScreen(new CourseScreen(this.game, this.course, gameMode, wallMode));
+                    this.game.setScreen(new EngineSelectorScreen(this.game, this.course, gameMode, wallMode));
                     this.screen.dispose();
                 }
 
@@ -297,7 +297,7 @@ public class BotScreen implements Screen {
                         gameMode = new UndefinedBotMode(this.game, bots, this.course, balls);
                         wallMode = new WallCreationMode(this.game, this.course, balls);
                     }
-                    this.game.setScreen(new CourseScreen(this.game, this.course, gameMode, wallMode));
+                    this.game.setScreen(new EngineSelectorScreen(this.game, this.course, gameMode, wallMode));
                     this.screen.dispose();
                 }
 

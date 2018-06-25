@@ -2,6 +2,7 @@ package com.group.golf.ai;
 
 
 import com.badlogic.gdx.Gdx;
+import com.group.golf.Golf;
 import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
 import com.badlogic.gdx.math.Vector2;
@@ -35,8 +36,8 @@ public class botMartijn implements Bot {
         private Physics virtualEngine;
         private Collision virtualCollision;
 
-        private double bestAngle;
-        private double bestForce;
+        private float bestAngle;
+        private float bestForce;
         private Point3D ballCor;
         private double maxForce; // open for adjustment
         private boolean hit = false;
@@ -55,28 +56,28 @@ public class botMartijn implements Bot {
         @Override
         public void setPhysics(Physics physics) {
             this.engine = physics;
-            this.virtualEngine = new Physics(physics);
-            this.virtualEngine.setBall(this.virtualBall);
+//            this.virtualEngine = new Physics(physics);
+//            this.virtualEngine.setBall(this.virtualBall);
         }
 
-        @Override
-        public void setCollision(Collision collision) {
-            this.collision = collision;
-            this.virtualCollision = new Collision(collision);
-            this.virtualCollision.setBall(this.virtualEngine.getBall());
-            this.virtualEngine.setCollision(this.virtualCollision);
-        }
+//        @Override
+//        public void setCollision(Collision collision) {
+//            this.collision = collision;
+//            this.virtualCollision = new Collision(collision);
+//            this.virtualCollision.setBall(this.virtualEngine.getBall());
+//            this.virtualEngine.setCollision(this.virtualCollision);
+//        }
 
         @Override
         public void makeMove() {
             System.out.print("BOT");
-            double bestScore = Double.NEGATIVE_INFINITY;
+            double bestScore = Float.NEGATIVE_INFINITY;
             double currentScore = 0.0;
 
             for(double angle = 0; angle <= 360; angle++) {
                 for (double force = 0; force < maxForce; force += 3) {// try which number works best
-                    double forceX = force * Math.cos(Math.toRadians(angle));
-                    double forceY = force * Math.sin(Math.toRadians(angle));
+                    float forceX = (float)(force * Math.cos(Math.toRadians(angle)));
+                    float forceY = (float)(force * Math.sin(Math.toRadians(angle)));
                     JVector2 forceVec = new JVector2(forceX,forceY);
                     this.simulateShot(forceVec);
 
@@ -93,8 +94,8 @@ public class botMartijn implements Bot {
                 //update the bestScore.
                 if (currentScore > bestScore) {
                     bestScore = currentScore;
-                    bestAngle = angle;
-                    bestForce = force;
+                    bestAngle = (float)angle;
+                    bestForce = (float)force;
                     this.prevScore.add(currentScore);
                     System.out.println(currentScore); //showing the score change.
                     }
@@ -103,14 +104,14 @@ public class botMartijn implements Bot {
 
 
             //make move with the correct angle and force.
-            double forceX = this.bestForce * Math.cos(Math.toRadians(this.bestAngle));
-            double forceY = this.bestForce * Math.sin(Math.toRadians(this.bestAngle));
-            this.engine.hit(forceX,forceY);
+            float forceX = this.bestForce * (float)Math.cos(Math.toRadians(this.bestAngle));
+            float forceY = this.bestForce * (float)Math.sin(Math.toRadians(this.bestAngle));
+            this.engine.hit(ball,forceX,forceY);
         }
 
         //needs adjusting
         private double waterScore(Point3D ballPoint, Point3D goal){
-            if (this.collision.isWaterBetween(ballPoint, goal))
+            if (this.course.isWaterBetween(ballPoint, goal))
                 return Double.NEGATIVE_INFINITY;
 
             else {
@@ -123,7 +124,7 @@ public class botMartijn implements Bot {
         }
 
         private double distanceScore(Point3D endBallpoint){
-           double[] goal = course.getGoal();
+           float[] goal = course.getGoal();
            double[] end  = {endBallpoint.getX(),endBallpoint.getY()};
            double distance  = Math.sqrt(Math.pow(goal[0] - end[0], 2) + Math.pow(goal[1] - end[1],2));
            return distance;
@@ -145,14 +146,13 @@ public class botMartijn implements Bot {
         }
 
         private void simulateShot(JVector2 force) {
-            this.virtualEngine.hit(force.getX(), force.getY());
-            while (this.virtualBall.getSize() != 0) {
-                this.virtualBall.dequeue();
-                if (this.virtualEngine.isWater() && this.virtualBall.getSize() == 0) {
-                    this.virtualBall.clear();
-                    this.virtualBall.setX(this.engine.getHitCoord()[0]);
-                    this.virtualBall.setY(this.engine.getHitCoord()[1]);
-                }
+            this.virtualEngine.hit(virtualBall,(float)force.getX(), (float)force.getY());
+            while (this.virtualBall.isMoving()) {
+                this.engine.movement(Golf.DELTA, true);
+//                if (this.engine.isWater()) {
+//                    this.virtualBall.setX(this.engine.getHitCoord()[0]);
+//                    this.virtualBall.setY(this.engine.getHitCoord()[1]);
+//                }
             }
         }
 

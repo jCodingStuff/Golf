@@ -11,6 +11,6 @@ public interface Computable {
 	 * @param y the y-component of the coordinate
 	 * @return the Z that relates to the given (x, y)
 	 */
-	double getZ(double x, double y);
+	float getZ(float x, float y);
 	
 }

@@ -3,6 +3,7 @@ package com.group.golf;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -20,6 +21,9 @@ public class Golf extends Game {
 	public static final String GAME_NAME = "Crazy Golf";
 	public static final int VIRTUAL_WIDTH = 1000;
 	public static final int VIRTUAL_HEIGHT = 700;
+	public static final float DELTA = 0.01666666666f;
+	public static final float HIT_VOLUME = 0.6f;
+	public static final Color HIGHLIGHT_COLOR = new Color(1, 0, 0, 0.2f);
 
 	public SpriteBatch batch;
 	public BitmapFont font;

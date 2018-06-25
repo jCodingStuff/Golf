@@ -36,7 +36,7 @@ public class Function implements Computable {
      * @return the value of z = f(x, y)
      */
     @Override
-    public double getZ(double x, double y) {
+    public float getZ(float x, float y) {
         return this.calc.compute(x, y);
     }
 

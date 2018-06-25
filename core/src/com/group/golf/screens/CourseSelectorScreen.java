@@ -105,12 +105,12 @@ public class CourseSelectorScreen implements Screen {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 String formula = "0.1 * x + 0.3 * x ^ 2 + 0.2 * y";
-                double[] start = new double[]{4, 3};
-                double[] goal = new double[]{0, 1};
+                float[] start = new float[]{4, 3};
+                float[] goal = new float[]{0, 1};
                 Function function = new Function(formula);
                 Computable[][] functions = new Computable[1][1];
                 functions[0][0] = function;
-                Course course = new Course(functions, 9.81, 0.95, 80, start, goal, 0.5);
+                Course course = new Course(functions, 9.81f, 0.95f, 15.0f, start, goal, 0.5f);
                 design.setTouchable(Touchable.disabled);
                 importbtn.setTouchable(Touchable.disabled);
                 play.setTouchable(Touchable.disabled);
@@ -169,7 +169,7 @@ public class CourseSelectorScreen implements Screen {
             }
         }
         scoreBoard.addListener(new ScoreBoardListener(game, this));
-        
+
         class MultiListener extends ChangeListener{
             final Golf game;
             private Screen screen;
