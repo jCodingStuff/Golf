@@ -23,10 +23,10 @@ public class RandomBot implements Bot{
     private final Course course;
     private Random rand;
 
-    double MAXFORCE = 200.0;
+    float MAXFORCE = 200;
 
-    double forceX = 0;
-    double forceY = 0;
+    float forceX = 0;
+    float forceY = 0;
 
     int counter = 0;
 
@@ -56,18 +56,15 @@ public class RandomBot implements Bot{
      */
 
 
-    private double GetBestRandomChoice(double cur, double goal) {
+    private float GetBestRandomChoice(double cur, double goal) {
+
+        float choice = (float)(Math.random()* MAXFORCE);
 
 
-      
-
-
-
-        double choice = (Math.random()) * MAXFORCE;
-        
         System.out.println(choice);
         if(goal-cur<0)
             choice = choice*-1;
+       
 
         return choice;
     }
