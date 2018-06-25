@@ -59,7 +59,7 @@ public class RandomBot implements Bot{
     private double GetBestRandomChoice(double cur, double goal) {
 
         double choice = (Math.random()) * MAXFORCE;
-        
+
         System.out.println(choice);
         if(goal-cur<0)
             choice = choice*-1;
