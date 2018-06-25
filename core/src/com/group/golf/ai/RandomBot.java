@@ -24,7 +24,7 @@ public class RandomBot implements Bot{
     private final Course course;
     private Random rand;
     double MAXFORCE = 200.0;
-    int numGuesses = 1;
+
     double forceX = 0;
     double forceY = 0;
     int counter = 0;
@@ -57,20 +57,17 @@ public class RandomBot implements Bot{
      */
 
     private double GetBestRandomChoice(double cur, double goal) {
-        double closest = 0;
-        double choice;
-        for (int i = 0; i < numGuesses; i++){
-            choice = (Math.random()) * MAXFORCE;
+
+        double choice = (Math.random()) * MAXFORCE;
 
 
-            if (Math.abs(choice - goal) > Math.abs(closest - goal))
-                closest = choice;
-        }
-        System.out.println(closest);
+
+
+        System.out.println(choice);
         if(goal-cur<0)
-            closest = closest*-1;
+            choice = choice*-1;
 
-        return closest;
+        return choice;
     }
 
 
