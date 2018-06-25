@@ -1,6 +1,7 @@
 package com.group.golf.ai;
 
 import java.util.List;
+import java.util.Random;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -39,13 +40,12 @@ public class PledgeBot implements Bot {
     private boolean repeat = false;
     private List<Rectangle> rects;
     private float distanceLimit = 3850;
-	private float upperBound = 138;
-	private float lowerBound = (float) 7.5;
-	private float upperBounda = 12;
-	private float lowerBounda = -12;
+	private float upperBounda = (float) 0.5;
+	private float lowerBounda = (float) 0.1;
 	private float hitForce = (float) 4.1; // Default 4.1
 	private int repeatCount;
 	private float extraCheckLength = 7;
+	private int actualMoveCount = 0; // For experiments
 
     /**
      * Create a new instance of PledgeBot
@@ -67,6 +67,14 @@ public class PledgeBot implements Bot {
     @Override
     public void makeMove() {
     	// Calculate ball coords in pixels.
+    	calcExtraPower(lowerBounda, upperBounda);
+    	int min = 0;
+    	int max = 1;
+    	int random = min + (int)(Math.random() * ((max - min) + 1));
+    	System.out.println("random: " + random);
+    	actualMoveCount++;
+    	System.out.println("actualMoveCount: "+actualMoveCount);
+    	System.out.println("repeatCount: " + repeatCount);
     	float coordXd = this.ball.getX();
      	float coordYd = this.ball.getY();
      	float[] coords = new float[]{coordXd, coordYd};
@@ -98,15 +106,8 @@ public class PledgeBot implements Bot {
     		extraHitPowerCounta = 0;
     		cancelHit = true;
     	}
-
-    	/*
-    	if (extraHitPowerCount == 2) {
-    		extraHitPower = (float)(Math.random() * ((upperBound - lowerBound) + 1) + lowerBound);
-    		extraHitPowerCount = 0;
-    	}
-    	*/
-
-    	// 0 = forward, 1 = left, 2 = bot, 3 = right     the 'way' the ball is 'facing'.
+    	
+         // 0 = forward, 1 = left, 2 = bot, 3 = right     the 'way' the ball is 'facing'.
     	if (cancelHit == false) {
     	 if (goalBallDistance() < distanceLimit) {
     		 float hitScalar = (float) 0.065;
@@ -125,7 +126,6 @@ public class PledgeBot implements Bot {
     		 this.engine.hit(this.ball, distances[0]*hitScalar, distances[1]*hitScalar);
     	 }
     	 else	if (currentDir == 0) {
-    		 System.out.println("At 0");
     	if (rightClear()) {
     		this.engine.hit(this.ball,hitForce + extraHitPower, 0);
     		currentDir = 3;
@@ -141,7 +141,6 @@ public class PledgeBot implements Bot {
     	else currentDir = 1;
     	}
     	else if (currentDir == 1) {
-    		System.out.println("At 1");
     		if (forwardClear()) {
         		this.engine.hit(this.ball, 0, hitForce + extraHitPower);
         		currentDir = 0;
@@ -158,7 +157,6 @@ public class PledgeBot implements Bot {
     	}
 
     	else if (currentDir == 2) {
-    		System.out.println("At 2");
     		if (leftClear()) {
         		this.engine.hit(this.ball, -hitForce - extraHitPower, 0);
         		currentDir = 1;
@@ -175,7 +173,6 @@ public class PledgeBot implements Bot {
     	}
 
     	else if (currentDir == 3) {
-    		System.out.println("At 3");
     		if (bottomClear()) {
         		this.engine.hit(this.ball, 0, -hitForce - extraHitPower);
         		currentDir = 2;
@@ -196,6 +193,22 @@ public class PledgeBot implements Bot {
     	 extraHitPowerCounta++;
     	 extraHitPower = 0;
     	 moveCount += 2;
+    }
+    
+    // Calculate random extraPower to apply to ball
+    private void calcExtraPower(float lower, float upper) {
+    	// Randomly picks 1 or 0, which determines whether the extraPower will be negative.
+    	int min = 0;
+    	int max = 1;
+    	int random = min + (int)(Math.random() * ((max - min) + 1));
+    	System.out.println("random: " + random);
+    	Random r = new Random();
+		extraHitPower = lowerBounda + r.nextFloat() * (upperBounda - lowerBounda);
+		if (random == 1) {
+			extraHitPower = -extraHitPower;
+		}
+		System.out.println("Extra random error: " + extraHitPower);
+		extraHitPowerCount = 0;
     }
 
     // Place rectangle in given place (added to list of walls). Not in use right now.
@@ -264,7 +277,6 @@ public class PledgeBot implements Bot {
         		float extraB2 = realFloatY - (float) extraCheckLength; // new
 
         		if ((walls.get(i).contains(a, b)) || (walls.get(i).contains(a, extraB1)) || (walls.get(i).contains(a, extraB2))) {
-        			System.out.println("rightClear became false");
         			result = false;
         		}
         		else {
@@ -274,9 +286,6 @@ public class PledgeBot implements Bot {
             		i++;
             		j = 0;
             		}
-    	}
-    	if (result == false) {
-    		System.out.println("Right not clear");
     	}
     	return result;
     }
@@ -301,7 +310,6 @@ public class PledgeBot implements Bot {
         		float extraA1 = realFloatX - extraCheckLength; // new
         		float extraA2 = realFloatX + extraCheckLength; // new
     		if ((walls.get(i).contains(a, b)) || (walls.get(i).contains(extraA1, b)) ||  walls.get(i).contains(extraA2, b)) {
-    			System.out.println("forwardClear became false");
     			result = false;
     		}
     		else {
@@ -311,9 +319,6 @@ public class PledgeBot implements Bot {
     		i++;
     		j = 0;
     		}
-    	}
-    	if (result == false) {
-    		System.out.println("Forward not clear");
     	}
     	return result;
     }
@@ -340,7 +345,6 @@ public class PledgeBot implements Bot {
         		float extraB2 = realFloatY - (float) extraCheckLength; // new
 
         		if ((walls.get(i).contains(a, b)) || (walls.get(i).contains(a, extraB1)) || (walls.get(i).contains(a, extraB2))) {
-        			System.out.println("rightClear became false");
         			result = false;
         		}
         		else {
@@ -350,9 +354,6 @@ public class PledgeBot implements Bot {
             		i++;
             		j = 0;
             		}
-    	}
-    	if (result == false) {
-    		System.out.println("Left not clear");
     	}
     	return result;
     }
@@ -378,7 +379,6 @@ public class PledgeBot implements Bot {
         		float extraA2 = realFloatX - extraCheckLength; // new
 
     		if ((walls.get(i).contains(a, b) == true) || (walls.get(i).contains(extraA1, b)) || (walls.get(i).contains(extraA2, b))) {
-    			System.out.println("bottomClear became false");
     			result = false;
     		}
     		else {
@@ -388,9 +388,6 @@ public class PledgeBot implements Bot {
         		i++;
         		j = 0;
         		}
-    	}
-    	if (result == false) {
-    		System.out.println("Bottom not clear");
     	}
     	return result;
     }
@@ -415,7 +412,6 @@ public class PledgeBot implements Bot {
 
     	Point3D goalPoint = new Point3D(realFloatXGoal, realFloatYGoal);
     	Point3D ballPoint = new Point3D(realFloatX, realFloatY);
-    	System.out.println("Goal ball distance: " + MathLib.distanceSquared(ballPoint, goalPoint));
     	return MathLib.distanceSquared(ballPoint, goalPoint);
     }
 
