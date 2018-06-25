@@ -70,7 +70,7 @@ public class DumBot implements Bot {
     	distances[0] *= BIG_SCALAR;
     	distances[1] *= BIG_SCALAR; 
         this.scale(distances);
-    	this.engine.hit(ball,distances[0], distances[1]);
+    	this.engine.hit(ball,distances[0] / 15, distances[1] / 15);
     }
 
     private void scale(float[] forces) {
