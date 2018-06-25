@@ -83,7 +83,7 @@ public class RandomBot implements Bot{
             forceY = GetBestRandomChoice(this.ball.getY(),goal[1]);
         }
 
-        this.engine.hit(forceX, forceY);
+        this.engine.hit(ball, forceX, forceY);
 
         counter += 1;
         System.out.print(counter);
