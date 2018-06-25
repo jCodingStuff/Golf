@@ -24,9 +24,9 @@ public class SplineSubmitListener extends ChangeListener {
     TextField dx;
     TextField dy;
     TextField dxy;
-    double[][] dxMatrix;
-    double[][] dyMatrix;
-    double[][] dxyMatrix;
+    float[][] dxMatrix;
+    float[][] dyMatrix;
+    float[][] dxyMatrix;
     Point3D[][] xyzMatrix;
     int xCounter;
     int yCounter;
@@ -35,7 +35,7 @@ public class SplineSubmitListener extends ChangeListener {
 
 
     public SplineSubmitListener(final Golf game, Screen screen, TextField xyz, TextField dx, TextField dy,
-                                TextField dxy, Point3D[][] xyzMatrix, double[][] dxMatrix, double[][] dyMatrix, double[][] dxyMatrix, TextField xUnits, TextField yUnits){
+                                TextField dxy, Point3D[][] xyzMatrix, float[][] dxMatrix, float[][] dyMatrix, float[][] dxyMatrix, TextField xUnits, TextField yUnits){
         this.game = game;
         this.screen = screen;
         this.xyzMatrix = xyzMatrix;
@@ -56,14 +56,14 @@ public class SplineSubmitListener extends ChangeListener {
 
 
         StringTokenizer tokenizerStart = new StringTokenizer(this.xyz.getText());
-        double x = Double.parseDouble(tokenizerStart.nextToken());
-        double y = Double.parseDouble(tokenizerStart.nextToken());
-        double z = Double.parseDouble(tokenizerStart.nextToken());
+        float x = Float.parseFloat(tokenizerStart.nextToken());
+        float y = Float.parseFloat(tokenizerStart.nextToken());
+        float z = Float.parseFloat(tokenizerStart.nextToken());
         xyzMatrix[xCounter][yCounter] = new Point3D(x,y,z);
 
-        dxMatrix[xCounter][yCounter] = Double.parseDouble(dx.getText());
-        dyMatrix[xCounter][yCounter] = Double.parseDouble(dy.getText());
-        dxyMatrix[xCounter][yCounter] = Double.parseDouble(dxy.getText());
+        dxMatrix[xCounter][yCounter] = Float.parseFloat(dx.getText());
+        dyMatrix[xCounter][yCounter] = Float.parseFloat(dy.getText());
+        dxyMatrix[xCounter][yCounter] = Float.parseFloat(dxy.getText());
         System.out.println(Arrays.deepToString(dxMatrix));
 
         System.out.println("Coordinates: " + x + ", " + y + ", " + z);

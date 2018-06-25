@@ -19,10 +19,4 @@ public interface Bot {
      */
     void setPhysics(Physics physics);
 
-    /**
-     * Set collision to the bot
-     * @param collision the new collision
-     */
-    void setCollision(Collision collision);
-
 }

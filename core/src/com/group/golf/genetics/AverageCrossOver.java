@@ -27,11 +27,11 @@ public class AverageCrossOver implements CrossOver {
 
         // Average crossover
         for (int i = 0; i < newGenes.length; i++) {
-            double aX = genesA[i].getX(); double aY = genesA[i].getY();
-            double bX = genesB[i].getX(); double bY = genesB[i].getY();
-            double x = MathLib.average(Math.abs(aX), Math.abs(bX));
+            float aX = genesA[i].getX(); float aY = genesA[i].getY();
+            float bX = genesB[i].getX(); float bY = genesB[i].getY();
+            float x = MathLib.average(Math.abs(aX), Math.abs(bX));
             if (Math.random() < 0.5) x = -x;
-            double y = MathLib.average(Math.abs(aY), Math.abs(bY));
+            float y = MathLib.average(Math.abs(aY), Math.abs(bY));
             if (Math.random() < 0.5) y = -y;
             JVector2 gene = new JVector2(x, y);
             newGenes[i] = gene;

@@ -20,13 +20,14 @@ public class RandomBot implements Bot{
 
     private Ball ball;
     private Physics engine;
-    private Collision collision;
     private final Course course;
     private Random rand;
+
     double MAXFORCE = 200.0;
 
     double forceX = 0;
     double forceY = 0;
+
     int counter = 0;
 
 /**
@@ -39,10 +40,8 @@ public class RandomBot implements Bot{
         this.rand = new Random();
         this.course = course;
     }
-    @Override
-    public void setCollision(Collision collision){
-        this.collision = collision;
-    }
+
+
     @Override
     public void setPhysics(Physics physics){
             this.engine = physics;
@@ -56,7 +55,13 @@ public class RandomBot implements Bot{
      * @param goal the Best choice sofar
      */
 
+
     private double GetBestRandomChoice(double cur, double goal) {
+
+
+      
+
+
 
         double choice = (Math.random()) * MAXFORCE;
         
@@ -71,7 +76,7 @@ public class RandomBot implements Bot{
     @Override
     public void makeMove() {
 
-        double[] goal = this.course.getGoal();
+        float[] goal = this.course.getGoal();
         System.out.println(Arrays.toString(goal));
         forceX = GetBestRandomChoice(this.ball.getX(),goal[0]);
         forceY = GetBestRandomChoice(this.ball.getY(),goal[1]);
@@ -80,14 +85,16 @@ public class RandomBot implements Bot{
             //System.out.println(forceX);
             forceY = GetBestRandomChoice(this.ball.getY(),goal[1]);
         }
+
         this.engine.hit(forceX, forceY);
+
         counter += 1;
         System.out.print(counter);
     }
 
     private boolean checkPath(){
         for(double c = 0.1; c <= 1.0; c += 0.1){
-            if(this.engine.getCourse().getHeight(forceX*Math.pow(c, 2), forceY*Math.pow(c, 2)) < 0)
+            if(this.engine.getCourse().getHeight(forceX*(float)Math.pow(c, 2), forceY*(float)Math.pow(c, 2)) < 0)
                 return false;
         }
         return true;
