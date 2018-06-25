@@ -22,10 +22,12 @@ public class RandomBot implements Bot{
     private Physics engine;
     private final Course course;
     private Random rand;
-    float MAXFORCE = 100.0f;
-    int numGuesses = 2;
-    float forceX = 0;
-    float forceY = 0;
+
+    double MAXFORCE = 200.0;
+
+    double forceX = 0;
+    double forceY = 0;
+
     int counter = 0;
 
 /**
@@ -53,18 +55,21 @@ public class RandomBot implements Bot{
      * @param goal the Best choice sofar
      */
 
-    private float GetBestRandomChoice(float goal) {
-        float closest = Float.POSITIVE_INFINITY;
-        float choice;
-        for (int i = 0; i < numGuesses; i++){
-            choice = this.rand.nextFloat() * MAXFORCE;
 
-            // choice closer than goal
-            if (Math.abs(choice - goal) < Math.abs(closest - goal))
-                closest = choice;
-        }
-        System.out.println(closest);
-        return closest;
+    private double GetBestRandomChoice(double cur, double goal) {
+
+
+      
+
+
+
+        double choice = (Math.random()) * MAXFORCE;
+        
+        System.out.println(choice);
+        if(goal-cur<0)
+            choice = choice*-1;
+
+        return choice;
     }
 
 
@@ -73,14 +78,16 @@ public class RandomBot implements Bot{
 
         float[] goal = this.course.getGoal();
         System.out.println(Arrays.toString(goal));
-        forceX = GetBestRandomChoice(goal[0]);
-        forceY = GetBestRandomChoice(goal[1]);
+        forceX = GetBestRandomChoice(this.ball.getX(),goal[0]);
+        forceY = GetBestRandomChoice(this.ball.getY(),goal[1]);
         while(!checkPath()){
-            forceX = GetBestRandomChoice(goal[0]);
+            forceX = GetBestRandomChoice(this.ball.getX(),goal[0]);
             //System.out.println(forceX);
-            forceY = GetBestRandomChoice(goal[1]);
+            forceY = GetBestRandomChoice(this.ball.getY(),goal[1]);
         }
-        this.engine.hit(ball,forceX, -forceY);
+
+        this.engine.hit(forceX, forceY);
+
         counter += 1;
         System.out.print(counter);
     }
