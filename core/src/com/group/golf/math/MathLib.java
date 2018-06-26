@@ -5,6 +5,9 @@ import com.group.golf.Golf;
 
 /**
  * A class to hold static methods for Math purposes
+ * @author Julian Marrades
+ * @author Kaspar Kallast
+ * @author Alexandros Chimonas
  */
 public class MathLib {
 

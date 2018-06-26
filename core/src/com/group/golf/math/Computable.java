@@ -2,6 +2,7 @@ package com.group.golf.math;
 
 /**
  * An interface for holding Computable objects, those that yield a Z out of an X and Y
+ * @author Julian Marrades
  */
 public interface Computable {
 

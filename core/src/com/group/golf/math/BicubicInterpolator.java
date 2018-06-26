@@ -2,6 +2,8 @@ package com.group.golf.math;
 
 /**
  * A class to use bicubic polynomials for interpolation
+ * @author Kaspar Kallast
+ * @author Julian Marrades
  */
 public class BicubicInterpolator implements Computable {
 
@@ -105,6 +107,12 @@ public class BicubicInterpolator implements Computable {
     	this.coefficients = MathLib.multiply(res1, B);
     }
 
+	/**
+	 * Make use of the coefficients to compute f(x, y)
+	 * @param x the x-component of the coordinate
+	 * @param y the y-component of the coordinate
+	 * @return z = f(x, y)
+	 */
 	@Override
 	public float getZ(float x, float y) {
 		float result = 0;

@@ -2,6 +2,8 @@ package com.group.golf.math;
 
 /**
  * A class to hold static methods for interpolation
+ * @author Kaspar Kallast
+ * @author Julian Marrades
  */
 public class Interpolator {
 
