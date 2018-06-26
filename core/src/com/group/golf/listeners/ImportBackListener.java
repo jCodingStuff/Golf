@@ -9,6 +9,8 @@ import com.group.golf.screens.CourseSelectorScreen;
 
 /**
  * Listener to go backwards from the import Screen
+ * @author Kim Roggenbuck
+ * @author Lillian Wush
  */
 public class ImportBackListener extends ChangeListener {
 

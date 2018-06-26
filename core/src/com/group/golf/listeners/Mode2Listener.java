@@ -18,6 +18,8 @@ import java.util.StringTokenizer;
 
 /**
  * Listener to run the game using mode2 (file takes the control)
+ * @author Kim Roggenbuck
+ * @author Lillian Wush
  */
 public class Mode2Listener extends ChangeListener {
 

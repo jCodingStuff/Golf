@@ -21,6 +21,7 @@ import com.badlogic.gdx.files.FileHandle;
 
 /**
  * A listener to export a course into a file
+ * @author Kaspar Kallast
  */
 public class ExportListener extends ChangeListener {
 	
@@ -45,7 +46,7 @@ public class ExportListener extends ChangeListener {
 		this.course1 = course1;
 		this.txt = txt;
 	}
-	
+
 	@Override
 	public void changed(ChangeEvent event, Actor actor) {
 		String name = this.txt.getText();

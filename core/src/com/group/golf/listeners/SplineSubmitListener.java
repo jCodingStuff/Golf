@@ -14,9 +14,10 @@ import java.util.StringTokenizer;
 import javax.xml.soap.Text;
 
 /**
- * Created by lilly on 4/17/18.
+ * Listener to submit points for spline interpolation
+ * @author Lillian Wush
+ * @author Kim Roggenbuck
  */
-
 public class SplineSubmitListener extends ChangeListener {
     final Golf game;
     Screen screen;
@@ -33,7 +34,21 @@ public class SplineSubmitListener extends ChangeListener {
     int xUnits;
     int yUnits;
 
-
+    /**
+     * Create a new instance of SplineSubmitListener
+     * @param game the game instance
+     * @param screen the current screen
+     * @param xyz texfield for the x y z coordinates
+     * @param dx textfield for derivative of x
+     * @param dy textfield for derivate of y
+     * @param dxy texfield for dy in terms of dx
+     * @param xyzMatrix martix containing the x y z coordinates of the points
+     * @param dxMatrix matrix containing dx for all points
+     * @param dyMatrix matrix containing dy for all points
+     * @param dxyMatrix matrix containing dxy for all points
+     * @param xUnits units to interpolate along the x-axis
+     * @param yUnits units to interpolate along the y-axis
+     */
     public SplineSubmitListener(final Golf game, Screen screen, TextField xyz, TextField dx, TextField dy,
                                 TextField dxy, Point3D[][] xyzMatrix, float[][] dxMatrix, float[][] dyMatrix, float[][] dxyMatrix, TextField xUnits, TextField yUnits){
         this.game = game;
