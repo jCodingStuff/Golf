@@ -4,8 +4,17 @@ import com.group.golf.Course;
 import com.group.golf.math.JVector2;
 import com.group.golf.math.Point3D;
 
+/**
+ * Class WallScoreComputer computes fitness for maze-like courses
+ * @author Julian Marrades
+ */
 public class WallScoreComputer implements ScoreComputer {
 
+    /**
+     * Penalize the distance from the last spot (s) to the goal (g), the number of walls between s and g, and the presence of water between s and g
+     * @param course the course where the algorithm is operating
+     * @param population the population to evaluate
+     */
     @Override
     public void compute(Course course, Individual[] population) {
         float[] goal = course.getGoal();
