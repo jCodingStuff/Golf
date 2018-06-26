@@ -33,7 +33,11 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 /**
- * A class to draw the course
+ * A screen class to render a course
+ * @author Julian Marrades
+ * @author Alexandros Chimonas
+ * @author Martijn Hilders
+ * @author Kaspar Kallast
  */
 public class CourseScreen implements Screen {
 
@@ -68,6 +72,13 @@ public class CourseScreen implements Screen {
 
     private boolean started;
 
+    /**
+     * Create a new instance of CourseScreen
+     * @param game the game instance
+     * @param course the course to be rendered
+     * @param gameMode the desired gamemode
+     * @param wallMode the wall editor gamemode
+     */
     public CourseScreen(final Golf game, Course course, GameMode gameMode, GameMode wallMode) {
         this.game = game;
         this.course = course;
@@ -205,11 +216,18 @@ public class CourseScreen implements Screen {
         this.setScaleY((float)(topY - this.getYoffset()) / Golf.VIRTUAL_HEIGHT);
     }
 
+    /**
+     * Start playing background music
+     */
     @Override
     public void show() {
         this.music.play();
     }
 
+    /**
+     * Render common elements to all gamemodes (terrain, goals, walls, etc.)
+     * @param delta the time between last and current frame
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
@@ -250,6 +268,9 @@ public class CourseScreen implements Screen {
         this.activeMode.render(this.game.batch);
     }
 
+    /**
+     * Check if user wants to quit playing
+     */
     private void checkQuit() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
             this.game.setScreen(new CourseSelectorScreen(this.game));
@@ -257,6 +278,9 @@ public class CourseScreen implements Screen {
         }
     }
 
+    /**
+     * Chack if user wants to display information about the course graphic walls
+     */
     private void checkWallPrint() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             List<Rectangle> walls = this.course.getWalls();
@@ -271,6 +295,9 @@ public class CourseScreen implements Screen {
         }
     }
 
+    /**
+     * Check if user wants to delete a wall
+     */
     private void checkWallDelete() {
         if (!this.started && Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             List<Rectangle> walls = this.course.getWalls();
@@ -288,6 +315,9 @@ public class CourseScreen implements Screen {
         }
     }
 
+    /**
+     * Update the sprites for the walls
+     */
     private void updateWallRegions() {
         List<Rectangle> walls = this.course.getWalls();
         int wallNum = walls.size();
@@ -299,6 +329,9 @@ public class CourseScreen implements Screen {
         }
     }
 
+    /**
+     * Check is user wants to start (game phase / end wall editor)
+     */
     private void checkForStart() {
         if (!this.started && Gdx.input.isKeyPressed(Input.Keys.S)) {
             this.activeMode = this.gameMode; // Start real GameMode
@@ -309,6 +342,9 @@ public class CourseScreen implements Screen {
         }
     }
 
+    /**
+     * Render the graphic walls
+     */
     private void renderWalls() {
         this.game.batch.begin();
         List<Rectangle> walls = this.course.getWalls();
@@ -403,11 +439,17 @@ public class CourseScreen implements Screen {
 
     }
 
+    /**
+     * Stop playing music if hide
+     */
     @Override
     public void hide() {
         this.music.stop();
     }
 
+    /**
+     * Dispose sounds and sprites
+     */
     @Override
     public void dispose() {
         this.music.dispose();
@@ -416,6 +458,21 @@ public class CourseScreen implements Screen {
         this.gameMode.dispose();
     }
 
+    /**
+     * Get the mouse position of the user
+     * @param cam the camera being used at the very moment
+     * @return a Vector2 instance containing the (x, y) coordinates of the mouse tip
+     */
+    public static Vector2 mousePosition(OrthographicCamera cam) {
+        Vector3 mouse3D = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        cam.unproject(mouse3D);
+        return new Vector2(mouse3D.x, mouse3D.y);
+    }
+
+
+
+
+    // GETTER AND SETTER AREA
     public Golf getGame() {
         return game;
     }
@@ -522,11 +579,5 @@ public class CourseScreen implements Screen {
 
     public void setYoffset(float yoffset) {
         this.yoffset = yoffset;
-    }
-
-    public static Vector2 mousePosition(OrthographicCamera cam) {
-        Vector3 mouse3D = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-        cam.unproject(mouse3D);
-        return new Vector2(mouse3D.x, mouse3D.y);
     }
 }

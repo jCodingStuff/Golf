@@ -5,14 +5,30 @@ import com.group.golf.Physics.Collision;
 import com.group.golf.ai.GeneticBot;
 import com.group.golf.math.JVector2;
 
+/**
+ * GoalChecker for mazes
+ * @author Julian Marrades
+ */
 public class MazeChecker implements GoalChecker {
 
     private GeneticBot bot;
-    
+
+    /**
+     * Create a new instance of MazeChecker
+     * @param bot the bot that will operate this instance
+     */
     public MazeChecker(GeneticBot bot) {
         this.bot = bot;
     }
 
+    /**
+     * Check if any of the landings of any individual is inside the tolerance radius of the goal
+     * @param goal the coordinates of the goal
+     * @param population the population of individuals
+     * @param virtualBall the instance of the virtualBall
+     * @param virtualCollision the instance of the virtualCollision
+     * @return true if the goal has been reached, false otherwise
+     */
     @Override
     public boolean goalReached(float[] goal, Individual[] population, Ball virtualBall, Collision virtualCollision) {
         boolean reached = false;

@@ -22,6 +22,11 @@ import com.group.golf.screens.ExportScreen;
 import com.group.golf.screens.ImportMovesScreen;
 import java.util.List;
 
+/**
+ * A listener to move to the exporting module
+ * @author Lillian Wush
+ * @author Kim Roggenbuck
+ */
 public class ToExportListener extends ChangeListener {
 	
 	final Golf game;
@@ -34,9 +39,20 @@ public class ToExportListener extends ChangeListener {
     TextField txtFriction;
     TextField txtGravity;
     TextField txtBallMass;
-   
-    
-    
+
+    /**
+     * Create a new instance of ToExportListener
+     * @param game the game instance
+     * @param screen the current screen
+     * @param txtFunction textfield for the function
+     * @param txtStartPos textfield for the start coordinates
+     * @param txtGoalPos textfield for the goal coordinates
+     * @param txtRadius textfield for the goal radius/tolerance
+     * @param txtVMax textfield for the maximum velocity allowed
+     * @param txtFriction textfield for the friction coefficient
+     * @param txtGravity textfield for the acceleration of gravity
+     * @param txtBallMass textfield for the mass of the ball
+     */
     public ToExportListener(final Golf game, Screen screen, TextField txtFunction, TextField txtStartPos,
 			TextField txtGoalPos, TextField txtRadius, TextField txtVMax, TextField txtFriction, TextField txtGravity,
 			TextField txtBallMass) {

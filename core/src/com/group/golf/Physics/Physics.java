@@ -14,10 +14,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by alex_ on 21-Mar-18.
- * A class to hold the Physics engine for the Crazy Golf game
+ * A major class for the physics engine for the Golf game
+ * @author Alexandros Chimonas
+ * @author Martijn Hilders
  */
-
 public class Physics {
 
     private Course course;
@@ -25,7 +25,7 @@ public class Physics {
     private boolean water;
     private boolean wall_stop;
     private List<Rectangle> walls;
-     static float[][] repeatChecker;
+    static float[][] repeatChecker;
     protected float errorBound;
 
     protected static float[] hitCoord;
@@ -36,7 +36,6 @@ public class Physics {
 
     /**
      * Construct a Physics engine
-     *
      * @param course the course to analyze
      */
     public Physics(Course course) {
@@ -46,6 +45,10 @@ public class Physics {
         this.walls = course.getWalls();
     }
 
+    /**
+     * Construct a Physics engine from a template
+     * @param other another Physics engine acting as a tempalte
+     */
     public Physics(Physics other) {
         this.course = other.course;
         this.collision = other.collision;
@@ -77,10 +80,19 @@ public class Physics {
         this.movingBall.limit(this.course.getVmax());
     }
 
+    /**
+     * Manage the movement of the active ball
+     * @param delta step-size
+     * @param simulation true if the hit is part of a simulation, false if it is a real hit
+     */
     public void movement(float delta, boolean simulation) {
         System.out.println("No differential equation created");
     }
 
+    /**
+     * Check collisions
+     * @param simulation true if a simulation is taking place, false otherwise
+     */
     public void checkCollision(boolean simulation) {
         float[] ballPixels = MathLib.toPixel(new float[]{this.movingBall.getX(), this.movingBall.getY()}, this.course.getOffsets(),
                 this.course.getScales());
@@ -96,22 +108,29 @@ public class Physics {
         }
     }
 
-   protected void checkLowVelocity() {
+    /**
+     * Stop the ball if it meets the conditions
+     */
+    protected void checkLowVelocity() {
         if (Math.abs(movingBall.calcVelocity()) < errorBound) {
             movingBall.reset();
         }
-   }
+    }
 
-
+    /**
+     * Compute the accelation
+     * @param coord the actual position of the ball
+     * @param velocities the velocities at that position
+     * @return the accelation at that position
+     */
     public float[] acceleration(float[] coord, float[] velocities) {
         float[] gravForce = gravForce(coord);
         float[] frictionForce = frictionForce(velocities[0],velocities[1]);
         return new float[]{gravForce[0]+frictionForce[0],gravForce[1]+frictionForce[1]};
     }
 
-
     /**
-     * Compute the friction force that oposes to the movement of the ball
+     * Compute the friction force that opposes to the movement of the ball
      * @param velocityX the x-component of the velocity of the ball
      * @param velocityY the y-component of the velocity of the ball
      * @return a Vector2 instace containig the friction force
@@ -184,11 +203,21 @@ public class Physics {
         return hitCoord;
     }
 
+    /**
+     * Check if a ball has achieved the goal
+     * @param ball the ball to check
+     * @return true if the ball has achieved the goal, false otherwise
+     */
     public boolean isGoalAchieved(Ball ball) {
         collision.setBall(ball);
         return collision.isGoalAchieved();
     }
 
+    /**
+     * Check if a ball has achieved the goal2
+     * @param ball the ball to check
+     * @return true if the ball has achieved the goal2, false otherwise
+     */
     public boolean isGoalAchieved2(Ball ball) {
         collision.setBall(ball);
         return collision.isGoalAchieved2();
@@ -202,7 +231,10 @@ public class Physics {
         this.hitCoord = hitCoord;
     }
 
-
+    /**
+     * Check and manage water attribute
+     * @return true if water is true, false otherwise
+     */
     public boolean isWater() {
         if (water)  {
             water = false;
@@ -211,26 +243,50 @@ public class Physics {
         return false;
     }
 
+    /**
+     * Set a new value for the water attribute
+     * @param water the new value
+     */
     public void setWater(boolean water) {
         this.water = water;
     }
-    
+
+    /**
+     * Set a new set of walls to the physics engine
+     * @param walls the new set of walls
+     */
     public void setWalls(List<Rectangle> walls) {
     	this.walls = walls;
     }
 
+    /**
+     * Get access to the Collision instance managed by the physics engine
+     * @return
+     */
     public Collision getCollision() {
         return collision;
     }
 
+    /**
+     * Set a new instance of Collision to the physics engine
+     * @param collision the new Collision instance
+     */
     public void setCollision(Collision collision) {
         this.collision = collision;
     }
 
+    /**
+     * Get access to the ball being manipulated by the physics engine
+     * @return the active ball
+     */
     public Ball getBall() {
         return movingBall;
     }
 
+    /**
+     * Set a new ball to the physics engine
+     * @param ball the new ball
+     */
     public void setBall(Ball ball) {
         this.movingBall = ball;
     }

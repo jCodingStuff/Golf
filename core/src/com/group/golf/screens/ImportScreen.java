@@ -19,8 +19,9 @@ import com.group.golf.listeners.ImportListener;
 
 
 /**
- * Created by kim on 20.03.2018.
  * Screen to import a course
+ * @author Kim Roggenbuck
+ * @author Lillian Wush
  */
 
 class ImportScreen implements Screen {
@@ -34,7 +35,7 @@ class ImportScreen implements Screen {
     Texture background;
 
     /**
-     * Create a new Import screen
+     * Create a new ImportScreen instance
      * @param game the Golf instance
      */
     public ImportScreen(final Golf game){
@@ -95,11 +96,19 @@ class ImportScreen implements Screen {
         this.music.setVolume(0.2f);
         this.music.setLooping(true);
     }
+
+    /**
+     * Start playing background music
+     */
     @Override
     public void show() {
         this.music.play();
     }
 
+    /**
+     * Render UI
+     * @param delta time between last and current frame
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0.5f, 0, 1);
@@ -115,6 +124,7 @@ class ImportScreen implements Screen {
         stage.draw();
 
     }
+
     @Override
     public void resize(int width, int height) {
 
@@ -130,10 +140,17 @@ class ImportScreen implements Screen {
 
     }
 
+    /**
+     * Stop music if hide
+     */
     @Override
     public void hide() {
         this.music.stop();
     }
+
+    /**
+     * Dispose sound and sprite
+     */
     @Override
     public void dispose() {
         this.music.dispose();

@@ -34,6 +34,8 @@ import java.util.List;
 
 /**
  * The main menu screen for the Crazy Golf game
+ * @author Kim Roggenbuck
+ * @author Lillian Wush
  */
 public class CourseSelectorScreen implements Screen {
 
@@ -51,7 +53,7 @@ public class CourseSelectorScreen implements Screen {
     Texture background;
 
     /**
-     * Create a new main menu screen
+     * Create a new CourseSelectorScreen instance
      * @param game the Golf instance
      */
     public CourseSelectorScreen(final Golf game) {
@@ -187,11 +189,18 @@ public class CourseSelectorScreen implements Screen {
 
     }
 
+    /**
+     * Start playing background music
+     */
     @Override
     public void show() {
         this.menuMusic.play();
     }
 
+    /**
+     * Render UI
+     * @param delta the time between last and current frame
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.196f, 0.804f, 0.196f, 1);
@@ -223,11 +232,17 @@ public class CourseSelectorScreen implements Screen {
 
     }
 
+    /**
+     * Stop playing music when hide
+     */
     @Override
     public void hide() {
         this.menuMusic.stop();
     }
 
+    /**
+     * Dispose sound and sprites
+     */
     @Override
     public void dispose() {
         this.menuMusic.dispose();

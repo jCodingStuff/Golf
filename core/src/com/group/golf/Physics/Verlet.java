@@ -3,8 +3,16 @@ package com.group.golf.Physics;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 
+/**
+ * A physics engine that users Verlet ODE solver method
+ * @author Alexandros Chimonas
+ */
 public class Verlet extends Physics {
 
+    /**
+     * Create a new Verlet instance
+     * @param course the course being played
+     */
     public Verlet(Course course) {
         super(course);
         errorBound = 0.07f;

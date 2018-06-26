@@ -5,14 +5,30 @@ import com.group.golf.Physics.Collision;
 import com.group.golf.ai.GeneticBot;
 import com.group.golf.math.JVector2;
 
+/**
+ * GoalChecker for simple courses
+ * @author Julian Marrades
+ */
 public class SimpleChecker implements GoalChecker {
 
     private GeneticBot bot;
 
+    /**
+     * Create a new instance of SimpleChecker
+     * @param bot the bot that will operate on this instance
+     */
     public SimpleChecker(GeneticBot bot) {
         this.bot = bot;
     }
 
+    /**
+     * Check if the closest landing of any individual is inside the tolerance radius of the goal
+     * @param goal the coordinates of the goal
+     * @param population the population of individuals
+     * @param virtualBall the instance of the virtualBall
+     * @param virtualCollision the instance of the virtualCollision
+     * @return true if the goal has been reached, false otherwise
+     */
     @Override
     public boolean goalReached(float[] goal, Individual[] population, Ball virtualBall, Collision virtualCollision) {
         boolean reached = false;

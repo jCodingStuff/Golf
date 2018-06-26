@@ -16,6 +16,10 @@ import com.group.golf.Course;
 import com.group.golf.Golf;
 import com.group.golf.modes.GameMode;
 
+/**
+ * A class to select the physics engine
+ * @author Julian Marrades
+ */
 public class EngineSelectorScreen implements Screen {
 
     private final Golf game;
@@ -35,6 +39,13 @@ public class EngineSelectorScreen implements Screen {
     private TextButton rungeKutta;
     private TextButton predictorCorrector;
 
+    /**
+     * Create a new instance of EngineSelectorScreen
+     * @param game the game instance
+     * @param course the course that will be played
+     * @param gameMode the desired gamemode
+     * @param wallMode the wall editor mode
+     */
     public EngineSelectorScreen(final Golf game, final Course course, final GameMode gameMode, final GameMode wallMode) {
         this.game = game;
         this.course = course;
@@ -157,6 +168,9 @@ public class EngineSelectorScreen implements Screen {
         this.background = new Texture(Gdx.files.internal("minigolf_background.jpg"));
     }
 
+    /**
+     * Disable all buttons
+     */
     private void disableButtons() {
         predictorCorrector.setTouchable(Touchable.disabled);
         verlet.setTouchable(Touchable.disabled);
@@ -165,11 +179,18 @@ public class EngineSelectorScreen implements Screen {
         euler.setTouchable(Touchable.disabled);
     }
 
+    /**
+     * Start playing background music
+     */
     @Override
     public void show() {
         this.menuMusic.play();
     }
 
+    /**
+     * Render UI
+     * @param delta the time between last and current frame
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.196f, 0.804f, 0.196f, 1);
@@ -201,11 +222,17 @@ public class EngineSelectorScreen implements Screen {
 
     }
 
+    /**
+     * Stop music when hide
+     */
     @Override
     public void hide() {
         this.menuMusic.stop();
     }
 
+    /**
+     * Dispose sprite and sound
+     */
     @Override
     public void dispose() {
         this.menuMusic.dispose();

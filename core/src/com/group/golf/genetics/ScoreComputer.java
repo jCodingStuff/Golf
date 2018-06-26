@@ -2,6 +2,10 @@ package com.group.golf.genetics;
 
 import com.group.golf.Course;
 
+/**
+ * An interface for fitness computation
+ * @author Julian Marrades
+ */
 public interface ScoreComputer {
 
     /**

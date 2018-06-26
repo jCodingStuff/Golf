@@ -5,6 +5,7 @@ import com.group.golf.Physics.Physics;
 
 /**
  * Interface to hold bots
+ * @author Julian Marrades
  */
 public interface Bot {
 

@@ -25,6 +25,8 @@ import java.util.StringTokenizer;
 
 /**
  * Listener for the ImportScreen to import a course
+ * @author Kaspar Kallast
+ * @author Julian Marrades
  */
 public class ImportListener extends ChangeListener {
 

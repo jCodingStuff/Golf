@@ -3,8 +3,17 @@ package com.group.golf.genetics;
 import com.group.golf.Course;
 import com.group.golf.math.JVector2;
 
+/**
+ * Class InverseScoreComputer computes fitness for simple courses
+ * @auther Julian Marrades
+ */
 public class InverseScoreComputer implements ScoreComputer {
 
+    /**
+     * Penalize the distance from the closestPoint to the goal, and the number of shots to achieve closestPoint
+     * @param course the course where the algorithm is operating
+     * @param population the population to evaluate
+     */
     @Override
     public void compute(Course course, Individual[] population) {
         float[] goal = course.getGoal();

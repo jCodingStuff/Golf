@@ -6,7 +6,9 @@ import com.badlogic.gdx.math.Circle;
 
 
 /**
- * A class to save the data of the ball
+ * A class to save the data of the ball for the Golf game
+ * @author Julian Marrades
+ * @author Alexandros Chimonas
  */
 public class Ball {
 
@@ -85,6 +87,12 @@ public class Ball {
         }
     }
 
+    /**
+     * Render the ball to the screen
+     * @param batch the batch instance responsible for drawing sprites
+     * @param realX the x-pixel of the ball
+     * @param realY the y-pixel of the ball
+     */
     public void render(Batch batch, double realX, double realY) {
         batch.begin();
         batch.draw(this.texture, (float) realX - RADIUS,
@@ -92,10 +100,16 @@ public class Ball {
         batch.end();
     }
 
+    /**
+     * Reverse the x-component of the velocity
+     */
     public void invertVelocityX() {
         this.velocityX = -this.velocityX;
     }
 
+    /**
+     * Reverse the y-component of the velocity
+     */
     public void invertVelocityY() {
         this.velocityY = -this.velocityY;
     }
@@ -231,18 +245,28 @@ public class Ball {
         this.updateCollisionCircle();
     }
 
+    /**
+     * Set a new position for the ball (using a float array)
+     * @param coords the array representing the new function coordinates of the ball
+     */
     public void setCoords(float[] coords) {
         setX(coords[0]);
         setY(coords[1]);
     }
 
+    /**
+     * Set the velocities for the ball (using a float array)
+     * @param velocities the array representing the new component velocities of the ball
+     */
     public void setVelocities(float[] velocities) {
         setVelocityX(velocities[0]);
         setVelocityY(velocities[1]);
     }
 
-
-
+    /**
+     * Get access to the collision circle of the ball
+     * @return the collision circle
+     */
     public Circle getCollisionCircle() {
         return collisionCircle;
     }

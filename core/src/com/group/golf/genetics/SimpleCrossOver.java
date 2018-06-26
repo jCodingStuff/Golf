@@ -5,6 +5,7 @@ import com.group.golf.math.JVector2;
 
 /**
  * Simple crossover algorithm
+ * @auther Julian Marrades
  */
 public class SimpleCrossOver implements CrossOver {
 
@@ -18,6 +19,12 @@ public class SimpleCrossOver implements CrossOver {
         this.bot = bot;
     }
 
+    /**
+     * Get a random index of the dna chain. Get the forces from 0 to that index from genesA and the rest from genesB
+     * @param genesA the first chain
+     * @param genesB the second chain
+     * @return the new individual containing the combination of the dna chains
+     */
     @Override
     public Individual crossOver(JVector2[] genesA, JVector2[] genesB) {
         JVector2[] newGenes = new JVector2[genesA.length];

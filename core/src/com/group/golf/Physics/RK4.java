@@ -6,8 +6,16 @@ import com.group.golf.Course;
 
 //https://www.haroldserrano.com/blog/visualizing-the-runge-kutta-method
 
+/**
+ * A physics engine that uses Runge-Kutta 4th order method (ODE)
+ * @author Alexandros Chimonas
+ */
 public class RK4 extends Physics {
 
+    /**
+     * Create a new instance of RK4
+     * @param course the course being played
+     */
     public RK4(Course course) {
         super(course);
         errorBound = 0.05f;
@@ -43,6 +51,12 @@ public class RK4 extends Physics {
 
     }
 
+    /**
+     * Bootstrap for other solvers
+     * @param ball the ball to handle
+     * @param delta the step-size
+     * @param simulation true if it is a simulation, false otherwise
+     */
     public void bootstrapMovement(Ball ball,float delta, boolean simulation) {
         super.setBall(ball);
         super.getCollision().setBall(ball);

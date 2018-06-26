@@ -26,6 +26,10 @@ import com.group.golf.modes.UndefinedBotMode;
 import com.group.golf.modes.UndefinedPlayerMode;
 import com.group.golf.modes.WallCreationMode;
 
+/**
+ * A screen to enter the AI vs AI mode
+ * @author Julian Marrades
+ */
 public class AIvsAIScreen implements Screen {
 
     private final Golf game;
@@ -44,6 +48,12 @@ public class AIvsAIScreen implements Screen {
     private OrthographicCamera cam;
     private Texture background;
 
+    /**
+     * Create a new AIvsAIScreen instance
+     * @param game the game instance
+     * @param course the course that will be played
+     * @param ball the ball holding properties
+     */
     public AIvsAIScreen(final Golf game, final Course course, final Ball ball) {
         this.game = game;
         this.course = course;
@@ -160,6 +170,11 @@ public class AIvsAIScreen implements Screen {
 
     }
 
+    /**
+     * Generate a selectBox for ai selection
+     * @param skin the skin to apply to the box
+     * @return the selectBox
+     */
     private SelectBox<Label> generateBox(Skin skin) {
         Label[] blob = new Label[4];
         blob[0] = new Label("GeneticBot", skin);
@@ -171,11 +186,18 @@ public class AIvsAIScreen implements Screen {
         return sb;
     }
 
+    /**
+     * Start playing the background musics
+     */
     @Override
     public void show() {
         this.menuMusic.play();
     }
 
+    /**
+     * Render UI
+     * @param delta the time between last and current frame
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.196f, 0.804f, 0.196f, 1);
@@ -207,11 +229,17 @@ public class AIvsAIScreen implements Screen {
 
     }
 
+    /**
+     * Stop playing music when hide
+     */
     @Override
     public void hide() {
         this.menuMusic.stop();
     }
 
+    /**
+     * Dispose sound and sprites
+     */
     @Override
     public void dispose() {
         this.menuMusic.dispose();

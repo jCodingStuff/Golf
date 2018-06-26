@@ -23,6 +23,11 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+/**
+ * File Gamemode (reading from a txt file)
+ * @author Kaspar Kallast
+ * @author Julian Marrades
+ */
 public class FileMode extends GameMode {
 
     private final Golf game;
@@ -44,6 +49,13 @@ public class FileMode extends GameMode {
     private int counter;
     private List<String> moves;
 
+    /**
+     * Create a new FileMode instance
+     * @param game the game instance
+     * @param course the course being played
+     * @param ball the ball being used
+     * @param moves the moves to perform
+     */
     public FileMode(Golf game, Course course, Ball ball, String moves) {
         this.game = game;
         this.course = course;
@@ -62,12 +74,19 @@ public class FileMode extends GameMode {
         this.winSound = Gdx.audio.newSound(Gdx.files.internal("success_2.wav"));
     }
 
+    /**
+     * Setup the ball
+     */
     private void setUpBall() {
         this.ball.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
         this.ball.setX(this.course.getStart()[0]);
         this.ball.setY(this.course.getStart()[1]);
     }
 
+    /**
+     * Setup the moves
+     * @param moves the string containing all moves
+     */
     private void setUpMoves(String moves) {
         this.moves = new ArrayList<String>();
         Scanner in = new Scanner(moves);
@@ -77,12 +96,19 @@ public class FileMode extends GameMode {
         in.close();
     }
 
+    /**
+     * Compute the pixel coordinate of the ball
+     */
     private void computePixels() {
         float[] ballPixels = MathLib.toPixel(new float[]{this.ball.getX(), this.ball.getY()},
                     this.offsets, this.scales);
         this.ballPixels.setPosition(ballPixels[0], ballPixels[1]);
     }
 
+    /**
+     * Render the ball
+     * @param batch the batch responsible for drawing sprites
+     */
     @Override
     public void render(Batch batch) {
         this.computePixels();
@@ -98,6 +124,11 @@ public class FileMode extends GameMode {
 //        }
 //    }
 
+    /**
+     * Perform the movement
+     * @param cam the camera being used
+     * @return true if the goal has not been reached, false otherwise
+     */
     @Override
     public boolean move(OrthographicCamera cam) {
         if (!this.ball.isMoving()) {
@@ -123,6 +154,9 @@ public class FileMode extends GameMode {
         }
     }
 
+    /**
+     * Read a move from the list
+     */
     private void readMove() {
         StringTokenizer tokenizer = new StringTokenizer(this.moves.get(this.counter));
         float force = Float.parseFloat(tokenizer.nextToken());
@@ -142,6 +176,9 @@ public class FileMode extends GameMode {
     }
 
 
+    /**
+     * Dispose sounds
+     */
     @Override
     public void dispose() {
         this.hitSound.dispose();

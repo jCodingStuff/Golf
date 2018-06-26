@@ -4,6 +4,7 @@ import com.group.golf.math.JVector2;
 
 /**
  * Interface to hold crossOver algorithms
+ * @author Julian Marrades
  */
 public interface CrossOver {
 

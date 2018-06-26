@@ -25,8 +25,7 @@ import com.group.golf.math.Function;
 
 /**
  * A screen to export a course into a file.
- * @author kaspar
- *
+ * @author Kaspar Kallast
  */
 public class ExportScreen implements Screen {
 
@@ -43,7 +42,7 @@ public class ExportScreen implements Screen {
     Ball ball1;
 
     /**
-     * Create a new export screen instance.
+     * Create a new ExportScreen instance.
      * @param game The golf instance.
      * @param course1 The course1 instance.
      * @param ball1 The ball1 instance.
@@ -131,11 +130,19 @@ public class ExportScreen implements Screen {
         this.music.setVolume(1.5f);
         this.music.setLooping(true);
     }
+
+    /**
+     * Start playing background music
+     */
     @Override
     public void show() {
         this.music.play();
     }
 
+    /**
+     * Render UI
+     * @param delta the time between last and current frame
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0.5f, 0, 1);
@@ -150,6 +157,7 @@ public class ExportScreen implements Screen {
         stage.draw();
 
     }
+
     @Override
     public void resize(int width, int height) {
 
@@ -165,10 +173,17 @@ public class ExportScreen implements Screen {
 
     }
 
+    /**
+     * Stop music when hide
+     */
     @Override
     public void hide() {
         this.music.stop();
     }
+
+    /**
+     * Dispose sound and sprite
+     */
     @Override
     public void dispose() {
         this.music.dispose();

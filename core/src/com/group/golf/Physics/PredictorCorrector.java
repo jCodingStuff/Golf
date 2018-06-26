@@ -4,14 +4,19 @@ import com.group.golf.Ball;
 import com.group.golf.Course;
 import com.group.golf.Physics.Physics;
 
+/**
+ * A physics engine that uses 3 stage Adams-Moulton corrector method with 2 stage Adams-Bashforth predictor bootstrapped by RK4
+ */
 public class PredictorCorrector extends Physics {
-    //third-stage Adams-Moulton method corrector with two - stage Adams-Bashforth predictor bootstrapped by RK4
-
 
     private state prevState_1;
     private state prevState_2;
     private float[] tempCoords;
 
+    /**
+     * Create a new instance of PredictorCorrector
+     * @param course the course being played
+     */
     public PredictorCorrector(Course course) {
         super(course);
         errorBound = 0.027f;

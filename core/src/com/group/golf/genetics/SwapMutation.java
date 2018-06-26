@@ -7,6 +7,11 @@ import com.group.golf.math.JVector2;
  */
 public class SwapMutation implements Mutation {
 
+    /**
+     * Get to random forces from the individual and swap their order
+     * @param ind the individual to mutate
+     * @param rate the mutation rate
+     */
     @Override
     public void mutate(Individual ind, double rate) {
         if (Math.random() < rate) {

@@ -22,6 +22,9 @@ import com.group.golf.math.Function;
 
 /**
  * Screen to import a file containing the moves to perform
+ * @author Kim Roggenbuck
+ * @author Lillian Wush
+ * @author Kaspar Kallast
  */
 public class ImportMovesScreen implements Screen {
 
@@ -38,7 +41,7 @@ public class ImportMovesScreen implements Screen {
     Texture background;
 
     /**
-     * Create a new moves screen
+     * Create a new ImportMovesScreen instance
      * @param game the Golf instance
      * @param course the Course instance
      * @param ball the Ball instance
@@ -127,11 +130,18 @@ public class ImportMovesScreen implements Screen {
         this.stage.addActor(this.playBt);
     }
 
+    /**
+     * Start playing background music
+     */
     @Override
     public void show() {
         this.music.play();
     }
 
+    /**
+     * Render UI
+     * @param delta the time between last and current frame
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.196f, 0.804f, 0.196f, 1);
@@ -162,11 +172,17 @@ public class ImportMovesScreen implements Screen {
 
     }
 
+    /**
+     * Stop playing music if hide
+     */
     @Override
     public void hide() {
         this.music.stop();
     }
 
+    /**
+     * Dispose sound and sprite
+     */
     @Override
     public void dispose() {
         this.music.dispose();

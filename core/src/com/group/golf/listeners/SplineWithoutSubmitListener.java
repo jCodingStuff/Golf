@@ -13,9 +13,10 @@ import java.util.StringTokenizer;
 import javax.xml.soap.Text;
 
 /**
- * Created by lilly on 4/17/18.
+ * Listener to submit points for spline interpolation (easy mode, without derivatives)
+ * @author Lillian Wush
+ * @author Kim Roggenbuck
  */
-
 public class SplineWithoutSubmitListener extends ChangeListener {
     final Golf game;
     Screen screen;
@@ -27,7 +28,15 @@ public class SplineWithoutSubmitListener extends ChangeListener {
     int xUnits;
     int yUnits;
 
-
+    /**
+     * Create a new instance of SplineWithoutSubmitListener
+     * @param game the game instance
+     * @param screen the current screen
+     * @param xyz textfield for point coordinates
+     * @param xyzMatrix martix containing the x y z coordinates of the points
+     * @param xUnits units to interpolate along the x-axis
+     * @param yUnits units to interpolate along the y-axis
+     */
     public SplineWithoutSubmitListener(final Golf game, Screen screen, TextField xyz,  Point3D[][] xyzMatrix, TextField xUnits, TextField yUnits){
         this.game = game;
         this.screen = screen;

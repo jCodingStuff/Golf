@@ -6,6 +6,7 @@ import com.group.golf.math.MathLib;
 
 /**
  * AverageCrossOver algorithm
+ * @author Julian Marrades
  */
 public class AverageCrossOver implements CrossOver {
 
@@ -19,6 +20,12 @@ public class AverageCrossOver implements CrossOver {
         this.bot = bot;
     }
 
+    /**
+     * For each new force, get the force with the same index from genesA and genesB and average their components
+     * @param genesA the first chain
+     * @param genesB the second chain
+     * @return a new individual using the new forces
+     */
     @Override
     public Individual crossOver(JVector2[] genesA, JVector2[] genesB) {
         JVector2[] newGenes = new JVector2[genesA.length];

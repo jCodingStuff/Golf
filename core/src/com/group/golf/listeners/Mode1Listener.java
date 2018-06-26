@@ -17,7 +17,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
- * Listener to run the game using mode1 (player takes the control)
+ * Listener to run the game entering playmode selection
+ * @author Kim Roggenbuck
+ * @author Lillian Wush
  */
 public class Mode1Listener extends ChangeListener {
 

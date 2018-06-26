@@ -16,7 +16,9 @@ import com.group.golf.screens.ModeScreen;
 import java.util.StringTokenizer;
 
 /**
- * Listener to run the game using mode1 (player takes the control)
+ * Listener to run the game entering playmode Selection
+ * @author Kim Roggenbuck
+ * @author Lillian Wush
  */
 public class SplineMode1Listener extends ChangeListener {
 
@@ -35,7 +37,6 @@ public class SplineMode1Listener extends ChangeListener {
      * Create a new Mode1Listener
      * @param game the Golf instance
      * @param screen the Screen instance
-
      * @param txtStartPos the TextField containing the Start Coordinates
      * @param txtGoalPos the TextField containing the Goal Coordinates
      * @param txtRadius the TextField containing the tolerance

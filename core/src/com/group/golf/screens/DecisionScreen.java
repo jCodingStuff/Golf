@@ -19,7 +19,9 @@ import com.group.golf.listeners.Mode2Listener;
 import com.group.golf.listeners.ToExportListener;
 
 /**
- * Created by kim on 13.04.2018.
+ * Screen to decide which kind of design is wanted (function or splines)
+ * @author Kim Roggenbuck
+ * @author Lillian Wush
  */
 
 public class DecisionScreen implements Screen {
@@ -36,9 +38,8 @@ public class DecisionScreen implements Screen {
     Texture background;
 
     /**
-     * Create a new Design Screen
-     *
-     * @param game the Golf instace
+     * Create a new DecisionScreen instance
+     * @param game the Golf instance
      */
     public DecisionScreen(final Golf game) {
 
@@ -166,12 +167,20 @@ public class DecisionScreen implements Screen {
         }
         function.addListener(new FunctionListener(game, this));
     }
-        @Override
+
+    /**
+     * Start playing background music
+     */
+    @Override
         public void show() {
             this.music.play();
         }
 
-        @Override
+    /**
+     * Render UI
+     * @param delta the time between last and current frame
+     */
+    @Override
         public void render(float delta) {
             Gdx.gl.glClearColor(0.196f, 0.804f, 0.196f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -200,11 +209,18 @@ public class DecisionScreen implements Screen {
 
         }
 
-        @Override
+    /**
+     * Stop playing music when hide
+     */
+    @Override
         public void hide() {
             this.music.stop();
         }
-        @Override
+
+    /**
+     * Dispose sprite and sound
+     */
+    @Override
         public void dispose() {
             this.music.dispose();
             this.background.dispose();

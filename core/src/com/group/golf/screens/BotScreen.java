@@ -25,7 +25,9 @@ import com.group.golf.modes.UndefinedBotMode;
 import com.group.golf.modes.WallCreationMode;
 
 /**
- * Created by lilly on 5/22/18.
+ * Screen to select the desired AI agent
+ * @author Lillian Wush
+ * @author Julian Marrades
  */
 
 public class BotScreen implements Screen {
@@ -40,7 +42,6 @@ public class BotScreen implements Screen {
 
     TextButton genetic;
     TextButton random;
-    TextButton martijn;
     TextButton dum;
     TextButton back;
     TextButton pledge;
@@ -48,6 +49,13 @@ public class BotScreen implements Screen {
     OrthographicCamera cam;
     Texture background;
 
+    /**
+     * Create a new BotScreen instance
+     * @param game the game instance
+     * @param course the course that will be played
+     * @param ball the ball holding properties
+     * @param pvb true if the gamemode will be playerVSAI, false if it will be single AI
+     */
         public BotScreen(final Golf game, Course course, Ball ball, final boolean pvb) {
             this.pvb = pvb;
             this.game = game;
@@ -58,21 +66,18 @@ public class BotScreen implements Screen {
             Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
             genetic = new TextButton(" GeneticBot", skin);
             random = new TextButton("Random Bot", skin);
-            martijn = new TextButton("Bot Martijn", skin);
             dum = new TextButton("Dumb Bot", skin);
             back = new TextButton("Back", skin);
             pledge = new TextButton("Pledge", skin);
 
             genetic.setPosition(300, 400);
             random.setPosition(300, 300);
-            martijn.setPosition(600, 400);
             dum.setPosition(600, 300);
             back.setPosition(100, 300);
             pledge.setPosition(600, 400);
 
             genetic.setSize(200, 60);
             random.setSize(200, 60);
-            martijn.setSize(200, 60);
             dum.setSize(200, 60);
             back.setSize(100, 60);
             pledge.setSize(200, 60);
@@ -114,7 +119,6 @@ public class BotScreen implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     genetic.setTouchable(Touchable.disabled);
                     random.setTouchable(Touchable.disabled);
-                    martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
                     GameMode gameMode;
@@ -155,7 +159,6 @@ public class BotScreen implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     genetic.setTouchable(Touchable.disabled);
                     random.setTouchable(Touchable.disabled);
-                    martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
                     GameMode gameMode;
@@ -178,47 +181,6 @@ public class BotScreen implements Screen {
 
             }
             random.addListener(new RandomBotListener(game, this, this.course, this.ball));
-
-            class MartijnListener extends ChangeListener {
-                final Golf game;
-                private Screen screen;
-                private Course course;
-                private Ball ball;
-
-                public MartijnListener(final Golf game, Screen screen, Course course, Ball ball) {
-                    this.game = game;
-                    this.screen = screen;
-                    this.course = course;
-                    this.ball = ball;
-                }
-
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    genetic.setTouchable(Touchable.disabled);
-                    random.setTouchable(Touchable.disabled);
-                    martijn.setTouchable(Touchable.disabled);
-                    dum.setTouchable(Touchable.disabled);
-                    back.setTouchable(Touchable.disabled);
-                    GameMode gameMode;
-                    GameMode wallMode;
-                    if (pvb) {
-                        Ball[] balls = new Ball[]{this.ball, new Ball(this.ball)};
-                        Bot bot = new botMartijn(course, balls[1]);
-                        gameMode = new PlayerVSBotMode(this.game, bot, this.course, balls);
-                        wallMode = new WallCreationMode(this.game, this.course, balls);
-                    } else {
-                        Bot bot = new botMartijn(this.course, this.ball);
-                        Bot[] bots = new Bot[]{bot};
-                        Ball[] balls = new Ball[]{this.ball};
-                        gameMode = new UndefinedBotMode(this.game, bots, this.course, balls);
-                        wallMode = new WallCreationMode(this.game, this.course, balls);
-                    }
-                    this.game.setScreen(new EngineSelectorScreen(this.game, this.course, gameMode, wallMode));
-                    this.screen.dispose();
-                }
-
-            }
-            martijn.addListener(new MartijnListener(game, this, this.course, this.ball));
             
             class pledgeListener extends ChangeListener {
                 final Golf game;
@@ -237,7 +199,6 @@ public class BotScreen implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     genetic.setTouchable(Touchable.disabled);
                     random.setTouchable(Touchable.disabled);
-                    martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
                     GameMode gameMode;
@@ -280,7 +241,6 @@ public class BotScreen implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     genetic.setTouchable(Touchable.disabled);
                     random.setTouchable(Touchable.disabled);
-                    martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
                     GameMode gameMode;
@@ -314,11 +274,8 @@ public class BotScreen implements Screen {
 
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-
-
                     genetic.setTouchable(Touchable.disabled);
                     random.setTouchable(Touchable.disabled);
-                    martijn.setTouchable(Touchable.disabled);
                     dum.setTouchable(Touchable.disabled);
                     back.setTouchable(Touchable.disabled);
 
@@ -330,11 +287,19 @@ public class BotScreen implements Screen {
             back.addListener(new BackListener(game, this));
 
     }
+
+    /**
+     * Start playing the background music
+     */
     @Override
     public void show() {
         this.menuMusic.play();
     }
 
+    /**
+     * Render UI
+     * @param delta time between last and current frame
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.196f, 0.804f, 0.196f, 1);
@@ -366,11 +331,17 @@ public class BotScreen implements Screen {
 
     }
 
+    /**
+     * Stop music when hide
+     */
     @Override
     public void hide() {
         this.menuMusic.stop();
     }
 
+    /**
+     * Dispose sound and sprites
+     */
     @Override
     public void dispose() {
         this.menuMusic.dispose();

@@ -17,7 +17,9 @@ import com.group.golf.modes.WallCreationMode;
 import com.group.golf.screens.CourseScreen;
 
 /**
- * Screen to load moves file
+ * Listener to load moves file
+ * @author Kim Roggenbuck
+ * @author Lillian Wush
  */
 public class MovesPlayListener extends ChangeListener {
 
