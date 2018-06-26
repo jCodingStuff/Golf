@@ -40,8 +40,8 @@ public class PledgeBot implements Bot {
     private boolean repeat = false;
     private List<Rectangle> rects;
     private float distanceLimit = 3850;
-	private float upperBounda = (float) 0.5;
-	private float lowerBounda = (float) 0.1;
+	private float upperBounda = (float) 8.5; 
+	private float lowerBounda = (float) 1;
 	private float hitForce = (float) 4.1; // Default 4.1
 	private int repeatCount;
 	private float extraCheckLength = 7;
@@ -67,7 +67,7 @@ public class PledgeBot implements Bot {
     @Override
     public void makeMove() {
     	// Calculate ball coords in pixels.
-    	calcExtraPower(lowerBounda, upperBounda);
+    	//calcExtraPower(lowerBounda, upperBounda);
     	int min = 0;
     	int max = 1;
     	int random = min + (int)(Math.random() * ((max - min) + 1));
