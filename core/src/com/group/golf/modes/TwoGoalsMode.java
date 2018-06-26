@@ -22,7 +22,12 @@ import com.group.golf.screens.CourseSelectorScreen;
 
 import java.util.Arrays;
 
-
+/**
+ * A cooperative move (2 balls 2 goals)
+ * @author Kaspar Kallast
+ * @author Kim Roggenbuck
+ * @author Lillian Wush
+ */
 public class TwoGoalsMode extends GameMode {
 
     private final Golf game;
@@ -46,8 +51,15 @@ public class TwoGoalsMode extends GameMode {
     private int p1counter;
     private int p2counter;
 
+    /**
+     * Create a new instance of TwoGoalsMode
+     * @param game the game instance
+     * @param course the course being played
+     * @param balls the set of balls (2 in this case)
+     * @param distanceLimit the limit of distance between the two balls
+     */
     public TwoGoalsMode(Golf game, Course course, Ball[] balls, double distanceLimit) {
-        this.distanceLimit = 10.5;
+//        this.distanceLimit = 10.5;
         this.game = game;
         this.course = course;
         this.balls = balls;
@@ -69,6 +81,9 @@ public class TwoGoalsMode extends GameMode {
     }
 
 
+    /**
+     * Setup the 2 balls
+     */
     private void setUpBalls() {
     	// Ball1
         this.balls[0].reset();
@@ -83,6 +98,9 @@ public class TwoGoalsMode extends GameMode {
     	this.balls[1].setY(this.course.getStart2()[1]);
     }
 
+    /**
+     * Initialize the balls pixels
+     */
     private void initPixels() {
         this.ballsPixels = new JVector2[this.balls.length];
         for (int i = 0; i < this.ballsPixels.length; i++) {
@@ -90,6 +108,9 @@ public class TwoGoalsMode extends GameMode {
         }
     }
 
+    /**
+     * Compute the pixels for the balls
+     */
     private void computePixels() {
         for (int i = 0; i < this.ballsPixels.length; i++) {
             float[] ballPixels = MathLib.toPixel(new float[]{this.balls[i].getX(), this.balls[i].getY()},
@@ -98,6 +119,10 @@ public class TwoGoalsMode extends GameMode {
         }
     }
 
+    /**
+     * Render the balls
+     * @param batch the batch responsible for drawing sprites
+     */
     @Override
     public void render(Batch batch) {
         this.computePixels();
@@ -116,11 +141,20 @@ public class TwoGoalsMode extends GameMode {
 //        }
 //    }
 
+    /**
+     * Advance turn
+     */
     private void incrementCounter() {
         this.counter++;
         if (this.counter >= this.balls.length) this.counter = 0;
     }
-    
+
+    /**
+     * Check if 2 balls have exceeded the limit distance
+     * @param a the first ball
+     * @param b the second ball
+     * @return true if the distance limit has been exceeded, false otherwise
+     */
     public boolean distanceCheck(Ball a, Ball b) {
     	float x1 = a.getX();
     	float y1 = a.getY();
@@ -138,6 +172,10 @@ public class TwoGoalsMode extends GameMode {
         }
     }
 
+    /**
+     * Add the score to the highscores file
+     * @param score the score to add
+     */
     public void addScore(int score) {
         FileHandle scoreFile = Gdx.files.local("scores.txt");
 
@@ -172,6 +210,11 @@ public class TwoGoalsMode extends GameMode {
 
     }
 
+    /**
+     * Perform movement
+     * @param cam the camera being used
+     * @return false if the goal has been reached, true otherwise
+     */
     @Override
     public boolean move(OrthographicCamera cam){
         Ball currentBall = this.balls[this.counter];
@@ -203,6 +246,9 @@ public class TwoGoalsMode extends GameMode {
         }
     }
 
+    /**
+     * Inform the winner via console
+     */
     private void informWinner() {
         System.out.println("EVERYONE WINS!");
         if(p1counter>p2counter) addScore(p1counter);
@@ -211,6 +257,10 @@ public class TwoGoalsMode extends GameMode {
 
     }
 
+    /**
+     * Look for user input
+     * @param cam the camera to unproject user input
+     */
     private void userInput(OrthographicCamera cam) {
         Vector2 mousePos = CourseScreen.mousePosition(cam);
         if (Gdx.input.isTouched()) {
@@ -263,6 +313,9 @@ public class TwoGoalsMode extends GameMode {
     }
 
 
+    /**
+     * Dispose sounds
+     */
     @Override
     public void dispose() {
         this.hitSound.dispose();

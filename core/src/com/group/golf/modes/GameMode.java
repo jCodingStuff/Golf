@@ -5,7 +5,11 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.group.golf.Course;
 import com.group.golf.Physics.*;
 
-
+/**
+ * An abstract class to represent a gamemode in the golf game
+ * @author Julian Marrades
+ * @author Alexandros Chimonas
+ */
 abstract public class GameMode {
 
     protected float[] offsets;
@@ -14,24 +18,51 @@ abstract public class GameMode {
     protected Physics engine;
     protected Course course;
 
+    /**
+     * Render the gamemome-dependant objects
+     * @param batch the batch responsible for drawing sprites
+     */
     public abstract void render(Batch batch);
 
+    /**
+     * Look for user input or other means of ball hitting
+     * @param cam the camera being used
+     * @return true if the move was successful, false otherwise (goal reached)
+     */
     public abstract boolean move(OrthographicCamera cam);
 
 //    public abstract void water();
 
+    /**
+     * Perform extra-checks
+     */
     public abstract void extraChecks();
 
+    /**
+     * Set a new offsets for the gamemode
+     * @param offsets the new offsets
+     */
     public void setOffsets(float[] offsets) {
         this.offsets = offsets;
     }
 
+    /**
+     * Set a new scales for the gamemodes
+     * @param scales the new scales
+     */
     public void setScales(float[] scales) {
         this.scales = scales;
     }
 
+    /**
+     * Get rid of objects when the game has ended or quit
+     */
     public abstract void dispose();
 
+    /**
+     * Setup the physics for the gamemode
+     * @param diffMethod the desired ODE (Euler, Verlet, RK4 or PredictorCorretor)
+     */
     public void setUpPhysics(String diffMethod) {
         if (diffMethod.equalsIgnoreCase("Euler")) {
             this.engine = new Euler(this.course);

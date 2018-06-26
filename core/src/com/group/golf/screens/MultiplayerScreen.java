@@ -126,7 +126,7 @@ public class MultiplayerScreen implements Screen{
                 Ball ball2 = new Ball(40);
                 Ball[] balls = new Ball[]{ball, ball2};
 
-                GameMode gameMode = new TwoGoalsMode(this.game, course, balls, 2.5);
+                GameMode gameMode = new TwoGoalsMode(this.game, course, balls, 10.5);
                 GameMode wallMode = new WallCreationMode(this.game, course, balls);
                 this.game.setScreen(new EngineSelectorScreen(this.game, course, gameMode, wallMode));
 
@@ -187,7 +187,7 @@ public class MultiplayerScreen implements Screen{
                 Ball ball2 = new Ball(40);
                 Ball[] balls = new Ball[]{ball, ball2};
 
-                GameMode gameMode = new TwoGoalsMode(this.game, course, balls, 2.5);
+                GameMode gameMode = new TwoGoalsMode(this.game, course, balls, 10.5);
                 GameMode wallMode = new WallCreationMode(this.game, course, balls);
                 this.game.setScreen(new EngineSelectorScreen(this.game, course, gameMode, wallMode));
 
@@ -251,7 +251,7 @@ public class MultiplayerScreen implements Screen{
                 Ball ball2 = new Ball(40);
                 Ball[] balls = new Ball[]{ball, ball2};
 
-                GameMode gameMode = new TwoGoalsMode(this.game, course, balls, 2.5);
+                GameMode gameMode = new TwoGoalsMode(this.game, course, balls, 10.5);
                 GameMode wallMode = new WallCreationMode(this.game, course, balls);
                 this.game.setScreen(new EngineSelectorScreen(this.game, course, gameMode, wallMode));
 

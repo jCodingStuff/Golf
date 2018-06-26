@@ -19,6 +19,12 @@ import com.group.golf.math.MathLib;
 import com.group.golf.screens.CourseScreen;
 import com.group.golf.screens.CourseSelectorScreen;
 
+/**
+ * A mode for any number of human players
+ * @author Julian Marrades
+ * @author Alexandros Chimonas
+ * @author Martijn Hilders
+ */
 public class UndefinedPlayerMode extends GameMode {
 
     private final Golf game;
@@ -41,6 +47,12 @@ public class UndefinedPlayerMode extends GameMode {
     private int lastX;
     private int lastY;
 
+    /**
+     * Create a new instance of UndefinedPlayerMode
+     * @param game the game instance
+     * @param course the course being played
+     * @param balls the balls to be handled by the players
+     */
     public UndefinedPlayerMode(Golf game, Course course, Ball[] balls) {
         this.game = game;
         this.course = course;
@@ -58,7 +70,9 @@ public class UndefinedPlayerMode extends GameMode {
         this.winSound = Gdx.audio.newSound(Gdx.files.internal("success_2.wav"));
     }
 
-
+    /**
+     * Setup the balls
+     */
     private void setUpBalls() {
         for (Ball ball : this.balls) {
             ball.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
@@ -67,6 +81,9 @@ public class UndefinedPlayerMode extends GameMode {
         }
     }
 
+    /**
+     * Initialize the pixels for the balls
+     */
     private void initPixels() {
         this.ballsPixels = new JVector2[this.balls.length];
         for (int i = 0; i < this.ballsPixels.length; i++) {
@@ -74,6 +91,9 @@ public class UndefinedPlayerMode extends GameMode {
         }
     }
 
+    /**
+     * Compute the pixels of the balls
+     */
     private void computePixels() {
         for (int i = 0; i < this.ballsPixels.length; i++) {
             float[] ballPixels = MathLib.toPixel(new float[]{this.balls[i].getX(), this.balls[i].getY()},
@@ -82,6 +102,10 @@ public class UndefinedPlayerMode extends GameMode {
         }
     }
 
+    /**
+     * Render the balls
+     * @param batch the batch responsible for drawing sprites
+     */
     @Override
     public void render(Batch batch) {
         this.computePixels();
@@ -91,6 +115,9 @@ public class UndefinedPlayerMode extends GameMode {
         this.highlightBall();
     }
 
+    /**
+     * Highlight the current ball
+     */
     private void highlightBall() {
         if (Gdx.input.isKeyPressed(Input.Keys.H)) {
             this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -111,11 +138,19 @@ public class UndefinedPlayerMode extends GameMode {
 //        }
 //    }
 
+    /**
+     * Advance turn
+     */
     private void incrementCounter() {
         this.counter++;
         if (this.counter >= this.balls.length) this.counter = 0;
     }
 
+    /**
+     * Perform movement
+     * @param cam the camera being used
+     * @return false if the goal has been reached, true otherwise
+     */
     @Override
     public boolean move(OrthographicCamera cam) {
         Ball currentBall = this.balls[this.counter];
@@ -146,11 +181,18 @@ public class UndefinedPlayerMode extends GameMode {
         }
     }
 
+    /**
+     * Inform the winner via console
+     */
     private void informWinner() {
         int playerNum = this.counter + 1;
         System.out.println("Player " + playerNum + " WINS!");
     }
 
+    /**
+     * Look for user input
+     * @param cam the camera to unproject user input
+     */
     private void userInput(OrthographicCamera cam) {
         Vector2 mousePos = CourseScreen.mousePosition(cam);
         if (Gdx.input.isTouched()) {
@@ -197,7 +239,9 @@ public class UndefinedPlayerMode extends GameMode {
     public void extraChecks() {
     }
 
-
+    /**
+     * Dispose sounds
+     */
     @Override
     public void dispose() {
         this.hitSound.dispose();

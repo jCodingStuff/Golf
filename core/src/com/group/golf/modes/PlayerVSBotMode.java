@@ -21,6 +21,10 @@ import com.group.golf.math.MathLib;
 import com.group.golf.screens.CourseScreen;
 import com.group.golf.screens.CourseSelectorScreen;
 
+/**
+ * A player vs bot gamemode
+ * @author Julian Marrades
+ */
 public class PlayerVSBotMode extends GameMode {
 
     private final Golf game;
@@ -44,6 +48,13 @@ public class PlayerVSBotMode extends GameMode {
     private int lastX;
     private int lastY;
 
+    /**
+     * Create a new instance of PlayerVSBotMode
+     * @param game the game instance
+     * @param bot the bot to use
+     * @param course the course being played
+     * @param balls the set of balls to use (user, bot)
+     */
     public PlayerVSBotMode(Golf game, Bot bot, Course course, Ball[] balls) {
         this.game = game;
         this.bot = bot;
@@ -63,7 +74,9 @@ public class PlayerVSBotMode extends GameMode {
 
     }
 
-
+    /**
+     * Setup the set of balls
+     */
     private void setUpBalls() {
         for (Ball ball : this.balls) {
             ball.setTexture(new Texture(Gdx.files.internal("ball_soccer2.png")));
@@ -72,6 +85,9 @@ public class PlayerVSBotMode extends GameMode {
         }
     }
 
+    /**
+     * Setup the balls pixels
+     */
     private void initPixels() {
         this.ballsPixels = new JVector2[this.balls.length];
         for (int i = 0; i < this.ballsPixels.length; i++) {
@@ -79,6 +95,9 @@ public class PlayerVSBotMode extends GameMode {
         }
     }
 
+    /**
+     * Compute the pixels for the set of balls
+     */
     private void computePixels() {
         for (int i = 0; i < this.ballsPixels.length; i++) {
             float[] ballPixels = MathLib.toPixel(new float[]{this.balls[i].getX(), this.balls[i].getY()},
@@ -87,6 +106,10 @@ public class PlayerVSBotMode extends GameMode {
         }
     }
 
+    /**
+     * Render the balls
+     * @param batch the batch responsible for drawing sprites
+     */
     @Override
     public void render(Batch batch) {
         this.computePixels();
@@ -106,6 +129,9 @@ public class PlayerVSBotMode extends GameMode {
 //        }
 //    }
 
+    /**
+     * Highlight the current ball
+     */
     private void highlightBall() {
         if (Gdx.input.isKeyPressed(Input.Keys.H)) {
             this.game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -115,11 +141,19 @@ public class PlayerVSBotMode extends GameMode {
         }
     }
 
+    /**
+     * Advance turn
+     */
     private void incrementCounter() {
         this.counter++;
         if (this.counter >= this.balls.length) this.counter = 0;
     }
 
+    /**
+     * Perform the movement
+     * @param cam the camera being used
+     * @return true if the goal has not been reached, false otherwise
+     */
     @Override
     public boolean move(OrthographicCamera cam) {
         Ball currentBall = this.balls[this.counter];
@@ -157,6 +191,9 @@ public class PlayerVSBotMode extends GameMode {
         }
     }
 
+    /**
+     * Make the bot perform a move
+     */
     private void botMove() {
         this.bot.makeMove();
         this.landed = true;
@@ -164,6 +201,9 @@ public class PlayerVSBotMode extends GameMode {
         this.hitSound.play(Golf.HIT_VOLUME);
     }
 
+    /**
+     * Inform of the winner via console
+     */
     private void informWinner() {
         if (this.counter == 0) {
             System.out.println("HUMAN WINS!");
@@ -172,6 +212,10 @@ public class PlayerVSBotMode extends GameMode {
         }
     }
 
+    /**
+     * Look for user input
+     * @param cam the camera to unproject the user input
+     */
     private void userInput(OrthographicCamera cam) {
         Vector2 mousePos = CourseScreen.mousePosition(cam);
         if (Gdx.input.isTouched()) {
@@ -218,17 +262,26 @@ public class PlayerVSBotMode extends GameMode {
 
     }
 
-
+    /**
+     * Set the new scales and setup the bot
+     * @param scales the new scales
+     */
     @Override
     public void setScales(float[] scales) {
         this.scales = scales;
         this.setUpBot();
     }
 
+    /**
+     * Setup the bot
+     */
     private void setUpBot() {
         this.bot.setPhysics(this.engine);
     }
 
+    /**
+     * Dispose sounds
+     */
     @Override
     public void dispose() {
         this.hitSound.dispose();
