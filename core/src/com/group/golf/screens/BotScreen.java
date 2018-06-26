@@ -25,7 +25,9 @@ import com.group.golf.modes.UndefinedBotMode;
 import com.group.golf.modes.WallCreationMode;
 
 /**
- * Created by lilly on 5/22/18.
+ * Screen to select the desired AI agent
+ * @author Lillian Wush
+ * @author Julian Marrades
  */
 
 public class BotScreen implements Screen {
@@ -47,6 +49,13 @@ public class BotScreen implements Screen {
     OrthographicCamera cam;
     Texture background;
 
+    /**
+     * Create a new BotScreen instance
+     * @param game the game instance
+     * @param course the course that will be played
+     * @param ball the ball holding properties
+     * @param pvb true if the gamemode will be playerVSAI, false if it will be single AI
+     */
         public BotScreen(final Golf game, Course course, Ball ball, final boolean pvb) {
             this.pvb = pvb;
             this.game = game;
@@ -278,11 +287,19 @@ public class BotScreen implements Screen {
             back.addListener(new BackListener(game, this));
 
     }
+
+    /**
+     * Start playing the background music
+     */
     @Override
     public void show() {
         this.menuMusic.play();
     }
 
+    /**
+     * Render UI
+     * @param delta time between last and current frame
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.196f, 0.804f, 0.196f, 1);
@@ -314,11 +331,17 @@ public class BotScreen implements Screen {
 
     }
 
+    /**
+     * Stop music when hide
+     */
     @Override
     public void hide() {
         this.menuMusic.stop();
     }
 
+    /**
+     * Dispose sound and sprites
+     */
     @Override
     public void dispose() {
         this.menuMusic.dispose();

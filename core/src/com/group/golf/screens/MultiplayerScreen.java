@@ -26,6 +26,11 @@ import com.group.golf.modes.TwoGoalsMode;
 import com.group.golf.modes.UndefinedPlayerMode;
 import com.group.golf.modes.WallCreationMode;
 
+/**
+ * A screen to select cooperative course
+ * @author Lillian Wush
+ * @author Kim Roggenbuck
+ */
 public class MultiplayerScreen implements Screen{
     private final Golf game;
     private Stage stage;
@@ -42,6 +47,10 @@ public class MultiplayerScreen implements Screen{
     private OrthographicCamera cam;
     private Texture background;
 
+    /**
+     * Create a new MultiplayerScreen instance
+     * @param game the game instance
+     */
     public MultiplayerScreen(final Golf game) {
         this.game = game;
 //        this.course = course;
@@ -274,11 +283,18 @@ public class MultiplayerScreen implements Screen{
         this.background = new Texture(Gdx.files.internal("minigolf_background.jpg"));
     }
 
+    /**
+     * Start playing background music
+     */
     @Override
     public void show() {
         this.menuMusic.play();
     }
 
+    /**
+     * Render UI
+     * @param delta time between last and current frame
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.196f, 0.804f, 0.196f, 1);
@@ -309,11 +325,17 @@ public class MultiplayerScreen implements Screen{
 
     }
 
+    /**
+     * Stop music when hide
+     */
     @Override
     public void hide() {
         this.menuMusic.stop();
     }
 
+    /**
+     * Dispose sprite and sound
+     */
     @Override
     public void dispose() {
         this.menuMusic.dispose();

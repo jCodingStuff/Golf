@@ -22,6 +22,13 @@ import com.group.golf.modes.*;
 
 import java.util.Scanner;
 
+/**
+ * Screen class to select the desired gamemode
+ * @author Julian Marrades
+ * @author Kaspar Kallast
+ * @author Kim Roggenbuck
+ * @author Lillian Wush
+ */
 public class ModeScreen implements Screen {
 
     private final Golf game;
@@ -40,6 +47,12 @@ public class ModeScreen implements Screen {
     private OrthographicCamera cam;
     private Texture background;
 
+    /**
+     * Create a new ModeScreen instance
+     * @param game the game instance
+     * @param course the course that will be played
+     * @param ball the ball holding the properties
+     */
     public ModeScreen(final Golf game, final Course course, final Ball ball) {
         this.game = game;
         this.course = course;
@@ -216,6 +229,9 @@ public class ModeScreen implements Screen {
         this.background = new Texture(Gdx.files.internal("minigolf_background.jpg"));
     }
 
+    /**
+     * Disable all buttons
+     */
     private void disableButtons() {
         singlePlayer.setTouchable(Touchable.disabled);
         playerVSai.setTouchable(Touchable.disabled);
@@ -226,11 +242,18 @@ public class ModeScreen implements Screen {
         multiplayer.setTouchable(Touchable.disabled);
     }
 
+    /**
+     * Start playing background music
+     */
     @Override
     public void show() {
         this.menuMusic.play();
     }
 
+    /**
+     * Render UI
+     * @param delta time between last and current frame
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.196f, 0.804f, 0.196f, 1);
@@ -262,11 +285,17 @@ public class ModeScreen implements Screen {
 
     }
 
+    /**
+     * Stop music when hide
+     */
     @Override
     public void hide() {
         this.menuMusic.stop();
     }
 
+    /**
+     * Dispose sprite and sound
+     */
     @Override
     public void dispose() {
         this.menuMusic.dispose();

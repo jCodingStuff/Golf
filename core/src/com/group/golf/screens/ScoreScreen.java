@@ -22,9 +22,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 
 /**
- * Created by kim on 12.06.2018.
+ * A screen class to display the highscores for cooperative mode
+ * @auther Kim Roggenbuck
+ * @author Lillian Wush
  */
-
 class ScoreScreen implements Screen {
 
     final Golf game;
@@ -39,6 +40,10 @@ class ScoreScreen implements Screen {
     FreeTypeFontGenerator.FreeTypeFontParameter subTitleParameter;
     BitmapFont subTitleFont;
 
+    /**
+     * Create a new ScoreScreen instance
+     * @param game the game instance
+     */
     public ScoreScreen(Golf game) {
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.game = game;
@@ -87,12 +92,18 @@ class ScoreScreen implements Screen {
         stage.addActor(back);
     }
 
-
+    /**
+     * Start playing background music
+     */
     @Override
     public void show() {
         this.menuMusic.play();
     }
 
+    /**
+     * Render UI
+     * @param delta time between last and current frame
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.196f, 0.804f, 0.196f, 1);
@@ -140,11 +151,17 @@ class ScoreScreen implements Screen {
 
     }
 
+    /**
+     * Stop music if hide
+     */
     @Override
     public void hide() {
         this.menuMusic.stop();
     }
 
+    /**
+     * Dispose sprite and music
+     */
     @Override
     public void dispose() {
         this.menuMusic.dispose();

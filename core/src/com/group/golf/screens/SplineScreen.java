@@ -25,9 +25,10 @@ import com.group.golf.math.Point3D;
 import static java.lang.Integer.parseInt;
 
 /**
- * Created by kim on 13.04.2018.
+ * Screen to customize splines using derivatives
+ * @author Kim Roggenbuck
+ * @author Lillian Wush
  */
-
 public class SplineScreen implements Screen{
     final Golf game;
 
@@ -54,6 +55,10 @@ public class SplineScreen implements Screen{
     float[][] dyMatrix;
     float[][] dxyMatrix;
 
+    /**
+     * Create a new instance of SplineScreen
+     * @param game the game instance
+     */
     public SplineScreen(final Golf game){
 
         this.game = game;
@@ -243,11 +248,18 @@ public class SplineScreen implements Screen{
     }
 
 
+    /**
+     * Start playing background music
+     */
     @Override
     public void show() {
         this.music.play();
     }
 
+    /**
+     * Render UI
+     * @param delta time between last and current frame
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.196f, 0.804f, 0.196f, 1);
@@ -276,11 +288,17 @@ public class SplineScreen implements Screen{
 
     }
 
+    /**
+     * Stop music if hide
+     */
     @Override
     public void hide() {
         this.music.stop();
     }
 
+    /**
+     * Dispose sound and sprite
+     */
     @Override
     public void dispose() {
         this.music.dispose();

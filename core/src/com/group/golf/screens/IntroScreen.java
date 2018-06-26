@@ -14,6 +14,7 @@ import com.group.golf.Golf;
 
 /**
  * The introductory screen for the game
+ * @author Julian Marrades
  */
 public class IntroScreen implements Screen {
 
@@ -68,11 +69,18 @@ public class IntroScreen implements Screen {
         this.subTitleFont = this.subTitleGenerator.generateFont(this.subTitleParameter);
     }
 
+    /**
+     * Start playing background music
+     */
     @Override
     public void show() {
         this.introMusic.play();
     }
 
+    /**
+     * Render UI
+     * @param delta time between last and current frame
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.196f, 0.804f, 0.196f, 1);
@@ -108,11 +116,17 @@ public class IntroScreen implements Screen {
 
     }
 
+    /**
+     * Stop music if hide
+     */
     @Override
     public void hide() {
         this.introMusic.stop();
     }
 
+    /**
+     * Dispose music, sprites and fonts
+     */
     @Override
     public void dispose() {
         this.introMusic.dispose();

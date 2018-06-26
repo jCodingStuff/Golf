@@ -21,8 +21,9 @@ import com.group.golf.listeners.Mode2Listener;
 import com.group.golf.listeners.ToExportListener;
 
 /**
- * Created by kim on 20.03.2018.
  * Screen to design courses
+ * @author Kim Roggenbuck
+ * @author Lillian Wush
  */
 class DesignScreen implements Screen {
     final Golf game;
@@ -49,8 +50,8 @@ class DesignScreen implements Screen {
     String txt;
 
     /**
-     * Create a new Design Screen
-     * @param game the Golf instace
+     * Create a new DesignScreen instance
+     * @param game the Golf instance
      */
     public DesignScreen(final Golf game){
 
@@ -196,11 +197,18 @@ class DesignScreen implements Screen {
 
     }
 
+    /**
+     * Start playing background music
+     */
     @Override
     public void show() {
         this.music.play();
     }
 
+    /**
+     * Render UI
+     * @param delta the time between last and current frame
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.196f, 0.804f, 0.196f, 1);
@@ -214,6 +222,7 @@ class DesignScreen implements Screen {
         stage.act(delta);
         stage.draw();
     }
+
     @Override
     public void resize(int width, int height) {
 
@@ -229,10 +238,17 @@ class DesignScreen implements Screen {
 
     }
 
+    /**
+     * Stop music when hide
+     */
     @Override
     public void hide() {
         this.music.stop();
     }
+
+    /**
+     * Dispose sound and sprite
+     */
     @Override
     public void dispose() {
         this.music.dispose();
