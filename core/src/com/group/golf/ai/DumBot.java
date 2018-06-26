@@ -13,6 +13,10 @@ import com.group.golf.Physics.Collision;
 import com.group.golf.Physics.Physics;
 import com.group.golf.math.Point3D;
 
+/**
+ * A very simple bot to solve simple courses
+ * @author Kaspar Kallast
+ */
 public class DumBot implements Bot {
 
     private static final float A_SCALAR = 15;
@@ -40,7 +44,10 @@ public class DumBot implements Bot {
     }
 
 
-    @Override
+	/**
+	 * Compute distance between the ball and the goal and make a shot in that direction, using a force proportional to that distance
+	 */
+	@Override
     public void makeMove() {
     	double extraPower = 6.5; 
     	double distanceLimit = 0.75; 
@@ -73,13 +80,23 @@ public class DumBot implements Bot {
     	this.engine.hit(ball,distances[0] / 15, distances[1] / 15);
     }
 
-    private void scale(float[] forces) {
+	/**
+	 * Scale the forces to apply using the slope
+	 * @param forces
+	 */
+	private void scale(float[] forces) {
         float[] derivatives = this.engine.calculateSlope(new float[]{this.ball.getX(), this.ball.getY()});
         for (int i = 0; i < forces.length; i++) {
             forces[i] = this.scaleForce(forces[i], derivatives[i]);
         }
     }
 
+	/**
+	 * Scale a force
+	 * @param force the force
+	 * @param d the scales
+	 * @return the scaled force
+	 */
     private float scaleForce(float force, float d) {
     	float scaledForce;
     	if (force > 0 && d > 0) {

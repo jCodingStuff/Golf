@@ -12,7 +12,9 @@ import java.util.Random;
 
 
 /**
- * Created by kim on 04.05.2018.
+ * A bot to solve simple courses
+ * @author Kim Roggenbuck
+ * @author Lillian Wush
  */
 
 public class RandomBot implements Bot{
@@ -30,11 +32,11 @@ public class RandomBot implements Bot{
 
     int counter = 0;
 
-/**
- * Create a new RandomBot instance
- * @param ball the BALL instance
- */
-
+    /**
+     * Create a new RandomBot instance
+     * @param course the current course in the game
+     * @param ball the ball which has to be operated
+     */
     public RandomBot(Course course, Ball ball){
         this.ball = ball;
         this.rand = new Random();
@@ -46,16 +48,21 @@ public class RandomBot implements Bot{
     public void setPhysics(Physics physics){
             this.engine = physics;
     }
+
+    /**
+     * Get a random force withing a maximum
+     * @param maximum the maximum limit
+     * @return a random number between 0 and maximum
+     */
     private double GetRandomForce(double maximum){
         return this.rand.nextDouble() * maximum;
     }
 
     /**
      * generates random options and searches for the best out of 10 guesses
-     * @param goal the Best choice sofar
+     * @param cur
+     * @param goal the Best choice so far
      */
-
-
     private float GetBestRandomChoice(double cur, double goal) {
 
         float choice = (float)(Math.random()* MAXFORCE);
@@ -70,6 +77,9 @@ public class RandomBot implements Bot{
     }
 
 
+    /**
+     * Get the best choice and perform it
+     */
     @Override
     public void makeMove() {
 
@@ -89,6 +99,10 @@ public class RandomBot implements Bot{
         System.out.print(counter);
     }
 
+    /**
+     * Check if a certain path does not pass over water
+     * @return true if is does not intersect with water, false otherwise
+     */
     private boolean checkPath(){
         for(double c = 0.1; c <= 1.0; c += 0.1){
             if(this.engine.getCourse().getHeight(forceX*(float)Math.pow(c, 2), forceY*(float)Math.pow(c, 2)) < 0)

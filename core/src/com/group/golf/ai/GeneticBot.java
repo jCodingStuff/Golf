@@ -14,7 +14,6 @@ import com.group.golf.math.MathLib;
 /**
  * A bot that uses a genetic algorithm
  * @author Julian Marrades
- * @version 0.1, 15-05-2018
  */
 public class GeneticBot implements Bot {
 
@@ -67,6 +66,9 @@ public class GeneticBot implements Bot {
         this.checker = new MazeChecker(this);
     }
 
+    /**
+     * Perform the moves of the winner of the evolution
+     */
     @Override
     public void makeMove() {
         if (this.counter < this.winner.getGenes().length) {
@@ -81,6 +83,10 @@ public class GeneticBot implements Bot {
         }
     }
 
+    /**
+     * Set the physics instance and start the evolution
+     * @param physics the new physics
+     */
     @Override
     public void setPhysics(Physics physics) {
         this.engine = physics;
@@ -220,6 +226,7 @@ public class GeneticBot implements Bot {
 
     /**
      * Simulate a shot
+     * @param force the force to apply
      */
     private void simulateShot(JVector2 force) {
 
@@ -241,14 +248,27 @@ public class GeneticBot implements Bot {
 
 
     // GETTER AND SETTER AREA
+
+    /**
+     * Get access to the course being played
+     * @return the current course
+     */
     public Course getCourse() {
         return course;
     }
 
+    /**
+     * Get access to the actual winner
+     * @return the individual instance who has the best score (or achieved the goal) at the very moment
+     */
     public Individual getWinner() {
         return winner;
     }
 
+    /**
+     * Set a new winner
+     * @param winner the new individual instance representing the winner
+     */
     public void setWinner(Individual winner) {
         this.winner = winner;
     }
