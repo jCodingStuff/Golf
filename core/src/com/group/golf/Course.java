@@ -9,6 +9,8 @@ import java.util.List;
 
 /**
  * This class represents a course for the Golf Game
+ * @author Julian Marrades
+ * @author Kaspar Kallast
  */
 public class Course {
 
@@ -58,6 +60,18 @@ public class Course {
         this.walls = new ArrayList<Rectangle>();
     }
 
+    /**
+     * Create a new Course for Golf game for cooperative gamemode
+     * @param functions the 3D function that represents the course physically z = f(x, y), or the splines that build it
+     * @param g the gravity
+     * @param mu the friction coefficient
+     * @param vmax the terminal velocity
+     * @param start the start coordinates
+     * @param start2 the start of the second ball
+     * @param goal the goal coordinates
+     * @param goal2 the second goal coordinates
+     * @param tolerance the radius of the goal
+     */
     public Course(Computable[][] functions, float g, float mu, float vmax, float[] start, float[] start2, float[] goal, float[] goal2,
             float tolerance) {
         this.g = g;
@@ -117,6 +131,11 @@ public class Course {
         }
     }
 
+    /**
+     * Computes the number of walls closest and goal
+     * @param closest the point to interpolate with goal
+     * @return the number of walls that intersect with the line (interpolating closest and goal) between closest and goal
+     */
     public double getWallNum(Point3D closest) {
         // Create a clone of the walls
         List<Rectangle> cloneWalls = new ArrayList<Rectangle>();
@@ -138,6 +157,12 @@ public class Course {
         return this.walls.size() - cloneWalls.size();
     }
 
+    /**
+     * Given an x-coordinate and a line, compute the y-coordinate and delete a wall if a it contains (x, y)
+     * @param x the x-coordinate
+     * @param line the line
+     * @param cloneWalls the set of walls to be checked
+     */
     private void helpWallNum(float x, Line2D line, List<Rectangle> cloneWalls) {
         float y = line.getY(x);
         float[] coord = MathLib.toPixel(new float[]{x, y}, this.offsets, this.scales);
@@ -149,7 +174,13 @@ public class Course {
             }
         }
     }
-    
+
+    /**
+     * Check if there is water between two points
+     * @param a one point
+     * @param b another point
+     * @return true if the line interpolating a and b intersects with water (between a and b), false otherwise
+     */
     public boolean isWaterBetween(Point3D a, Point3D b) {
         Line2D path = new Line2D(a, b);
         boolean water = false;
@@ -248,13 +279,17 @@ public class Course {
     public void setGoal(float[] goal) {
         this.goal = goal;
     }
-    
+
+    /**
+     * Get access to the second start coordinates
+     * @return the second start coordinates
+     */
     public float[] getStart2() {
         return start2;
     }
 
     /**
-     * Set a new set of start coordinates
+     * Set a new set of start coordinates for the second goal
      * @param start2 the new start coordinates
      */
     public void setStart2(float[] start2) {
@@ -262,8 +297,8 @@ public class Course {
     }
 
     /**
-     * Get access to the goal coordinates
-     * @return the goal coordinates
+     * Get access to the second goal coordinates
+     * @return the second goal coordinates
      */
     public float[] getGoal2() {
         return goal2;
@@ -325,48 +360,83 @@ public class Course {
         double dist = Math.sqrt(Math.pow(this.goal[0] - this.start[0], 2) + Math.pow(this.goal[1] - this.start[1], 2));
         return Math.abs(dist);
     }
-    
+
+    /**
+     * Get the euclidean distance between second start and second goal
+     * @return the euclidean distance between start2 and goal2
+     */
     public double getDistance2() {
         double dist2 = Math.sqrt(Math.pow(this.goal2[0] - this.start2[0], 2) + Math.pow(this.goal2[1] - this.start2[1], 2));
         return Math.abs(dist2);
     }
 
+    /**
+     * Get the wall at index i from the list of walls
+     * @param i the index of the wall
+     * @return the wall at index i
+     */
     public Rectangle getWall(int i) {
         return this.walls.get(i);
     }
 
+    /**
+     * Add a wall to the set of walls
+     * @param newWall the new wall
+     */
     public void addWall(Rectangle newWall) {
         this.walls.add(newWall);
     }
 
+    /**
+     * Get access to the list of walls
+     * @return the list of walls
+     */
     public List<Rectangle> getWalls() {
         return walls;
     }
 
+    /**
+     * Set a new list of walls
+     * @param walls the new list of walls
+     */
     public void setWalls(List<Rectangle> walls) {
         this.walls = walls;
     }
 
+    /**
+     * Set the offsets to the course (x, y coordinates of the function at pixel [0, 0])
+     * @param offsets the offsets
+     */
     public void setOffsets(float[] offsets) {
         this.offsets = offsets;
     }
 
+    /**
+     * Set the scales to the course (relation between pixel and function units)
+     * @param scales the scales
+     */
     public void setScales(float[] scales) {
         this.scales = scales;
     }
 
+    /**
+     * Get access to the offsets of the course
+     * @return the offsets
+     */
     public float[] getOffsets() {
         return offsets;
     }
 
+    /**
+     * Get access to the scales of the course
+     * @return the scales
+     */
     public float[] getScales() {
         return scales;
     }
 
     @Override
     public String toString() {
-
-
         String message = this.getClass().getName() + " [" + this.functions + ", start=" + arrToStr(this.start) + ", ";
         message += "goal=" + arrToStr(this.goal) + ", tolerance=" + this.tolerance + ", g=" + this.g + ", mu=" + this.mu;
         message += ", vmax=" + this.vmax + "]";
