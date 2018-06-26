@@ -18,7 +18,7 @@ public class RK4 extends Physics {
      */
     public RK4(Course course) {
         super(course);
-        errorBound = 0.05f;
+        errorBound = 0.15f;
     }
 
     //method to be overwritten by each subclass

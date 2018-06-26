@@ -24,6 +24,8 @@ public class GeneticBot implements Bot {
 
     private Ball virtualBall;
 
+    private static final float MIN_ERROR = 0.5f, MAX_ERROR = 1.5f;
+
 
 
     private int counter;
@@ -187,7 +189,9 @@ public class GeneticBot implements Bot {
         for (int i = 0; i < DNA_LENGTH; i++) {
             float forceX = MathLib.randomFloat(-this.componentVMax, this.componentVMax);
             float forceY = MathLib.randomFloat(-this.componentVMax, this.componentVMax);
+            // Small error to make it challenging
             genes[i] = new JVector2(forceX, forceY);
+            genes[i].multiply(this.getRandomError());
         }
         this.fillLandings(genes, landings);
         return new Individual(genes, landings);
@@ -212,15 +216,12 @@ public class GeneticBot implements Bot {
      */
     public void fillLandings(JVector2[] forces, JVector2[] landings) {
         this.virtualBall.reset();
-        this.virtualBall.setPosition((float)landings[0].getX(), (float)landings[0].getY());
+        this.virtualBall.setPosition(landings[0].getX(), landings[0].getY());
         for (int i = 1; i < landings.length; i++) {
-            // small random error for the force applied to the ball
-            float min = 0.999f;
-            float max= 1.001f;
-            //error = MathLib.randomFloat(min, max);
             error = 1;
             this.simulateShot(forces[i-1]);
-            landings[i] = new JVector2(this.virtualBall.getX()*error, this.virtualBall.getY()*error);
+            landings[i] = new JVector2(this.virtualBall.getX(), this.virtualBall.getY());
+//            landings[i].multiply(error);
         }
     }
 
@@ -229,13 +230,6 @@ public class GeneticBot implements Bot {
      * @param force the force to apply
      */
     private void simulateShot(JVector2 force) {
-
-        // small random error for the force applied to the ball
-        float min = 0.999f;
-        float max= 1.001f;
-        //error = MathLib.randomFloat(min, max);
-        error = 1;
-        force.multiply(error);
         this.engine.hit(virtualBall,force.getX(), force.getY());
         while (this.virtualBall.isMoving()) {
             this.engine.movement(Golf.DELTA, true);
@@ -271,5 +265,9 @@ public class GeneticBot implements Bot {
      */
     public void setWinner(Individual winner) {
         this.winner = winner;
+    }
+
+    public float getRandomError() {
+        return MathLib.randomFloat(0.5f, 1.5f);
     }
 }

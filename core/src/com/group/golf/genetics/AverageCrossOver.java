@@ -41,6 +41,7 @@ public class AverageCrossOver implements CrossOver {
             float y = MathLib.average(Math.abs(aY), Math.abs(bY));
             if (Math.random() < 0.5) y = -y;
             JVector2 gene = new JVector2(x, y);
+            gene.multiply(this.bot.getRandomError());
             newGenes[i] = gene;
         }
         this.bot.fillLandings(newGenes, landings);
