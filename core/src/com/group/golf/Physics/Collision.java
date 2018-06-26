@@ -13,8 +13,10 @@ import java.io.*;
 import java.util.List;
 
 /**
+ * A class to handle collisions in the Golf game
  * @author Julian Marrades
- * @version 0.1, 13-04-2018
+ * @author Alexandros Chimonas
+ * @author Kaspar Kallast
  */
 public class Collision {
 
@@ -39,6 +41,10 @@ public class Collision {
         this.lastX = this.course.getStart()[1];
     }
 
+    /**
+     * Create a new Collision instance from a template
+     * @param other the other Collision instance acting as a template
+     */
     public Collision(Collision other) {
         this.course = other.course;
         this.lastX = other.lastX;
@@ -46,8 +52,8 @@ public class Collision {
     }
 
     /**
-     * Check if the ball is within the tolerance range from the goal coordinate
-     * @return
+     * Check if the ball is within the tolerance range from the goal coordinates
+     * @return true if the goal has been reached, false otherwise
      */
     public boolean isGoalAchieved() {
         float xToGoal = this.course.getGoal()[0] - this.ball.getX();
@@ -55,8 +61,11 @@ public class Collision {
         float distToGoal = (float) Math.sqrt(xToGoal * xToGoal + yToGoal * yToGoal);
         return distToGoal <= this.course.getTolerance();
     }
-    
-    // For multiplayer
+
+    /**
+     * Check if the ball is within the tolerance range from the goal2 coordinates
+     * @return true if the goal2 has been reached, false otherwise
+     */
     public boolean isGoalAchieved2() {
         float xToGoal = this.course.getGoal2()[0] - this.ball.getX();
         float yToGoal = this.course.getGoal2()[1] - this.ball.getY();
@@ -85,7 +94,13 @@ public class Collision {
 
         }
     }
-    
+
+    /**
+     * Manage collisions with graphic walls
+     * @param ballX the pixel x-coordinate of the ball
+     * @param ballY the pixel y-coordinate of the ball
+     * @param rects the set of walls
+     */
     public void checkForGraphicWalls(float ballX, float ballY, List<Rectangle> rects) {
         for (Rectangle wall : rects) {
             if (this.hittingWallRight(ballX, ballY, wall)) { // Hitting by the right
@@ -108,6 +123,13 @@ public class Collision {
         }
     }
 
+    /**
+     * Check if a wall is being hit by the right
+     * @param ballX the pixel x-coordinate of the ball
+     * @param ballY the pixel y-coordinate of the ball
+     * @param wall the wall to check
+     * @return true if the wall has been hit by the right, false otherwise
+     */
     private boolean hittingWallRight(float ballX, float ballY, Rectangle wall) {
         return (ballY <= wall.y + wall.height &&
                 ballY >= wall.y &&
@@ -116,6 +138,13 @@ public class Collision {
                 this.ball.getVelocityX() < 0);
     }
 
+    /**
+     * Check if a wall is being hit by the left
+     * @param ballX the pixel x-coordinate of the ball
+     * @param ballY the pixel y-coordinate of the ball
+     * @param wall the wall to check
+     * @return true if the wall has been hit by the left, false otherwise
+     */
     private boolean hittingWallLeft(float ballX, float ballY, Rectangle wall) {
         return (ballY <= wall.y + wall.height &&
                 ballY >= wall.y &&
@@ -124,6 +153,13 @@ public class Collision {
                 this.ball.getVelocityX() > 0);
     }
 
+    /**
+     * Check if a wall is being hit by the top
+     * @param ballX the pixel x-coordinate of the ball
+     * @param ballY the pixel y-coordinate of the ball
+     * @param wall the wall to check
+     * @return true if the wall has been hit by the top, false otherwise
+     */
     private boolean hittingWallTop(float ballX, float ballY, Rectangle wall) {
         return (ballX >= wall.x &&
                 ballX <= wall.x + wall.width &&
@@ -132,6 +168,13 @@ public class Collision {
                 this.ball.getVelocityY() < 0);
     }
 
+    /**
+     * Check if a wall is being hit by the bottom
+     * @param ballX the pixel x-coordinate of the ball
+     * @param ballY the pixel y-coordinate of the ball
+     * @param wall the wall to check
+     * @return true if the wall has been hit by the bottom, false otherwise
+     */
     private boolean hittingWallBottom(float ballX, float ballY, Rectangle wall) {
         return (ballX >= wall.x &&
                 ballX <= wall.x + wall.width &&
@@ -140,6 +183,9 @@ public class Collision {
                 this.ball.getVelocityY() > 0);
     }
 
+    /**
+     * Stop the ball if it meets the stop conditions when hitting a wall
+     */
     private void stopConditions() {
         if (Math.abs(this.ball.getVelocityX()) <= STOP_CONDITION &&
                 Math.abs(this.ball.getVelocityY()) <= STOP_CONDITION) {
@@ -211,10 +257,18 @@ public class Collision {
 //        return water;
 //    }
 
+    /**
+     * Get access to the ball instance being handled
+     * @return
+     */
     public Ball getBall() {
         return ball;
     }
 
+    /**
+     * Set a new ball instance
+     * @param ball the new ball instance
+     */
     public void setBall(Ball ball) {
         this.ball = ball;
         this.lastX = this.ball.getX();

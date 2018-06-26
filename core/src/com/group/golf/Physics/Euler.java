@@ -3,8 +3,17 @@ package com.group.golf.Physics;
 import com.group.golf.Ball;
 import com.group.golf.Course;
 
+/**
+ * A physics engine that users Euler ODE solver method
+ * @author Alexandros Chimonas
+ * @author Martijn Hilders
+ */
 public class Euler extends Physics {
 
+    /**
+     * Create a new Euler instance
+     * @param course the course being played
+     */
     public Euler(Course course) {
         super(course);
         errorBound = 0.08f;
