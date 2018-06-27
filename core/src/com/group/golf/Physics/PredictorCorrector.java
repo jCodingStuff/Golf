@@ -80,7 +80,7 @@ public class PredictorCorrector extends Physics {
 
 
 
-            super.checkCollision(simulation);
+            if (!super.checkCollision(simulation)) this.counter = 1;
             ball.limit(super.getCourse().getVmax());
 
 //            System.out.println("Corrected velocities x: " + correctedVel[0] + "  y: " + correctedVel[1] );

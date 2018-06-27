@@ -92,8 +92,9 @@ public class Physics {
     /**
      * Check collisions
      * @param simulation true if a simulation is taking place, false otherwise
+     * @return true if no water has hit, false otherwise
      */
-    public void checkCollision(boolean simulation) {
+    public boolean checkCollision(boolean simulation) {
         float[] ballPixels = MathLib.toPixel(new float[]{this.movingBall.getX(), this.movingBall.getY()}, this.course.getOffsets(),
                 this.course.getScales());
         this.collision.checkForWalls(ballPixels[0], ballPixels[1]);
@@ -105,7 +106,9 @@ public class Physics {
             this.movingBall.setY(hitCoord[1]);
             if (!simulation) loseSound.play(0.2f);
             water = true;
+            return false;
         }
+        return true;
     }
 
     /**
