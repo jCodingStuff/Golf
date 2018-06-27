@@ -5,11 +5,6 @@ import java.util.Random;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-/**
- * Class to generate instances of PledgeBot
- * @author Kaspar Kallast
- * @version 0.2, 19-06-2018
- */
 import com.badlogic.gdx.math.Vector2;
 import com.group.golf.Ball;
 import com.group.golf.Course;
@@ -33,7 +28,7 @@ public class PledgeBot implements Bot {
     private Line2D right;
     private Line2D forward;
     private Line2D left;
-    private float lineLength = 38; // By default it�s 30.
+    private float lineLength = 38; // By default it's 30.
     private int currentDir = 0;
     private float extraHitPower = 0;
     private int extraHitPowerCount = 0;
@@ -105,6 +100,7 @@ public class PledgeBot implements Bot {
      		}
 
     	// System.out.println("extraHitPowerCount: " + extraHitPowerCount);
+     		// If ball is repeating movement then hit it in a random direction.
     	if (repeat && repeatCount > 1) {
     		this.engine.hit(this.ball,(float)(Math.random() * ((upperBounda - lowerBounda) + 1) + lowerBounda), (float)(Math.random() * ((upperBounda - lowerBounda) + 1) + lowerBounda));
     		extraHitPowerCounta = 0;
@@ -113,6 +109,7 @@ public class PledgeBot implements Bot {
     	
          // 0 = forward, 1 = left, 2 = bot, 3 = right     the 'way' the ball is 'facing'.
     	if (cancelHit == false) {
+    		// If the ball is close enough to the goal then hit the ball towards the goal.
     	 if (goalBallDistance() < distanceLimit) {
     		 float hitScalar = (float) 0.065;
 
@@ -129,6 +126,7 @@ public class PledgeBot implements Bot {
     		 float[] distances = new float[] {aGoal-a, bGoal-b};
     		 this.engine.hit(this.ball, distances[0]*hitScalar, distances[1]*hitScalar);
     	 }
+    	 // Check if a certain direction is open and then hit the ball in that direction.
     	 else	if (currentDir == 0) {
     	if (rightClear()) {
     		this.engine.hit(this.ball,hitForce + extraHitPower, 0);
@@ -235,8 +233,6 @@ public class PledgeBot implements Bot {
     	rect.setHeight(rectHeight);
     	walls.add(rect);
     }
-
-    // Check for movement repetition
 
 	/**
 	 * Check for movement repetition
