@@ -19,6 +19,10 @@ import com.group.golf.math.Line2D;
 import com.group.golf.math.MathLib;
 import com.group.golf.math.Point3D;
 
+/**
+ * An AI agent to solve pure maze-like courses
+ * @author Kaspar Kallast
+ */
 public class PledgeBot implements Bot {
 
 	private final Course course;
@@ -29,7 +33,7 @@ public class PledgeBot implements Bot {
     private Line2D right;
     private Line2D forward;
     private Line2D left;
-    private float lineLength = 38; // By default it´s 30.
+    private float lineLength = 38; // By default itï¿½s 30.
     private int currentDir = 0;
     private float extraHitPower = 0;
     private int extraHitPowerCount = 0;
@@ -194,9 +198,13 @@ public class PledgeBot implements Bot {
     	 extraHitPower = 0;
     	 moveCount += 2;
     }
-    
-    // Calculate random extraPower to apply to ball
-    private void calcExtraPower(float lower, float upper) {
+
+	/**
+	 * Calculate random extra power to apply to the ball
+	 * @param lower
+	 * @param upper
+	 */
+	private void calcExtraPower(float lower, float upper) {
     	// Randomly picks 1 or 0, which determines whether the extraPower will be negative.
     	int min = 0;
     	int max = 1;
@@ -211,7 +219,11 @@ public class PledgeBot implements Bot {
 		extraHitPowerCount = 0;
     }
 
-    // Place rectangle in given place (added to list of walls). Not in use right now.
+	/**
+	 * Place a rectangle in a given place
+	 * @param x x-coordinate of the rectangle
+	 * @param y y-coordinate of the rectangle
+	 */
     private void placeRect(float x, float y) {
     	float floatX = (float) x;
     	float floatY = (float) y;
@@ -225,6 +237,12 @@ public class PledgeBot implements Bot {
     }
 
     // Check for movement repetition
+
+	/**
+	 * Check for movement repetition
+	 * @param tracker
+	 * @return
+	 */
    private boolean repetition(float[] tracker) {
 	   boolean isRepeating = false;
 	   float[] loc1 = new float[] {(float) Math.round(tracker[tracker.length - 2] * 10) / 10, (float) Math.round(tracker[tracker.length - 1] * 10) / 10};
@@ -256,8 +274,11 @@ public class PledgeBot implements Bot {
 	   return isRepeating;
    }
 
-    // Check if right side of ball is clear
-    private boolean rightClear() {
+	/**
+	 * Check if right-side of the ball is clear
+	 * @return true if there is no wall on the right, false otherwise
+	 */
+	private boolean rightClear() {
     	boolean result = true;
     	int i = 0;
     	int j = 0;
@@ -290,7 +311,10 @@ public class PledgeBot implements Bot {
     	return result;
     }
 
- // Check if ahead of ball is clear
+	/**
+	 * Check if ahead of the ball is clear
+	 * @return true if there is no wall ahead, false otherwise
+	 */
     private boolean forwardClear() {
     	boolean result = true;
     	int i = 0;
@@ -324,7 +348,10 @@ public class PledgeBot implements Bot {
     }
 
 
- // Check if left side of ball is clear
+	/**
+	 * Check if left-side of the ball is clear
+	 * @return true if there is no wall on the left, false otherwise
+	 */
     private boolean leftClear() {
     	boolean result = true;
     	int i = 0;
@@ -358,7 +385,10 @@ public class PledgeBot implements Bot {
     	return result;
     }
 
- // Check if bottom side of ball is clear
+	/**
+	 * Check if bottom-side of the ball is clear
+	 * @return true if there is no wall on the bottom, false otherwise
+	 */
     private boolean bottomClear() {
     	boolean result = true;
     	int i = 0;
@@ -392,8 +422,11 @@ public class PledgeBot implements Bot {
     	return result;
     }
 
-    // Find distance between given wall and ball
-    private float goalBallDistance() {
+	/**
+	 * Find distance from ball to goal
+	 * @return euclidean distance from ball to goal
+	 */
+	private float goalBallDistance() {
     	float coordXd = this.ball.getX();
     	float coordYd = this.ball.getY();
     	float[] coords = new float[]{coordXd, coordYd};
