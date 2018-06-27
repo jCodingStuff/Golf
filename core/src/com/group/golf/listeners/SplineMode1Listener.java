@@ -37,6 +37,7 @@ public class SplineMode1Listener extends ChangeListener {
      * Create a new Mode1Listener
      * @param game the Golf instance
      * @param screen the Screen instance
+     * @param computable the computable array of splines
      * @param txtStartPos the TextField containing the Start Coordinates
      * @param txtGoalPos the TextField containing the Goal Coordinates
      * @param txtRadius the TextField containing the tolerance

@@ -4,6 +4,7 @@ import com.group.golf.math.JVector2;
 
 /**
  * Mutation that swaps the order of two movements
+ * @author Julian Marrades
  */
 public class SwapMutation implements Mutation {
 

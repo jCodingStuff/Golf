@@ -5,7 +5,7 @@ import com.group.golf.math.JVector2;
 
 /**
  * Simple crossover algorithm
- * @auther Julian Marrades
+ * @author Julian Marrades
  */
 public class SimpleCrossOver implements CrossOver {
 

@@ -144,7 +144,7 @@ public class MathLib {
      * Get a random float value within a range
      * @param low lower bound of the range
      * @param high upper bound of the range
-     * @return a random float x such that low <= x < high
+     * @return a random float x between low (including) and high (excluding)
      */
     public static float randomFloat(float low, float high) {
         return (float)(Math.random()*(high - low) + low);

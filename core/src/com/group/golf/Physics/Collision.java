@@ -259,7 +259,7 @@ public class Collision {
 
     /**
      * Get access to the ball instance being handled
-     * @return
+     * @return the instance of ball
      */
     public Ball getBall() {
         return ball;
