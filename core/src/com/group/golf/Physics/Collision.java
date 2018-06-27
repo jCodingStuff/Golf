@@ -21,7 +21,7 @@ import java.util.List;
 public class Collision {
 
     private static final float STEP = 0.001f;
-    private static final float STOP_CONDITION = 0.1f;
+    private static final float STOP_CONDITION = 0.15f;
 
     private Ball ball;
     private final Course course;
