@@ -60,6 +60,7 @@ public class Physics {
 
     /**
      * Hit the ball
+     * @param ball the ball to hit
      * @param xLength the length that the mouse was dragged horizontally
      * @param yLength the length that the mouse was dragged vertically
      */
@@ -268,7 +269,7 @@ public class Physics {
 
     /**
      * Get access to the Collision instance managed by the physics engine
-     * @return
+     * @return the collision instance
      */
     public Collision getCollision() {
         return collision;

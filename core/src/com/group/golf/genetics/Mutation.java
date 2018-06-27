@@ -2,7 +2,7 @@ package com.group.golf.genetics;
 
 /**
  * An interface for mutation algorithms
- * @auther Julian Marrades
+ * @author Julian Marrades
  */
 public interface Mutation {
 

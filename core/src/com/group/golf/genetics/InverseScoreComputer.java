@@ -5,7 +5,7 @@ import com.group.golf.math.JVector2;
 
 /**
  * Class InverseScoreComputer computes fitness for simple courses
- * @auther Julian Marrades
+ * @author Julian Marrades
  */
 public class InverseScoreComputer implements ScoreComputer {
 
