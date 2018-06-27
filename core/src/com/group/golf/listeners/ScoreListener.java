@@ -8,7 +8,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import com.group.golf.Golf;
 
-    public class ScoreListener {
+/**
+ * Class that handles highscores for cooperative mode
+ * @author Kim Roggenbuck
+ * @author Lillian Wush
+ */
+public class ScoreListener {
     FileHandle scoreFile;
 
 
@@ -22,6 +27,11 @@ import com.group.golf.Golf;
 
     }
 
+    /**
+     * Add a score the list of highscores
+     * @param name name of the player/s
+     * @param score final score of the game
+     */
     public void addScore(String name, int score) {
 
 //        try {
