@@ -19,7 +19,7 @@ public class PredictorCorrector extends Physics {
      */
     public PredictorCorrector(Course course) {
         super(course);
-        errorBound = 0.027f;
+        errorBound = 0.05f;
     }
 
 
@@ -76,11 +76,8 @@ public class PredictorCorrector extends Physics {
             ball.setVelocities(correctedVel);
             ball.setCoords(correctedCoord);
 
-            checkLowVelocity();
-
-
-
-            if (!super.checkCollision(simulation)) this.counter = 1;
+            if (checkLowVelocity()) this.resetCounter();
+            if (!super.checkCollision(simulation)) this.resetCounter();
             ball.limit(super.getCourse().getVmax());
 
 //            System.out.println("Corrected velocities x: " + correctedVel[0] + "  y: " + correctedVel[1] );
@@ -89,6 +86,10 @@ public class PredictorCorrector extends Physics {
     }
 
 
+    private void resetCounter() {
+        System.out.println("Resetting counter to 1!");
+        this.counter = 1;
+    }
 
     class state {
         float positionX;

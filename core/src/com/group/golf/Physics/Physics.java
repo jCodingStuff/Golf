@@ -113,12 +113,15 @@ public class Physics {
 
     /**
      * Stop the ball if it meets the conditions
+     * @return true if the ball was forced to stop, false otherwise
      */
-    protected void checkLowVelocity() {
+    protected boolean checkLowVelocity() {
 //        System.out.println("ErrorBound: " + errorBound);
         if (Math.abs(movingBall.calcVelocity()) < errorBound) {
             movingBall.reset();
+            return true;
         }
+        return false;
     }
 
     /**
