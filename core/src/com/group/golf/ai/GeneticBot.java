@@ -268,6 +268,6 @@ public class GeneticBot implements Bot {
     }
 
     public float getRandomError() {
-        return MathLib.randomFloat(0.5f, 1.5f);
+        return MathLib.randomFloat(MIN_ERROR, MAX_ERROR);
     }
 }
