@@ -18,8 +18,8 @@ public class BicubicInterpolator implements Computable {
     private float[][] coefficients;
 
     private Point3D[][] points;
-    private double x0;
-    private double y0;
+    private float x0;
+    private float y0;
 
 	/**
 	 * Create a new Instance of BicubicInterpolator
@@ -35,14 +35,14 @@ public class BicubicInterpolator implements Computable {
 
     	fitter(dx, dy, dxy);
 
-    	this.printInfo();
+    	this.printInfo(dx, dy, dxy);
 
     }
 
 	/**
 	 * Print info about the instance of BicubicInterpolator
 	 */
-	private void printInfo() {
+	private void printInfo(float[][] dx, float[][] dy, float[][] dxy) {
 		System.out.println("Bicubic interpolator info:");
 		System.out.println("\tPoints:");
 		for (int x = 0; x < points.length; x++) {
@@ -50,12 +50,20 @@ public class BicubicInterpolator implements Computable {
 				System.out.println("\t\t[" + x + ", " + y + "] -> " + this.points[x][y]);
 			}
 		}
-		System.out.println("\tCoefficients:");
-		for (int i = 0; i < this.coefficients.length; i++) {
+
+		this.printHelp("Coefficients", this.coefficients);
+		this.printHelp("Dx", dx);
+		this.printHelp("Dy", dy);
+		this.printHelp("Dxy", dxy);
+	}
+
+	private void printHelp(String text, float[][] matrix) {
+		System.out.println("\t" + text + ":");
+		for (int i = 0; i < matrix.length; i++) {
 			System.out.print("\t\t[");
-			for (int j = 0; j < this.coefficients[i].length; j++) {
-				System.out.print(this.coefficients[i][j]);
-				if (j != coefficients[i].length - 1) System.out.print(" ");
+			for (int j = 0; j < matrix[i].length; j++) {
+				System.out.print(matrix[i][j]);
+				if (j != matrix[i].length - 1) System.out.print(" ");
 			}
 			System.out.println("]");
 		}
@@ -103,7 +111,7 @@ public class BicubicInterpolator implements Computable {
 		values[3][2] = dxy[1][0];
 		values[3][3] = dxy[1][1];
 
-    	float[][] res1 = MathLib.multiply(values, A);
+    	float[][] res1 = MathLib.multiply(A, values);
     	this.coefficients = MathLib.multiply(res1, B);
     }
 

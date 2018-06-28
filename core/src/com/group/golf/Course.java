@@ -124,6 +124,11 @@ public class Course {
      * @return the height at (x, y)
      */
     public float getHeight(float x, float y) {
+        if (this.isSpline() && (x < this.offsets[0] || y < this.offsets[1] || x > this.offsets[0] + Golf.VIRTUAL_WIDTH*this.scales[0] ||
+                y > this.offsets[1] + Golf.VIRTUAL_HEIGHT*this.scales[1])) {
+            return 0;
+        }
+
         if (this.isSpline()) {
             return this.getFunctionFor(x, y).getZ(x, y);
         } else {

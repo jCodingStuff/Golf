@@ -90,8 +90,6 @@ public class CourseScreen implements Screen {
 
         System.out.println("Offsets: [" + xoffset + ", " + yoffset + "]");
         System.out.println("Scales: [" + scaleX + ", " + scaleY + "]");
-        this.course.setOffsets(new float[]{this.xoffset, this.yoffset});
-        this.course.setScales(new float[]{this.scaleX, this.scaleY});
         this.activeMode.setOffsets(new float[]{this.xoffset, this.yoffset});
         this.activeMode.setScales(new float[]{this.scaleX, this.scaleY});
     }
@@ -196,8 +194,8 @@ public class CourseScreen implements Screen {
         // Setup Offsets
         BicubicInterpolator botLeftInterp = (BicubicInterpolator) this.course.getFunctions()[0][0];
         Point3D[][] points = botLeftInterp.getPoints();
-        this.setXoffset((float)points[0][0].getX());
-        this.setYoffset((float)points[0][0].getY());
+        this.setXoffset(points[0][0].getX());
+        this.setYoffset(points[0][0].getY());
 
         // Setup scales
         int xLength = this.course.getFunctions().length;
@@ -206,14 +204,17 @@ public class CourseScreen implements Screen {
         // scaleX
         BicubicInterpolator botRightInterp = (BicubicInterpolator) this.course.getFunctions()[xLength - 1][0];
         Point3D[][] botRightPoints = botRightInterp.getPoints();
-        double rightX = botRightPoints[1][0].getX();
-        this.setScaleX((float)(rightX - this.getXoffset()) / Golf.VIRTUAL_WIDTH);
+        float rightX = botRightPoints[1][0].getX();
+        this.setScaleX((rightX - this.getXoffset())/ Golf.VIRTUAL_WIDTH);
 
         // scaleY
         BicubicInterpolator topLeftInterp = (BicubicInterpolator) this.course.getFunctions()[0][yLength - 1];
         Point3D[][] topLeftPoints = topLeftInterp.getPoints();
-        double topY = topLeftPoints[0][1].getY();
-        this.setScaleY((float)(topY - this.getYoffset()) / Golf.VIRTUAL_HEIGHT);
+        float topY = topLeftPoints[0][1].getY();
+        this.setScaleY((topY - this.getYoffset()) / Golf.VIRTUAL_HEIGHT);
+
+        this.course.setOffsets(new float[]{this.xoffset, this.yoffset});
+        this.course.setScales(new float[]{this.scaleX, this.scaleY});
     }
 
     /**
@@ -368,6 +369,7 @@ public class CourseScreen implements Screen {
             limitDist *= 2;
         }
         this.scaleY = scaleX;
+        this.course.setScales(new float[]{this.scaleX, this.scaleY});
     }
 
     /**
@@ -382,6 +384,7 @@ public class CourseScreen implements Screen {
         float y2 = this.course.getGoal()[1];
         float yUnits = Golf.VIRTUAL_HEIGHT / (1/this.scaleY);
         this.yoffset = (y1 + y2 - yUnits) / 2.0f;
+        this.course.setOffsets(new float[]{this.xoffset, this.yoffset});
     }
 
     /**
