@@ -21,7 +21,7 @@ public class DumBot implements Bot {
 
     private static final float A_SCALAR = 15;
     private static final float F_SCALAR = 2;
-    private static final float BIG_SCALAR = 30;
+    private static final float BIG_SCALAR = (float) 0.935;
 
 	private final Course course;
     private final Ball ball;
@@ -49,7 +49,7 @@ public class DumBot implements Bot {
 	 */
 	@Override
     public void makeMove() {
-    	double extraPower = 6.5; 
+    	double extraPower = 2; 
     	double distanceLimit = 0.75; 
     	float[] goalCoords = this.course.getGoal();
     	float[] distances = new float[] {goalCoords[0]-this.ball.getX(), goalCoords[1]-this.ball.getY()};
@@ -77,7 +77,7 @@ public class DumBot implements Bot {
     	distances[0] *= BIG_SCALAR;
     	distances[1] *= BIG_SCALAR; 
         this.scale(distances);
-    	this.engine.hit(ball,distances[0] / 15, distances[1] / 15);
+    	this.engine.hit(ball,distances[0], distances[1]);
     }
 
 	/**
