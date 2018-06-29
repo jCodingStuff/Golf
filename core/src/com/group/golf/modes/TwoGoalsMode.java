@@ -59,7 +59,7 @@ public class TwoGoalsMode extends GameMode {
      * @param distanceLimit the limit of distance between the two balls
      */
     public TwoGoalsMode(Golf game, Course course, Ball[] balls, double distanceLimit) {
-//        this.distanceLimit = 10.5;
+        this.distanceLimit = distanceLimit;
         this.game = game;
         this.course = course;
         this.balls = balls;
