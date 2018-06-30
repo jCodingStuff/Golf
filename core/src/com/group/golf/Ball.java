@@ -74,6 +74,20 @@ public class Ball {
     }
 
     /**
+     * Reset the velocityX of the ball to 0
+     */
+    public void resetX() {
+        this.velocityX = 0;
+    }
+
+    /**
+     * Reset the velocityY of the ball to 0
+     */
+    public void resetY() {
+        this.velocityY = 0;
+    }
+
+    /**
      * Limit the velocity to a maximum
      * @param max the limit
      */
