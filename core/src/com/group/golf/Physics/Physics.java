@@ -117,12 +117,16 @@ public class Physics {
      * @return true if the ball was forced to stop, false otherwise
      */
     protected boolean checkLowVelocity() {
-//        System.out.println("ErrorBound: " + errorBound);
-        if (Math.abs(movingBall.calcVelocity()) < errorBound) {
-            movingBall.reset();
-            return true;
+        float[] slope = this.calculateSlope(new float[]{this.movingBall.getX(), this.movingBall.getY()});
+        float vx = this.movingBall.getVelocityX();
+        float vy = this.movingBall.getVelocityY();
+        if ((vx < 0 && slope[0] > 0 && vx >= -errorBound) || (vx > 0 && slope[0] < 0 && vx <= errorBound)) {
+            this.movingBall.resetX();
         }
-        return false;
+        if ((vy < 0 && slope[1] > 0 && vy >= -errorBound) || (vy > 0 && slope[1] < 0 && vy <= errorBound)) {
+            this.movingBall.resetY();
+        }
+        return !this.movingBall.isMoving();
     }
 
     /**

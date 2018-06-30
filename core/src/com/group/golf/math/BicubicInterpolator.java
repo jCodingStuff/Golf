@@ -57,6 +57,11 @@ public class BicubicInterpolator implements Computable {
 		this.printHelp("Dxy", dxy);
 	}
 
+	/**
+	 * Print a matrix
+	 * @param text the title of the matrix
+	 * @param matrix the matrix
+	 */
 	private void printHelp(String text, float[][] matrix) {
 		System.out.println("\t" + text + ":");
 		for (int i = 0; i < matrix.length; i++) {
