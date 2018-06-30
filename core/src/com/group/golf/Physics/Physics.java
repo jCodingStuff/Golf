@@ -120,10 +120,14 @@ public class Physics {
         float[] slope = this.calculateSlope(new float[]{this.movingBall.getX(), this.movingBall.getY()});
         float vx = this.movingBall.getVelocityX();
         float vy = this.movingBall.getVelocityY();
-        if ((vx < 0 && slope[0] > 0 && vx >= -errorBound) || (vx > 0 && slope[0] < 0 && vx <= errorBound)) {
+        if (vx != 0 && ((vx < 0 && slope[0] >= 0 && vx >= -errorBound) ||
+                (vx > 0 && slope[0] <= 0 && vx <= errorBound))) {
+//            System.out.println("VelocityX reset!");
             this.movingBall.resetX();
         }
-        if ((vy < 0 && slope[1] > 0 && vy >= -errorBound) || (vy > 0 && slope[1] < 0 && vy <= errorBound)) {
+        if (vy != 0 && ((vy < 0 && slope[1] >= 0 && vy >= -errorBound) ||
+                (vy > 0 && slope[1] <= 0 && vy <= errorBound))) {
+//            System.out.println("VelocityY reset!");
             this.movingBall.resetY();
         }
         return !this.movingBall.isMoving();
