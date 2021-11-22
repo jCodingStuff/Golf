@@ -1,4 +1,7 @@
 # Golf
+
+<img src="/imgs/game_screen_shot.png" alt="Thumbnail" width="50%"/>
+
 This is a golf game which was part of the Project 1-3 for the Data Science and Knowledge Engineering bachelor at Maastricht University.  
 This project is made by Group 14, including Martijn Hilders, Kim Roggenbuck, Alexandros Chimonas, Kaspar Kallast, Lillian Wush and myself.  
 The controls are very simple as you only need to click and drag the mouse to move the ball.  
