@@ -8,4 +8,4 @@ We have included a variety of gamemodes which you can explore and modify.
 Crazy Golf includes a set of 4 AI players which you can configure to obtain your desired difficulty and performance.  
 
 In order to play it, load it into your preferred IDE opening build.gradle.  
-This crazy putting game is powered by LibGdx (https://libgdx.badlogicgames.com/).
+This crazy putting game is powered by [LibGDX](https://libgdx.badlogicgames.com/).
